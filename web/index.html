@@ -48,16 +48,16 @@
   }
   .cmd button:hover { color: inherit; }
   .cmd button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
-  .cmd .labels { display: inline-grid; justify-items: center; }
-  .cmd .l {
+  .cmd .suffix { display: inline-grid; justify-items: start; }
+  .cmd .s {
     grid-area: 1 / 1;
     transition: opacity 180ms ease, transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .cmd .l-copied { opacity: 0; transform: translateY(4px); }
-  .cmd button[data-copied] .l-copy { opacity: 0; transform: translateY(-4px); }
-  .cmd button[data-copied] .l-copied { opacity: 1; transform: none; }
+  .cmd .s-ied { opacity: 0; transform: translateY(4px); }
+  .cmd button[data-copied] .s-y { opacity: 0; transform: translateY(-4px); }
+  .cmd button[data-copied] .s-ied { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) {
-    .cmd .l { transition: opacity 150ms ease; transform: none !important; }
+    .cmd .s { transition: opacity 150ms ease; transform: none !important; }
   }
   .sr {
     position: absolute;
@@ -88,10 +88,7 @@
   <div class="cmd">
     <code id="install-cmd">npx skills add cortez/uipolish</code>
     <button type="button" aria-label="Copy install command" onclick="copyCmd(this)">
-      <span class="labels" aria-hidden="true">
-        <span class="l l-copy">Copy</span>
-        <span class="l l-copied">Copied</span>
-      </span>
+      <span aria-hidden="true">Cop<span class="suffix"><span class="s s-y">y</span><span class="s s-ied">ied</span></span></span>
       <span class="sr" role="status"></span>
     </button>
   </div>
