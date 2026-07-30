@@ -1,6 +1,6 @@
 ---
 name: uipolish
-description: Systematic polish pass that brings an existing UI to life — microinteractions, motion, spacing, typography, depth, and interaction states. Use when a UI works but feels flat, static, bland, unfinished, or "off", or when asked to polish, refine, add microinteractions, improve spacing or typography, make an app feel premium, delightful, alive, or production-ready. Triggers on: polish the UI, uipolish, make it feel better, feels flat, feels basic, add microinteractions, improve the design, bring it to life, finishing touches, design pass, make it pop.
+description: "Systematic polish pass that brings an existing UI to life — microinteractions, motion, spacing, typography, depth, and interaction states. Use when a UI works but feels flat, static, bland, unfinished, or 'off', or when asked to polish, refine, add microinteractions, improve spacing or typography, or make an app feel premium, delightful, alive, or production-ready. Triggers on phrases like polish the UI, uipolish, make it feel better, feels flat, feels basic, add microinteractions, improve the design, bring it to life, finishing touches, design pass, make it pop."
 ---
 
 # uipolish
