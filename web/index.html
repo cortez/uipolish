@@ -78,8 +78,14 @@
   ol { padding-inline-start: 1.5em; }
   li { margin-top: 0.5em; }
   li::marker { color: light-dark(#6f6f6f, #9c9c9c); font-variant-numeric: tabular-nums; }
-  a { color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: light-dark(#bbb, #555); }
-  a:hover { text-decoration-color: inherit; }
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: light-dark(#bbb, #555);
+    transition: color 150ms ease, text-decoration-color 150ms ease;
+  }
+  a:hover { color: light-dark(#111, #ededed); text-decoration-color: inherit; }
   a:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
   footer { margin-top: 3.5em; }
 </style>
