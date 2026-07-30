@@ -51,8 +51,17 @@ Rules that follow from Recon:
 
 ## Phase 1 — Audit (build the punch list)
 
-Sweep the in-scope UI and collect concrete findings. For each finding record:
-file, what is wrong, which pass fixes it. Grep-able signals worth hunting:
+Load [references/antipatterns.md](references/antipatterns.md) before sweeping —
+it catalogs the non-obvious defects that pass code review because each looks
+intentional in isolation: hover states on non-interactive elements, transitions
+declared only on `:hover`, state changes that reflow siblings, `100vh` on
+mobile, async actions with no failure branch. Findings from that file outrank
+cosmetic ones: a styling promise the interface doesn't keep is worse than a
+missing flourish.
+
+Then sweep the in-scope UI and collect concrete findings. For each finding
+record: file, what is wrong, which pass fixes it. Grep-able signals worth
+hunting:
 
 - Interactive elements with no `hover:`/`active:`/`focus-visible:` treatment,
   or `outline-none` with no replacement focus style.
@@ -90,6 +99,10 @@ recipes, and code idioms to use.
 | 4 | Surfaces & depth: shadows, borders, radius, dark-mode elevation | [references/surfaces.md](references/surfaces.md) |
 | 5 | Motion & microinteractions: hover/press, enter/exit, reveals, stagger | [references/motion.md](references/motion.md) |
 | 6 | States: loading, skeleton, empty, error, disabled, optimistic | [references/states.md](references/states.md) |
+
+Cross-cutting: [references/antipatterns.md](references/antipatterns.md)
+(loaded in Audit) applies to every pass — re-check its affordance and
+state-honesty rules whenever a pass adds a hover, transition, or overlay.
 
 Per-pass discipline:
 
