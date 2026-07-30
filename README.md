@@ -38,15 +38,16 @@ The agent will also pick the skill up automatically when you say things like
 
 ## What it does
 
-1. **Recon** — detects your stack, design tokens, and conventions so every edit
+1. **Recon** detects your stack, design tokens, and conventions so every edit
    extends your system instead of fighting it.
-2. **Audit** — sweeps the code and builds a punch list: dead hover states,
+2. **Audit** sweeps the code and builds a punch list: dead hover states,
    missing focus rings, arbitrary spacing, flat surfaces, layout shift,
    animations of the wrong properties.
-3. **Apply** — six ordered passes: foundations → typography → spacing →
-   surfaces → motion → states. Each pass draws on a reference file of concrete
+3. **Apply** runs six ordered passes: foundations, typography, spacing,
+   surfaces, motion, states. Each pass draws on a reference file of concrete
    recipes.
-4. **Verify** — diff review, reduced-motion check, keyboard walk, build/tests.
+4. **Verify** re-reads the diff, checks reduced motion, walks the keyboard
+   path, and runs your build and tests.
 
 ## What it will never do
 

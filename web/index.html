@@ -7,26 +7,29 @@
 <meta name="description" content="An agent skill that runs a systematic polish pass over your codebase. Install with npx skills add cortez/uipolish.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E">
 <style>
-  :root { color-scheme: light dark; }
+  :root {
+    color-scheme: light dark;
+    --fg: light-dark(#111, #ededed);
+    --muted: light-dark(#6f6f6f, #9c9c9c);
+  }
   * { margin: 0; box-sizing: border-box; }
   body {
     font: 14px/1.7 system-ui, sans-serif;
     background: light-dark(#fff, #0a0a0a);
-    color: light-dark(#111, #ededed);
+    color: var(--fg);
     max-width: 34rem;
     margin: 0 auto;
     padding: 2.5rem 1.5rem 4rem;
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: 100%;
   }
-  h1 { font-size: inherit; font-weight: inherit; }
+  h1 { font: inherit; }
   p, li { text-wrap: pretty; }
-  .muted { color: light-dark(#6f6f6f, #9c9c9c); }
   p, ol, .cmd { margin-top: 1.5em; }
-  code {
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 12px;
-  }
+  .muted, .cmd button, li::marker { color: var(--muted); }
+  code { font: 12px/1.7 ui-monospace, "SF Mono", Menlo, monospace; }
+  :focus-visible { outline: 2px solid; outline-offset: 2px; }
+
   .cmd {
     display: flex;
     align-items: center;
@@ -36,78 +39,38 @@
     padding: 0.5em 0.5em 0.5em 1em;
   }
   .cmd code { flex: 1; overflow-x: auto; white-space: nowrap; }
-  .cmd button {
-    font: inherit;
-    font-size: 12px;
-    color: light-dark(#6f6f6f, #9c9c9c);
-    background: none;
-    border: 0;
-    border-radius: 4px;
-    padding: 0.45em 0.75em;
-    cursor: pointer;
-    touch-action: manipulation;
-  }
+  .cmd button { font: inherit; font-size: 12px; background: none; border: 0; padding: 0.45em 0.75em; cursor: pointer; }
   .cmd button:hover { color: inherit; }
-  .cmd button[data-copied] { pointer-events: none; }
-  .cmd button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
-  .cmd .suffix {
+  [data-copied] { pointer-events: none; }
+
+  .suffix {
     position: relative;
     display: inline-block;
     overflow: hidden;
     vertical-align: bottom;
     transition: width 300ms cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .cmd .suffix.ready { width: var(--wy); }
-  .cmd button[data-copied] .suffix.ready { width: var(--wied); }
-  .cmd .s {
-    display: inline-block;
-    transition: opacity 200ms ease, filter 200ms ease;
-  }
-  .cmd .s-ied {
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-    filter: blur(3px);
-  }
-  .cmd button[data-copied] .s-y {
-    opacity: 0;
-    filter: blur(3px);
-    transition-duration: 150ms;
-  }
-  .cmd button[data-copied] .s-ied {
-    opacity: 1;
-    filter: none;
-    transition-duration: 250ms;
-    transition-delay: 60ms;
-  }
+  .suffix.ready { width: var(--wy); }
+  [data-copied] .suffix.ready { width: var(--wied); }
+  .s { display: inline-block; transition: opacity 200ms ease, filter 200ms ease; }
+  .s-ied { position: absolute; left: 0; opacity: 0; filter: blur(3px); }
+  [data-copied] .s-y { opacity: 0; filter: blur(3px); transition-duration: 150ms; }
+  [data-copied] .s-ied { opacity: 1; filter: none; transition-duration: 250ms; transition-delay: 60ms; }
   @media (prefers-reduced-motion: reduce) {
-    .cmd .suffix { transition: none; }
-    .cmd .s {
-      transition: opacity 200ms ease;
-      transition-delay: 0ms;
-      filter: none !important;
-    }
+    .suffix, .s { transition: none; }
   }
-  .sr {
-    position: absolute;
-    width: 1px; height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
   ol { padding-inline-start: 1.5em; }
   li { margin-top: 0.5em; }
-  li::marker { color: light-dark(#6f6f6f, #9c9c9c); font-variant-numeric: tabular-nums; }
+  li::marker { font-variant-numeric: tabular-nums; }
   a {
     color: inherit;
-    text-decoration: underline;
     text-underline-offset: 3px;
     text-decoration-color: light-dark(#bbb, #555);
     transition: color 150ms ease, text-decoration-color 150ms ease;
   }
-  a:hover { color: light-dark(#111, #ededed); text-decoration-color: inherit; }
-  a:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+  a:hover { color: var(--fg); text-decoration-color: inherit; }
   footer { margin-top: 3.5em; }
 </style>
 </head>
