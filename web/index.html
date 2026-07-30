@@ -49,19 +49,19 @@
   .cmd button:hover { color: inherit; }
   .cmd button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
   .cmd .suffix {
-    display: inline-grid;
-    grid-template-columns: 1fr 0fr;
-    transition: grid-template-columns 180ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .cmd .s {
-    grid-row: 1;
-    min-width: 0;
+    position: relative;
+    display: inline-block;
     overflow: hidden;
+    vertical-align: bottom;
+    transition: width 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .cmd .suffix.ready { width: var(--wy); }
+  .cmd button[data-copied] .suffix.ready { width: var(--wied); }
+  .cmd .s {
+    display: inline-block;
     transition: opacity 180ms ease, transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .cmd .s-y { grid-column: 1; }
-  .cmd .s-ied { grid-column: 2; opacity: 0; transform: translateY(4px); }
-  .cmd button[data-copied] .suffix { grid-template-columns: 0fr 1fr; }
+  .cmd .s-ied { position: absolute; left: 0; top: 0; opacity: 0; transform: translateY(4px); }
   .cmd button[data-copied] .s-y { opacity: 0; transform: translateY(-4px); }
   .cmd button[data-copied] .s-ied { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) {
@@ -131,6 +131,13 @@
   </footer>
 </main>
 <script>
+const suffix = document.querySelector('.cmd .suffix');
+requestAnimationFrame(() => {
+  suffix.style.setProperty('--wy', suffix.querySelector('.s-y').offsetWidth + 'px');
+  suffix.style.setProperty('--wied', suffix.querySelector('.s-ied').offsetWidth + 'px');
+  suffix.classList.add('ready');
+});
+
 async function copyCmd(btn) {
   const cmd = document.getElementById('install-cmd');
   const status = btn.querySelector('.sr');
