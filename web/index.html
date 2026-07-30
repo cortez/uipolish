@@ -48,9 +48,9 @@
   }
   .cmd button:hover { color: inherit; }
   .cmd button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
-  ol { list-style: none; }
-  li { margin-top: 0.5em; display: flex; gap: 1em; }
-  li .n { color: light-dark(#6f6f6f, #9c9c9c); font-variant-numeric: tabular-nums; }
+  ol { padding-inline-start: 1.5em; }
+  li { margin-top: 0.5em; }
+  li::marker { color: light-dark(#6f6f6f, #9c9c9c); font-variant-numeric: tabular-nums; }
   a { color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: light-dark(#bbb, #555); }
   a:hover { text-decoration-color: inherit; }
   a:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
@@ -76,11 +76,11 @@
   “polish this UI.” It works in five passes:</p>
 
   <ol>
-    <li><span class="n">01</span><span>Recon &amp; audit — your stack, your tokens, a punch list</span></li>
-    <li><span class="n">02</span><span>Typography &amp; spacing — hierarchy you can feel</span></li>
-    <li><span class="n">03</span><span>Surfaces &amp; depth — quiet borders, layered shadows</span></li>
-    <li><span class="n">04</span><span>Motion — transform and opacity only, reduced-motion safe</span></li>
-    <li><span class="n">05</span><span>States — loading, empty, error, focus, then verify</span></li>
+    <li>Recon &amp; audit — your stack, your tokens, a punch list</li>
+    <li>Typography &amp; spacing — hierarchy you can feel</li>
+    <li>Surfaces &amp; depth — quiet borders, layered shadows</li>
+    <li>Motion — transform and opacity only, reduced-motion safe</li>
+    <li>States — loading, empty, error, focus, then verify</li>
   </ol>
 
   <p>No redesigns, no new dependencies, no behavior changes. Accessibility is
