@@ -39,9 +39,9 @@
     padding: 0.5em 0.5em 0.5em 1em;
   }
   .cmd code { flex: 1; overflow-x: auto; white-space: nowrap; }
-  .cmd button { font: inherit; font-size: 12px; background: none; border: 0; padding: 0.45em 0.75em; cursor: pointer; }
+  .cmd button { font: inherit; font-size: 12px; background: none; border: 0; padding: 0.45em 0.75em; cursor: pointer; transition: color 200ms; }
   .cmd button:hover { color: inherit; }
-  [data-copied] { pointer-events: none; }
+  [data-copied] { pointer-events: none; color: var(--fg); }
 
   .suffix {
     position: relative;
