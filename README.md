@@ -5,8 +5,7 @@
 `uipolish` is an agent skill that runs a systematic polish pass over an existing
 codebase: microinteractions, motion, spacing, typography, depth, and interaction
 states. It audits first, then applies ordered passes using concrete,
-production-derived values — durations, easing curves, tracking, shadow recipes —
-instead of vibes.
+production-derived values: durations, easing curves, tracking, shadow recipes.
 
 It never redesigns and never changes behavior. It sharpens what's already there.
 
