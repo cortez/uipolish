@@ -15,16 +15,39 @@
     color: light-dark(#111, #ededed);
     max-width: 34rem;
     margin: 0 auto;
-    padding: 7rem 1.5rem 6rem;
+    padding: 4rem 1.5rem 4rem;
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: 100%;
   }
+  h1 { font-size: inherit; font-weight: inherit; }
   .muted { color: light-dark(#6f6f6f, #9c9c9c); }
-  p, ol { margin-top: 1.5em; }
+  p, ol, .cmd { margin-top: 1.5em; }
   code {
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
     font-size: 13px;
   }
+  .cmd {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    border: 1px solid light-dark(#e3e3e3, #2a2a2a);
+    border-radius: 6px;
+    padding: 0.5em 0.5em 0.5em 1em;
+  }
+  .cmd code { flex: 1; overflow-x: auto; white-space: nowrap; }
+  .cmd button {
+    font: inherit;
+    font-size: 13px;
+    color: light-dark(#6f6f6f, #9c9c9c);
+    background: none;
+    border: 0;
+    border-radius: 4px;
+    padding: 0.45em 0.75em;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .cmd button:hover { color: inherit; }
+  .cmd button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
   ol { list-style: none; }
   li { margin-top: 0.5em; display: flex; gap: 1em; }
   li .n { color: light-dark(#6f6f6f, #9c9c9c); font-variant-numeric: tabular-nums; }
@@ -36,7 +59,7 @@
 </head>
 <body>
 <main>
-  <h1 style="font-size: inherit;">uipolish</h1>
+  <h1>uipolish</h1>
   <p class="muted" style="margin-top: 0;">Make your UI feel finished.</p>
 
   <p>An agent skill that runs a systematic polish pass over an existing
@@ -44,7 +67,10 @@
   states. It audits first, applies concrete recipes instead of vibes, and
   never changes behavior.</p>
 
-  <p><code>npx skills add cortez/uipolish</code></p>
+  <div class="cmd">
+    <code id="install-cmd">npx skills add cortez/uipolish</code>
+    <button type="button" aria-live="polite" onclick="copyCmd(this)">Copy</button>
+  </div>
 
   <p>Then run <code>/uipolish</code> in your agent, or just say
   “polish this UI.” It works in five passes:</p>
@@ -68,5 +94,17 @@
     MIT
   </footer>
 </main>
+<script>
+async function copyCmd(btn) {
+  const cmd = document.getElementById('install-cmd');
+  try {
+    await navigator.clipboard.writeText(cmd.textContent);
+    btn.textContent = 'Copied';
+    setTimeout(() => (btn.textContent = 'Copy'), 1600);
+  } catch {
+    getSelection().selectAllChildren(cmd);
+  }
+}
+</script>
 </body>
 </html>
