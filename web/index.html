@@ -48,6 +48,7 @@
     touch-action: manipulation;
   }
   .cmd button:hover { color: inherit; }
+  .cmd button[data-copied] { pointer-events: none; }
   .cmd button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
   .cmd .suffix {
     position: relative;
@@ -159,6 +160,7 @@ requestAnimationFrame(() => {
 });
 
 async function copyCmd(btn) {
+  if (btn.hasAttribute('data-copied')) return;
   const cmd = document.getElementById('install-cmd');
   const status = btn.querySelector('.sr');
   try {
