@@ -70,10 +70,15 @@ heading at 1.5 has a hole in the middle of the layout.
 
 ## 4. Wrapping, measure, truncation
 
+- **`text-wrap: pretty` is the default for all body text, not an opt-in.**
+  Set it once globally (`p, li { text-wrap: pretty; }`) rather than
+  per-component; it costs nothing where lines don't wrap and removes orphans
+  everywhere they do. Its absence on any multi-line paragraph is a
+  punch-list item.
 - `text-wrap: balance` on every heading and any text ≤ 3 lines (card titles,
-  section intros, empty-state messages).
-- `text-wrap: pretty` on paragraph bodies. Division of labor: balance for
-  headings, pretty for prose. Don't put balance on long paragraphs.
+  section intros, empty-state messages). Division of labor: balance for
+  headings and short blocks, pretty for prose. Don't put balance on long
+  paragraphs — browsers ignore it past a few lines anyway.
 - Prose measure: 60–75 characters. `max-w-[65ch]` is a good default; it's fine
   to widen slightly at large breakpoints (61ch → 70ch). Heading measure should
   be *narrower* than body measure so display lines break 2–3 words in.

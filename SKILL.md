@@ -74,7 +74,8 @@ hunting:
 - Typography smells: default tracking on large headings, line-height too tall on
   headings or too tight on body, more than ~2 font weights doing the work of a
   hierarchy, raw quotes/apostrophes in marketing copy, numbers in tables without
-  `tabular-nums`.
+  `tabular-nums`, paragraphs without `text-wrap: pretty` or headings without
+  `text-wrap: balance`.
 - Flat surfaces: cards/popovers with a single hard border and no depth, pure
   black shadows at high opacity, radius values fighting each other when nested.
 - Missing states: buttons with no disabled/loading treatment, lists with no
