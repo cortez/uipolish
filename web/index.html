@@ -3,258 +3,70 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>uipolish — make your UI feel finished</title>
-<meta name="description" content="An agent skill that runs a systematic polish pass over your codebase: microinteractions, spacing, typography, depth, and states. Install with npx skills add cortez/uipolish.">
-<meta property="og:title" content="uipolish">
-<meta property="og:description" content="Your UI works. Now make it feel finished.">
+<title>uipolish</title>
+<meta name="description" content="An agent skill that runs a systematic polish pass over your codebase. Install with npx skills add cortez/uipolish.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E✨%3C/text%3E%3C/svg%3E">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fcfcfc">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c0c0e">
 <style>
-  :root {
-    color-scheme: light dark;
-    --bg: #fcfcfc;
-    --fg: #18181b;
-    --muted: rgba(24, 24, 27, 0.66);
-    --faint: rgba(24, 24, 27, 0.5);
-    --line: rgba(24, 24, 27, 0.1);
-    --surface: #ffffff;
-    --accent: #6d28d9;
-    --accent-soft: rgba(109, 40, 217, 0.08);
-    --shadow:
-      0 1px 2px rgba(24, 24, 27, 0.05),
-      0 4px 12px rgba(24, 24, 27, 0.05);
-    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    --dur: 180ms;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0c0c0e;
-      --fg: #f4f4f5;
-      --muted: rgba(244, 244, 245, 0.64);
-      --faint: rgba(244, 244, 245, 0.48);
-      --line: rgba(244, 244, 245, 0.1);
-      --surface: #151517;
-      --accent: #a78bfa;
-      --accent-soft: rgba(167, 139, 250, 0.1);
-      --shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.04),
-        0 1px 2px rgba(0, 0, 0, 0.4);
-    }
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  :root { color-scheme: light dark; }
+  * { margin: 0; box-sizing: border-box; }
   body {
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    background: var(--bg);
-    color: var(--fg);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-  ::selection { background: var(--accent-soft); color: var(--accent); }
-
-  main {
-    max-width: 40rem;
-    margin: 0 auto;
-    padding: clamp(4rem, 12vh, 8rem) 1.5rem 5rem;
-  }
-
-  .reveal { opacity: 0; transform: translateY(10px); }
-  @media (prefers-reduced-motion: no-preference) {
-    .reveal {
-      animation: rise 0.7s var(--ease-out) forwards;
-      animation-delay: calc(var(--i, 0) * 90ms);
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .reveal { opacity: 1; transform: none; }
-  }
-  @keyframes rise {
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    color: var(--accent);
-    background: var(--accent-soft);
-    border-radius: 999px;
-    padding: 0.25rem 0.75rem;
-    margin-bottom: 1.5rem;
-  }
-
-  h1 {
-    font-size: clamp(2.25rem, 6vw, 3.25rem);
-    line-height: 1.08;
-    letter-spacing: -0.03em;
-    font-weight: 700;
-    text-wrap: balance;
-  }
-  h1 .dim { color: var(--faint); }
-
-  .lede {
-    margin-top: 1.25rem;
-    font-size: 1.125rem;
-    letter-spacing: -0.01em;
-    color: var(--muted);
-    text-wrap: pretty;
+    font: 14px/1.7 system-ui, sans-serif;
+    background: light-dark(#fff, #0a0a0a);
+    color: light-dark(#111, #ededed);
     max-width: 34rem;
+    margin: 0 auto;
+    padding: 7rem 1.5rem 6rem;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
   }
-
-  .install {
-    margin-top: 2.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    padding: 0.875rem 1rem 0.875rem 1.25rem;
-    font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 0.9375rem;
-  }
-  .install code { flex: 1; overflow-x: auto; white-space: nowrap; }
-  .install .p { color: var(--faint); user-select: none; }
-  .copy {
-    flex-shrink: 0;
-    display: inline-grid;
-    place-items: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    touch-action: manipulation;
-    transition: background var(--dur) ease, color var(--dur) ease;
-  }
-  .copy:hover { background: var(--accent-soft); color: var(--accent); }
-  .copy:active { background: var(--accent-soft); color: var(--accent); transition-duration: 0s; }
-  .copy:focus-visible, a:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-    border-radius: 8px;
-  }
-  .copy svg { width: 1rem; height: 1rem; }
-  .copy .check { display: none; }
-  .copy.done .clip { display: none; }
-  .copy.done .check { display: block; color: var(--accent); }
-
-  .passes {
-    margin-top: 3.5rem;
-    display: grid;
-    gap: 0;
-    border-top: 1px solid var(--line);
-  }
-  .pass {
-    display: grid;
-    grid-template-columns: 2.5rem 1fr;
-    gap: 1rem;
-    padding: 1.125rem 0.25rem;
-    border-bottom: 1px solid var(--line);
-    transition: background var(--dur) ease;
-    border-radius: 8px;
-  }
-  .pass:hover { background: var(--accent-soft); }
-  .pass .n {
+  .muted { color: light-dark(#6f6f6f, #9c9c9c); }
+  p, ol { margin-top: 1.5em; }
+  code {
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.8125rem;
-    color: var(--muted);
-    padding-top: 0.2rem;
-    font-variant-numeric: tabular-nums;
+    font-size: 13px;
   }
-  .pass h2 { font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.01em; }
-  .pass p { font-size: 0.875rem; color: var(--muted); margin-top: 0.125rem; text-wrap: pretty; }
-
-  .promise {
-    margin-top: 3rem;
-    font-size: 0.9375rem;
-    color: var(--muted);
-    border-left: 2px solid var(--accent);
-    padding-left: 1rem;
-    text-wrap: pretty;
-  }
-  .promise strong { color: var(--fg); font-weight: 600; }
-
-  footer {
-    margin-top: 4rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--line);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    font-size: 0.875rem;
-    color: var(--muted);
-    flex-wrap: wrap;
-  }
-  footer a {
-    color: var(--muted);
-    text-decoration: none;
-    text-underline-offset: 3px;
-    transition: color var(--dur) ease;
-  }
-  footer a:hover { color: var(--fg); text-decoration: underline; }
+  ol { list-style: none; }
+  li { margin-top: 0.5em; display: flex; gap: 1em; }
+  li .n { color: light-dark(#6f6f6f, #9c9c9c); font-variant-numeric: tabular-nums; }
+  a { color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: light-dark(#bbb, #555); }
+  a:hover { text-decoration-color: inherit; }
+  a:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+  footer { margin-top: 3.5em; }
 </style>
 </head>
 <body>
 <main>
-  <div class="reveal" style="--i:0">
-    <span class="badge">✦ Agent skill</span>
-    <h1>Your UI works.<br><span class="dim">Now make it feel finished.</span></h1>
-  </div>
+  <h1 style="font-size: inherit;">uipolish</h1>
+  <p class="muted" style="margin-top: 0;">Make your UI feel finished.</p>
 
-  <p class="lede reveal" style="--i:1">
-    uipolish is an agent skill that runs a systematic polish pass over your
-    codebase — microinteractions, spacing, typography, depth, and interaction
-    states. It audits first, applies concrete recipes instead of vibes, and
-    never changes behavior.
-  </p>
+  <p>An agent skill that runs a systematic polish pass over an existing
+  codebase — microinteractions, spacing, typography, depth, and interaction
+  states. It audits first, applies concrete recipes instead of vibes, and
+  never changes behavior.</p>
 
-  <div class="install reveal" style="--i:2">
-    <code><span class="p">$&nbsp;</span>npx skills add cortez/uipolish</code>
-    <button class="copy" type="button" aria-label="Copy install command" onclick="copyCmd(this)">
-      <svg class="clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-      <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-    </button>
-  </div>
+  <p><code>npx skills add cortez/uipolish</code></p>
 
-  <div class="passes reveal" style="--i:3">
-    <div class="pass"><span class="n">01</span><div><h2>Recon &amp; audit</h2><p>Detects your stack, tokens, and conventions, then builds a punch list of everything that feels off.</p></div></div>
-    <div class="pass"><span class="n">02</span><div><h2>Typography &amp; spacing</h2><p>Tracking, line-height, rhythm, and grouping — hierarchy you can feel without reading.</p></div></div>
-    <div class="pass"><span class="n">03</span><div><h2>Surfaces &amp; depth</h2><p>Layered shadows, quiet borders, radii that nest correctly, elevation that survives dark mode.</p></div></div>
-    <div class="pass"><span class="n">04</span><div><h2>Motion &amp; microinteractions</h2><p>Hover, press, enter, exit — transform and opacity only, guarded by reduced-motion.</p></div></div>
-    <div class="pass"><span class="n">05</span><div><h2>States &amp; verification</h2><p>Loading, empty, error, focus. Then a diff review, keyboard walk, and your own build.</p></div></div>
-  </div>
+  <p>Then run <code>/uipolish</code> in your agent, or just say
+  “polish this UI.” It works in five passes:</p>
 
-  <p class="promise reveal" style="--i:4">
-    <strong>It sharpens what’s already there.</strong> No redesigns, no new
-    dependencies, no behavior changes, and accessibility is never traded for
-    aesthetics.
-  </p>
+  <ol>
+    <li><span class="n">01</span><span>Recon &amp; audit — your stack, your tokens, a punch list</span></li>
+    <li><span class="n">02</span><span>Typography &amp; spacing — hierarchy you can feel</span></li>
+    <li><span class="n">03</span><span>Surfaces &amp; depth — quiet borders, layered shadows</span></li>
+    <li><span class="n">04</span><span>Motion — transform and opacity only, reduced-motion safe</span></li>
+    <li><span class="n">05</span><span>States — loading, empty, error, focus, then verify</span></li>
+  </ol>
 
-  <footer class="reveal" style="--i:5">
-    <span>MIT © cortez</span>
-    <span>
-      <a href="https://github.com/cortez/uipolish">GitHub</a>
-      &nbsp;·&nbsp;
-      <a href="https://skills.sh/cortez/uipolish">skills.sh</a>
-    </span>
+  <p>No redesigns, no new dependencies, no behavior changes. Accessibility is
+  never traded for aesthetics.</p>
+
+  <footer class="muted">
+    <a href="https://github.com/cortez/uipolish">GitHub</a>
+    &nbsp;·&nbsp;
+    <a href="https://skills.sh/cortez/uipolish">skills.sh</a>
+    &nbsp;·&nbsp;
+    MIT
   </footer>
 </main>
-<script>
-function copyCmd(btn) {
-  navigator.clipboard.writeText('npx skills add cortez/uipolish').then(() => {
-    btn.classList.add('done');
-    setTimeout(() => btn.classList.remove('done'), 1600);
-  });
-}
-</script>
 </body>
 </html>
