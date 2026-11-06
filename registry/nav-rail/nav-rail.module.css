@@ -1,0 +1,426 @@
+/* A sunken capsule track; items are icon capsules inside it, --nav-rail-pad
+   from every edge, so their round ends are concentric with the track's. */
+.rail {
+  --nav-rail-item-h: var(--ui-control-md);
+  --nav-rail-item-w: calc(var(--nav-rail-item-h) * var(--ui-capsule));
+  --nav-rail-pad: 4px;
+  --nav-rail-gap: 4px;
+  /* Opaque, the same as --ui-fill over the canvas, so a badge can cut out of it. */
+  --nav-rail-bg: color-mix(in oklch, var(--ui-foreground) 4.5%, var(--ui-canvas));
+  --nav-rail-capsule: light-dark(var(--ui-surface), color-mix(in oklch, var(--ui-surface), white 8%));
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  /* One spacing everywhere: the track's padding, the gap between items and
+     the gap before the footer are all equal. */
+  gap: var(--nav-rail-gap);
+  box-sizing: border-box;
+  padding: var(--nav-rail-pad);
+  border-radius: calc(var(--nav-rail-item-h) / 2 + var(--nav-rail-pad));
+  background: var(--nav-rail-bg);
+  box-shadow: var(--ui-track-edge);
+  font-family: var(--ui-font-sans);
+}
+
+.rail[data-orientation="horizontal"] {
+  /* Its items at their capsule width, side by side: the width the bar takes
+     when it has room (the component sets the counts). */
+  --nav-rail-fit: calc(
+    var(--nav-rail-count, 5) * var(--nav-rail-item-w) + (var(--nav-rail-count, 5) - 1) * var(--nav-rail-gap) + 2 *
+      var(--nav-rail-pad)
+  );
+  /* Below this container width the bar is a phone's tab bar: it spans the
+     width and shares it evenly between the items. */
+  --nav-rail-phone: 480px;
+
+  display: flex;
+  flex-direction: row;
+  /* In a container wider than a phone, the bar is as wide as its items and
+     no wider: centered, it reads as one object, not a strip of spread-out
+     icons. In a phone-width one, the second term (a container condition
+     without a query, since the bar can't query its own parent) is larger
+     than the container, so the bar fills it. Either way it never passes
+     its container: the items give way evenly instead. */
+  width: 100%;
+  max-width: max(var(--nav-rail-fit), calc(100% - (100% - var(--nav-rail-phone)) * 1000));
+  margin-inline: auto;
+}
+
+/* A phone's bottom bar: pinned to the bottom, floating clear of the home
+   indicator (env() is 0 where there's none). --nav-rail-safe-bottom lets a
+   frame that draws its own indicator stand in for the device's. */
+.rail[data-orientation="horizontal"][data-fixed] {
+  position: fixed;
+  inset-inline: 0;
+  bottom: max(var(--ui-space-2), var(--nav-rail-safe-bottom, env(safe-area-inset-bottom, 0px)));
+  z-index: 40;
+  width: calc(100% - 2 * var(--ui-space-2));
+}
+
+.track {
+  position: relative;
+  isolation: isolate;
+}
+
+/* The list and the footer split the width so every item gets the same
+   share: the list's basis is its gaps, its weight its item count. */
+.rail[data-orientation="horizontal"] .track {
+  flex: var(--nav-rail-items, 4) 1 calc((var(--nav-rail-items, 4) - 1) * var(--nav-rail-gap));
+  min-width: 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nav-rail-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rail[data-orientation="horizontal"] .list {
+  flex-direction: row;
+}
+
+.cell {
+  display: flex;
+}
+
+.rail[data-orientation="horizontal"] .cell {
+  /* Equal shares of the bar: at their capsule width when it has room,
+     wider on a phone, and evenly narrower rather than past its edge. */
+  flex: 1 1 0;
+  min-width: 0;
+  justify-content: center;
+}
+
+/* The rail's far end: the footer is pushed there when the rail is stretched. */
+.footer {
+  display: flex;
+  margin-block-start: auto;
+}
+
+.rail[data-orientation="horizontal"] .footer {
+  flex: 1 1 0;
+  min-width: 0;
+  margin-block-start: 0;
+}
+
+.rail[data-orientation="horizontal"] .footer > .item {
+  width: 100%;
+}
+
+/* The raised capsule behind the current item; it glides from item to item. */
+.indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  border-radius: var(--ui-radius-full);
+  background: var(--nav-rail-capsule);
+  box-shadow:
+    0 0 0 var(--ui-hairline) var(--ui-border-strong),
+    var(--ui-shadow-control);
+  contain: layout style size;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.track[data-ready] .indicator[data-visible] {
+  visibility: visible;
+}
+
+.item {
+  position: relative;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: var(--nav-rail-item-w);
+  height: var(--nav-rail-item-h);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-muted);
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.rail[data-orientation="horizontal"] .cell .item {
+  width: 100%;
+}
+
+.item[data-current] {
+  color: var(--ui-foreground);
+}
+
+/* Before the capsule is measured, the current item paints its own. */
+.track:not([data-ready]) .item[data-current] {
+  background: var(--nav-rail-capsule);
+  box-shadow:
+    0 0 0 var(--ui-hairline) var(--ui-border-strong),
+    var(--ui-shadow-control);
+}
+
+/* Hover only brings the icon up to the text color: no fill. The tooltip
+   already says which item the pointer is on. */
+@media (hover: hover) {
+  .item:hover:not([data-current]) {
+    color: var(--ui-foreground);
+  }
+}
+
+.item:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+}
+
+.icon > svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+}
+
+/* An unread count at the icon's top right. It grows away from the icon, and a
+   ring of whatever is behind it cuts it out of the glyph. */
+.badge {
+  position: absolute;
+  top: 4px;
+  left: calc(50% + 2px);
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-width: 18px;
+  height: 18px;
+  padding-inline: 5px;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-accent);
+  box-shadow: 0 0 0 var(--ui-knockout) var(--nav-rail-bg);
+  color: var(--ui-on-accent);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  transition: box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.item[data-current] .badge {
+  box-shadow: 0 0 0 var(--ui-knockout) var(--nav-rail-capsule);
+}
+
+/* The hit area spans half the gap on each side, so a pointer moving down the
+   rail goes straight from one item to the next and the tooltip never closes
+   between them. */
+.item::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--nav-rail-gap) / -2) 0;
+}
+
+.rail[data-orientation="horizontal"] .item::before {
+  inset: 0 calc(var(--nav-rail-gap) / -2);
+}
+
+@media (pointer: coarse) {
+  .item::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+  }
+  /* On a bottom bar a finger lands anywhere on the bar: each item's hit
+     area runs to the bar's edges and halfway to its neighbors, 48px tall. */
+  .rail[data-orientation="horizontal"] .item::after {
+    inset: calc(var(--nav-rail-pad) * -1) calc(var(--nav-rail-gap) / -2);
+  }
+}
+
+/* A long press shows the tooltip and sliding along the rail moves it, so the
+   browser keeps only the scroll across the rail, and no callout menu. */
+.rail[data-orientation="vertical"] .item {
+  touch-action: pan-x;
+  -webkit-touch-callout: none;
+}
+
+.rail[data-orientation="horizontal"] .item {
+  touch-action: pan-y;
+  -webkit-touch-callout: none;
+}
+
+/* The shared tooltip. Base UI places the positioner; once it's on screen it
+   glides to each new item, and the popup's width eases to the new label. */
+.positioner {
+  z-index: 60;
+  /* While it resizes, Base UI lifts the popup out of flow; these keep the box. */
+  width: var(--positioner-width);
+  height: var(--positioner-height);
+  max-width: var(--available-width);
+}
+
+.positioner[data-glide] {
+  transition:
+    top var(--ui-dur-glide) var(--ui-ease-glide),
+    left var(--ui-dur-glide) var(--ui-ease-glide),
+    right var(--ui-dur-glide) var(--ui-ease-glide),
+    bottom var(--ui-dur-glide) var(--ui-ease-glide),
+    transform var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+.tooltip {
+  position: relative;
+  box-sizing: border-box;
+  width: var(--popup-width, auto);
+  height: var(--popup-height, auto);
+  max-width: min(280px, calc(100vw - 16px));
+  overflow: clip;
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-ink);
+  box-shadow: var(--ui-shadow-raised);
+  color: var(--ui-on-ink);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
+  transform-origin: var(--transform-origin);
+  opacity: 1;
+  scale: 1;
+  filter: none;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-fast) var(--ui-ease-enter),
+    filter var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.positioner[data-glide] .tooltip {
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-fast) var(--ui-ease-enter),
+    filter var(--ui-dur-fast) var(--ui-ease-enter),
+    width var(--ui-dur-glide) var(--ui-ease-glide),
+    height var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+.tooltip[data-starting-style],
+.tooltip[data-ending-style] {
+  opacity: 0;
+  scale: 0.97;
+  filter: blur(2px);
+}
+
+.tooltip[data-ending-style] {
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    scale var(--ui-dur-instant) var(--ui-ease-exit),
+    filter var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+/* Warm (back within 300ms) or opened by focus: it's simply there. */
+.tooltip[data-instant]:is([data-starting-style], [data-ending-style]) {
+  transition-duration: 0s;
+}
+
+.viewport {
+  position: relative;
+  padding: var(--ui-space-1) var(--ui-space-2);
+}
+
+.viewport > [data-previous] {
+  top: var(--ui-space-1);
+  left: var(--ui-space-2);
+}
+
+/* The label crossfades, offset half a beat, and rolls a few px the way the tooltip travelled. */
+.viewport > [data-current] {
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) 60ms,
+    translate var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+.viewport > [data-previous] {
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    translate var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+.viewport > [data-current][data-starting-style],
+.viewport > [data-previous][data-ending-style] {
+  opacity: 0;
+}
+
+.viewport[data-activation-direction~="down"] > [data-current][data-starting-style],
+.viewport[data-activation-direction~="up"] > [data-previous][data-ending-style] {
+  translate: 0 4px;
+}
+
+.viewport[data-activation-direction~="up"] > [data-current][data-starting-style],
+.viewport[data-activation-direction~="down"] > [data-previous][data-ending-style] {
+  translate: 0 -4px;
+}
+
+.viewport[data-activation-direction~="right"] > [data-current][data-starting-style],
+.viewport[data-activation-direction~="left"] > [data-previous][data-ending-style] {
+  translate: 4px 0;
+}
+
+.viewport[data-activation-direction~="left"] > [data-current][data-starting-style],
+.viewport[data-activation-direction~="right"] > [data-previous][data-ending-style] {
+  translate: -4px 0;
+}
+
+.tip {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-2);
+}
+
+.tipLabel {
+  composes: wrap from "../text/text.module.css";
+  min-width: 0;
+}
+
+/* No keyboard, no shortcut: a long press on a phone shows only the name. */
+@media (hover: none) {
+  .tip .tipKbd {
+    display: none;
+  }
+}
+
+.tipKbd {
+  flex-shrink: 0;
+  color: var(--ui-on-ink-muted);
+  line-height: var(--ui-leading-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .positioner[data-glide],
+  .positioner[data-glide] .tooltip {
+    transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
+  }
+  .tooltip[data-starting-style],
+  .tooltip[data-ending-style] {
+    scale: none;
+    filter: none;
+  }
+  .viewport > [data-current],
+  .viewport > [data-previous] {
+    translate: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .item[data-current] {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+  .tooltip {
+    border: 1px solid CanvasText;
+  }
+}

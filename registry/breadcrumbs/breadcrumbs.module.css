@@ -1,0 +1,168 @@
+.root {
+  --crumb-pad: 6px;
+  --breadcrumbs-label-max: 20em;
+  --ui-icon-stroke: calc(var(--ui-icon-stroke-regular) * 16 / 14);
+
+  min-width: 0;
+  color: var(--ui-muted);
+  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: var(--ui-space-1);
+  margin: 0;
+  margin-inline-start: calc(var(--crumb-pad) * -1);
+  padding: 0;
+  list-style: none;
+}
+
+/* translate is set by the component's FLIP when the fold opens. */
+.item {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  transition:
+    translate var(--ui-dur-move) var(--ui-ease-move),
+    opacity var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@starting-style {
+  .root[data-ready] .item {
+    opacity: 0;
+  }
+}
+
+.crumb {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 24px;
+  padding: 3px var(--crumb-pad);
+  border-radius: var(--ui-radius-full);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+a.crumb {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (hover: hover) {
+  a.crumb:hover {
+    background: var(--ui-fill);
+    color: var(--ui-foreground);
+  }
+}
+
+a.crumb:active {
+  background: var(--ui-fill-strong);
+  color: var(--ui-foreground);
+  transition-duration: var(--ui-dur-press);
+}
+
+a.crumb:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+  color: var(--ui-foreground);
+}
+
+.crumb[aria-current] {
+  color: var(--ui-foreground);
+  font-weight: var(--ui-weight-medium);
+}
+
+.label {
+  /* One line per crumb: a label longer than this fades at its end, and the
+     full label shows on hover (Label sets the title only when it's cut). */
+  composes: truncate from "../text/text.module.css";
+  max-inline-size: var(--breadcrumbs-label-max);
+}
+
+.label[data-cut] {
+  mask-image: linear-gradient(to left, transparent, #000 24px);
+}
+
+:is([dir="rtl"]) .label[data-cut] {
+  mask-image: linear-gradient(to right, transparent, #000 24px);
+}
+
+.item .separator {
+  width: 14px;
+  height: 14px;
+  color: var(--ui-subtle);
+}
+
+:is([dir="rtl"]) .item .separator {
+  scale: -1 1;
+}
+
+/* ---------- The fold ---------- */
+
+.more {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 32px;
+  height: 24px;
+  margin: 0;
+  padding: 0 var(--crumb-pad);
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: var(--ui-weight-medium);
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .more:hover {
+    background: var(--ui-fill);
+    color: var(--ui-foreground);
+  }
+}
+
+.more:active {
+  background: var(--ui-fill-strong);
+  color: var(--ui-foreground);
+  transition-duration: var(--ui-dur-press);
+}
+
+.more:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+  color: var(--ui-foreground);
+}
+
+/* Wider row gap so the enlarged touch targets on wrapped lines don't overlap. */
+@media (pointer: coarse) {
+  .list {
+    row-gap: var(--ui-space-4);
+  }
+  :is(a.crumb, .more)::after {
+    content: "";
+    position: absolute;
+    inset: -8px -4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    transition: none;
+  }
+}

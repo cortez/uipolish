@@ -1,0 +1,13 @@
+{
+  "name": "message-thread",
+  "title": "Message thread",
+  "summary": "Chat transcript that fades in only the newly streamed words. It stays pinned to the bottom until you scroll up and announces each reply once it ends.",
+  "kit": "agent",
+  "version": "0.2.11",
+  "dependencies": [
+    "button",
+    "icons",
+    "text-morph",
+    "text"
+  ]
+}

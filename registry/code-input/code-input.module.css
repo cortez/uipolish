@@ -1,0 +1,498 @@
+.root {
+  display: grid;
+  /* The parent's width, never the boxes', so the row can shrink into it. */
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: start;
+  min-width: 0;
+  gap: var(--ui-space-2);
+  font-family: var(--ui-font-sans);
+}
+
+/* Focused only while it's a pill, so focus has somewhere to stay; the pill shows the state. */
+.root:focus {
+  outline: none;
+}
+
+.label {
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+/* The boxes and the pill share one cell; the boxes stay in flow, so the row
+   keeps its size whatever the pill does. */
+.stage {
+  position: relative;
+  display: grid;
+  /* A column the stage's width, not the boxes' widest: the stage is as wide
+     as the boxes when there's room and the boxes narrow when there isn't. */
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 100%;
+}
+
+.boxes {
+  --code-box-width: 44px;
+  --code-box-min: 24px;
+  --code-gap: var(--ui-space-2);
+  --code-group-gap: var(--ui-space-5);
+  --code-dot: 4px;
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  gap: var(--code-gap);
+}
+
+/* Between groups: a dot in a wider gap, so 123 · 456 reads the way it's said. */
+.separator {
+  flex: none;
+  width: var(--code-dot);
+  height: var(--code-dot);
+  margin-inline: calc((var(--code-group-gap) - 2 * var(--code-gap) - var(--code-dot)) / 2);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-muted);
+  opacity: 0.6;
+  transition: opacity var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+.root[data-phase="verifying"] .separator,
+.root[data-phase="success"] .separator {
+  opacity: 0;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-exit);
+}
+
+.root[data-disabled] .separator {
+  opacity: 0.3;
+}
+
+/* Registered so the edge color and its mix toward danger transition separately. */
+@property --code-edge {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+/* The drawn caret's ink, registered so it can blink. */
+@property --code-caret {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --code-danger {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+.box {
+  --code-edge: var(--ui-border-strong);
+  --code-edge-width: var(--ui-hairline);
+  flex: 0 1 var(--code-box-width);
+  box-sizing: border-box;
+  width: var(--code-box-width);
+  min-width: var(--code-box-min);
+  height: var(--ui-control-lg);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  background-color: var(--ui-surface);
+  /* The caret is drawn, not the platform's: 2px, centered, the digit's height. */
+  background-image: linear-gradient(var(--code-caret), var(--code-caret));
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 2px calc(1em - 2px);
+  box-shadow: inset 0 0 0 var(--code-edge-width) color-mix(in oklch, var(--code-edge), var(--ui-danger) var(--code-danger));
+  color: var(--ui-foreground);
+  caret-color: transparent;
+  /* Must stay over 16px, below which iOS zooms the page into a field. */
+  font-family: var(--ui-font-sans);
+  font-size: 24px;
+  font-weight: var(--ui-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  line-height: 1;
+  text-align: center;
+  outline: none;
+  /* Opacity, drift and blur: the boxes coming back out of the pill. */
+  transition:
+    --code-edge var(--ui-dur-instant) var(--ui-ease-color),
+    --code-danger var(--ui-dur-fast) var(--ui-ease-color),
+    opacity var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    translate var(--ui-dur-glide) var(--ui-ease-glide),
+    filter var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+.box::selection {
+  background: var(--ui-selection);
+}
+
+.box[data-filled] {
+  /* Only the text moves, by padding inside the fixed height; the box never resizes. */
+  animation: code-char var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@keyframes code-char {
+  from {
+    padding-top: 4px;
+    color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .box[data-filled] {
+    animation: none;
+  }
+}
+
+@media (hover: hover) {
+  .box:hover:not(:focus, :disabled) {
+    --code-edge: var(--ui-field-focus);
+  }
+}
+
+/* The active box: its edge darkens at once and, while it's empty, a caret blinks in it. */
+.box:focus {
+  --code-edge: var(--ui-field-focus);
+  transition:
+    --code-edge 0s,
+    --code-danger var(--ui-dur-fast) var(--ui-ease-color),
+    opacity var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    translate var(--ui-dur-glide) var(--ui-ease-glide),
+    filter var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+.box:focus:not([data-filled]) {
+  --code-caret: var(--ui-foreground);
+  animation: code-caret calc(var(--ui-dur-pulse) * 2) steps(1, end) infinite;
+}
+
+@keyframes code-caret {
+  50% { --code-caret: transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .box:focus:not([data-filled]) {
+    animation: none;
+  }
+}
+
+.root[data-invalid] .box {
+  --code-danger: 100%;
+}
+
+.box:disabled {
+  opacity: 0.5;
+  cursor: default;
+  transition: none;
+}
+
+/* Set --code-message-lines when a longer error can arrive, so it never pushes the page. */
+.message {
+  display: grid;
+  min-height: calc(var(--code-message-lines, 1) * var(--ui-leading-md));
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.hint,
+.error {
+  grid-area: 1 / 1;
+  min-width: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    visibility 0s linear var(--ui-dur-instant);
+}
+
+.hint[data-shown],
+.error[data-shown] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    visibility 0s;
+}
+
+@starting-style {
+  .error[data-shown] {
+    opacity: 0;
+  }
+}
+
+/* The error comes in from the field above it: a 2px drop with a blur clearing. */
+.error[data-shown] {
+  animation: code-error-in var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+}
+
+@keyframes code-error-in {
+  from {
+    translate: 0 -2px;
+    filter: blur(2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .error[data-shown] {
+    animation: none;
+  }
+}
+
+.hint {
+  color: var(--ui-muted);
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+  color: var(--ui-danger-text);
+}
+
+.error[data-shown] .errorText {
+  animation: code-error-swap var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.error svg {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  stroke-width: var(--ui-icon-stroke-regular);
+  margin-top: calc((var(--ui-leading-md) - 14px) / 2);
+  flex-shrink: 0;
+}
+
+@keyframes code-error-swap {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .error[data-shown] .errorText {
+    animation: none;
+  }
+}
+
+/* ---------- Status: the boxes fold into a pill ---------- */
+
+/* Merging: each box drifts toward the pill's middle as it fades into it. */
+.root[data-phase="verifying"] .box,
+.root[data-phase="success"] .box {
+  opacity: 0;
+  translate: var(--code-drift, 0) 0;
+  filter: blur(2px);
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-exit),
+    translate var(--ui-dur-glide) var(--ui-ease-glide),
+    filter var(--ui-dur-fast) var(--ui-ease-exit),
+    --code-edge var(--ui-dur-instant) var(--ui-ease-color),
+    --code-danger var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+/* A short nudge on a failed code, once the boxes are back. */
+.boxes[data-nudge="0"] {
+  animation: code-nudge-a var(--ui-dur-move) var(--ui-ease-pulse);
+}
+
+.boxes[data-nudge="1"] {
+  animation: code-nudge-b var(--ui-dur-move) var(--ui-ease-pulse);
+}
+
+.boxes[data-nudge-late] {
+  animation-delay: var(--ui-dur-glide);
+}
+
+@keyframes code-nudge-a {
+  25% { translate: -4px 0; }
+  55% { translate: 3px 0; }
+  80% { translate: -1px 0; }
+}
+
+@keyframes code-nudge-b {
+  25% { translate: -4px 0; }
+  55% { translate: 3px 0; }
+  80% { translate: -1px 0; }
+}
+
+/* The pill: a quiet fill with no edge, the row's width at rest, the label's
+   when folded. Pinned to all four edges with auto margins, so it sits on the
+   row's exact center and folds toward it from both sides at once. */
+.pill {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  height: var(--ui-control-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill);
+  color: var(--ui-foreground);
+  opacity: 0;
+  pointer-events: none;
+  /* Opening back up: it widens and, once its words are gone, dissolves into the returning boxes. */
+  transition:
+    width var(--ui-dur-glide) var(--ui-ease-glide),
+    opacity var(--ui-dur-base) var(--ui-ease-color) var(--ui-dur-instant);
+}
+
+.root[data-phase="verifying"] .pill,
+.root[data-phase="success"] .pill {
+  width: var(--code-pill-width, max-content);
+  opacity: 1;
+  transition:
+    width var(--ui-dur-glide) var(--ui-ease-glide),
+    opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.pillContent {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ui-space-2);
+  /* Even on both sides, so the glyph and words sit on the pill's center. */
+  padding-inline: var(--ui-space-4);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+  letter-spacing: var(--ui-tracking-control);
+  white-space: nowrap;
+  opacity: 0;
+  filter: blur(2px);
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    filter var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.root[data-phase="verifying"] .pillContent,
+.root[data-phase="success"] .pillContent {
+  opacity: 1;
+  filter: none;
+  transition:
+    opacity var(--ui-dur-base) var(--ui-ease-enter) var(--ui-dur-instant),
+    filter var(--ui-dur-base) var(--ui-ease-enter) var(--ui-dur-instant);
+}
+
+/* Muted while checking; full ink once it's done. No other color. */
+.pillText {
+  color: var(--ui-muted);
+  transition: color var(--ui-dur-base) var(--ui-ease-color);
+}
+
+.root[data-phase="success"] .pillText {
+  color: var(--ui-foreground);
+}
+
+/* A ring with a breathing dot while checking; the dot gives way to a drawn check. */
+.glyph {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  flex: none;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke-medium);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ring {
+  opacity: 0.4;
+  transition: opacity var(--ui-dur-base) var(--ui-ease-color);
+}
+
+.root[data-phase="success"] .ring {
+  opacity: 1;
+}
+
+.dot {
+  fill: currentColor;
+  stroke: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  scale: 0.6;
+  transition:
+    scale var(--ui-dur-instant) var(--ui-ease-exit),
+    opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.root[data-phase="verifying"] .dot {
+  animation: code-breathe var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;
+}
+
+.root[data-phase="success"] .dot {
+  scale: 0;
+  opacity: 0;
+}
+
+@keyframes code-breathe {
+  from { scale: 0.5; }
+  to { scale: 1; }
+}
+
+.check {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.root[data-phase="success"] .check {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--ui-dur-base) var(--ui-ease-draw) calc(var(--ui-dur-instant) / 2);
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+/* Reduced motion: the same states, by fades alone. */
+@media (prefers-reduced-motion: reduce) {
+  .root[data-phase] .box {
+    translate: none;
+    filter: none;
+  }
+
+  .boxes[data-nudge] {
+    animation: none;
+  }
+
+  /* The pill takes its width while unseen: at once on the way in, after its fade on the way out. */
+  .pill {
+    transition:
+      opacity var(--ui-dur-fast) var(--ui-ease-color),
+      width 0s linear var(--ui-dur-fast);
+  }
+
+  .root[data-phase="verifying"] .pill,
+  .root[data-phase="success"] .pill {
+    transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+  }
+
+  .pillContent,
+  .root[data-phase] .pillContent {
+    filter: none;
+  }
+
+  .root[data-phase] .dot {
+    animation: none;
+  }
+
+  .root[data-phase] .check {
+    transition-property: opacity;
+  }
+}
+
+/* Selected for retyping after a failed code: every digit, as one selection, while focus is here. */
+.boxes:focus-within .box[data-replacing] {
+  background: color-mix(in oklch, var(--ui-selection), var(--ui-surface));
+}
+
+.box[data-replacing]::selection {
+  background: transparent;
+}

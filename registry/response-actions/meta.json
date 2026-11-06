@@ -1,0 +1,11 @@
+{
+  "name": "response-actions",
+  "title": "Response actions",
+  "summary": "The row under an assistant reply: copy, thumbs up and down, and retry. A thumbs down can open a “What went wrong?” field in place.",
+  "version": "0.1.5",
+  "dependencies": [
+    "icons",
+    "tooltip",
+    "text"
+  ]
+}

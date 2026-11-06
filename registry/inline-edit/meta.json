@@ -1,0 +1,10 @@
+{
+  "name": "inline-edit",
+  "title": "Inline edit",
+  "summary": "Text that becomes an input where it stands, in the same font and the same place, so not a letter moves. Enter saves, Escape restores, and an error keeps you editing.",
+  "version": "0.1.0",
+  "dependencies": [
+    "field",
+    "icons"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "usage-meter",
+  "title": "Usage meter",
+  "summary": "How much of an agent’s context window or spending budget is used, as a ring and a percentage in the composer toolbar. Opens to a breakdown, warns before the limit and offers to compact.",
+  "kit": "agent",
+  "version": "0.2.5",
+  "dependencies": [
+    "animated-size",
+    "button",
+    "icons",
+    "popover",
+    "text",
+    "text-morph"
+  ]
+}

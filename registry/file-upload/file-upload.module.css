@@ -1,0 +1,368 @@
+.root {
+  composes: field from "../field/field.module.css";
+  --upload-height: 248px;
+  interpolate-size: allow-keywords;
+}
+
+.label {
+  composes: label from "../field/field.module.css";
+}
+
+.zone {
+  --zone-pad: var(--ui-space-1);
+  --row-height: calc(var(--ui-control-md) + var(--ui-space-4));
+  --badge-size: var(--ui-control-md);
+  --row-inset: calc((var(--row-height) - var(--badge-size)) / 2);
+  --item-radius: calc(var(--inner-radius) - var(--row-inset));
+  --inner-radius: calc(var(--ui-radius-lg) - var(--zone-pad));
+  --zone-bg: var(--ui-canvas);
+  --zone-edge: var(--ui-border-strong);
+  position: relative;
+  display: grid;
+  /* minmax(0, …) so long names truncate instead of widening the well. */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 1fr;
+  height: var(--upload-height);
+  padding: var(--zone-pad);
+  border-radius: var(--ui-radius-lg);
+  background: var(--zone-bg);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--zone-edge);
+  font-family: var(--ui-font-sans);
+  transition:
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.zone[data-has] {
+  grid-template-rows: minmax(0, 1fr) auto;
+  --zone-bg: var(--ui-surface);
+}
+
+/* The empty well answers the pointer like a field: its edge darkens, and
+   nothing fills or shrinks. A press needs no state of its own; the picker
+   opening is the answer. */
+@media (hover: hover) {
+  .zone:not([data-has], [data-disabled], [data-dragging]):has(.browse:hover) {
+    --zone-edge: var(--ui-field-focus);
+  }
+}
+
+/* The one state that has to read from across the screen: a file held over
+   the zone. The edge takes the focused field's color, the well tints a step,
+   and the prompt comes up to the text color. */
+.zone[data-dragging] {
+  --zone-bg: color-mix(in oklch, var(--ui-canvas), var(--ui-foreground) 5%);
+  --zone-edge: var(--ui-field-focus);
+}
+
+.zone[data-has][data-dragging] {
+  --zone-bg: var(--ui-fill-solid);
+}
+
+.zone[data-disabled] {
+  opacity: 0.5;
+}
+
+.input {
+  display: none;
+}
+
+/* ---------- Browse ---------- */
+
+.browse {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-2);
+  min-height: 0;
+  padding: var(--ui-space-4);
+  border: 0;
+  border-radius: var(--inner-radius);
+  background: none;
+  color: var(--ui-foreground);
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.zone[data-has] .browse {
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: var(--ui-space-3);
+  min-height: var(--row-height);
+  padding: 0 var(--row-inset);
+  text-align: start;
+  color: var(--ui-muted);
+}
+
+.zone[data-has] .browse::after {
+  content: "";
+  position: absolute;
+  inset: 0 var(--row-inset) auto;
+  height: var(--ui-hairline);
+  background: var(--ui-border);
+}
+
+/* The "Add more files" bar is a row in a list, so it takes a row's hover:
+   the text comes up to the text color. No fill, and no press state. */
+@media (hover: hover) {
+  .zone[data-has] .browse:hover:not(:disabled) {
+    color: var(--ui-foreground);
+  }
+}
+
+.zone[data-dragging] .browse,
+.zone[data-dragging] .mark {
+  color: var(--ui-foreground);
+}
+
+.browse:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.browse:disabled {
+  cursor: default;
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  color: var(--ui-muted);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.zone[data-has] .mark {
+  flex-shrink: 0;
+  width: var(--badge-size);
+  color: inherit;
+}
+
+.prompt {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.zone[data-has] .prompt {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+}
+
+.zone[data-has] .action {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Visually hidden, not removed: the button uses them as its description. */
+.zone[data-has] .constraints {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.action {
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.constraints {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.constraints:empty {
+  display: none;
+}
+
+/* ---------- Files ---------- */
+
+.scroll {
+  min-height: 0;
+  border-radius: var(--inner-radius);
+}
+
+.list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  height: var(--row-height);
+  padding-inline: var(--row-inset);
+  overflow: hidden;
+  border-radius: var(--inner-radius);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  animation: upload-row-in var(--ui-dur-base) var(--ui-ease-enter);
+}
+
+.row + .row::after {
+  content: "";
+  position: absolute;
+  inset: 0 var(--row-inset) auto calc(var(--row-inset) + var(--badge-size) + var(--ui-space-3));
+  height: var(--ui-hairline);
+  background: var(--ui-border);
+}
+
+.row > * {
+  position: relative;
+}
+
+/* Clipped, not scaled, so its corners keep the row's radius. */
+.wash {
+  position: absolute !important;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--ui-fill);
+  clip-path: inset(0 calc((1 - var(--progress)) * 100%) 0 0);
+  transition:
+    clip-path var(--ui-dur-move) var(--ui-ease-move),
+    opacity var(--ui-dur-base) var(--ui-ease-color);
+}
+
+:is([dir="rtl"]) .wash {
+  clip-path: inset(0 0 0 calc((1 - var(--progress)) * 100%));
+}
+
+.row[data-status="done"] .wash {
+  opacity: 0;
+  transition-delay: 0s, var(--ui-dur-move);
+}
+
+.row:is([data-status="failed"], [data-status="rejected"]) .wash {
+  background: var(--ui-danger-tint);
+}
+
+.row[data-status="rejected"] .wash {
+  clip-path: none;
+}
+
+.row[data-leaving] {
+  animation:
+    upload-row-fade var(--ui-dur-instant) var(--ui-ease-exit) forwards,
+    upload-row-close var(--ui-dur-base) var(--ui-ease-collapse) var(--ui-dur-instant) forwards;
+}
+
+@keyframes upload-row-in {
+  from {
+    opacity: 0;
+    translate: 0 4px;
+  }
+}
+
+@keyframes upload-row-fade {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes upload-row-close {
+  to {
+    height: 0;
+  }
+}
+
+.badge {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--badge-size);
+  height: var(--badge-size);
+  border-radius: var(--item-radius);
+  background: var(--ui-fill);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: 1;
+}
+
+.row[data-status="done"] .badge {
+  color: var(--ui-foreground);
+}
+
+.row:is([data-status="failed"], [data-status="rejected"]) .badge {
+  background: var(--ui-danger-tint);
+  color: var(--ui-danger-text);
+}
+
+.text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  composes: wrap from "../text/text.module.css";
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.meta {
+  overflow: hidden;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  overflow-wrap: anywhere;
+}
+
+.row[data-status="uploading"] .meta {
+  font-variant-numeric: tabular-nums;
+}
+
+.row:is([data-status="failed"], [data-status="rejected"]) .meta {
+  color: var(--ui-danger-text);
+}
+
+/* Room for retry is kept on every row, so a failure moves nothing. */
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: flex-end;
+  gap: 2px;
+  width: calc(var(--badge-size) * 2 + 2px);
+}
+
+.icon {
+  composes: inset from "../field/field.module.css";
+}
+
+/* Doubled so it outranks the inset rule in any stylesheet order. */
+.icon.icon {
+  width: var(--badge-size);
+  height: var(--badge-size);
+  border-radius: var(--item-radius);
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .row[data-leaving] {
+    animation: none;
+  }
+  .wash {
+    transition: none;
+  }
+}

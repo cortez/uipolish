@@ -1,0 +1,265 @@
+/* ---------- Trigger ---------- */
+
+.trigger {
+  --trigger-pad-start: 14px;
+  --trigger-pad-end: 10px;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: var(--ui-control-sm);
+  padding: 0 var(--trigger-pad-end) 0 var(--trigger-pad-start);
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: none;
+  color: var(--ui-muted);
+  isolation: isolate;
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    width var(--ui-dur-move) var(--ui-ease-move),
+    color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* No press scale: the list is anchored to the trigger's real box. */
+.trigger::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: transparent;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .trigger:hover:not(:disabled) {
+    color: var(--ui-foreground);
+  }
+  .trigger:hover:not(:disabled)::before {
+    background: var(--ui-fill);
+  }
+}
+
+.trigger[aria-expanded="true"] {
+  color: var(--ui-foreground);
+}
+
+.trigger[aria-expanded="true"]::before {
+  background: var(--ui-fill);
+}
+
+.trigger:active:not(:disabled)::before {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+.trigger:focus-visible:not([data-pointer-focus]) {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.trigger:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.content {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Must keep the trigger's padding, since its width becomes the trigger's. */
+.measure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0 var(--trigger-pad-end) 0 var(--trigger-pad-start);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.chevron {
+  display: inline-block;
+  flex-shrink: 0;
+  width: var(--ui-icon-chevron);
+  height: var(--ui-icon-chevron);
+  color: var(--ui-subtle);
+}
+
+@media (pointer: coarse) {
+  .trigger::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+}
+
+/* ---------- List ---------- */
+
+/* Base UI's Positioner places this element; .surface animates inside it. */
+.positioner {
+  z-index: 50;
+  min-width: 240px;
+  max-width: min(300px, calc(100vw - 16px));
+  outline: none;
+}
+
+.surface {
+  position: relative;
+  box-sizing: border-box;
+  max-height: min(calc(100dvh - 16px), var(--available-height, 100dvh));
+  /* Rows sit one inset in and take the concentric radius: rounded, not pills. */
+  --menu-inset: var(--ui-inset-menu);
+  --menu-row-radius: calc(var(--ui-radius-lg) - var(--menu-inset));
+  padding: var(--menu-inset);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-floating);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  user-select: none;
+  outline: none;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  transform-origin: var(--transform-origin);
+  opacity: 1;
+  scale: 1;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.surface[data-starting-style],
+.surface[data-ending-style] {
+  opacity: 0;
+  scale: 0.97;
+}
+
+.surface[data-ending-style] {
+  transition-duration: var(--ui-dur-instant);
+  transition-timing-function: var(--ui-ease-exit);
+}
+
+.highlight {
+  position: absolute;
+  top: 0;
+  left: var(--menu-inset);
+  right: var(--menu-inset);
+  border-radius: var(--menu-row-radius);
+  background: var(--ui-fill-strong);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    translate var(--ui-dur-snap) var(--ui-ease-snap),
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.highlight[data-visible] {
+  opacity: 1;
+}
+
+.highlight[data-jump] {
+  transition-property: opacity, background-color;
+}
+
+.surface:has(.option:active:not([data-disabled])) > .highlight {
+  background: color-mix(in oklch, var(--ui-foreground) 16%, transparent);
+  transition-duration: var(--ui-dur-press);
+}
+
+.option {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-2) var(--ui-pad-row);
+  border-radius: var(--menu-row-radius);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.option {
+  outline: none;
+}
+
+.option[data-disabled] {
+  cursor: default;
+}
+
+.option[data-disabled] .name {
+  color: var(--ui-subtle);
+}
+
+.text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-weight: var(--ui-weight-medium);
+}
+
+.description {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.check {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: calc((var(--ui-leading-md) - 16px) / 2);
+  stroke-width: var(--ui-icon-stroke);
+  overflow: visible;
+}
+
+/* With pathLength 1, offset 1.3 hides the stroke including its round cap. */
+.check path {
+  stroke-dasharray: 1 3;
+  stroke-dashoffset: 1.3;
+  transition: stroke-dashoffset var(--ui-dur-fast) var(--ui-ease-exit);
+}
+
+.check[data-drawn] path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--ui-dur-base) var(--ui-ease-draw);
+}
+
+@media (pointer: coarse) {
+  .option {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trigger {
+    transition-property: color;
+  }
+  .surface {
+    transition: none;
+  }
+  .surface[data-starting-style],
+  .surface[data-ending-style] {
+    scale: none;
+  }
+  .highlight {
+    transition-property: opacity, background-color;
+  }
+  .check path,
+  .check[data-drawn] path {
+    transition: none;
+  }
+}

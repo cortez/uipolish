@@ -1,0 +1,9 @@
+{
+  "name": "badge",
+  "title": "Badge",
+  "summary": "A static label for a status or a count, exactly as tall as the line it sits in. Counts are round for one digit and set in equal-width figures.",
+  "version": "0.2.0",
+  "dependencies": [
+    "text"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "tooltip",
+  "title": "Tooltip",
+  "summary": "Short hint that opens after a pause, then instantly as you move between triggers. Keyboard focus opens it at once.",
+  "version": "0.2.1",
+  "dependencies": [],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

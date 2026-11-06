@@ -1,0 +1,887 @@
+/* The geometry every part reads, on the sidebar and on its phone drawer.
+   Rows are 32px, Tabs' height; collapsed, each is a 44px icon capsule (the
+   capsule ratio of a 32px button), so the rail is that plus the padding on
+   both sides. Content starts --sidebar-inset into a row: where a 16px icon
+   sits centered in the capsule, so icons don't move as the sidebar folds. */
+.vars {
+  --sidebar-width: 264px;
+  --sidebar-pad: var(--ui-space-2);
+  --sidebar-row: var(--ui-control-sm);
+  --sidebar-capsule: calc(var(--sidebar-row) * var(--ui-capsule));
+  --sidebar-rail: calc(var(--sidebar-capsule) + var(--sidebar-pad) * 2);
+  --sidebar-inset: calc((var(--sidebar-capsule) - 16px) / 2);
+  --sidebar-more: calc(24px * var(--ui-capsule));
+  --sidebar-bg: var(--ui-canvas);
+  /* Opaque versions of the row fills, so the collapsed count can cut out of them. */
+  --sidebar-bg-current: color-mix(in oklch, var(--ui-foreground) 8%, var(--sidebar-bg));
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+/* A finger gets 40px rows; collapsed, that's Nav rail's 55px capsule. */
+@media (pointer: coarse) {
+  .vars {
+    --sidebar-row: var(--ui-control-md);
+  }
+}
+
+/* ---------- Frame ---------- */
+
+/* On the canvas, one step under the page beside it: the change of surface is
+   the edge, as in Chat app. Its width glides between the full sidebar and the
+   rail; the parent lays it out in a row (flex or grid, `auto` column). */
+.sidebar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: var(--sidebar-width);
+  height: 100%;
+  min-height: 0;
+  overflow: clip;
+  background: var(--sidebar-bg);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+  transition: width var(--ui-dur-panel) var(--ui-ease-expand);
+}
+
+.sidebar[data-collapsed] {
+  width: var(--sidebar-rail);
+  transition-duration: var(--ui-dur-base);
+  transition-timing-function: var(--ui-ease-collapse);
+}
+
+/* On a phone it's a drawer instead; hidden here from the first paint. */
+@media (max-width: 767px) {
+  .sidebar {
+    display: none;
+  }
+}
+
+.header {
+  padding: var(--ui-space-2) var(--sidebar-pad) 0;
+}
+
+.footer {
+  padding: var(--ui-space-2) var(--sidebar-pad);
+}
+
+/* Labels leave fast as the sidebar folds, and arrive half a beat after it
+   starts to open, so text is never read mid-move. Icons hold still. */
+.label,
+.trailing,
+.chevron,
+.menuText,
+.scrollWrap {
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) var(--ui-dur-instant);
+}
+
+.sidebar[data-collapsed] :is(.label, .trailing, .chevron, .menuText) {
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.sidebar[data-collapsed] .scrollWrap {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    visibility 0s linear var(--ui-dur-instant);
+}
+
+/* ---------- Nav ---------- */
+
+.nav {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.primary,
+.list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.primary {
+  padding: var(--ui-space-2) var(--sidebar-pad) 0;
+}
+
+.cell {
+  display: grid;
+  min-width: 0;
+}
+
+.scrollWrap {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  margin-block-start: var(--ui-space-3);
+}
+
+.scroll {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Held at the open width, so nothing rewraps while the sidebar folds over it. */
+.more {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ui-space-4);
+  box-sizing: border-box;
+  min-width: calc(var(--sidebar-width) - var(--scroll-area-bar, 0px));
+  padding: 0 var(--sidebar-pad) var(--ui-space-4);
+}
+
+/* ---------- The pill ---------- */
+
+/* Only on screen while it flies between rows; at rest the current row
+   paints the same flat pill itself. */
+.pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-track-pill);
+  contain: layout style size;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.nav[data-flying] > .pill {
+  visibility: visible;
+}
+
+/* ---------- Rows ---------- */
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: var(--sidebar-row);
+  margin: 0;
+  padding: 0 var(--sidebar-inset);
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  /* Rows rest in the muted text color; hover brings the row up to the text
+     color, as Nav rail's items do: no fill. Only the current row has one. */
+  color: var(--ui-muted);
+  font: var(--ui-weight-medium) var(--ui-text-md) / 1 var(--ui-font-sans);
+  text-align: start;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .row:hover,
+  .recentItem:hover .row {
+    color: var(--ui-foreground);
+  }
+}
+
+/* The current item: Tabs' flat pill, the same fill, no edge, no shadow. */
+.row[data-current] {
+  background: var(--ui-track-pill);
+  color: var(--ui-foreground);
+}
+
+.nav[data-flying] .row[data-current] {
+  background: transparent;
+}
+
+/* The pill hands off without a fade: the row it leaves clears at once
+   (no second, fading pill behind the flying one) and the row it lands on
+   paints at once (no blink as the flying pill hides). Hover keeps its
+   fade on every other row. */
+.row[data-current],
+.nav[data-flying] .row {
+  transition: none;
+}
+
+.row:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.row[data-nested] {
+  padding-inline-start: calc(var(--sidebar-inset) + 16px + var(--ui-space-2));
+  font-weight: var(--ui-weight-regular);
+}
+
+.icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  color: var(--ui-muted);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.icon > svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+}
+
+.row[data-current] .icon {
+  color: var(--ui-foreground);
+}
+
+@media (hover: hover) {
+  .row:hover .icon {
+    color: var(--ui-foreground);
+  }
+}
+
+.label {
+  composes: truncate from "../text/text.module.css";
+  flex: 1;
+}
+
+.trailing {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  margin-inline-start: auto;
+}
+
+/* A row's detail ("Away"): quiet, in the recent list's meta type. */
+.detail {
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-regular);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+}
+
+/* The shortcut is a hint: it shows on hover and focus, and stays in the
+   collapsed rail's tooltip. */
+.kbd {
+  color: var(--ui-subtle);
+  font-weight: var(--ui-weight-regular);
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.row:focus-visible .kbd {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .row:hover .kbd {
+    opacity: 1;
+  }
+}
+
+.count,
+.corner {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-width: 18px;
+  height: 18px;
+  padding-inline: 5px;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-accent);
+  color: var(--ui-on-accent);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Collapsed, the count sits at the icon's top right, as on Nav rail, cut
+   out of the glyph by a ring of whatever is behind it. */
+.corner {
+  position: absolute;
+  top: calc(var(--sidebar-row) / 2 - 16px);
+  inset-inline-start: calc(var(--sidebar-inset) + 10px);
+  box-shadow: 0 0 0 var(--ui-knockout) var(--sidebar-bg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.row[data-current] .corner {
+  box-shadow: 0 0 0 var(--ui-knockout) var(--sidebar-bg-current);
+}
+
+.sidebar[data-collapsed] .corner {
+  opacity: 1;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) var(--ui-dur-instant);
+}
+
+/* Disclosure chevrons rest muted and come up to the text color with their row. */
+.chevron {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  color: var(--ui-muted);
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) var(--ui-dur-instant),
+    color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* A group heading is 13px text: its chevron is the sm icon. */
+.headingButton .chevron {
+  width: var(--ui-icon-chevron);
+  height: var(--ui-icon-chevron);
+}
+
+@media (hover: hover) {
+  :is(.row, .headingButton, .menuButton):hover .chevron {
+    color: var(--ui-foreground);
+  }
+}
+
+/* ---------- Folding ---------- */
+
+.fold {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse);
+}
+
+.fold[data-open] {
+  grid-template-rows: 1fr;
+  transition: grid-template-rows var(--ui-dur-panel) var(--ui-ease-expand);
+}
+
+.foldInner {
+  display: grid;
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.fold[data-open] > .foldInner {
+  opacity: 1;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+/* The rows inside start 2px below the group's row, as between any two rows. */
+.fold > .foldInner > .list {
+  padding-block-start: 2px;
+}
+
+/* ---------- Sections ---------- */
+
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}
+
+.heading {
+  margin: 0;
+  font: inherit;
+}
+
+.headingText,
+.headingButton {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--sidebar-row);
+  padding: 0 var(--sidebar-inset);
+  color: var(--ui-muted);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+}
+
+.headingButton {
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  text-align: start;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .headingButton:hover {
+    color: var(--ui-foreground);
+  }
+}
+
+.headingButton:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.headingLabel {
+  composes: truncate from "../text/text.module.css";
+}
+
+/* ---------- Recent ---------- */
+
+.recentItem {
+  display: grid;
+  grid-template-rows: 1fr;
+  min-width: 0;
+}
+
+.recentInner {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* A removed chat fades on the press, then its space folds. */
+.recentItem[data-state="leave"] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse) var(--ui-dur-instant);
+}
+
+.recentItem[data-state="leave"] > .recentInner {
+  overflow: hidden;
+}
+
+/* A chat that arrives (a new one, one just pinned) opens its space and fades in. */
+.recentItem[data-state="enter"] {
+  animation: recent-open var(--ui-dur-panel) var(--ui-ease-expand);
+}
+
+.recentItem[data-state="enter"] > .recentInner {
+  overflow: hidden;
+  animation: recent-in var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+}
+
+@keyframes recent-open {
+  from {
+    grid-template-rows: 0fr;
+  }
+}
+
+@keyframes recent-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.row[data-kind="recent"] {
+  font-weight: var(--ui-weight-regular);
+  font-size: var(--ui-text-sm);
+}
+
+/* One line, faded at the end when cut; the whole title is in `title`. */
+.recentTitle {
+  composes: truncate from "../text/text.module.css";
+  flex: 1;
+  line-height: var(--ui-leading-sm);
+}
+
+/* Names and titles are people's own words and take their own direction
+   (dir="auto"); they line up with the sidebar's start either way. Set from
+   the measured direction: `:dir()` doesn't survive every CSS build. */
+.recentTitle,
+.menuName,
+.menuDetail,
+.renameInput {
+  text-align: left;
+}
+
+[data-rtl] :is(.recentTitle, .menuName, .menuDetail, .renameInput) {
+  text-align: right;
+}
+
+/* Room for the "…" while it shows, so the title fades out before it. */
+.recentItem[data-actions]:is(:hover, :focus-within, [data-menu-open]) .row,
+.recentItem[data-actions] .row[data-current] {
+  padding-inline-end: calc(var(--sidebar-more) + 8px);
+}
+
+@media (hover: none), (pointer: coarse) {
+  .recentItem[data-actions] .row {
+    padding-inline-end: calc(var(--sidebar-more) + 8px);
+  }
+  /* The "…" is always there on touch, so it keeps the end. */
+  .recentItem[data-actions] .recentMeta {
+    display: none;
+  }
+  .recentItem[data-actions][data-meta]:is(:hover, :focus-within, [data-menu-open]) .row,
+  .recentItem[data-actions][data-meta] .row[data-current] {
+    padding-inline-end: calc(var(--sidebar-more) + 8px);
+  }
+}
+
+/* Meta at the row's end (a time, faces): subtle, figures of equal width,
+   at least as wide as the "…", which takes its place on hover, focus, the
+   current row and while the menu is open. The row keeps its padding, so
+   the title never moves when the two swap. */
+.recentMeta {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ui-gap-tight);
+  min-width: var(--sidebar-more);
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  font-variant-numeric: tabular-nums;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.recentItem[data-meta]:is(:hover, :focus-within, [data-menu-open]) .row,
+.recentItem[data-meta] .row[data-current] {
+  padding-inline-end: var(--sidebar-inset);
+}
+
+.recentItem[data-actions]:is(:hover, :focus-within, [data-menu-open]) .recentMeta,
+.recentItem[data-actions] .row[data-current] .recentMeta {
+  opacity: 0;
+}
+
+/* The "…" capsule, 4px in from the row's round end, so the two are concentric.
+   It shows on hover, focus, the current row and while its menu is open;
+   always on touch. */
+.moreButton {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 4px;
+  display: grid;
+  place-items: center;
+  width: var(--sidebar-more);
+  height: 24px;
+  margin-block: auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-muted);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* 40px to a finger without changing the row. */
+.moreButton::after {
+  content: "";
+  position: absolute;
+  inset: -8px -4px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .moreButton {
+    opacity: 0;
+  }
+  .recentItem:is(:hover, :focus-within, [data-menu-open]) .moreButton,
+  .row[data-current] + .moreButton {
+    opacity: 1;
+  }
+  .moreButton:hover {
+    background: var(--ui-fill-strong);
+    color: var(--ui-foreground);
+  }
+}
+
+.recentItem[data-menu-open] .moreButton {
+  background: var(--ui-fill-strong);
+  color: var(--ui-foreground);
+}
+
+.moreButton:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.glyph {
+  flex-shrink: 0;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke, 1.5);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The title, editable where it sat: the text keeps its place in a field
+   the row's shape. */
+.rename {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.renameInput {
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--sidebar-row);
+  margin: 0;
+  padding: 0 var(--sidebar-inset);
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
+  outline: none;
+}
+
+.renameInput[aria-invalid] {
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-danger);
+}
+
+.renameBusy {
+  composes: sweep from "../text/text.module.css";
+  --sweep-dim: 0.5;
+}
+
+@media (pointer: coarse) {
+  .renameInput {
+    font-size: var(--ui-text-touch);
+  }
+}
+
+.renameError {
+  margin: 0;
+  padding: 0 var(--sidebar-inset) var(--ui-space-1);
+  color: var(--ui-danger-text);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.showAll {
+  composes: row;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+}
+
+@media (hover: hover) {
+  .showAll:hover {
+    color: var(--ui-foreground);
+  }
+}
+
+/* Empty: quiet words in the list's place, no drawing. */
+.empty {
+  display: grid;
+  gap: 2px;
+  padding: var(--ui-space-1) var(--sidebar-inset) var(--ui-space-2);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.empty > p {
+  margin: 0;
+}
+
+.emptyTitle,
+.empty > p:first-child {
+  color: var(--ui-foreground);
+  font-weight: var(--ui-weight-medium);
+}
+
+/* One bone per title, in a row of the real height. */
+.skeleton {
+  display: grid;
+  gap: 2px;
+}
+
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  height: var(--sidebar-row);
+  padding-inline: var(--sidebar-inset);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+/* ---------- Header and footer buttons ---------- */
+
+.menuButton {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: var(--ui-control-md);
+  margin: 0;
+  /* The 24px mark centers on the icon column below it. */
+  padding: 0 calc(var(--sidebar-inset) - 4px);
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-medium) var(--ui-text-md) / 1 var(--ui-font-sans);
+  letter-spacing: normal;
+  text-align: start;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .menuButton:hover {
+    background: var(--ui-fill);
+  }
+}
+
+.menuButton[data-popup-open] {
+  background: var(--ui-fill-strong);
+}
+
+.menuButton:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.media {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+}
+
+/* The mark on a round ink tile: round, so it's concentric with the button. */
+.mark {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-ink);
+  color: var(--ui-on-ink);
+}
+
+.mark > svg {
+  width: var(--ui-icon-xs);
+  height: var(--ui-icon-xs);
+}
+
+.menuText {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.menuName,
+.menuDetail {
+  composes: truncate from "../text/text.module.css";
+}
+
+.menuButton[data-kind="account"] .menuName,
+.menuDetail {
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.menuDetail {
+  color: var(--ui-muted);
+  font-weight: var(--ui-weight-regular);
+}
+
+/* As wide as the button it opens from, when that's wider than a menu. */
+.menu[role="menu"] {
+  min-width: max(var(--anchor-width, 0px), 220px);
+}
+
+/* ---------- Drawer ---------- */
+
+/* On a phone the drawer is the surface; the rows sit on it at its padding. */
+.drawer {
+  --sidebar-bg: var(--ui-surface);
+  --drawer-pad: var(--ui-space-4);
+}
+
+.drawer .primary {
+  padding: 0;
+}
+
+.drawer .more {
+  min-width: 0;
+  margin-block-start: var(--ui-space-3);
+  padding: 0;
+}
+
+/* The switcher is the drawer's title: centered on the title's line, its mark
+   on the icon column below. */
+.drawer .menuButton {
+  margin-block: calc((var(--ui-leading-2xl) - var(--ui-control-md)) / 2);
+}
+
+.drawerFooter {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---------- Toggle tooltip ---------- */
+
+.tip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--ui-space-2);
+}
+
+.tipKbd {
+  color: var(--ui-on-ink-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .sidebar[data-collapsed],
+  .fold,
+  .fold[data-open],
+  .recentItem[data-state="leave"] {
+    transition: none;
+  }
+  .label,
+  .trailing,
+  .chevron,
+  .menuText,
+  .scrollWrap,
+  .corner,
+  .sidebar[data-collapsed] :is(.label, .trailing, .chevron, .menuText, .scrollWrap, .corner) {
+    transition: none;
+  }
+  .recentItem[data-state="enter"],
+  .recentItem[data-state="enter"] > .recentInner {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .row[data-current] {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+}

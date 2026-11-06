@@ -1,0 +1,11 @@
+{
+  "name": "stat",
+  "title": "Stat",
+  "summary": "A figure with its label and a change stated by both an arrow and words. The hint always takes two lines, so tiles in a row stay level.",
+  "version": "0.1.1",
+  "dependencies": [
+    "icons",
+    "text-morph",
+    "text"
+  ]
+}

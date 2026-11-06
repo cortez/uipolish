@@ -1,0 +1,232 @@
+/* Shared field parts to compose. */
+
+.field {
+  display: grid;
+  /* The field's width, not its input's: an input's default size (about 20
+     characters) would otherwise push a narrow form sideways. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ui-space-2);
+  min-width: 0;
+  font-family: var(--ui-font-sans);
+}
+
+.label {
+  justify-self: start;
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.shell {
+  --edge: var(--ui-border-strong);
+  --edge-width: var(--ui-hairline);
+  --shell-inset: calc((var(--ui-control-md) - var(--ui-control-sm)) / 2);
+  position: relative;
+  height: var(--ui-control-md);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--edge-width) var(--edge);
+  transition: box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .shell:hover:not(:focus-within, [data-invalid], [data-disabled], [data-open]) {
+    --edge: var(--ui-field-focus);
+  }
+}
+
+.shell:focus-within,
+.shell[data-open] {
+  --edge: var(--ui-field-focus);
+  --edge-width: 1px;
+  box-shadow: inset 0 0 0 var(--edge-width) var(--edge);
+  transition-duration: 0s;
+}
+
+.shell[data-open] {
+  transition-duration: var(--ui-dur-instant);
+}
+
+.shell[data-invalid] {
+  --edge: var(--ui-danger);
+}
+
+.shell[data-disabled] {
+  opacity: 0.5;
+}
+
+.bare {
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  outline: none;
+}
+
+.bare::placeholder {
+  color: var(--ui-subtle);
+}
+
+.bare:disabled {
+  cursor: default;
+}
+
+/* iOS zooms the page into any field under 16px. */
+@media (pointer: coarse) {
+  .bare {
+    font-size: var(--ui-text-touch);
+  }
+}
+
+/* Inset button. Set its radius where it sits (outer radius less the inset). */
+.inset {
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  position: relative;
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--ui-control-sm);
+  height: var(--ui-control-sm);
+  padding: 0;
+  border: 0;
+  border-radius: calc(var(--ui-radius-md) - var(--shell-inset, 4px));
+  background: none;
+  color: var(--ui-muted);
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.inset::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.inset > * {
+  position: relative;
+}
+
+@media (hover: hover) {
+  .inset:hover:not(:disabled, [aria-disabled]) {
+    color: var(--ui-foreground);
+  }
+  .inset:hover:not(:disabled, [aria-disabled])::before {
+    background: var(--ui-fill);
+  }
+}
+
+.inset:active:not(:disabled, [aria-disabled]) {
+  color: var(--ui-foreground);
+}
+
+.inset:active:not(:disabled, [aria-disabled])::before {
+  background: var(--ui-fill-strong);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.inset:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+  color: var(--ui-foreground);
+}
+
+.inset:disabled,
+.inset[aria-disabled] {
+  cursor: default;
+}
+
+/* 32px to look at, 40px to hit. */
+@media (pointer: coarse) {
+  .inset::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+}
+
+.message {
+  display: grid;
+  min-height: var(--ui-leading-md);
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.hint,
+.error {
+  grid-area: 1 / 1;
+  min-width: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    visibility 0s linear var(--ui-dur-instant);
+}
+
+.hint[data-shown],
+.error[data-shown] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    visibility 0s;
+}
+
+@starting-style {
+  .error[data-shown] {
+    opacity: 0;
+  }
+}
+
+.hint {
+  color: var(--ui-muted);
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+  color: var(--ui-danger-text);
+}
+
+.errorIcon {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  margin-top: calc((var(--ui-leading-md) - 14px) / 2);
+  --ui-icon-stroke: calc(var(--ui-icon-stroke-regular) * 16 / 14);
+}
+
+.error[data-shown] .errorText {
+  animation: field-error-swap var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@keyframes field-error-swap {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inset:active:not(:disabled, [aria-disabled])::before {
+    scale: none;
+  }
+  .error[data-shown] .errorText {
+    animation: none;
+  }
+}

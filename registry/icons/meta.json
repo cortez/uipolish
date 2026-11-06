@@ -1,0 +1,8 @@
+{
+  "name": "icons",
+  "title": "Icons",
+  "summary": "16px stroke icons behind one <Icon name> component. When the name changes, shared strokes stay and the rest draw in or retract, with CSS transitions only.",
+  "version": "0.3.1",
+  "dependencies": [],
+  "primitive": true
+}

@@ -1,0 +1,12 @@
+{
+  "name": "slider",
+  "title": "Slider",
+  "summary": "A label row with a steady-width value over a sunken track, an accent range and a raised capsule thumb that glides to place. Base UI's slider underneath handles pointer, keyboard and touch.",
+  "version": "0.4.4",
+  "dependencies": [
+    "text-morph"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

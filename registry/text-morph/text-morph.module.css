@@ -1,0 +1,57 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  white-space: pre;
+}
+
+/* The real label, for screen readers and find-in-page. */
+.label {
+  composes: srOnly from "../text/text.module.css";
+}
+
+/* Block padding keeps descenders inside the mask. */
+@property --morph-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.row {
+  --morph-to: right;
+  position: relative;
+  display: inline-flex;
+  padding-block: 0.3em;
+  margin-block: -0.3em;
+}
+
+:is([dir="rtl"]) .row {
+  --morph-to: left;
+}
+
+.row[data-morphing] {
+  mask-image: linear-gradient(to var(--morph-to), #000 calc(100% - var(--morph-fade)), transparent);
+}
+
+/* A filter (the blur on arriving and leaving letters) paints only inside
+   the element's box, and a glyph's descender hangs below a tight line box.
+   The block padding grows each letter's box to hold its descenders; the
+   negative margin gives the room back, so nothing moves. */
+.glyph {
+  display: inline-block;
+  padding-block: 0.3em;
+  margin-block: -0.3em;
+}
+
+.ghosts {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Sits where the letter sat: the row's block padding, held as the ghost's
+   own padding so its blur has room for descenders too. */
+.ghost {
+  position: absolute;
+  top: 0;
+  padding-block: 0.3em;
+}

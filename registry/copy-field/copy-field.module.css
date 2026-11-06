@@ -1,0 +1,157 @@
+.field {
+  composes: field from "../field/field.module.css";
+  --copy-height: var(--ui-control-md);
+}
+
+.field[data-size="sm"] {
+  --copy-height: var(--ui-control-sm);
+}
+
+.field[data-size="lg"] {
+  --copy-height: var(--ui-control-lg);
+}
+
+.label {
+  composes: label from "../field/field.module.css";
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: var(--ui-space-2);
+}
+
+.row[data-action] {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.action {
+  display: flex;
+  gap: var(--ui-space-2);
+}
+
+.control {
+  composes: shell from "../field/field.module.css";
+  display: flex;
+  align-items: center;
+  height: var(--copy-height);
+  /* 14px in, where a text field's text starts, so stacked fields line up. */
+  padding-inline: calc(var(--shell-inset) + 10px) var(--shell-inset);
+}
+
+@media (hover: hover) {
+  .control:hover:not(:focus-within) {
+    --edge: var(--ui-border-strong);
+  }
+}
+
+.control:focus-within {
+  --edge: var(--ui-border-strong);
+  --edge-width: var(--ui-hairline);
+}
+
+/* One line, always: the field keeps its height and the value never wraps
+   out of it. A long value fades at its cut end; the full value is in its
+   title and copies whole. */
+.cell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  flex: 1;
+  min-width: 0;
+  margin-inline-end: var(--ui-space-2);
+}
+
+.value,
+.mask {
+  grid-area: 1 / 1;
+  /* Hidden after the fade, so it also leaves the accessibility tree. */
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    visibility 0s linear var(--ui-dur-instant);
+}
+
+.value[data-shown],
+.mask[data-shown] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    visibility 0s;
+}
+
+.value {
+  composes: truncate from "../text/text.module.css";
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  user-select: all;
+}
+
+/* Longhands, not `font`, so code keeps its ligatures off. */
+.value[data-mono] {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-sm);
+}
+
+.mask {
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--ui-muted);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  /* Nothing to select: dots copied by hand would only paste as dots. */
+  user-select: none;
+}
+
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 2px;
+}
+
+/* Concentric: the same inset on top, bottom and end, radius the field's less that inset. */
+.button {
+  composes: inset from "../field/field.module.css";
+  width: calc(var(--copy-height) - var(--shell-inset) * 2);
+  height: calc(var(--copy-height) - var(--shell-inset) * 2);
+  border-radius: calc(var(--ui-radius-md) - var(--shell-inset));
+}
+
+.field[data-size="sm"] .value:not([data-mono]),
+.field[data-size="sm"] .mask {
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.button[aria-pressed="true"],
+.button[data-state="copied"] {
+  color: var(--ui-foreground);
+}
+
+.button[data-state="failed"] {
+  color: var(--ui-danger-text);
+}
+
+@media (pointer: coarse) {
+  .button::after {
+    inset: calc(var(--shell-inset) * -1) -1px;
+  }
+  .button:last-child::after {
+    inset-inline-end: calc(var(--shell-inset) * -1);
+  }
+  .actions {
+    gap: var(--ui-space-1);
+  }
+}
+
+@media (pointer: coarse) {
+  .value:not([data-mono]),
+  .mask {
+    font-size: var(--ui-text-touch);
+  }
+}

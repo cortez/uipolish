@@ -1,0 +1,15 @@
+{
+  "name": "toast",
+  "title": "Toast",
+  "summary": "Imperative toasts in a collapsed stack that fans out on hover. Timers pause while you read, and a flick swipes a toast away.",
+  "version": "0.2.3",
+  "dependencies": [
+    "button",
+    "icons",
+    "text-morph",
+    "text"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "dialog",
+  "title": "Dialog",
+  "summary": "Modal that grows out of its trigger and eases to fit its content as steps change. It locks scroll without a shift and asks before discarding edits.",
+  "version": "0.5.2",
+  "dependencies": [
+    "animated-size",
+    "button",
+    "icons"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

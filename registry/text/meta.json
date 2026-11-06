@@ -1,0 +1,8 @@
+{
+  "name": "text",
+  "title": "Text",
+  "summary": "CSS text utilities: truncation that fades the end instead of adding an ellipsis, text for screen readers only, and a shimmer for work in progress.",
+  "version": "0.1.2",
+  "dependencies": [],
+  "primitive": true
+}

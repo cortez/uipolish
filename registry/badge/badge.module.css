@@ -1,0 +1,120 @@
+.badge {
+  --badge-fill: var(--ui-fill-strong);
+  --badge-text: var(--ui-muted);
+  --badge-dot: var(--ui-subtle);
+  --badge-edge: var(--ui-border);
+  /* A little taller than the line it sits on, so the pill has air above and
+     below its letters and still sits inside a 24px row. */
+  --badge-height: 24px;
+  /* Half the height: the label starts where the round end stops. */
+  --badge-pad: var(--ui-pad-tag);
+
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-sizing: border-box;
+  height: var(--badge-height);
+  max-width: 100%;
+  padding-inline: var(--badge-pad);
+  /* Not `middle`: that centers on the x-height and makes the line taller. */
+  vertical-align: top;
+  border-radius: var(--ui-radius-full);
+  background: var(--badge-fill);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--badge-edge);
+  color: var(--badge-text);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  white-space: nowrap;
+}
+
+/* In running text (a badge straight inside a paragraph or list item) the
+   pill is shorter than the line and its label sits on the sentence's
+   baseline, so it reads as part of the line with room above and below and
+   never touches the lines around it; a little room at the sides keeps
+   punctuation off it. */
+:is(p, li, dd, figcaption) > .badge {
+  --badge-height: 20px;
+  --badge-pad: var(--ui-pad-tag-sm);
+  margin-inline: 2px;
+  vertical-align: baseline;
+}
+
+.badge[data-tone="accent"] {
+  --badge-fill: var(--ui-accent-tint);
+  --badge-edge: var(--ui-border-accent);
+  --badge-text: var(--ui-accent-text);
+  --badge-dot: var(--ui-accent);
+}
+
+.badge[data-tone="positive"] {
+  --badge-fill: var(--ui-success-tint);
+  --badge-edge: var(--ui-border-success);
+  --badge-text: var(--ui-success-text);
+  --badge-dot: var(--ui-success);
+}
+
+.badge[data-tone="danger"] {
+  --badge-fill: var(--ui-danger-tint);
+  --badge-edge: var(--ui-border-danger);
+  --badge-text: var(--ui-danger-text);
+  --badge-dot: var(--ui-danger);
+}
+
+.badge[data-tone="warning"] {
+  --badge-fill: var(--ui-warning-tint);
+  --badge-edge: var(--ui-border-warning);
+  --badge-text: var(--ui-warning-text);
+  --badge-dot: var(--ui-warning);
+}
+
+.badge[data-size="sm"] {
+  --badge-height: 20px;
+  --badge-pad: var(--ui-pad-tag-sm);
+  gap: 5px;
+}
+
+.badge:has(.dot) {
+  padding-inline-start: calc(var(--badge-pad) - 2px);
+}
+
+/* Trimmed to the capitals and the baseline, so centering the label centers
+   the letters: the font's own spacing puts more room above them than below,
+   which reads as text sitting high in a short pill. */
+.label {
+  text-box: trim-both cap alphabetic;
+}
+
+.dot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--ui-radius-full);
+  background: var(--badge-dot);
+}
+
+.badge[data-count] {
+  --badge-pad: var(--ui-pad-tag-sm);
+  min-width: var(--badge-height);
+  font-variant-numeric: tabular-nums;
+}
+
+.badge[data-count][data-size="sm"] {
+  --badge-pad: calc(var(--ui-pad-tag-sm) - 2px);
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+/* Forced colors drop the tint and inset edge, so draw a real outline. */
+@media (forced-colors: active) {
+  .badge {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+  .dot {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+}

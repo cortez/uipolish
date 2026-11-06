@@ -1,0 +1,403 @@
+.field {
+  display: grid;
+  /* One column no wider than the field, so a long label can't widen it. */
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: start;
+  gap: var(--ui-space-2);
+  min-width: 0;
+  font-family: var(--ui-font-sans);
+}
+
+.label {
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.control {
+  position: relative;
+  display: grid;
+  max-width: 100%;
+}
+
+/* ---------- Trigger ---------- */
+
+.trigger {
+  /* More room before the label than after the chevron: the chevron carries
+     its own air inside its 16px box, so 14 / 10 reads as even. */
+  --select-pad-start: 14px;
+  --select-pad-end: 10px;
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  /* Fits its label, but never wider than the field: a long label is cut. */
+  min-width: 0;
+  max-width: 100%;
+  height: var(--ui-control-md);
+  padding: 0 var(--select-pad-end) 0 var(--select-pad-start);
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / 1 var(--ui-font-sans);
+  text-align: start;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* A label longer than the room it has is cut at the trigger's edge instead
+   of pushing the trigger wider than its container. */
+/* A mark before the label (list and trigger). It carries air inside its
+   16px box like the chevron does, so the trigger's start padding drops to
+   match the end. */
+.icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-icon-chevron);
+  height: var(--ui-icon-chevron);
+}
+
+.trigger:has(> .icon) {
+  --select-pad-start: 10px;
+}
+
+.value {
+  min-width: 0;
+  /* Sideways only: clipping both ways cuts off descenders. */
+  overflow-x: clip;
+  overflow-clip-margin: 0;
+}
+
+.trigger[data-placeholder] .value {
+  color: var(--ui-subtle);
+}
+
+.chevron {
+  flex-shrink: 0;
+  color: var(--ui-muted);
+}
+
+@media (hover: hover) {
+  .trigger:hover:not(:disabled, [data-disabled], [data-popup-open], :focus-visible, [aria-invalid]) {
+    box-shadow:
+      inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
+  }
+}
+
+.trigger:active:not(:disabled, [data-disabled]) {
+  background: var(--ui-fill-solid);
+  transition-duration: var(--ui-dur-press);
+}
+
+/* The dark edge is for keyboard focus only. Opened by a click or a tap,
+   the trigger takes the hover edge: the open list already says where you are. */
+.trigger:focus {
+  outline: none;
+}
+
+.trigger[data-popup-open] {
+  box-shadow:
+    inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
+}
+
+.trigger:focus-visible,
+.field[data-native] .control:has(.native:focus-visible) .trigger {
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--ui-field-focus);
+  transition-duration: 0s;
+}
+
+.trigger[aria-invalid] {
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-danger);
+}
+
+.trigger[aria-invalid]:is(:focus-visible, [data-popup-open]),
+.field[data-native] .control:has(.native:focus-visible) .trigger[aria-invalid] {
+  box-shadow: inset 0 0 0 1px var(--ui-danger);
+}
+
+.trigger:is(:disabled, [data-disabled]) {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.field[data-size="sm"] .trigger {
+  --select-pad-start: 12px;
+  --select-pad-end: 8px;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  height: var(--ui-control-sm);
+  gap: 6px;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill);
+  box-shadow: none;
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+}
+
+.field[data-size="sm"] .chevron {
+  width: var(--ui-icon-chevron);
+  height: var(--ui-icon-chevron);
+}
+
+@media (hover: hover) {
+  .field[data-size="sm"] .trigger:hover:not(:disabled, [data-disabled]) {
+    background: var(--ui-fill-strong);
+    box-shadow: none;
+  }
+}
+
+.field[data-size="sm"] .trigger:active:not(:disabled, [data-disabled]) {
+  background: var(--ui-fill-strong);
+}
+
+.field[data-size="sm"] .trigger:focus-visible,
+.field[data-size="sm"][data-native] .control:has(.native:focus-visible) .trigger {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+  box-shadow: none;
+}
+
+.field[data-size="sm"] .trigger[data-popup-open] {
+  box-shadow: none;
+  background: var(--ui-fill-strong);
+}
+
+/* ---------- Native picker (touch screens) ---------- */
+
+.native {
+  display: none;
+}
+
+.field[data-native] .native {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  appearance: none;
+  opacity: 0;
+  /* iOS zooms the page into any control under 16px. */
+  font-size: var(--ui-text-touch);
+  cursor: pointer;
+}
+
+.field[data-native] .native:disabled {
+  cursor: default;
+}
+
+/* ---------- List ---------- */
+
+/* The Base UI positioner: never scaled; .panel (the popup) animates. */
+.popup {
+  z-index: 50;
+  width: max-content;
+  min-width: var(--anchor-width, 0);
+  max-width: min(320px, calc(100vw - 16px));
+  outline: none;
+}
+
+.panel {
+  --list-pad: var(--ui-space-1);
+  overflow: hidden;
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-floating);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  outline: none;
+  user-select: none;
+  transform-origin: var(--transform-origin);
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-fast) var(--ui-ease-enter),
+    filter var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.panel[data-starting-style],
+.panel[data-ending-style] {
+  opacity: 0;
+  scale: 0.97;
+  filter: blur(2px);
+}
+
+.panel[data-ending-style] {
+  transition-duration: var(--ui-dur-instant);
+  transition-timing-function: var(--ui-ease-exit);
+}
+
+.list {
+  composes: fade from "../listbox/listbox.module.css";
+  position: relative;
+  max-height: min(320px, calc(100dvh - 16px), var(--available-height, 100dvh));
+  padding: var(--list-pad);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+
+.highlight {
+  position: absolute;
+  top: 0;
+  left: var(--list-pad);
+  right: var(--list-pad);
+  border-radius: calc(var(--ui-radius-md) - var(--list-pad));
+  background: var(--ui-fill-strong);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    translate var(--ui-dur-snap) var(--ui-ease-snap),
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.highlight[data-visible] {
+  opacity: 1;
+}
+
+.highlight[data-jump] {
+  transition-property: opacity, background-color;
+}
+
+.list:has(.option:active:not([data-disabled])) > .highlight {
+  background: color-mix(in oklch, var(--ui-foreground) 16%, transparent);
+  transition-duration: var(--ui-dur-press);
+}
+
+.option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  /* Inline: a full row pad, never less than the row's radius, so the text
+     clears the curve. */
+  padding: var(--ui-space-2) var(--ui-pad-row);
+  border-radius: calc(var(--ui-radius-md) - var(--list-pad));
+  outline: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.popup[data-size="sm"] .option {
+  min-height: var(--ui-control-sm);
+  padding-block: 6px;
+}
+
+.option[data-disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.optionLabel {
+  composes: wrap from "../text/text.module.css";
+}
+
+.description {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.check {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  visibility: hidden;
+}
+
+.option[data-selected] .check {
+  visibility: visible;
+}
+
+.group {
+  display: grid;
+}
+
+.group + .group {
+  margin-top: var(--ui-space-1);
+}
+
+.groupLabel {
+  padding: var(--ui-space-2) var(--ui-pad-row) var(--ui-space-1);
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+}
+
+/* ---------- Message ---------- */
+
+.message {
+  display: grid;
+  justify-self: stretch;
+  min-height: calc(var(--field-message-lines, 1) * var(--ui-leading-md));
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.hint {
+  color: var(--ui-muted);
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+  color: var(--ui-danger-text);
+  animation: select-error-in var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.error svg {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  stroke-width: var(--ui-icon-stroke-regular);
+  margin-top: calc((var(--ui-leading-md) - 14px) / 2);
+  flex-shrink: 0;
+}
+
+@keyframes select-error-in {
+  from {
+    opacity: 0;
+    translate: 0 -3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
+  .panel {
+    scale: none;
+  }
+  .highlight {
+    transition-property: opacity, background-color;
+  }
+  .error {
+    animation: none;
+  }
+}

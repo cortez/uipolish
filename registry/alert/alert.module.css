@@ -1,0 +1,241 @@
+.root {
+  --alert-tone: var(--ui-foreground);
+  --alert-edge: var(--ui-border-strong);
+  --alert-pad: var(--ui-space-3);
+  --alert-radius: var(--ui-radius-md);
+  --alert-dismiss: var(--ui-control-sm);
+  --alert-dismiss-inset: calc(var(--alert-pad) + var(--ui-leading-md) / 2 - var(--alert-dismiss) / 2);
+  display: grid;
+  grid-template-rows: 1fr;
+  min-width: 0;
+  font-family: var(--ui-font-sans);
+  transition: grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse);
+}
+
+.root[data-tone="success"] {
+  --alert-tone: var(--ui-success);
+  --alert-edge: var(--ui-border-success);
+}
+
+.root[data-tone="warning"] {
+  --alert-tone: var(--ui-warning);
+  --alert-edge: var(--ui-border-warning);
+}
+
+.root[data-tone="error"] {
+  --alert-tone: var(--ui-danger);
+  --alert-edge: var(--ui-border-danger);
+}
+
+.root[data-mode="expand"]:not([data-shown]),
+.root[data-dismissed] {
+  grid-template-rows: 0fr;
+}
+
+.root[data-mode="expand"][data-shown] {
+  transition-duration: var(--ui-dur-panel);
+}
+
+.clip {
+  min-height: 0;
+  overflow: clip;
+  /* Room for the dismiss button's focus ring while clipped. */
+  overflow-clip-margin: 2px;
+}
+
+.cell {
+  display: grid;
+}
+
+.sizer,
+.live {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+.sizer {
+  visibility: hidden;
+}
+
+/* ---------- The alert ---------- */
+
+.layer {
+  opacity: 0;
+  translate: 0 -2px;
+  visibility: hidden;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    translate var(--ui-dur-instant) var(--ui-ease-exit),
+    visibility 0s linear var(--ui-dur-instant);
+}
+
+.layer[data-on] {
+  opacity: 1;
+  translate: none;
+  visibility: visible;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    translate var(--ui-dur-fast) var(--ui-ease-enter),
+    visibility 0s;
+}
+
+@starting-style {
+  .layer[data-on] {
+    opacity: 0;
+    translate: 0 -2px;
+  }
+}
+
+.root[data-mode="static"] .layer[data-on] {
+  transition: none;
+}
+
+@starting-style {
+  .root[data-mode="static"] .layer[data-on] {
+    opacity: 1;
+    translate: none;
+  }
+}
+
+/* Expand: the alert never shows a hard edge while its space opens. It
+   stays faint and soft until the space is nearly open, then settles in:
+   opacity, a blur clearing and a small scale from the top all run the
+   length of the opening, so no line ever sweeps across a solid box. */
+.root[data-mode="expand"] .layer {
+  transform-origin: top center;
+}
+
+.root[data-mode="expand"] .layer[data-on] {
+  filter: none;
+  scale: 1;
+  transition:
+    opacity var(--ui-dur-panel) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    filter var(--ui-dur-panel) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    scale var(--ui-dur-panel) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    translate var(--ui-dur-panel) var(--ui-ease-enter),
+    visibility 0s;
+}
+
+@starting-style {
+  .root[data-mode="expand"] .layer[data-on] {
+    opacity: 0;
+    filter: blur(6px);
+    scale: 0.985;
+    translate: 0 -4px;
+  }
+}
+
+/* While it opens, the bottom of the opening space fades out rather than
+   cutting: the clip edge is a gradient, never a line. */
+.root[data-mode="expand"][data-shown] .clip {
+  animation: soft-edge var(--ui-dur-panel) var(--ui-ease-expand);
+}
+
+@keyframes soft-edge {
+  from {
+    mask-image: linear-gradient(black calc(100% - var(--ui-space-6)), transparent);
+  }
+  to {
+    mask-image: linear-gradient(black calc(100% - var(--ui-space-6)), transparent);
+  }
+}
+
+.alert {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+  padding: var(--alert-pad);
+  border-radius: var(--alert-radius);
+  background: light-dark(
+    color-mix(in oklch, var(--alert-tone) 3.5%, var(--ui-surface)),
+    color-mix(in oklch, var(--alert-tone) 7%, var(--ui-surface))
+  );
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--alert-edge);
+  color: var(--ui-foreground);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+.root[data-tone="info"] .alert {
+  background: var(--ui-fill-solid);
+}
+
+.icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--ui-leading-md);
+  height: var(--ui-leading-md);
+  color: var(--alert-tone);
+}
+
+.body {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  gap: 2px;
+}
+
+.root:has(.dismiss) .body {
+  padding-inline-end: calc(var(--alert-dismiss-inset) + var(--alert-dismiss) + var(--ui-space-2) - var(--alert-pad));
+}
+
+.title {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.text {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.text :where(p) {
+  margin: 0;
+}
+
+.text :where(a) {
+  color: var(--ui-foreground);
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in oklch, currentColor 35%, transparent);
+  text-underline-offset: 2px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+  margin-top: var(--ui-space-2);
+}
+
+/* ---------- Dismiss ---------- */
+
+.dismiss {
+  composes: inset from "../field/field.module.css";
+}
+
+/* Doubled so it outranks the composed inset rule in any stylesheet order. */
+.dismiss.dismiss {
+  position: absolute;
+  inset-block-start: var(--alert-dismiss-inset);
+  inset-inline-end: var(--alert-dismiss-inset);
+  border-radius: calc(var(--alert-radius) - var(--alert-dismiss-inset));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root,
+  .layer,
+  .layer[data-on],
+  .root[data-mode="expand"] .layer[data-on] {
+    filter: none;
+    scale: none;
+    transition: none;
+  }
+  .root[data-mode="expand"][data-shown] .clip {
+    animation: none;
+  }
+}

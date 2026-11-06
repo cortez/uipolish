@@ -1,0 +1,538 @@
+/* Thread */
+
+.thread {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  min-height: 0;
+  height: 100%;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+.scroller {
+  /* Containing block for visually hidden status text, so it can't stretch the page. */
+  position: relative;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+  outline: none;
+}
+
+.scroller {
+  border-radius: inherit;
+}
+
+.scroller:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  max-width: var(--message-thread-width, 680px);
+  min-height: 100%;
+  margin-inline: auto;
+  padding: var(--ui-space-5) var(--ui-space-4) var(--ui-space-6);
+}
+
+.empty {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  text-align: center;
+}
+
+/* Messages */
+
+.message {
+  display: grid;
+  min-width: 0;
+}
+
+.message + .message {
+  margin-top: var(--ui-space-6);
+}
+
+.message[data-from="user"] + .message[data-from="assistant"] {
+  margin-top: var(--ui-space-5);
+}
+
+.message[data-avatar] {
+  --avatar: 28px;
+  grid-template-columns: var(--avatar) minmax(0, 1fr);
+  gap: var(--ui-space-3);
+}
+
+.message[data-from="user"][data-avatar] {
+  grid-template-columns: minmax(0, 1fr) var(--avatar);
+}
+
+.message[data-from="user"][data-avatar] .avatar {
+  order: 1;
+  margin-top: calc(var(--ui-space-3) + (var(--ui-leading-md) - var(--avatar)) / 2);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: var(--avatar);
+  height: var(--avatar);
+  margin-top: calc((var(--ui-text-md) * var(--ui-leading-prose) - var(--avatar)) / 2);
+  overflow: hidden;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+}
+
+.avatar > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.message[data-from="user"] .main {
+  align-items: flex-end;
+  gap: var(--ui-space-2);
+}
+
+.message[data-from="user"][data-enter] .main {
+  animation: message-in var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@keyframes message-in {
+  from {
+    opacity: 0;
+    translate: 0 4px;
+  }
+}
+
+.bubble {
+  max-width: min(85%, 520px);
+  padding: var(--ui-space-3) var(--ui-space-4);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-fill);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+
+.prose {
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-prose);
+  hanging-punctuation: first;
+  overflow-wrap: break-word;
+}
+
+.prose > * {
+  margin: 0;
+}
+
+.prose > * + * {
+  margin-top: var(--ui-space-3);
+}
+
+.prose > p + :is(ul, ol) {
+  margin-top: var(--ui-space-1);
+}
+
+.prose > :is(ul, ol) + p {
+  margin-top: var(--ui-space-4);
+}
+
+.prose ul,
+.prose ol {
+  padding-inline-start: 22px;
+}
+
+.prose li + li {
+  margin-top: var(--ui-space-1);
+}
+
+.prose li {
+  padding-inline-start: 2px;
+}
+
+.prose li::marker {
+  color: var(--ui-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.prose strong {
+  font-weight: var(--ui-weight-medium);
+}
+
+.prose code {
+  padding: 2px 5px;
+  border-radius: calc(var(--ui-radius-sm) / 2);
+  background: var(--ui-fill);
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-code);
+}
+
+.word {
+  animation: word-in var(--ui-dur-base) var(--ui-ease-enter) backwards;
+  animation-delay: var(--delay, 0ms);
+}
+
+@keyframes word-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.pending {
+  composes: sweep from "../text/text.module.css";
+  --sweep-dim: 0.45;
+  color: var(--ui-muted);
+}
+
+/* Stopped and error */
+
+.note {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  margin: var(--ui-space-3) 0 0;
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+}
+
+.note svg {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  fill: currentColor;
+}
+
+.error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2) var(--ui-space-3);
+  margin-top: var(--ui-space-3);
+}
+
+.message[data-status="error"] .prose:has(p) + .error {
+  padding-top: var(--ui-space-3);
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+.error p {
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+  margin: 0;
+  color: var(--ui-danger-text);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.error svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  margin-top: calc((var(--ui-leading-md) - 16px) / 2);
+  flex-shrink: 0;
+}
+
+/* Attachments on a sent message */
+
+.attachments {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--ui-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.attachment {
+  position: relative;
+  border-radius: var(--ui-radius-md);
+}
+
+.attachment[data-kind="image"] img {
+  display: block;
+  width: 96px;
+  height: 96px;
+  border-radius: inherit;
+  background: var(--ui-fill);
+  object-fit: cover;
+}
+
+.attachment[data-kind="image"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border);
+  pointer-events: none;
+}
+
+.attachment[data-kind="file"] {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  max-width: 240px;
+  height: var(--ui-control-md);
+  padding-inline: var(--ui-space-3);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+.fileName {
+  composes: wrap from "../text/text.module.css";
+}
+
+.attachment[data-kind="file"] svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke);
+  stroke-linejoin: round;
+}
+
+/* Actions */
+
+.actions {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: var(--ui-control-sm);
+  /* 16px under the reply, the same everywhere actions follow a message:
+     clear of the last line's descenders, still read as part of it. */
+  margin-top: var(--ui-space-4);
+  /* Pull the first icon's ink in line with the text above. */
+  margin-inline-start: -8px;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* Space stays reserved while streaming, so finishing doesn't push anything. */
+.actions[data-hidden] {
+  visibility: hidden;
+}
+
+/* Hover can't be the only way to an action: touch and the latest reply always show them. */
+@media (hover: hover) and (pointer: fine) {
+  .actions:not([data-pinned]) {
+    opacity: 0;
+  }
+  .message:hover .actions,
+  .actions:focus-within,
+  .message:last-child .actions {
+    opacity: 1;
+  }
+}
+
+.action {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--ui-control-sm);
+  height: var(--ui-control-sm);
+  padding-inline: var(--ui-space-2);
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-muted);
+  isolation: isolate;
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* No clip on the button, so a label morphing into "Copied" is never cut off. */
+.action::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.action svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: fill var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .action:hover {
+    color: var(--ui-foreground);
+  }
+  .action:hover::before {
+    background: var(--ui-fill);
+  }
+}
+
+.action:active::before {
+  background: var(--ui-fill-strong);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.action:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.action[aria-pressed="true"] {
+  color: var(--ui-foreground);
+}
+
+.action[aria-pressed="true"] svg {
+  fill: currentColor;
+}
+
+.action[data-copy="copied"] {
+  color: var(--ui-foreground);
+}
+
+.action[data-copy="failed"] {
+  color: var(--ui-danger-text);
+}
+
+.actionLabel {
+  display: inline-flex;
+}
+
+@media (pointer: coarse) {
+  .action {
+    min-width: var(--ui-control-md);
+    height: var(--ui-control-md);
+  }
+  .actions {
+    margin-inline-start: -12px;
+  }
+}
+
+/* Jump to latest */
+
+.jump {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  position: absolute;
+  bottom: var(--ui-space-4);
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: var(--ui-control-sm);
+  padding-inline: 10px 14px;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong), var(--ui-shadow-raised);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  translate: -50% 4px;
+  opacity: 0;
+  visibility: hidden;
+  /* visibility takes it out of the tab order once gone. */
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    translate var(--ui-dur-instant) var(--ui-ease-exit),
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    visibility 0s linear var(--ui-dur-instant);
+}
+
+.jump[data-visible] {
+  translate: -50% 0;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    translate var(--ui-dur-fast) var(--ui-ease-enter),
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    visibility 0s;
+}
+
+/* arrow-right rotated, so its hover nudge points down. */
+.jump .jumpArrow {
+  width: 14px;
+  height: 14px;
+  rotate: 90deg;
+}
+
+@media (hover: hover) {
+  .jump:hover {
+    background: var(--ui-fill-solid);
+  }
+}
+
+.jump:active {
+  background: var(--ui-fill-strong-solid);
+  transition-duration: var(--ui-dur-press);
+}
+
+.jump:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+@media (pointer: coarse) {
+  .jump::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word,
+  .message[data-from="user"][data-enter] .main {
+    animation: none;
+  }
+  .jump {
+    translate: -50% 0;
+  }
+  .action::before {
+    transition-property: background-color;
+  }
+  .action:active::before {
+    scale: none;
+  }
+}

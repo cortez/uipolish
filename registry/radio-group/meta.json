@@ -1,0 +1,12 @@
+{
+  "name": "radio-group",
+  "title": "Radio group",
+  "summary": "Base UI radios in a fieldset, as a list or as cards. The mark opens from its center, arrow keys choose, and the whole group takes one tab stop.",
+  "version": "0.3.7",
+  "dependencies": [
+    "field"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

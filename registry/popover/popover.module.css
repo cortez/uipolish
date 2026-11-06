@@ -1,0 +1,91 @@
+/* Base UI's Positioner places this element; the panel inside it animates. */
+.positioner {
+  z-index: 50;
+  max-width: min(360px, calc(100vw - 16px));
+  outline: none;
+}
+
+.panel {
+  --popover-pad: var(--ui-space-4);
+  position: relative;
+  box-sizing: border-box;
+  padding: var(--popover-pad);
+  border-radius: calc(var(--popover-pad) + var(--ui-control-sm) / 2);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-floating);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  text-wrap: pretty;
+  outline: none;
+  transform-origin: var(--transform-origin);
+  opacity: 1;
+  scale: 1;
+  filter: none;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-fast) var(--ui-ease-enter),
+    filter var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.panel[data-starting-style],
+.panel[data-ending-style] {
+  opacity: 0;
+  scale: 0.97;
+  filter: blur(2px);
+}
+
+.panel[data-ending-style] {
+  transition-duration: var(--ui-dur-instant);
+  transition-timing-function: var(--ui-ease-exit);
+}
+
+/* Base UI sets the arrow's offset along the edge; the SVG points down by default. */
+.arrow {
+  position: absolute;
+  width: 16px;
+  height: 8px;
+}
+
+.arrow svg {
+  display: block;
+  width: 16px;
+  height: 8px;
+  overflow: visible;
+}
+
+.arrowFill {
+  fill: var(--ui-surface);
+}
+
+.arrowEdge {
+  fill: none;
+  stroke: var(--ui-border);
+  stroke-width: var(--ui-hairline);
+  vector-effect: non-scaling-stroke;
+}
+
+.arrow[data-side="top"] {
+  top: 100%;
+}
+.arrow[data-side="bottom"] {
+  bottom: 100%;
+  rotate: 180deg;
+}
+.arrow[data-side="left"] {
+  left: calc(100% - 4px);
+  rotate: -90deg;
+}
+.arrow[data-side="right"] {
+  right: calc(100% - 4px);
+  rotate: 90deg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
+  .panel[data-starting-style],
+  .panel[data-ending-style] {
+    scale: none;
+  }
+}

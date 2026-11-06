@@ -1,0 +1,376 @@
+/* ---------- Modal ---------- */
+
+/* 50, like the popovers: one opened inside the dialog portals later, so it stacks above. */
+.backdrop {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  min-height: 100dvh;
+  background: var(--ui-scrim);
+  opacity: 1;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.backdrop[data-starting-style] {
+  opacity: 0;
+}
+
+.backdrop[data-ending-style] {
+  opacity: 0;
+  transition-duration: var(--ui-dur-instant);
+  transition-timing-function: var(--ui-ease-exit);
+}
+
+/* Fixed at 0,0 and centering, like the top layer did for the native dialog. */
+.viewport {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  padding: var(--ui-space-5) var(--ui-space-4);
+}
+
+.modal {
+  position: relative;
+  box-sizing: border-box;
+  width: var(--modal-width, 480px);
+  max-width: 100%;
+  max-height: calc(100dvh - 2 * var(--ui-space-5));
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-floating);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+  overflow: clip;
+  outline: none;
+  /* Arrives like a popover, a block's size: fades, scales up from 0.97 and
+     clears a 2px blur. No spring: nothing travels, it comes into focus. */
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-base) var(--ui-ease-enter),
+    filter var(--ui-dur-base) var(--ui-ease-enter);
+}
+
+.modal[data-starting-style],
+.modal[data-ending-style] {
+  opacity: 0;
+  scale: 0.97;
+  filter: blur(2px);
+}
+
+.modal[data-ending-style] {
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    scale var(--ui-dur-instant) var(--ui-ease-exit),
+    filter var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+/* Phones: docked at the bottom, in reach of a thumb, 8px off the edges.
+   For a sheet that swipes away, use the drawer. */
+@media (max-width: 480px) {
+  .viewport {
+    place-items: end center;
+    padding: var(--ui-space-5) var(--ui-space-2) max(var(--ui-space-2), env(safe-area-inset-bottom, 0px));
+  }
+  .modal {
+    max-height: calc(100dvh - var(--ui-space-5) - max(var(--ui-space-2), env(safe-area-inset-bottom, 0px)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop {
+    transition-duration: var(--ui-dur-instant);
+  }
+  .modal,
+  .modal[data-ending-style] {
+    transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+  }
+  .modal[data-starting-style],
+  .modal[data-ending-style] {
+    scale: none;
+    filter: none;
+  }
+}
+
+/* ---------- Dialog ---------- */
+
+/* The radius is --corner plus half a button, so footer pills stay concentric with the corner. */
+.dialog {
+  --dialog-pad: var(--ui-space-6);
+  --corner: var(--ui-space-4);
+  --dialog-radius: calc(var(--corner) + var(--ui-control-md) / 2);
+  border-radius: var(--dialog-radius);
+}
+
+.frame {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  max-height: inherit;
+}
+
+.dialog:has(.frame[data-size="sm"]) {
+  --modal-width: 420px;
+}
+
+.dialog:has(.frame[data-size="lg"]) {
+  --modal-width: 640px;
+}
+
+.dialog[data-open]:not([data-starting-style]) {
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-base) var(--ui-ease-enter),
+    filter var(--ui-dur-base) var(--ui-ease-enter),
+    width var(--ui-dur-panel) var(--ui-ease-expand);
+}
+
+/* Passes the height limit down, so a tall body still scrolls inside. */
+.sizer,
+.sizer > * {
+  max-height: inherit;
+}
+
+/* The leaving step is out of flow, so the panel measures only the arriving one. */
+.steps {
+  position: relative;
+}
+
+.stepOut {
+  position: absolute;
+  inset: 0 0 auto;
+  animation: step-out var(--ui-dur-instant) var(--ui-ease-color) forwards;
+  pointer-events: none;
+}
+
+.stepIn {
+  animation: step-in var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+}
+
+@keyframes step-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes step-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* The top is a step short of the sides: the title's line height already
+   puts air above its capitals, so the two edges read the same. */
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+  padding: calc(var(--dialog-pad) - var(--ui-space-1)) var(--dialog-pad) var(--ui-space-4);
+}
+
+.heading {
+  display: grid;
+  flex: 1;
+  gap: var(--ui-space-1);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-heading);
+  text-wrap: balance;
+}
+
+.description {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+/* The close button is a ghost icon Button: a capsule like every other.
+   Centered on the title's first line, with its X on the content's edge.
+   Doubled to win over the button's own size, whatever order sheets load in. */
+.close.close {
+  --close-size: var(--ui-control-sm);
+  --close-width: calc(var(--close-size) * var(--ui-capsule));
+  flex-shrink: 0;
+  width: var(--close-width);
+  height: var(--close-size);
+  margin: calc(var(--ui-leading-2xl) / 2 - var(--close-size) / 2) calc((16px - var(--close-width)) / 2) 0 0;
+  color: var(--ui-muted);
+}
+
+@media (hover: hover) {
+  .close.close:hover {
+    color: var(--ui-foreground);
+  }
+}
+
+/* 40px on touch screens, the finger's size. */
+@media (pointer: coarse) {
+  .close.close {
+    --close-size: var(--ui-control-md);
+  }
+}
+
+.body {
+  min-height: 0;
+  padding: var(--ui-space-1) var(--dialog-pad) var(--dialog-pad);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+.header:last-child {
+  padding-bottom: var(--dialog-pad);
+}
+
+.frame[data-guarding] .body,
+.frame[data-guarding] .header {
+  opacity: 0.45;
+}
+
+/* The buttons sit --corner from the panel's edges, concentric with its
+   corners; text in the footer (a step count, an error, the guard's
+   question) lines up with the content's edge instead. */
+.footerCell {
+  --footer-text-inset: calc(var(--dialog-pad) - var(--corner));
+  display: grid;
+  padding: var(--corner);
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+.footer > :not(.actions),
+.guardText {
+  padding-inline-start: var(--footer-text-inset);
+}
+
+.header + .footerCell {
+  padding-top: var(--ui-space-2);
+  box-shadow: none;
+}
+
+.footer,
+.guard {
+  grid-area: 1 / 1;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ui-space-2) var(--ui-space-3);
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    visibility 0s linear 0s;
+}
+
+.frame[data-guarding] .footer {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    visibility 0s linear var(--ui-dur-instant);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--ui-space-2);
+  margin-left: auto;
+}
+
+.error {
+  flex: 1 1 160px;
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+  color: var(--ui-danger-text);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.error:empty {
+  flex-basis: 0;
+  padding: 0;
+}
+
+/* ---------- Unsaved-changes guard ---------- */
+
+.guard {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-3);
+  animation: guard-in var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+}
+
+.guardText {
+  display: grid;
+  flex: 1 1 180px;
+  gap: 2px;
+}
+
+.guardTitle {
+  margin: 0;
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.guardDescription {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+@keyframes guard-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .dialog {
+    --dialog-pad: var(--ui-space-5);
+  }
+  .actions {
+    flex: 1 1 100%;
+  }
+  /* Side by side while both labels fit; once one doesn't, they stack,
+     full width, rather than clip. */
+  .actions > * {
+    flex: 1 1 calc((100% - var(--ui-space-2)) / 2);
+    min-width: fit-content;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guard,
+  .stepIn {
+    animation: none;
+  }
+  .stepOut {
+    display: none;
+  }
+  .dialog[data-open]:not([data-starting-style]) {
+    transition: opacity var(--ui-dur-instant) var(--ui-ease-enter);
+  }
+}

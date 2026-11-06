@@ -1,0 +1,13 @@
+{
+  "name": "code-block",
+  "title": "Code block",
+  "summary": "Code block for AI apps that streams in without flashing or jumping. Copy, line wrap and calm token-colored highlighting are built in, with no highlighter library.",
+  "kit": "agent",
+  "version": "0.3.4",
+  "dependencies": [
+    "button",
+    "icons",
+    "text-morph",
+    "text"
+  ]
+}

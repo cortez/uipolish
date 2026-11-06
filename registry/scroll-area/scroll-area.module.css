@@ -1,0 +1,130 @@
+/* Registered so the edge alphas can transition. */
+@property --scroll-area-start {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+@property --scroll-area-end {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+/* The focus ring lives here because the viewport's mask would fade it out. */
+.root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.root:has(> .viewport:focus-visible) {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.viewport {
+  --scroll-area-fade: var(--ui-space-6, 32px);
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  border-radius: inherit;
+  outline: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+
+.viewport[data-orientation="vertical"] {
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-padding-block: var(--scroll-area-fade);
+}
+
+/* Stops a sideways swipe at the end from triggering browser back. */
+.viewport[data-orientation="horizontal"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-inline: contain;
+  scroll-padding-inline: var(--scroll-area-fade);
+}
+
+/* One fade layer over the whole viewport, scrollbar included: a solid
+   strip kept for a classic scrollbar also left a sliver of each row at full
+   opacity beside it. */
+.viewport[data-fade] {
+  mask-image: linear-gradient(
+    var(--scroll-area-direction, to bottom),
+    rgb(0 0 0 / var(--scroll-area-start, 1)),
+    black var(--scroll-area-fade, 32px),
+    black calc(100% - var(--scroll-area-fade, 32px)),
+    rgb(0 0 0 / var(--scroll-area-end, 1))
+  );
+}
+
+.viewport[data-fade][data-orientation="horizontal"] {
+  --scroll-area-direction: to right;
+}
+
+:is([dir="rtl"]) .viewport[data-fade][data-orientation="horizontal"] {
+  --scroll-area-direction: to left;
+}
+
+@supports (animation-timeline: scroll()) {
+  .viewport[data-fade] {
+    animation:
+      scroll-area-start linear both,
+      scroll-area-end linear both;
+    animation-timeline: scroll(self block), scroll(self block);
+    animation-range:
+      0 var(--scroll-area-fade),
+      calc(100% - var(--scroll-area-fade)) 100%;
+  }
+
+  .viewport[data-fade][data-orientation="horizontal"] {
+    animation-timeline: scroll(self inline), scroll(self inline);
+  }
+
+  /* Chromium keeps an animation's last value once its timeline goes inactive;
+     the script sets data-fits so stale fades clear. */
+  .viewport[data-fade][data-fits] {
+    animation: none;
+  }
+}
+
+@keyframes scroll-area-start {
+  from {
+    --scroll-area-start: 1;
+  }
+  to {
+    --scroll-area-start: 0;
+  }
+}
+
+@keyframes scroll-area-end {
+  from {
+    --scroll-area-end: 0;
+  }
+  to {
+    --scroll-area-end: 1;
+  }
+}
+
+/* Script fallback; data-ready skips the transition on first paint. */
+@supports not (animation-timeline: scroll()) {
+  .viewport[data-fade][data-ready] {
+    transition:
+      --scroll-area-start var(--ui-dur-fast) var(--ui-ease-color),
+      --scroll-area-end var(--ui-dur-fast) var(--ui-ease-color);
+  }
+}
+
+.content {
+  display: flow-root;
+}
+
+.viewport[data-orientation="horizontal"] > .content {
+  width: max-content;
+  min-width: 100%;
+}

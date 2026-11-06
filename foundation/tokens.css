@@ -1,0 +1,330 @@
+/*
+ * UI Polish foundation tokens. Components read these roles and nothing else;
+ * map them onto your own design system:
+ *
+ *   :root {
+ *     --ui-surface: var(--background);
+ *     --ui-foreground: var(--foreground);
+ *     --ui-radius-md: var(--radius);
+ *   }
+ *
+ * Colors use light-dark() and follow `color-scheme`; force a theme with
+ * [data-theme="light" | "dark"] on any ancestor. Roles are redeclared on
+ * [data-theme] because light-dark() resolves where it is declared, not used.
+ */
+
+:root,
+[data-theme] {
+  color-scheme: light dark;
+
+  /* Space */
+  --ui-space-1: 4px;
+  --ui-space-2: 8px;
+  --ui-space-3: 12px;
+  --ui-space-4: 16px;
+  --ui-space-5: 24px;
+  --ui-space-6: 32px;
+  --ui-space-7: 48px;
+  --ui-space-8: 64px;
+
+  /* Spacing roles, on the scale above. Pick by the relationship between two
+     things, never by the component: the same relationship takes the same
+     token everywhere (foundation/rules/spacing.md §1).
+     The layout roles are fluid: they read the width of the nearest size
+     container (cqi; the viewport when there is none), so a block in a narrow
+     pane stays compact and the same block on a wide screen breathes, and
+     round to the 4px grid so nothing lands between pixels. */
+
+  /* Inside things: how far content sits in from its own edge. */
+  /* A badge, tag or count pill: half its 24px height, so the label starts
+     where the round end stops. */
+  --ui-pad-tag: var(--ui-space-3);
+  /* A 20px tag, and a tag inside a sentence. */
+  --ui-pad-tag-sm: var(--ui-space-2);
+  /* A row in a menu or a list in a panel, inline: never less than the row's
+     radius, so its text clears the curve. */
+  --ui-pad-row: var(--ui-space-3);
+  /* A menu's inset around its rows. The rows take the concentric radius,
+     panel − inset: 24 − 12 = 12, a rounded row, never a pill. */
+  --ui-inset-menu: var(--ui-space-3);
+  /* A card or panel: 16 in a phone-wide container, 24 from 560px. */
+  --ui-pad-card: round(clamp(16px, 4cqi + 1.6px, 24px), 4px);
+  /* A screen or page-level block: 24 narrow, 40 from 760px. */
+  --ui-pad-section: round(clamp(24px, 4cqi + 9.6px, 40px), 4px);
+
+  /* Between things. Each step is wider than the one inside it, so the
+     grouping reads before anything else does. */
+  /* Lines of one thing: a title and its description, a label and its value. */
+  --ui-gap-tight: var(--ui-space-1);
+  /* Side by side in a row: icon and label, tag and tag, button and button. */
+  --ui-gap-inline: var(--ui-space-2);
+  /* Items of one group: fields in a cluster, the rows of a card. */
+  --ui-gap-stack: var(--ui-space-3);
+  /* Groups inside a card or section, and a section's heading above its
+     content: 16 narrow, 24 from 760px. */
+  --ui-gap-group: round(clamp(16px, 2cqi + 8.8px, 24px), 4px);
+  /* Cards and panels in a layout, and a screen's title above its content:
+     16 narrow, 24 at 560px, 32 from 760px. */
+  --ui-gap-block: round(clamp(16px, 4cqi + 1.6px, 32px), 4px);
+  /* Sections of a screen or page: 48 narrow, 56 at 600px, 72 from 960px. */
+  --ui-gap-section: round(clamp(48px, 4cqi + 33.6px, 72px), 8px);
+
+  /* Radius */
+  --ui-radius-sm: 10px;
+  --ui-radius-md: 14px;
+  /* Every box and card: 24, which is also the 8px inset around a 32px
+     button plus that button's half-height, so a code block's corner and
+     its Copy button stay concentric. */
+  --ui-radius-lg: 24px;
+  --ui-radius-full: 9999px;
+
+  /* Control heights */
+  --ui-control-sm: 32px;
+  --ui-control-md: 40px;
+  --ui-control-lg: 48px;
+  /* Icon-only buttons are capsules, this much wider than tall, not circles:
+     an easier target, and one shape for every button. */
+  --ui-capsule: 1.375;
+
+  /* Type */
+  --ui-font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --ui-font-display: var(--ui-font-sans);
+  --ui-font-mono: ui-monospace, "SF Mono", SFMono-Regular, "Cascadia Code", "Segoe UI Mono", "Roboto Mono", Menlo, Consolas, monospace;
+
+  --ui-text-sm: 13px;
+  --ui-text-md: 15px;
+  --ui-text-2xl: 22px;
+  --ui-text-display: clamp(30px, 1.6vw + 1rem, 38px);
+  --ui-leading-sm: 18px;
+  --ui-leading-md: 22px;
+  --ui-leading-2xl: 28px;
+  /* Rounded: a fractional line height pushes everything below off the pixel grid. */
+  --ui-leading-display: round(calc(var(--ui-text-display) * 1.1), 1px);
+
+  --ui-leading-prose: 1.6;
+  --ui-measure: 65ch;
+
+  --ui-text-code: 0.875em;
+
+  /* Under 16px, iOS zooms the page when a field is focused. */
+  --ui-text-touch: 16px;
+
+  /* Weights. Fonts without a 550 round to 600. */
+  --ui-weight-regular: 400;
+  --ui-weight-medium: 500;
+  --ui-weight-semibold: 550;
+
+  /* Tracking. None for body text: any letter-spacing turns optional ligatures off. */
+  --ui-tracking-heading: -0.01em;
+  --ui-tracking-title: -0.02em;
+  --ui-tracking-control: -0.01em;
+  --ui-tracking-caps: 0.06em;
+
+  /* Icon stroke: two tiers, one per label weight, each the width of the
+     text's stem (DM Sans at 15px: 1.25px at 400, 1.48px at 500), in a
+     16-unit viewBox drawn at 16px. Icons beside regular text take regular;
+     beside a medium label (button, tab, nav or menu item) medium. A smaller
+     glyph that stands on its own keeps the line: calc(tier * 16 / size).
+     --ui-icon-stroke-semibold is the medium value, kept so older code
+     still resolves; don't use it in new code. */
+  --ui-icon-stroke-regular: 1.25;
+  --ui-icon-stroke-medium: 1.5;
+  --ui-icon-stroke-semibold: var(--ui-icon-stroke-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+
+  /* Icon sizes: an icon is sized by the text it sits with, so every chevron,
+     check or glyph in the same role is the same size. md beside 14-16px text
+     and in every control; sm beside 13px text (sm controls, meta lines,
+     notes); xs only for tiny badges and marks inside a node; lg for a glyph
+     standing alone in a tile. Nothing between. */
+  --ui-icon-xs: 12px;
+  --ui-icon-sm: 14px;
+  --ui-icon-md: 16px;
+  --ui-icon-lg: 20px;
+  /* Every chevron, whatever the text beside it: a chevron is a hint, so it
+     sits a step under the icons around it and is one size everywhere. */
+  --ui-icon-chevron: var(--ui-icon-sm);
+
+  /* Motion. Exits run one step shorter than their entrance. */
+  --ui-dur-press: 80ms;    /* going down on press */
+  --ui-dur-instant: 120ms; /* color feedback; small things leaving */
+  --ui-dur-fast: 160ms;    /* small things arriving; blocks leaving */
+  --ui-dur-base: 200ms;    /* blocks arriving; height closing; strokes drawing */
+  --ui-dur-panel: 280ms;   /* height opening */
+
+  /* Enter: popovers, menus, tooltips, toasts, rows arriving. Between quint- and expo-out. */
+  --ui-ease-enter: cubic-bezier(0.2, 1, 0.3, 1);
+
+  /* Exit: anything leaving. Accelerates out; pair with the shorter step. */
+  --ui-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  --ui-scale-press: 0.985;
+  /* Move: layout moves (tab pill, toast stack). A spring sampled over --ui-dur-move,
+     a little underdamped (damping 0.72): it overshoots about 4% and settles. */
+  --ui-dur-move: 380ms;
+  --ui-ease-move: linear(0, 0.0197, 0.0712, 0.1442, 0.2303, 0.3231, 0.4171, 0.5086, 0.5948, 0.6739, 0.7446, 0.8066, 0.8597, 0.9043, 0.9409, 0.9702, 0.993, 1.0102, 1.0225, 1.0307, 1.0357, 1.038, 1.0383, 1.0371, 1.0348, 1.0318, 1.0284, 1.0248, 1.0212, 1.0177, 1.0145, 1.0116, 1.009, 1.0067, 1.0048, 1.0032, 1.0019, 1.0008, 1, 0.9994, 1);
+
+  /* Glide: the same move without the give, critically damped. For what is
+     held by a track or a count: a pill inside its group, a sheet against an
+     edge, a height, a number counting to its value. */
+  --ui-dur-glide: 320ms;
+  --ui-ease-glide: linear(0, 0.0319, 0.106, 0.2005, 0.3013, 0.3998, 0.4917, 0.5739, 0.6459, 0.7079, 0.7606, 0.8048, 0.8416, 0.872, 0.8969, 0.9172, 0.9337, 0.9471, 0.9578, 0.9665, 0.9734, 0.9789, 0.9834, 0.9869, 0.9896, 0.9918, 0.9936, 0.995, 0.996, 0.9969, 0.9976, 0.9981, 1);
+
+  /* Snap: short hops, press release, chevrons. A stiffer spring sampled over
+     --ui-dur-snap (damping 0.8): about 1.5% past, then back. */
+  --ui-dur-snap: 240ms;
+  --ui-ease-snap: linear(0, 0.0284, 0.0988, 0.1935, 0.2993, 0.4069, 0.5099, 0.6045, 0.6883, 0.7607, 0.8215, 0.8714, 0.9114, 0.9427, 0.9666, 0.9842, 0.9968, 1.0053, 1.0107, 1.0137, 1.015, 1.0151, 1.0143, 1.013, 1.0115, 1.0099, 1.0083, 1.0067, 1.0054, 1.0042, 1.0032, 1.0023, 1);
+
+  /* Bounce: a thumb landing on a stop. Overshoots, so not for anything that can hit its track's end. */
+  --ui-dur-bounce: 340ms;
+  --ui-ease-bounce: linear(0, 0.0293, 0.1033, 0.2045, 0.3192, 0.4369, 0.5503, 0.6543, 0.7461, 0.8243, 0.8886, 0.9397, 0.9787, 1.0072, 1.0266, 1.0388, 1.0451, 1.0471, 1.0458, 1.0424, 1.0377, 1.0323, 1.0268, 1.0214, 1.0165, 1.0122, 1.0084, 1.0054, 1.003, 1.0011, 0.9997, 0.9988, 0.9982, 0.9979, 0.9978, 0.9978, 1);
+
+  /* Expand: grid-template-rows height opening, over --ui-dur-panel. */
+  --ui-ease-expand: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Collapse: height closing, over --ui-dur-base. Eases in while the content
+     fades, then folds and stops without a tail. */
+  --ui-ease-collapse: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Color: in-place color and opacity feedback, over --ui-dur-instant. */
+  --ui-ease-color: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Draw: SVG strokes drawn with stroke-dashoffset, over --ui-dur-base. */
+  --ui-ease-draw: cubic-bezier(0.35, 0, 0.15, 1);
+
+  /* Pulse: `alternate` loops, --ui-dur-pulse per half cycle; sweeps run linear. */
+  --ui-ease-pulse: cubic-bezier(0.37, 0, 0.63, 1);
+  --ui-dur-pulse: 700ms;
+  --ui-dur-sweep: 2400ms;
+
+  /* Color. Text roles hold 4.5:1 on canvas and surface in both themes, and
+     no more than they need: the darkest text isn't black and the lightest
+     isn't white, so a page reads firm without glaring. */
+  --ui-canvas: light-dark(oklch(0.99 0 0), oklch(0.145 0 0));
+  --ui-surface: light-dark(oklch(1 0 0), oklch(0.19 0 0));
+  --ui-foreground: light-dark(oklch(0.21 0 0), oklch(0.93 0 0));
+  --ui-muted: light-dark(oklch(0.5 0 0), oklch(0.71 0 0));
+  --ui-subtle: light-dark(oklch(0.55 0 0), oklch(0.62 0 0));
+  /* Edges: one solid neutral for every line, outline or divider. A card's
+     frame, a field, a button, a checkbox, a table's row rules, a key cap:
+     the same color at the same 1px weight, so no line reads darker,
+     lighter, thicker or thinner than another. Solid, not a see-through
+     tint: a tint came out darker over the page than over a card or a
+     field, so the same token drew two different lines.
+     --ui-border-strong (drawn by --ui-edge) and --ui-border are the same
+     value, two names kept so existing code resolves; --ui-border-subtle
+     too. Only hover, focus and selected step darker, to --ui-field-focus.
+     Colored ones mix a hue at --ui-border-tint: the status edges below, or
+     a component's own hue (a phase, a brand) at the same strength. */
+  --ui-border-strong: light-dark(oklch(0.954 0 0), oklch(0.26 0 0));
+  --ui-border: var(--ui-border-strong);
+  --ui-border-subtle: var(--ui-border);
+  --ui-border-tint: 32%;
+  --ui-fill: color-mix(in oklch, var(--ui-foreground) 4.5%, transparent);
+  --ui-fill-strong: color-mix(in oklch, var(--ui-foreground) 8%, transparent);
+  /* The same two fills, opaque, for what must hide what's under it (a
+     sticky cell, an avatar, a shell around panels): never a third gray. */
+  --ui-fill-solid: color-mix(in oklch, var(--ui-foreground) 4.5%, var(--ui-surface));
+  --ui-fill-strong-solid: color-mix(in oklch, var(--ui-foreground) 8%, var(--ui-surface));
+  --ui-ink: var(--ui-foreground);
+  --ui-on-ink: light-dark(oklch(0.99 0 0), oklch(0.17 0 0));
+  /* Secondary text on ink (a shortcut in a tooltip): the muted step. */
+  --ui-on-ink-muted: color-mix(in oklch, var(--ui-on-ink) 60%, var(--ui-ink));
+  /* Each theme has its own tuned hues; fills and icons hold 3:1, text 4.5:1. */
+  --ui-accent: light-dark(oklch(0.55 0.22 262), oklch(0.6 0.19 258));
+  --ui-on-accent: oklch(0.99 0 0);
+  --ui-success: light-dark(oklch(0.6 0.16 150), oklch(0.7 0.17 150));
+  /* Text on a success fill (a Merge button): white on light, ink on the lighter dark-theme green. */
+  --ui-on-success: light-dark(oklch(0.99 0 0), oklch(0.17 0 0));
+  --ui-warning: light-dark(oklch(0.67 0.155 58), oklch(0.78 0.15 72));
+  --ui-danger: light-dark(oklch(0.58 0.22 27), oklch(0.62 0.21 25));
+  --ui-on-danger: oklch(0.99 0 0);
+  --ui-accent-text: light-dark(oklch(0.49 0.21 263), oklch(0.76 0.12 255));
+  --ui-success-text: light-dark(oklch(0.5 0.13 150), oklch(0.8 0.17 152));
+  --ui-warning-text: light-dark(oklch(0.53 0.13 52), oklch(0.85 0.135 82));
+  --ui-danger-text: light-dark(oklch(0.51 0.2 27), oklch(0.74 0.15 22));
+  --ui-scrim: light-dark(oklch(0.2 0 0 / 0.2), oklch(0 0 0 / 0.5));
+  --ui-selection: color-mix(in oklch, var(--ui-accent) 24%, transparent);
+  --ui-border-accent: color-mix(in oklch, var(--ui-accent) var(--ui-border-tint), transparent);
+  --ui-border-success: color-mix(in oklch, var(--ui-success) var(--ui-border-tint), transparent);
+  --ui-border-warning: color-mix(in oklch, var(--ui-warning) var(--ui-border-tint), transparent);
+  --ui-border-danger: color-mix(in oklch, var(--ui-danger) var(--ui-border-tint), transparent);
+  /* Tints: the one fill behind status text (a badge, a pill, a changed
+     line). Stronger in dark, where a low-alpha hue disappears. */
+  --ui-accent-tint: light-dark(color-mix(in oklch, var(--ui-accent) 10%, transparent), color-mix(in oklch, var(--ui-accent) 16%, transparent));
+  --ui-success-tint: light-dark(color-mix(in oklch, var(--ui-success) 10%, transparent), color-mix(in oklch, var(--ui-success) 16%, transparent));
+  --ui-warning-tint: light-dark(color-mix(in oklch, var(--ui-warning) 10%, transparent), color-mix(in oklch, var(--ui-warning) 16%, transparent));
+  --ui-danger-tint: light-dark(color-mix(in oklch, var(--ui-danger) 10%, transparent), color-mix(in oklch, var(--ui-danger) 16%, transparent));
+
+  /* Focus: a line just inside the control's edge; fields darken their edge instead. */
+  --ui-ring-focus: 1px solid color-mix(in oklch, currentColor 45%, transparent);
+  --ui-ring-offset: -1px;
+  --ui-field-focus: color-mix(in oklch, var(--ui-foreground) 26%, var(--ui-border-strong));
+
+  /* Every edge and divider: one CSS pixel at a faint alpha, drawn as a
+     box-shadow (a ring, or an inset line on one side), never a `border`.
+     A half-pixel line drew crisp on straight sides but fuzzy and faint on
+     rounded corners; a full pixel at half the alpha carries the same ink
+     and draws the same on curves and straights. */
+  --ui-hairline: 1px;
+
+  /* Elevation, light mode only: three steps, each the edge plus a shadow in
+     the same ink, so the line and the shade read as one soft depth. Every
+     step is a tight contact layer under a wide, very faint ambient one; the
+     steps grow in reach, not in darkness at the edge.
+     Resting: cards and panels on the page. Raised: popovers, a featured
+     card, a hovered card. Floating: menus, dialogs, toasts.
+     Dark mode has no shadows at all: depth there comes from the surface
+     being lighter than the canvas, and from the edges. */
+  /* --ui-edge: a box's outline as a ring in place of a border, so it takes
+     no layout space. The same color as a field's edge: a card and the
+     controls in it read as one family. Already part of the resting and
+     floating shadows; never stack it on one of them, two rings read as a
+     darker edge. Raised carries no ring: pair it with --ui-edge. */
+  --ui-edge: 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  /* A track of choices (tabs, a segmented control): clear inside a hairline
+     edge, with one flat pill under the chosen item, inset from every side.
+     Both components read these, so they always look like one family. */
+  --ui-track-edge: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  --ui-track-inset: 4px;
+  --ui-track-pill: var(--ui-fill-strong);
+  /* The ambient layer barely drops (2px) and spreads wide, so the soft
+     shade wraps the whole card instead of pooling at its bottom edge. */
+  /* The edge, then only a wide soft spread that starts below it: nothing
+     darkens the line itself, so a card's edge is the same line as a
+     field's or a code block's, which carry no shadow. */
+  --ui-shadow-resting:
+    var(--ui-edge),
+    0 12px 32px -12px light-dark(oklch(0.21 0 0 / 0.09), transparent);
+  --ui-shadow-raised:
+    0 1px 2px light-dark(oklch(0.21 0 0 / 0.05), transparent),
+    0 4px 12px -4px light-dark(oklch(0.21 0 0 / 0.06), transparent),
+    0 16px 40px -12px light-dark(oklch(0.21 0 0 / 0.12), transparent);
+  --ui-shadow-floating:
+    var(--ui-edge),
+    0 2px 4px light-dark(oklch(0.21 0 0 / 0.05), transparent),
+    0 12px 28px -8px light-dark(oklch(0.21 0 0 / 0.1), transparent),
+    0 32px 72px -24px light-dark(oklch(0.21 0 0 / 0.16), transparent);
+  /* Every button, filled or not: the resting shadow's soft spread at a
+     control's scale. It starts below the edge, so a button's bottom line
+     is the same line as its top, never a darker one. */
+  --ui-shadow-control: 0 3px 6px -4px light-dark(oklch(0.21 0 0 / 0.08), transparent);
+  /* A ring in the surface's color that cuts a dot or avatar out of what it
+     overlaps (a status dot on an avatar, a stack of faces). */
+  --ui-knockout: 2px;
+}
+
+[data-theme="light"] { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
+
+/* Code drops ligatures, so != and => stay two characters. */
+:where(code, kbd, pre, samp) {
+  font-variant-ligatures: none;
+}
+
+/* A textarea wraps, so it never scrolls sideways: some browsers still show
+   a horizontal scrollbar for a long word or a trailing space. */
+:where(textarea) {
+  overflow-x: hidden;
+  overflow-wrap: break-word;
+}

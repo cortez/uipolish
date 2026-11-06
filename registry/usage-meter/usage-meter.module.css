@@ -1,0 +1,488 @@
+/* ---------- Trigger ---------- */
+
+.root {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.trigger {
+  --usage-arc: var(--ui-foreground);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: var(--ui-control-sm);
+  padding: 0 12px 0 10px;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: none;
+  color: var(--ui-muted);
+  isolation: isolate;
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.trigger[data-tone="warning"] {
+  --usage-arc: var(--ui-warning);
+  color: var(--ui-warning-text);
+}
+
+.trigger[data-tone="danger"] {
+  --usage-arc: var(--ui-danger);
+  color: var(--ui-danger-text);
+}
+
+/* No press scale: the popover is anchored to the trigger's real box. */
+.trigger::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: transparent;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .trigger[data-tone="calm"]:hover {
+    color: var(--ui-foreground);
+  }
+  .trigger:hover::before {
+    background: var(--ui-fill);
+  }
+}
+
+.trigger[aria-expanded="true"]::before {
+  background: var(--ui-fill);
+}
+
+.trigger[data-tone="calm"][aria-expanded="true"] {
+  color: var(--ui-foreground);
+}
+
+.trigger:active::before {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+.trigger:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+@media (pointer: coarse) {
+  .trigger::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+}
+
+/* Starts at twelve o'clock and fills clockwise. */
+.ring {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  rotate: -90deg;
+  overflow: visible;
+}
+
+:is([dir="rtl"]) .ring {
+  scale: 1 -1;
+}
+
+.ringTrack,
+.ringArc {
+  fill: none;
+  stroke-width: 2;
+}
+
+.ringTrack {
+  stroke: var(--ui-fill-strong);
+}
+
+.ringArc {
+  stroke: var(--usage-arc);
+  stroke-linecap: round;
+  stroke-dasharray: 100 200;
+  transition:
+    stroke-dashoffset var(--ui-dur-move) var(--ui-ease-move),
+    stroke var(--ui-dur-instant) var(--ui-ease-color),
+    opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* A round cap draws a dot at zero length. */
+.ringArc[data-empty] {
+  opacity: 0;
+}
+
+/* Translated, not scaled, so the leading end keeps its round cap. */
+.miniBar {
+  position: relative;
+  flex-shrink: 0;
+  width: 20px;
+  height: 4px;
+  overflow: hidden;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill-strong);
+}
+
+.miniBar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--usage-arc);
+  translate: calc((var(--usage) - 1) * 100%) 0;
+  transition:
+    translate var(--ui-dur-move) var(--ui-ease-move),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+:is([dir="rtl"]) .miniBar::before {
+  translate: calc((1 - var(--usage)) * 100%) 0;
+}
+
+/* ---------- Reserved width ---------- */
+
+/* The widest text sits hidden in the same cell, so a changing figure never moves what's beside it. */
+.reserve {
+  display: inline-grid;
+  justify-items: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.sizer,
+.reserved {
+  grid-area: 1 / 1;
+}
+
+.sizer {
+  visibility: hidden;
+}
+
+.triggerPercent {
+  justify-items: start;
+}
+
+/* ---------- Breakdown ---------- */
+
+.panel {
+  width: min(320px, calc(100vw - 16px));
+}
+
+/* Three categorical hues, mixed from the accent, success and danger tokens so each theme
+   gets its own tuned steps. Checked as a set in both themes: every pair stays apart under
+   protan and deutan simulation, and each holds 3:1 on the surface. Orchid, teal, blue
+   (the last, usually the largest, is the calmest):
+   none of them is the amber or red the tones use. Without segments the one fill is the blue. Segments
+   past the third, and "Other", are a neutral gray; free space is the unfilled track. */
+.breakdown {
+  --usage-1: color-mix(in oklch, color-mix(in oklch, var(--ui-accent) 45%, var(--ui-danger)) 90%, var(--ui-surface));
+  --usage-2: color-mix(in oklch, color-mix(in oklch, var(--ui-accent) 20%, var(--ui-success)) 90%, var(--ui-surface));
+  --usage-3: var(--ui-accent);
+  --usage-other: color-mix(in oklch, var(--ui-foreground) 42%, var(--ui-surface));
+  --usage-free: var(--ui-fill-strong);
+  --usage-free-edge: var(--ui-border-strong);
+  --usage-percent: var(--ui-muted);
+  --usage-icon: var(--ui-subtle);
+  --usage-message: var(--ui-muted);
+  display: grid;
+  gap: var(--ui-space-4);
+  min-width: 0;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+/* A tone tints what's left, never the segments: the hues keep meaning "what", the tint says "how much room". */
+.breakdown[data-tone="warning"] {
+  --usage-free: color-mix(in oklch, var(--ui-warning) 22%, transparent);
+  --usage-free-edge: var(--ui-border-warning);
+  --usage-percent: var(--ui-warning-text);
+  --usage-icon: var(--ui-warning);
+  --usage-message: var(--ui-warning-text);
+}
+
+.breakdown[data-tone="danger"] {
+  --usage-free: color-mix(in oklch, var(--ui-danger) 20%, transparent);
+  --usage-free-edge: var(--ui-border-danger);
+  --usage-percent: var(--ui-danger-text);
+  --usage-icon: var(--ui-danger);
+  --usage-message: var(--ui-danger-text);
+}
+
+.head {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.title {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+}
+
+.figure {
+  margin: 0;
+}
+
+.figureLine {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.used {
+  font-variant-numeric: tabular-nums;
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-2xl);
+  white-space: nowrap;
+}
+
+.of {
+  flex: 1;
+  min-width: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.percent {
+  color: var(--usage-percent);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* Each segment is a full-width layer clipped to its span, so a change slides its edges
+   instead of resizing anything. Every segment ends 2px short, and the free track starts
+   2px after the last one, so the gaps show the surface and neighbors never bleed. */
+.bar {
+  position: relative;
+  height: 8px;
+  overflow: hidden;
+  border-radius: var(--ui-radius-full);
+}
+
+/* From the danger tone the bar gets an edge, a hairline off it, so it still says "nearly out" once
+   the colored segments have filled the track. */
+.breakdown[data-tone="danger"] .bar {
+  outline: var(--ui-hairline) solid var(--usage-free-edge);
+  outline-offset: 2px;
+}
+
+.bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--usage-free);
+  /* min(used × 1000, 1) is 0 when nothing is used, so an empty bar has no gap at its start. */
+  clip-path: inset(0 0 0 calc(var(--used) * 100% + min(var(--used) * 1000, 1) * 2px));
+  transition:
+    clip-path var(--ui-dur-move) var(--ui-ease-move),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+:is([dir="rtl"]) .bar::before {
+  clip-path: inset(0 calc(var(--used) * 100% + min(var(--used) * 1000, 1) * 2px) 0 0);
+}
+
+.segment {
+  position: absolute;
+  inset: 0;
+  background: var(--usage-other);
+  clip-path: inset(0 calc((1 - var(--end)) * 100% + 2px) 0 calc(var(--start) * 100%));
+  transition:
+    clip-path var(--ui-dur-move) var(--ui-ease-move),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* The last segment runs to the end when the bar is full. */
+.segment[data-last][data-full] {
+  clip-path: inset(0 0 0 calc(var(--start) * 100%));
+}
+
+:is([dir="rtl"]) .segment {
+  clip-path: inset(0 calc(var(--start) * 100%) 0 calc((1 - var(--end)) * 100% + 2px));
+}
+
+:is([dir="rtl"]) .segment[data-last][data-full] {
+  clip-path: inset(0 calc(var(--start) * 100%) 0 0);
+}
+
+.segment[data-index="0"],
+.swatch[data-index="0"] {
+  background: var(--usage-1);
+}
+
+.segment[data-index="1"],
+.swatch[data-index="1"] {
+  background: var(--usage-2);
+}
+
+.segment[data-index="2"],
+.swatch[data-index="2"],
+.segment[data-index="used"] {
+  background: var(--usage-3);
+}
+
+.legend {
+  display: grid;
+  gap: var(--ui-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--ui-space-2);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+}
+
+.swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--ui-radius-full);
+  background: var(--usage-other);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.swatch[data-free] {
+  background: var(--usage-free);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--usage-free-edge);
+}
+
+.name {
+  composes: wrap from "../text/text.module.css";
+}
+
+.item[data-free] .name {
+  color: var(--ui-muted);
+}
+
+.amount {
+  color: var(--ui-muted);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+  white-space: nowrap;
+}
+
+/* ---------- What happens next ---------- */
+
+.status {
+  display: grid;
+  gap: var(--ui-space-3);
+  padding-top: var(--ui-space-4);
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+.message,
+.result {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: var(--ui-space-2);
+  align-items: start;
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.message {
+  color: var(--usage-message);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.message > svg,
+.result > svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  margin-top: calc((var(--ui-leading-md) - 16px) / 2);
+}
+
+.message > svg {
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  color: var(--usage-icon);
+}
+
+.result {
+  color: var(--ui-foreground);
+}
+
+.result:focus {
+  outline: none;
+}
+
+.result > svg {
+  color: var(--ui-success);
+}
+
+.figures {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.countBox {
+  justify-items: start;
+}
+
+.count {
+  font-weight: var(--ui-weight-medium);
+}
+
+.message[data-enter],
+.result[data-enter] {
+  animation: usage-in var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@keyframes usage-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.error {
+  margin: 0;
+  color: var(--ui-danger-text);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.action {
+  justify-self: start;
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ringArc,
+  .miniBar::before,
+  .bar::before,
+  .segment {
+    transition-property: stroke, opacity, background-color;
+  }
+  .message[data-enter],
+  .result[data-enter] {
+    animation: none;
+  }
+}

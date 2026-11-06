@@ -1,0 +1,263 @@
+.list {
+  --list-pad: var(--ui-space-1);
+  --row-pad: var(--ui-space-3);
+  --row-radius: calc(var(--ui-radius-lg) - var(--list-pad));
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  display: grid;
+  /* Long titles truncate instead of widening the list. */
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: var(--list-pad);
+  list-style: none;
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+}
+
+.list[data-variant="plain"] {
+  --list-pad: 0px;
+  --row-radius: var(--ui-radius-md);
+  margin-inline: calc(var(--row-pad) * -1);
+  background: none;
+  box-shadow: none;
+}
+
+/* Registered so the separator color can transition. */
+@property --list-separator {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.row {
+  --row-fill: transparent;
+  position: relative;
+  /* Keeps the z-index: -1 fill inside the row. */
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  padding-inline: var(--row-pad);
+  border-radius: var(--row-radius);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--row-fill);
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.leading {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  padding-block: var(--ui-space-2);
+  color: var(--ui-muted);
+}
+
+.leading > svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+}
+
+.main {
+  --list-separator: transparent;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--ui-space-3);
+  min-width: 0;
+  min-height: var(--ui-control-md);
+  padding-block: var(--ui-space-3);
+  background: linear-gradient(var(--list-separator), var(--list-separator)) top / 100% var(--ui-hairline) no-repeat;
+  transition: --list-separator var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.row + .row .main {
+  --list-separator: var(--ui-border);
+}
+
+.text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Not positioned, so its ::after stretches over the row: one target, one tab stop. */
+.primary {
+  display: grid;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  text-decoration: none;
+  outline: none;
+}
+
+.row[data-interactive] .primary {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* Above the masked title and description layers. */
+.primary:is(a, button)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--row-radius);
+}
+
+.title {
+  composes: wrap from "../text/text.module.css";
+  font-weight: var(--ui-weight-medium);
+}
+
+.description {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.trailing {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--ui-space-2);
+  color: var(--ui-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Controls sit above the stretched link so they take their own clicks. */
+.trailing :is(a, button, input, select, textarea, label, [tabindex]),
+.actions > * {
+  position: relative;
+  z-index: 2;
+}
+
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 2px;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.actions:last-child {
+  margin-inline-end: calc((var(--ui-control-sm) - 16px) / -2);
+}
+
+@media (hover: hover) {
+  .row:not(:hover, :focus-within) .actions {
+    opacity: 0;
+  }
+}
+
+.chevron {
+  flex-shrink: 0;
+  margin-inline-end: -4px;
+  color: var(--ui-subtle);
+  transition: translate var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+:is([dir="rtl"]) .chevron {
+  scale: -1 1;
+}
+
+@media (hover: hover) {
+  .row[data-interactive]:hover {
+    --row-fill: var(--ui-fill);
+  }
+  .row[data-interactive]:hover .chevron {
+    translate: 2px 0;
+  }
+  :is([dir="rtl"]) .row[data-interactive]:hover .chevron {
+    translate: -2px 0;
+  }
+  .row[data-interactive]:hover .main,
+  .row[data-interactive]:hover + .row .main {
+    --list-separator: transparent;
+  }
+}
+
+.row[data-current] {
+  --row-fill: var(--ui-fill-strong);
+}
+
+.row[data-current] .main,
+.row[data-current] + .row .main {
+  --list-separator: transparent;
+}
+
+/* Only a press on the row itself; pressing an action leaves the row alone. */
+.row[data-interactive]:has(.primary:active) {
+  --row-fill: color-mix(in oklch, var(--ui-foreground) 11%, transparent);
+}
+
+.row[data-interactive]:has(.primary:active)::before {
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.row:has(.primary:focus-visible) {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.row[data-interactive]:has(.primary:focus-visible) .chevron {
+  translate: 2px 0;
+}
+
+:is([dir="rtl"]) .row[data-interactive]:has(.primary:focus-visible) .chevron {
+  translate: -2px 0;
+}
+
+.row[data-disabled] :is(.leading, .title, .trailing, .chevron) {
+  opacity: 0.5;
+}
+
+.row[data-disabled] .primary {
+  cursor: default;
+}
+
+.action {
+  composes: inset from "../field/field.module.css";
+}
+
+/* Doubled so it outranks the composed inset rule in any stylesheet order. */
+.action.action {
+  border-radius: var(--ui-radius-full);
+}
+
+.action:disabled {
+  opacity: 0.5;
+}
+
+@media (pointer: coarse) {
+  .main {
+    min-height: var(--ui-control-lg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row[data-interactive]:has(.primary:active)::before {
+    scale: none;
+  }
+  .chevron {
+    transition: none;
+  }
+}

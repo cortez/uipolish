@@ -1,0 +1,122 @@
+/* Shared text utilities; other components compose these classes. */
+
+/* The fade only shows when text overflows: otherwise the scroll timeline is inactive. */
+
+@property --truncate-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+/* Text that's never cut: a long name, email or path breaks onto the next
+   line, inside a word only when there's nowhere else to break. Use this for
+   anything a person needs to read in full. */
+.wrap {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+/* One line, fading at the end when cut. Only for rows that must keep a
+   fixed height (a virtualized table); give the full text a title too. The padding/negative margin stops
+   overflow: hidden clipping descenders and accents at tight line heights. */
+.truncate {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-block: 0.2em;
+  margin-block: -0.2em;
+}
+
+/* Several lines; set --truncate-lines (default 2). */
+.truncateLines {
+  overflow: hidden;
+  max-height: calc(var(--truncate-lines, 2) * 1lh);
+}
+
+@supports (animation-timeline: scroll()) {
+  .truncate,
+  .truncateLines {
+    --truncate-to: right;
+    animation: truncate-overflow linear both;
+  }
+
+  :is([dir="rtl"]) .truncate,
+  :is([dir="rtl"]) .truncateLines {
+    --truncate-to: left;
+  }
+
+  .truncate {
+    mask-image: linear-gradient(to var(--truncate-to), #000 calc(100% - var(--truncate-fade)), transparent);
+    animation-timeline: scroll(self inline);
+  }
+
+  .truncateLines {
+    mask-image:
+      linear-gradient(#000 0 0),
+      linear-gradient(to var(--truncate-to), #000 calc(100% - var(--truncate-fade)), transparent);
+    mask-size: 100% calc(100% - 1lh), 100% 1lh;
+    mask-position: top, bottom;
+    mask-repeat: no-repeat;
+    animation-timeline: scroll(self block);
+  }
+}
+
+/* Without scroll timelines, fall back to an ellipsis. */
+@supports not (animation-timeline: scroll()) {
+  .truncate {
+    text-overflow: ellipsis;
+  }
+
+  .truncateLines {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--truncate-lines, 2);
+  }
+}
+
+@keyframes truncate-overflow {
+  from,
+  to {
+    --truncate-fade: 24px;
+  }
+}
+
+/* Visually hidden, still read by screen readers. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Work in progress: a light band sweeps across dimmed text. --sweep-dim sets the dim. */
+.sweep {
+  mask-image: linear-gradient(
+    90deg,
+    rgb(0 0 0 / var(--sweep-dim, 0.55)) 35%,
+    #000 50%,
+    rgb(0 0 0 / var(--sweep-dim, 0.55)) 65%
+  );
+  mask-size: 300% 100%;
+  mask-repeat: no-repeat;
+  animation: sweep var(--ui-dur-sweep) linear infinite;
+}
+
+@keyframes sweep {
+  from {
+    mask-position: 100% 0;
+  }
+  to {
+    mask-position: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sweep {
+    mask-image: none;
+    animation: none;
+  }
+}

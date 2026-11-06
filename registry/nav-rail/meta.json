@@ -1,0 +1,13 @@
+{
+  "name": "nav-rail",
+  "title": "Nav rail",
+  "summary": "A compact app rail of icon items. One tooltip glides from item to item, easing to each label’s width with the shortcut beside it, and a raised capsule glides to the current page.",
+  "version": "0.1.8",
+  "dependencies": [
+    "kbd",
+    "text"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

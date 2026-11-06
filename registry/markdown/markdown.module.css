@@ -1,0 +1,315 @@
+/* An assistant's reply at chat scale: 15px text on a 1.6 line, blocks 12
+   apart, headings, code and tables given more room. The first and last
+   blocks carry no outer margin, so it sits flush in a bubble. */
+.root {
+  min-width: 0;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-prose) var(--ui-font-sans);
+  overflow-wrap: break-word;
+  hanging-punctuation: first;
+}
+
+/* ---------- Rhythm ---------- */
+
+/* Every block container (the reply, a quote, a list item) spaces its
+   children the same way: margin on top only, never below. */
+:is(.root, .quote, .item, .taskBody) > * {
+  margin-block: 0;
+}
+
+:is(.root, .quote, .item, .taskBody) > * + * {
+  margin-top: var(--ui-space-3);
+}
+
+/* A lead-in line and its list read as one thought. */
+:is(.root, .quote, .item, .taskBody) > p + .list {
+  margin-top: var(--ui-space-2);
+}
+
+/* A nested list hangs right under its item's text. */
+:is(.item, .taskBody) > .list {
+  margin-top: var(--ui-space-1);
+}
+
+/* Boxes take more room on both sides, rules more again. */
+:is(.root, .quote, .item, .taskBody) > * + :is(.code, .table),
+:is(.root, .quote, .item, .taskBody) > :is(.code, .table) + * {
+  margin-top: var(--ui-space-4);
+}
+
+:is(.root, .quote, .item, .taskBody) > * + .rule,
+:is(.root, .quote, .item, .taskBody) > .rule + * {
+  margin-top: var(--ui-space-5);
+}
+
+/* A heading sits closer to what it introduces than to what came before. */
+:is(.root, .quote, .item, .taskBody) > * + .heading {
+  margin-top: var(--ui-space-5);
+}
+
+:is(.root, .quote, .item, .taskBody) > .heading + * {
+  margin-top: var(--ui-space-2);
+}
+
+/* ---------- Headings ---------- */
+
+/* Four sizes at most (typography.md): # is the 22px heading step, ## and
+   ### the body size in a heavier weight, #### a muted label. */
+.heading {
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-md);
+  text-wrap: balance;
+}
+
+.heading[data-depth="1"] {
+  font-size: var(--ui-text-2xl);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-heading);
+}
+
+.root > * + .heading[data-depth="1"] {
+  margin-top: var(--ui-space-6);
+}
+
+.root > * + .heading[data-depth="3"] {
+  margin-top: var(--ui-space-4);
+}
+
+.heading[data-depth="4"] {
+  color: var(--ui-muted);
+  font-weight: var(--ui-weight-medium);
+}
+
+/* ---------- Inline ---------- */
+
+.root strong {
+  font-weight: var(--ui-weight-semibold);
+}
+
+.root del {
+  color: var(--ui-muted);
+}
+
+.inlineCode {
+  padding: 2px 5px;
+  border-radius: calc(var(--ui-radius-sm) / 2);
+  background: var(--ui-fill);
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-code);
+  /* A path or identifier with nowhere to break still fits a phone. */
+  overflow-wrap: anywhere;
+}
+
+.link {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: var(--ui-subtle);
+  text-decoration-thickness: from-font;
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  a.link:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+/* ---------- Lists ---------- */
+
+.list {
+  padding-inline-start: var(--ui-space-5);
+}
+
+/* Set, not inherited from the browser: a reset such as Tailwind's
+   preflight clears list-style on every ul and ol. */
+ul.list {
+  list-style: disc outside;
+}
+
+ol.list {
+  list-style: decimal outside;
+}
+
+.item {
+  padding-inline-start: 2px;
+}
+
+.list > .item + .item {
+  margin-top: var(--ui-space-1);
+}
+
+/* A loose list (blank lines between items) keeps paragraph spacing. */
+.list:not([data-tight]) > .item + .item {
+  margin-top: var(--ui-space-3);
+}
+
+.item::marker {
+  color: var(--ui-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+/* A task: the box sits where the bullet would, on the first line. */
+.item[data-task] {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+  margin-inline-start: calc(var(--ui-space-5) * -1);
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+/* Centered on the first line: the box alone has no text to align by. */
+.task.task {
+  flex-shrink: 0;
+  margin-top: calc((1lh - var(--checkbox-size)) / 2);
+  cursor: default;
+}
+
+.item[data-task] > .taskBody {
+  flex: 1;
+  min-width: 0;
+  margin-top: 0;
+}
+
+/* ---------- Quote ---------- */
+
+.quote {
+  margin-inline: 0;
+  padding-inline-start: var(--ui-space-4);
+  /* Running text, not a pull quote: pretty, not balanced. */
+  text-wrap: pretty;
+  color: var(--ui-muted);
+  box-shadow: inset var(--ui-hairline) 0 0 var(--ui-border-strong);
+}
+
+:is([dir="rtl"]) .quote {
+  box-shadow: inset calc(var(--ui-hairline) * -1) 0 0 var(--ui-border-strong);
+}
+
+/* ---------- Rule ---------- */
+
+.rule {
+  height: var(--ui-hairline);
+  border: 0;
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+/* ---------- Code ---------- */
+
+/* ---------- Table ---------- */
+
+/* The kit's table: a box at rest with rows split by hairlines and no
+   fills. It scrolls sideways on its own, fading the edge that has more. */
+.table {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+
+.table:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.table[data-fade-end] {
+  mask-image: linear-gradient(to left, transparent, black var(--ui-space-6));
+}
+
+.table[data-fade-start] {
+  mask-image: linear-gradient(to right, transparent, black var(--ui-space-6));
+}
+
+.table[data-fade-start][data-fade-end] {
+  mask-image: linear-gradient(to right, transparent, black var(--ui-space-6), black calc(100% - var(--ui-space-6)), transparent);
+}
+
+.table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+  line-height: var(--ui-leading-md);
+}
+
+.table :is(th, td) {
+  min-width: 8rem;
+  padding: var(--ui-space-2) var(--ui-space-4);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table th {
+  color: var(--ui-muted);
+  font-weight: var(--ui-weight-medium);
+  white-space: nowrap;
+}
+
+.table :is(th, td)[data-align="center"] {
+  text-align: center;
+}
+
+.table :is(th, td)[data-align="right"] {
+  text-align: end;
+}
+
+/* A line between rows, never above the first: the box's own edge is there. */
+.table :where(tr + tr > *, thead + tbody tr:first-child > *) {
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+/* ---------- Caret ---------- */
+
+/* A quiet bar after the last word while the reply streams. It breathes
+   rather than blinks, and holds still under reduced motion. */
+.caret {
+  display: inline-block;
+  width: calc(var(--ui-hairline) * 2);
+  height: 1.1em;
+  margin-inline-start: 2px;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-muted);
+  vertical-align: -0.2em;
+  animation: caret var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;
+}
+
+/* In a tight list item the caret is the item's own child: keep the
+   block rhythm's top margin off it, or the line would drop. */
+.root .caret {
+  margin-block: 0;
+}
+
+@keyframes caret {
+  to {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    animation: none;
+  }
+
+  .link {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .caret {
+    background: CanvasText;
+  }
+
+  .quote {
+    border-inline-start: 1px solid CanvasText;
+  }
+
+  .rule {
+    border-top: 1px solid CanvasText;
+  }
+}

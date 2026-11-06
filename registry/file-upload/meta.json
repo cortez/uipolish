@@ -1,0 +1,12 @@
+{
+  "name": "file-upload",
+  "title": "File upload",
+  "summary": "Drop zone with a fixed-height file list. Each row fills with its upload progress, and the list scrolls inside its height, so the page never moves.",
+  "version": "0.3.3",
+  "dependencies": [
+    "field",
+    "icons",
+    "scroll-area",
+    "text"
+  ]
+}

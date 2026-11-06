@@ -1,0 +1,10 @@
+{
+  "name": "listbox",
+  "title": "Listbox",
+  "summary": "Shared parts for floating lists under a field: panel, row and status styles for Base UI popups, and a highlight that slides between rows.",
+  "version": "0.4.0",
+  "dependencies": [
+    "text"
+  ],
+  "primitive": true
+}

@@ -1,0 +1,11 @@
+{
+  "name": "markdown",
+  "title": "Markdown",
+  "summary": "Renders a model's markdown reply while it streams: no flash of raw asterisks, backticks or half-typed tables, code fences open as live code blocks, and HTML in the reply shows as text.",
+  "kit": "agent",
+  "version": "0.1.2",
+  "dependencies": [
+    "checkbox",
+    "code-block"
+  ]
+}

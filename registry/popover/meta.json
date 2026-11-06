@@ -1,0 +1,10 @@
+{
+  "name": "popover",
+  "title": "Popover",
+  "summary": "Click-triggered panel anchored to its trigger. It moves focus into forms, leaves it on the trigger for explanations, and returns it on close.",
+  "version": "0.2.2",
+  "dependencies": [],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

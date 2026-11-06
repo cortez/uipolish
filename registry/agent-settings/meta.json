@@ -1,0 +1,20 @@
+{
+  "name": "agent-settings",
+  "title": "Agent settings",
+  "summary": "A whole settings screen for an AI agent, built from the kit: model, MCP connections, what it may do without asking, a daily spending limit and memory. Every change saves in its row, and a sticky section nav follows you down the page.",
+  "kit": "agent",
+  "version": "0.1.4",
+  "dependencies": [
+    "animated-size",
+    "badge",
+    "button",
+    "connections",
+    "icons",
+    "model-picker",
+    "number-input",
+    "segmented-control",
+    "switch",
+    "text",
+    "usage-meter"
+  ]
+}

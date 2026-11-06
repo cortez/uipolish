@@ -1,0 +1,130 @@
+.field {
+  composes: field from "../field/field.module.css";
+}
+
+.label {
+  composes: label from "../field/field.module.css";
+}
+
+.control {
+  composes: shell from "../field/field.module.css";
+  display: grid;
+}
+
+.input {
+  composes: bare from "../field/field.module.css";
+  width: 100%;
+  border-radius: inherit;
+  text-overflow: ellipsis;
+}
+
+/* Scoped to the control so it outranks bare's padding: 0 in any stylesheet
+   order. If bare won, the text would run under both buttons. */
+.control .input {
+  padding-inline: calc(var(--shell-inset) + var(--ui-space-2)) calc(var(--ui-control-sm) * 2 + var(--shell-inset) + 2px);
+}
+
+.adornments {
+  position: absolute;
+  inset-block: var(--shell-inset);
+  inset-inline-end: var(--shell-inset);
+  display: flex;
+  gap: 2px;
+}
+
+.adornment {
+  composes: inset from "../field/field.module.css";
+}
+
+.adornment[data-hidden] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------- List ---------- */
+
+.popup {
+  composes: popup from "../listbox/listbox.module.css";
+  --listbox-width: var(--anchor-width);
+}
+
+.panel {
+  composes: panel from "../listbox/listbox.module.css";
+}
+
+.list {
+  composes: list from "../listbox/listbox.module.css";
+}
+
+.highlight {
+  composes: highlight from "../listbox/listbox.module.css";
+}
+
+.option {
+  composes: option from "../listbox/listbox.module.css";
+  gap: var(--ui-space-3);
+}
+
+.option[data-kind] {
+  gap: var(--ui-space-2);
+}
+
+.lead {
+  composes: lead from "../listbox/listbox.module.css";
+}
+
+.text {
+  composes: text from "../listbox/listbox.module.css";
+}
+
+.optionLabel {
+  composes: label from "../listbox/listbox.module.css";
+}
+
+.description {
+  composes: description from "../listbox/listbox.module.css";
+}
+
+.check {
+  composes: check from "../listbox/listbox.module.css";
+}
+
+.status {
+  composes: status from "../listbox/listbox.module.css";
+}
+
+/* The script paints the match back in full color with ::highlight(); it sets
+   data-highlights only where the browser supports that. */
+.list[data-highlights] :is(.optionLabel, .description)[data-match] {
+  color: var(--ui-muted);
+}
+
+.status[data-searching],
+.panel[data-waiting] {
+  animation: combobox-wait var(--ui-dur-fast) var(--ui-ease-enter) var(--combobox-wait, 300ms) both;
+}
+
+.panel[data-waiting] .status[data-searching] {
+  animation: none;
+}
+
+@keyframes combobox-wait {
+  from {
+    opacity: 0;
+  }
+}
+
+.sweep {
+  composes: sweep from "../text/text.module.css";
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status[data-searching],
+  .panel[data-waiting] {
+    animation: none;
+  }
+}

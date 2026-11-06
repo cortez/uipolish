@@ -1,0 +1,238 @@
+.field {
+  display: grid;
+  gap: var(--ui-space-2);
+  font-family: var(--ui-font-sans);
+}
+
+.label {
+  justify-self: start;
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.control {
+  --field-height: var(--ui-control-md);
+  --reveal-size: var(--ui-control-sm);
+  --reveal-inset: calc((var(--field-height) - var(--reveal-size)) / 2);
+  position: relative;
+  display: grid;
+}
+
+.field[data-size="lg"] .control {
+  --field-height: var(--ui-control-lg);
+}
+
+/* Separate registered parts, so focus can move --field-edge instantly while
+   --field-danger still eases. */
+@property --field-edge {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --field-danger {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+.input {
+  --field-edge: var(--ui-border-strong);
+  --field-edge-width: var(--ui-hairline);
+  width: 100%;
+  height: var(--ui-control-md);
+  /* 14px in, the same as a select's label, so stacked fields line up. */
+  padding-inline: calc(var(--reveal-inset) + 10px);
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--field-edge-width) color-mix(in oklch, var(--field-edge), var(--ui-danger) var(--field-danger));
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  outline: none;
+  transition:
+    --field-edge var(--ui-dur-instant) var(--ui-ease-color),
+    --field-danger var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+.field[data-size="lg"] .input {
+  height: var(--ui-control-lg);
+}
+
+.input[data-reveal] {
+  padding-inline-end: calc(var(--reveal-size) + var(--reveal-inset) * 2);
+}
+
+/* Edge draws its own reveal button; one is enough. */
+.input::-ms-reveal {
+  display: none;
+}
+
+.reveal {
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  position: absolute;
+  inset-block: var(--reveal-inset);
+  inset-inline-end: var(--reveal-inset);
+  display: grid;
+  place-items: center;
+  width: var(--reveal-size);
+  padding: 0;
+  border: 0;
+  border-radius: calc(var(--ui-radius-md) - var(--reveal-inset));
+  background: transparent;
+  color: var(--ui-muted);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+@media (hover: hover) {
+  .reveal:hover:not(:disabled) {
+    background: var(--ui-fill);
+    color: var(--ui-foreground);
+  }
+}
+
+.reveal:active:not(:disabled) {
+  background: var(--ui-fill-strong);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.reveal:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.reveal[aria-pressed="true"] {
+  color: var(--ui-foreground);
+}
+
+.reveal:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+@media (pointer: coarse) {
+  .reveal::before {
+    content: "";
+    position: absolute;
+    inset: calc(var(--reveal-inset) * -1);
+  }
+}
+
+.input::placeholder {
+  color: var(--ui-subtle);
+}
+
+@media (hover: hover) {
+  .input:hover:not(:focus, :disabled, [aria-invalid]) {
+    --field-edge: var(--ui-field-focus);
+  }
+}
+
+.input:focus {
+  --field-edge: var(--ui-field-focus);
+  --field-edge-width: 1px;
+  transition:
+    --field-edge 0s,
+    --field-danger var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+.input[aria-invalid] {
+  --field-danger: 100%;
+}
+
+.input:disabled {
+  opacity: 0.5;
+  cursor: default;
+  transition: none;
+}
+
+.message {
+  display: grid;
+  /* Set --field-message-lines when a longer error can arrive, so it never pushes the page. */
+  min-height: calc(var(--field-message-lines, 1) * var(--ui-leading-md));
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.hint,
+.error {
+  grid-area: 1 / 1;
+  min-width: 0;
+  /* Hidden after the fade so it also leaves the accessible description. */
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    visibility 0s linear var(--ui-dur-instant);
+}
+
+.hint[data-shown],
+.error[data-shown] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    visibility 0s;
+}
+
+@starting-style {
+  .error[data-shown] {
+    opacity: 0;
+  }
+}
+
+.hint {
+  color: var(--ui-muted);
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+  color: var(--ui-danger-text);
+}
+
+.error[data-shown] .errorText {
+  animation: error-swap var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.error svg {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  stroke-width: var(--ui-icon-stroke-regular);
+  margin-top: calc((var(--ui-leading-md) - 14px) / 2);
+  flex-shrink: 0;
+}
+
+@keyframes error-swap {
+  from {
+    opacity: 0;
+  }
+}
+
+/* iOS zooms the page into any field under 16px. */
+@media (pointer: coarse) {
+  .input {
+    font-size: var(--ui-text-touch);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .error[data-shown] .errorText {
+    animation: none;
+  }
+  .reveal:active:not(:disabled) {
+    scale: none;
+  }
+}

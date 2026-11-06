@@ -1,0 +1,598 @@
+/* The screen is its own container: the nav moves beside the sections once
+   the screen, not the window, is wide enough. */
+.root {
+  /* Where the nav sticks and where a jumped-to section lands. Set it to
+     your header's height plus 24 if the page has a sticky header. */
+  --agent-settings-top: var(--ui-space-6);
+  /* Links take a small button's padding; their text lines up with the title. */
+  --agent-settings-nav-inset: 14px;
+  container: agent-settings / inline-size;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+/* ---------- Title ---------- */
+
+.header {
+  display: grid;
+  gap: var(--ui-space-2);
+  padding-bottom: var(--ui-space-6);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-display);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-display);
+  letter-spacing: var(--ui-tracking-title);
+  text-wrap: balance;
+}
+
+.lede {
+  max-width: var(--ui-measure);
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+/* ---------- Layout and nav ---------- */
+
+/* Phones: the links sit in a wrapping row above the sections, 32 clear. */
+.layout {
+  display: grid;
+  gap: var(--ui-space-6);
+}
+
+.navList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin: 0;
+  /* The links' padding hangs outside, so their text starts at the title's edge. */
+  margin-inline-start: calc(var(--agent-settings-nav-inset) * -1);
+  padding: 0;
+  list-style: none;
+}
+
+.navLink {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--ui-control-sm);
+  padding-inline: var(--agent-settings-nav-inset);
+  border-radius: var(--ui-radius-sm);
+  color: var(--ui-muted);
+  /* One weight in every state, so marking the current link moves nothing. */
+  font: var(--ui-weight-medium) var(--ui-text-md) / 1 var(--ui-font-sans);
+  text-decoration: none;
+  white-space: nowrap;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .navLink:hover {
+    color: var(--ui-foreground);
+  }
+}
+
+.navLink:active {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+.navLink:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.navLink[aria-current="true"] {
+  background: var(--ui-fill);
+  color: var(--ui-foreground);
+}
+
+/* Links reach 40px under a finger. */
+@media (pointer: coarse) {
+  .navLink::after {
+    content: "";
+    position: absolute;
+    inset: -3px 0;
+  }
+}
+
+/* Wide: a column of links that stays in view and marks where you are. The
+   nav stretches the full height of the sections, so its list has room to stick. */
+@container agent-settings (min-width: 640px) {
+  .layout {
+    grid-template-columns: 144px minmax(0, 1fr);
+    column-gap: var(--ui-space-6);
+  }
+  .navList {
+    position: sticky;
+    top: var(--agent-settings-top);
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+}
+
+.content {
+  container: agent-settings-content / inline-size;
+  display: grid;
+  gap: var(--ui-space-8);
+  min-width: 0;
+}
+
+/* ---------- Sections ---------- */
+
+.section {
+  display: grid;
+  gap: var(--ui-space-5);
+  min-width: 0;
+  scroll-margin-top: var(--agent-settings-top);
+}
+
+.sectionHead,
+.subHead {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-heading);
+  text-wrap: balance;
+}
+
+.sectionTitle:focus {
+  outline: none;
+}
+
+.intro {
+  max-width: var(--ui-measure);
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.subsections {
+  display: grid;
+  gap: var(--ui-space-7);
+}
+
+.subsection {
+  display: grid;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+.subTitle {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+  text-wrap: balance;
+}
+
+/* Embedded as it is, at the column's full width. */
+.content .connections {
+  max-width: none;
+}
+
+/* ---------- Rows ---------- */
+
+/* Hairlines between rows, none above the first or under the last. */
+.rows {
+  display: grid;
+  min-width: 0;
+}
+
+.rows > * {
+  padding-block: var(--ui-space-4);
+}
+
+.rows > :first-child {
+  padding-top: 0;
+}
+
+.rows > :last-child {
+  padding-bottom: 0;
+}
+
+.rows > * + * {
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--ui-space-5);
+  align-items: center;
+  min-width: 0;
+}
+
+/* Beside a 48px field, the label sits level with the field's middle. */
+.row[data-align="field"] {
+  align-items: start;
+}
+
+.row[data-align="field"] .text {
+  padding-top: calc((var(--ui-control-md) - var(--ui-leading-md)) / 2);
+}
+
+.text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* The status rides after the label, wrapping under it before the label is cut. */
+.labelLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px var(--ui-space-2);
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.description {
+  max-width: var(--ui-measure);
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.focusTarget:focus {
+  outline: none;
+}
+
+.control {
+  display: flex;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.rowBody {
+  grid-column: 1 / -1;
+  min-width: 0;
+  padding-top: var(--ui-space-3);
+}
+
+/* Narrow column: the control drops under its text. */
+@container agent-settings-content (max-width: 440px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--ui-space-3);
+  }
+  .row[data-align="field"] .text {
+    padding-top: 0;
+  }
+  .control {
+    justify-content: flex-start;
+  }
+  /* The picker's label starts at the text's edge; its fill hangs outside. */
+  .model {
+    margin-inline-start: -14px;
+  }
+  .rowBody {
+    padding-top: 0;
+  }
+}
+
+/* "Saving…" waits 300ms before it shows, so a quick save shows only "Saved". */
+.status {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  min-width: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  opacity: 0;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-exit);
+}
+
+.status[data-shown] {
+  opacity: 1;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.status[data-shown][data-state="saving"] {
+  transition-delay: 300ms;
+}
+
+.status[data-state="failed"] {
+  color: var(--ui-danger-text);
+}
+
+/* 14px beside 13px text. */
+.statusIcon {
+  flex-shrink: 0;
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+}
+
+.status[data-state="saved"] .statusIcon {
+  color: var(--ui-success);
+}
+
+.status[data-state="failed"] .statusIcon {
+  color: var(--ui-danger);
+}
+
+.sweep {
+  composes: sweep from "../text/text.module.css";
+}
+
+/* ---------- Model, permissions, limit ---------- */
+
+/* Held to its own height, so the "Allow" that can't be picked stays in line. */
+.policy {
+  flex-shrink: 0;
+}
+
+/* ---------- Always allowed ---------- */
+
+/* Removed rows and groups close through grid-template-rows, so nothing jumps. */
+.group,
+.toolRow {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.group[data-closing],
+.toolRow[data-closing] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse) var(--ui-dur-instant);
+}
+
+.clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.groupInner {
+  display: grid;
+}
+
+/* Space between groups sits inside the clip, so it closes with the group. */
+.group + .group .groupInner {
+  padding-top: var(--ui-space-5);
+}
+
+.groupLabel {
+  margin: 0;
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+}
+
+.tools {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.toolInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--ui-space-5);
+  align-items: center;
+  padding-block: var(--ui-space-3);
+}
+
+.toolRow + .toolRow .toolInner {
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+.toolText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.toolLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px var(--ui-space-2);
+  min-width: 0;
+}
+
+.toolName {
+  min-width: 0;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-code);
+  line-height: var(--ui-leading-md);
+  overflow-wrap: anywhere;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.toolBadge {
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.toolRow[data-revoked] .toolName {
+  color: var(--ui-muted);
+}
+
+.toolRow[data-revoked] .toolBadge {
+  opacity: 0.5;
+}
+
+.toolDescription {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.toolDescription[data-error] {
+  color: var(--ui-danger-text);
+}
+
+.toolAction {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.revoked {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+}
+
+.revoked[data-enter] {
+  animation: agent-settings-fade var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@keyframes agent-settings-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.revokedText:focus {
+  outline: none;
+}
+
+.dot {
+  color: var(--ui-subtle);
+}
+
+/* The ghost button's label sits as close to the dot as the dot to "Revoked". */
+.undo {
+  margin-inline-start: calc(6px - 20px);
+}
+
+.empty {
+  max-width: var(--ui-measure);
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+/* ---------- Memory ---------- */
+
+.notes {
+  display: grid;
+  gap: var(--ui-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A small mark on each note's first line. */
+.notes li {
+  position: relative;
+  padding-inline-start: var(--ui-space-4);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.notes li::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--ui-leading-md) / 2 - 2px);
+  inset-inline-start: 2px;
+  width: 4px;
+  height: 4px;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-subtle);
+}
+
+.confirm {
+  display: grid;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-3);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-fill);
+}
+
+.notes + .confirm {
+  margin-top: var(--ui-space-4);
+}
+
+.confirm[data-enter] {
+  animation: agent-settings-in var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@keyframes agent-settings-in {
+  from {
+    opacity: 0;
+    translate: 0 4px;
+  }
+}
+
+.confirm p {
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.confirm strong {
+  font-weight: var(--ui-weight-semibold);
+}
+
+.confirm .failure {
+  color: var(--ui-danger-text);
+}
+
+.confirmActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ui-space-2);
+}
+
+@container agent-settings-content (max-width: 440px) {
+  .confirmActions > * {
+    flex: 1;
+  }
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .group[data-closing],
+  .toolRow[data-closing] {
+    transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+  }
+  .confirm[data-enter] {
+    animation: agent-settings-fade var(--ui-dur-fast) var(--ui-ease-enter);
+  }
+}

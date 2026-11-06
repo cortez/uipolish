@@ -1,0 +1,22 @@
+{
+  "name": "sidebar",
+  "title": "Sidebar",
+  "summary": "The app sidebar for an AI product: a workspace switcher, items with counts and shortcuts, folding sections, a recent chats list with rename, pin and delete, and an account menu. Collapses to an icon rail with one gliding tooltip, and becomes a drawer on phones.",
+  "version": "0.1.7",
+  "dependencies": [
+    "button",
+    "drawer",
+    "dropdown-menu",
+    "icons",
+    "kbd",
+    "nav-rail",
+    "scroll-area",
+    "skeleton",
+    "tabs",
+    "text",
+    "tooltip"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

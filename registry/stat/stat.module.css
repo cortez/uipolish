@@ -1,0 +1,115 @@
+.root {
+  --stat-positive: var(--ui-success-text);
+  --stat-negative: var(--ui-danger-text);
+  display: grid;
+  align-content: start;
+  gap: var(--ui-space-1);
+  min-width: 0;
+  margin: 0;
+  font-family: var(--ui-font-sans);
+}
+
+.root dd {
+  margin: 0;
+  min-width: 0;
+}
+
+.label {
+  overflow: clip;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+  white-space: nowrap;
+}
+
+.label[data-clipped] {
+  mask-image: linear-gradient(to left, transparent, black var(--ui-space-5));
+}
+
+:is([dir="rtl"]) .label[data-clipped] {
+  mask-image: linear-gradient(to right, transparent, black var(--ui-space-5));
+}
+
+.figure {
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-2xl);
+  white-space: nowrap;
+}
+
+.figure[data-word] .figureText {
+  font-size: var(--ui-text-2xl);
+}
+
+.delta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--ui-space-2);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+}
+
+.change {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--ui-muted);
+  font-weight: var(--ui-weight-medium);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.delta[data-tone="positive"] .change {
+  color: var(--stat-positive);
+}
+
+.delta[data-tone="negative"] .change {
+  color: var(--stat-negative);
+}
+
+.arrow {
+  width: 14px;
+  height: 14px;
+  /* Optical nudge: the arrow's ink sits short of its box. */
+  margin-inline-start: -1px;
+}
+
+.compare {
+  color: var(--ui-muted);
+}
+
+/* Fixed two-line height keeps neighbouring tiles level, even with no hint. */
+.hint {
+  height: calc(var(--ui-leading-md) * 2);
+  overflow: clip;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.hint[data-clipped] {
+  mask-image:
+    linear-gradient(black, black),
+    linear-gradient(to left, transparent, black var(--ui-space-6));
+  mask-size:
+    100% var(--ui-leading-md),
+    100% var(--ui-leading-md);
+  mask-position:
+    top,
+    bottom;
+  mask-repeat: no-repeat;
+}
+
+:is([dir="rtl"]) .hint[data-clipped] {
+  mask-image:
+    linear-gradient(black, black),
+    linear-gradient(to right, transparent, black var(--ui-space-6));
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}

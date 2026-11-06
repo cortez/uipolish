@@ -1,0 +1,393 @@
+.field {
+  composes: field from "../field/field.module.css";
+  justify-items: start;
+}
+
+.label {
+  composes: label from "../field/field.module.css";
+}
+
+/* ---------- Field ---------- */
+
+.trigger {
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  max-width: 100%;
+  height: var(--ui-control-md);
+  padding-inline: var(--ui-space-3);
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / 1 var(--ui-font-sans);
+  text-align: start;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.trigger[data-placeholder] .value {
+  color: var(--ui-subtle);
+}
+
+.icon {
+  color: var(--ui-muted);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .trigger:hover:not(:disabled, [data-popup-open], :focus-visible, [data-invalid]) {
+    box-shadow:
+      inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
+  }
+}
+
+.trigger:active:not(:disabled) {
+  background: var(--ui-fill-solid);
+  transition-duration: var(--ui-dur-press);
+}
+
+.trigger:focus-visible,
+.trigger[data-popup-open] {
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--ui-field-focus);
+  transition-duration: 0s;
+}
+
+.trigger[data-invalid] {
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-danger);
+}
+
+.trigger[data-invalid]:is(:focus-visible, [data-popup-open]) {
+  box-shadow: inset 0 0 0 1px var(--ui-danger);
+}
+
+.trigger:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ---------- Calendar ---------- */
+
+.popup {
+  composes: popup from "../listbox/listbox.module.css";
+}
+
+.panel {
+  composes: panel from "../listbox/listbox.module.css";
+  --panel-pad: var(--ui-space-3);
+  --inner-radius: calc(var(--ui-radius-lg) - var(--panel-pad));
+  --cell: 36px;
+  --weekday-height: var(--ui-control-sm);
+  --panel-radius: var(--ui-radius-lg);
+  display: grid;
+  gap: var(--ui-space-2);
+  padding: var(--panel-pad);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  /* A block-sized popover enters like a dialog: the fade answers on the fast
+     step, the scale and the blur settle on the base one. */
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-base) var(--ui-ease-enter),
+    filter var(--ui-dur-base) var(--ui-ease-enter);
+}
+
+/* Leaves one step faster on the exit curve (from the listbox panel). */
+
+@media (pointer: coarse) {
+  .panel {
+    --cell: 40px;
+  }
+}
+
+.header {
+  display: grid;
+  grid-template-columns: var(--ui-control-sm) 1fr var(--ui-control-sm);
+  align-items: center;
+}
+
+.title {
+  display: grid;
+  justify-items: center;
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+  text-align: center;
+}
+
+.titleText {
+  font-variant-numeric: tabular-nums;
+}
+
+.nav {
+  composes: inset from "../field/field.module.css";
+}
+
+/* Doubled so it outranks the composed inset rule in any stylesheet order. */
+.nav.nav {
+  border-radius: var(--inner-radius);
+}
+
+.day::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.nav[aria-disabled] {
+  opacity: 0.35;
+}
+
+/* ---------- Grid ---------- */
+
+/* Runs out to the panel's edges, so a sliding month fades through the
+   panel's padding instead of meeting a hard cut. At rest every day sits
+   inside the padding, clear of the fade. */
+.stage {
+  position: relative;
+  overflow: hidden;
+  margin-inline: calc(var(--panel-pad) * -1);
+  padding-inline: var(--panel-pad);
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 var(--panel-pad),
+    #000 calc(100% - var(--panel-pad)),
+    transparent
+  );
+}
+
+.grid {
+  border-collapse: collapse;
+  border-spacing: 0;
+  table-layout: fixed;
+  width: calc(var(--cell) * 7);
+}
+
+.weekday {
+  height: var(--weekday-height);
+  padding: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-regular);
+  line-height: var(--ui-leading-sm);
+  text-align: center;
+}
+
+.cell {
+  width: var(--cell);
+  height: var(--cell);
+  padding: 0;
+}
+
+.day {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--cell);
+  height: var(--cell);
+  padding: 0;
+  border: 0;
+  border-radius: var(--inner-radius);
+  background: none;
+  color: var(--ui-foreground);
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.day > * {
+  position: relative;
+}
+
+@media (hover: hover) {
+  .day:hover:not([aria-disabled], [data-selected])::before {
+    background: var(--ui-fill-strong);
+  }
+}
+
+.day:active:not([aria-disabled])::before {
+  background: color-mix(in oklch, var(--ui-foreground) 16%, transparent);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.day:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.day[data-today]::after {
+  content: "";
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  width: 10px;
+  height: 1.5px;
+  margin-left: -5px;
+  border-radius: 1px;
+  background: currentColor;
+}
+
+.day[data-selected] {
+  color: var(--ui-on-accent);
+  font-weight: var(--ui-weight-medium);
+}
+
+.day[data-selected]::before {
+  background: var(--ui-accent);
+}
+
+.day[aria-disabled] {
+  color: var(--ui-subtle);
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in oklch, currentColor 50%, transparent);
+  cursor: default;
+}
+
+.cell[data-between] {
+  background: var(--ui-fill-strong);
+}
+
+.cell[data-edge="start"] {
+  background: linear-gradient(to right, transparent 50%, var(--ui-fill-strong) 50%);
+}
+
+.cell[data-edge="end"] {
+  background: linear-gradient(to left, transparent 50%, var(--ui-fill-strong) 50%);
+}
+
+:is([dir="rtl"]) .cell[data-edge="start"] {
+  background: linear-gradient(to left, transparent 50%, var(--ui-fill-strong) 50%);
+}
+
+:is([dir="rtl"]) .cell[data-edge="end"] {
+  background: linear-gradient(to right, transparent 50%, var(--ui-fill-strong) 50%);
+}
+
+.cell[data-between]:first-child,
+.cell[data-between]:not(.cell:is([data-between], [data-edge]) + .cell) {
+  border-start-start-radius: var(--inner-radius);
+  border-end-start-radius: var(--inner-radius);
+}
+
+.cell[data-between]:last-child,
+.cell[data-between]:has(+ .cell:not([data-between], [data-edge])) {
+  border-start-end-radius: var(--inner-radius);
+  border-end-end-radius: var(--inner-radius);
+}
+
+.day:not([data-selected]):is(.cell[data-between] .day):hover::before {
+  background: var(--ui-fill);
+}
+
+/* ---------- Month slide ---------- */
+
+/* The new month comes from the side you moved toward and the old one leaves
+   the other way: both slide 20px on the glide spring, so neither swings
+   past its place. The old one is gone on the instant step before the new
+   one is more than faint, so the digits never read on top of each other.
+   The weekday row and the panel hold still; the title morphs (TextMorph). */
+.panel {
+  --slide: 20px;
+}
+
+.weeks[data-dir] {
+  animation:
+    date-in-x var(--ui-dur-glide) var(--ui-ease-glide),
+    date-in-fade var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+}
+
+.leaving {
+  position: absolute;
+  inset-block-start: var(--weekday-height);
+  inset-inline-start: var(--panel-pad);
+  pointer-events: none;
+  animation:
+    date-out-fade var(--ui-dur-instant) var(--ui-ease-color) forwards,
+    date-out-x var(--ui-dur-glide) var(--ui-ease-glide) forwards;
+}
+
+.panel [data-dir="-1"],
+.panel [data-leaving="-1"] {
+  --dir: -1;
+}
+
+:is([dir="rtl"]) .panel {
+  --flip: -1;
+}
+
+@keyframes date-in-x {
+  from {
+    translate: calc(var(--dir, 1) * var(--flip, 1) * var(--slide)) 0;
+  }
+}
+
+@keyframes date-in-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes date-out-x {
+  from {
+    translate: var(--from-x, 0px) 0;
+  }
+  to {
+    translate: calc(var(--dir, 1) * var(--flip, 1) * var(--slide) * -1) 0;
+  }
+}
+
+@keyframes date-out-fade {
+  from {
+    opacity: var(--from-opacity, 1);
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.status {
+  margin: 0;
+  padding-inline: var(--ui-space-1);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-align: center;
+}
+
+/* Reduced motion: the months crossfade in place and the panel only fades. */
+@media (prefers-reduced-motion: reduce) {
+  /* Doubled to outrank the listbox panel's own states in any stylesheet order. */
+  .panel.panel {
+    transition-property: opacity;
+  }
+  .panel.panel:is([data-starting-style], [data-ending-style]) {
+    scale: none;
+    filter: none;
+  }
+  .weeks[data-dir] {
+    animation: date-in-fade var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+  }
+  .leaving {
+    animation: date-out-fade var(--ui-dur-instant) var(--ui-ease-color) forwards;
+  }
+  .day:active:not([aria-disabled])::before {
+    scale: none;
+  }
+}

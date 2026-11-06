@@ -1,0 +1,15 @@
+{
+  "name": "date-picker",
+  "title": "Date picker",
+  "summary": "Date field that opens a calendar dialog with full grid keyboard support. Months slide a short way in the direction you moved, crossfading inside a soft-edged panel, and ranges are optional.",
+  "version": "0.4.3",
+  "dependencies": [
+    "field",
+    "icons",
+    "listbox",
+    "text-morph"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "progress",
+  "title": "Progress",
+  "summary": "Linear progress whose fill moves on a spring. The indeterminate state sweeps a band of light through the track, and a segmented variant shows named steps.",
+  "version": "0.3.2",
+  "dependencies": [
+    "text-morph"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

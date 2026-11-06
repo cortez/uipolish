@@ -1,0 +1,277 @@
+.group {
+  --radio-size: 16px;
+  /* Space between the legend, the options and any message. Margins, not a
+     grid gap: Safari keeps a floated legend out of a fieldset's grid, so a
+     gap never reached it and the first option touched the legend. */
+  --group-gap: var(--ui-space-2);
+  display: block;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: var(--ui-font-sans);
+}
+
+.legend {
+  /* Floated, so the legend leaves the fieldset's edge and sits in the flow. */
+  float: inline-start;
+  width: 100%;
+  margin: 0 0 var(--group-gap);
+  padding: 0;
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.options {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.legend + * {
+  clear: both;
+}
+
+.group > :not(.legend) + * {
+  margin-top: var(--group-gap);
+}
+
+/* ---------- List ---------- */
+
+.option {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-2);
+  padding-block: var(--ui-space-2);
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* No text, so its baseline is its bottom edge; --optical recenters it. */
+.control {
+  --optical: calc(var(--radio-size) / 2 - 0.5cap);
+  position: relative;
+  flex-shrink: 0;
+  width: var(--radio-size);
+  height: var(--radio-size);
+  margin-top: calc(var(--optical) * -1);
+  translate: 0 var(--optical);
+  transition: scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+/* Without the `cap` unit (Safari before 17.2) --optical is invalid and the
+   control drops onto the baseline, 2-6px high. The system faces' capitals
+   are about 0.7em tall, so half of that stands in. */
+@supports not (height: 1cap) {
+  .control {
+    --optical: calc(var(--radio-size) / 2 - 0.35em);
+  }
+}
+
+/* Base UI's Radio.Root is the ring: it takes focus, and the group moves it with the arrow keys. */
+.radio {
+  /* A small circle needs more than a field's edge to be found at a glance. */
+  --radio-edge: var(--ui-border-strong);
+  --radio-edge-width: var(--ui-hairline);
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: 50%;
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--radio-edge-width) var(--radio-edge);
+  /* Drives the focus line. */
+  color: var(--ui-foreground);
+  cursor: inherit;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.option[data-checked] .radio {
+  --radio-edge: var(--ui-accent);
+  background: var(--ui-accent);
+}
+
+.control::before {
+  content: "";
+  position: absolute;
+  inset: calc((var(--radio-size) - 6px) / 2);
+  z-index: 1;
+  border-radius: 50%;
+  background: var(--ui-on-accent);
+  clip-path: circle(0 at 50% 50%);
+  pointer-events: none;
+  transition: clip-path var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.option[data-checked] .control::before {
+  clip-path: circle(50% at 50% 50%);
+  transition: clip-path var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.text {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.labelLine {
+  display: grid;
+}
+
+.label {
+  font-weight: var(--ui-weight-medium);
+}
+
+.meta {
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.description {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+@media (hover: hover) {
+  .option:hover:not([data-disabled], [data-checked]) .radio {
+    --radio-edge: var(--ui-muted);
+  }
+}
+
+.option:active:not([data-disabled], [data-checked]) .radio {
+  background: var(--ui-fill-strong-solid);
+  transition-duration: var(--ui-dur-press);
+}
+
+.option:active:not([data-disabled]) .control {
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.radio:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.option[data-disabled] {
+  cursor: default;
+}
+
+.option[data-disabled] :is(.control, .text) {
+  opacity: 0.5;
+}
+
+.group[data-variant="list"] .control::after {
+  content: "";
+  position: absolute;
+  inset: calc((var(--radio-size) - 24px) / 2);
+}
+
+@media (pointer: coarse) {
+  .group[data-variant="list"] .control::after {
+    inset: calc((var(--radio-size) - 40px) / 2);
+  }
+}
+
+/* ---------- Cards ---------- */
+
+.group[data-variant="cards"] {
+  --group-gap: var(--ui-space-4);
+}
+
+.group[data-variant="cards"] .options {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 176px), 1fr));
+  gap: var(--ui-space-3);
+}
+
+.group[data-variant="cards"] .option {
+  --card-pad: var(--ui-space-4);
+  --optical: calc((var(--ui-leading-md) - var(--radio-size)) / 2);
+  isolation: isolate;
+  align-items: flex-start;
+  min-height: 0;
+  padding: calc(var(--card-pad) - var(--optical)) var(--card-pad) var(--card-pad);
+  border-radius: calc(var(--radio-size) / 2 + var(--card-pad));
+}
+
+.group[data-variant="cards"] .option::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  transition:
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.group[data-variant="cards"] .control {
+  margin-top: 0;
+  translate: 0 var(--optical);
+}
+
+.group[data-variant="cards"] .option[data-checked]::before {
+  /* The chosen card: the selected edge, at the same hairline as every edge. */
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
+}
+
+@media (hover: hover) {
+  .group[data-variant="cards"] .option:hover:not([data-disabled], [data-checked])::before {
+    box-shadow:
+      inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
+  }
+}
+
+.group[data-variant="cards"] .option:active:not([data-disabled])::before {
+  background: var(--ui-fill-solid);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+/* The card draws focus inside its edge, where it can be seen. */
+.group[data-variant="cards"] .radio:focus-visible {
+  outline: none;
+}
+
+.group[data-variant="cards"] .option:has(.radio:focus-visible) {
+  outline: var(--ui-ring-focus);
+  outline-offset: -3px;
+}
+
+/* Invalid: the message under the group carries it. The edges only lean
+   toward the danger color, so a row of red rings doesn't shout over it. */
+.options[aria-invalid] .option:not([data-checked]) .radio {
+  --radio-edge: var(--ui-border-danger);
+}
+
+.group[data-variant="cards"] .options[aria-invalid] .option:not([data-checked])::before {
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-danger);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .control::before,
+  .option[data-checked] .control::before {
+    transition: none;
+  }
+  .option:active:not([data-disabled]) .control {
+    scale: none;
+  }
+  .group[data-variant="cards"] .option:active:not([data-disabled])::before {
+    scale: none;
+  }
+}

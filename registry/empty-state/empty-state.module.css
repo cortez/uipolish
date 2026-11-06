@@ -1,0 +1,186 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--ui-space-6) var(--ui-space-4);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+  text-align: center;
+}
+
+.root[data-size="page"] {
+  padding-block: var(--ui-space-8);
+}
+
+/* ---------- The drawing ---------- */
+
+/* The art box is 120 x 88 drawing units, each drawing centered in it.
+   --art-size is its width in px as a plain number, so strokes can be divided
+   by the scale and stay at icon weight on screen. */
+.art {
+  --art-size: 196;
+  --art-width: calc(var(--art-size) * 1px);
+  --art-step: calc(var(--ui-dur-instant) / 2);
+  display: block;
+  flex-shrink: 0;
+  width: var(--art-width);
+  max-width: 100%;
+  aspect-ratio: 120 / 88;
+  margin-bottom: var(--ui-space-4);
+}
+
+.root[data-size="page"] .art {
+  --art-size: 264;
+  margin-bottom: var(--ui-space-5);
+}
+
+/* Strokes are the icon set's medium weight on screen at any size. */
+.sketch {
+  --art-line: color-mix(in oklch, var(--ui-foreground) 34%, var(--ui-surface));
+  --art-bone: color-mix(in oklch, var(--ui-foreground) 13%, var(--ui-surface));
+  --art-stroke: calc(var(--ui-icon-stroke-medium) * 120 / var(--art-size));
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  stroke: var(--art-line);
+  stroke-width: var(--art-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: miter;
+  stroke-miterlimit: 2;
+}
+
+/* Opaque, so nearer faces cover what's behind them. */
+.paper {
+  fill: var(--ui-surface);
+}
+
+.shade {
+  fill: color-mix(in oklch, var(--ui-foreground) 7%, var(--ui-surface));
+}
+
+/* Text on a card: a filled pill, no edge. */
+.bone {
+  fill: var(--art-bone);
+  stroke: none;
+}
+
+/* The one picked out: today on the calendar. */
+.mark {
+  fill: var(--art-line);
+  stroke: none;
+}
+
+/* A cable: a wide stroke with the surface down its middle, so it reads as a tube with two edges. */
+.cord {
+  stroke-width: calc(var(--art-stroke) * 4.2);
+}
+
+.core {
+  stroke: var(--ui-surface);
+  stroke-width: calc(var(--art-stroke) * 2.2);
+}
+
+.paper,
+.shade,
+.line,
+.cord,
+.core {
+  stroke-dasharray: 1 3;
+  stroke-dashoffset: 0;
+}
+
+/* Hidden pose only with scripting on: without JS nothing would trigger the draw. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .art:not([data-drawn]) :is(.paper, .shade, .line, .cord, .core) {
+    stroke-dashoffset: 1.3;
+    fill-opacity: 0;
+  }
+  .art:not([data-drawn]) :is(.bone, .mark) {
+    opacity: 0;
+  }
+
+  /* Back to front: each face draws its edge, then its fill settles in behind
+     the line so nearer faces cover what they hide. */
+  .art[data-drawn] :is(.paper, .shade, .line, .cord, .core) {
+    transition:
+      stroke-dashoffset var(--ui-dur-base) var(--ui-ease-draw),
+      fill-opacity var(--ui-dur-fast) var(--ui-ease-enter);
+    transition-delay: calc(var(--i, 0) * var(--art-step));
+  }
+  .art[data-drawn] :is(.bone, .mark) {
+    transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+    transition-delay: calc(var(--i) * var(--art-step));
+  }
+}
+
+/* Forced colors: lines only, in the text color. */
+@media (forced-colors: active) {
+  .sketch {
+    --art-line: CanvasText;
+    --art-bone: GrayText;
+  }
+  .paper,
+  .shade {
+    fill: Canvas;
+  }
+  .core {
+    stroke: Canvas;
+  }
+}
+
+/* ---------- Text ---------- */
+
+.text {
+  display: grid;
+  justify-items: center;
+  gap: var(--ui-space-1);
+}
+
+.title {
+  margin: 0;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+  text-wrap: balance;
+}
+
+.root[data-size="page"] .title {
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-2xl);
+}
+
+.description {
+  max-width: 36ch;
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-wrap: balance;
+}
+
+.root[data-size="page"] .description {
+  max-width: 40ch;
+}
+
+/* flex-grow only takes effect once the actions wrap, so stacked buttons go full width. */
+.action {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ui-space-2);
+  max-width: 100%;
+  margin-top: var(--ui-space-4);
+}
+
+.action > * {
+  flex: 1 0 auto;
+}
+
+.root[data-size="page"] .action {
+  margin-top: var(--ui-space-5);
+}

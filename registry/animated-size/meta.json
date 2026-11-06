@@ -1,0 +1,8 @@
+{
+  "name": "animated-size",
+  "title": "Animated size",
+  "summary": "A box that eases its height or width to fit its content. It holds still on mount and while hidden, and resizes instantly under reduced motion.",
+  "version": "0.1.1",
+  "dependencies": [],
+  "primitive": true
+}

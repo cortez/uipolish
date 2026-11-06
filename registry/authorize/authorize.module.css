@@ -1,0 +1,445 @@
+.root {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  /* The card changes size only when the result replaces the form: then it
+     glides to the new size, with no overshoot. Inside the form, the parts
+     that open (the error) pace themselves and the card follows them frame
+     by frame, so nothing chases. */
+  --animated-size-grow: 0s;
+  --animated-size-shrink: 0s;
+  --animated-size-ease: var(--ui-ease-glide);
+  display: grid;
+  gap: var(--ui-space-5);
+  width: 100%;
+  max-width: 360px;
+  padding: var(--ui-space-6) var(--ui-space-5) var(--ui-space-5);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+.root:is([data-status="connected"], [data-status="denied"]) {
+  --animated-size-grow: var(--ui-dur-glide);
+  --animated-size-shrink: var(--ui-dur-glide);
+}
+
+/* Two app tiles joined by a dotted line. Nothing sits on the line while
+   the person decides. While the grant is issued, a soft band of light
+   passes along the dots toward the server, in step with the button's own
+   sweep. Connected: the line draws in solid and a check appears on it.
+   Failed: the dots step back and an x appears. Cancelled: the dots step
+   back. One quiet change per state, no bounce. */
+.marks {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--ui-control-lg);
+  height: var(--ui-control-lg);
+  overflow: hidden;
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  box-shadow:
+    var(--ui-edge),
+    var(--ui-shadow-raised);
+  color: var(--ui-foreground);
+}
+
+.mark > :is(img, svg) {
+  width: 28px;
+  height: 28px;
+}
+
+/* No logo: the first letter on a tint picked from the name. The tint is
+   the accent turned to another hue, at the accent's own lightness and
+   chroma, so every monogram has the same weight and contrast as the
+   accent does, in light and dark. */
+.monogram {
+  --authorize-tint: var(--ui-accent);
+  --authorize-tint: oklch(from var(--ui-accent) l c var(--authorize-hue));
+  --authorize-letter: var(--ui-accent-text);
+  --authorize-letter: oklch(from var(--ui-accent-text) l c var(--authorize-hue));
+  background: color-mix(in oklch, var(--authorize-tint) 12%, var(--ui-surface));
+  box-shadow:
+    inset 0 0 0 var(--ui-hairline) color-mix(in oklch, var(--authorize-tint) var(--ui-border-tint), transparent),
+    var(--ui-shadow-raised);
+  color: var(--authorize-letter);
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-semibold);
+  line-height: 1;
+  letter-spacing: var(--ui-tracking-title);
+}
+
+.link {
+  --authorize-dot: 6px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  /* Twelve dots, one every 6px. */
+  width: calc(var(--authorize-dot) * 12);
+  height: var(--ui-icon-md);
+  margin-inline: var(--ui-space-3);
+}
+
+.dots,
+.dots::after,
+.solid {
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+}
+
+.dots {
+  height: 4px;
+  margin-top: -2px;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.dots::before,
+.dots::after {
+  content: "";
+  inset: 0;
+  background: radial-gradient(circle 1.25px, currentColor 70%, transparent) 0 0 / var(--authorize-dot) 100% repeat-x;
+}
+
+.dots::before {
+  position: absolute;
+  color: var(--ui-subtle);
+  opacity: 0.6;
+}
+
+/* The band: the same dots in the muted tone, seen through a soft window
+   that travels toward the server. Off until submitting. */
+.dots::after {
+  margin-top: 0;
+  color: var(--ui-muted);
+  opacity: 0;
+  mask-image: linear-gradient(90deg, transparent 35%, black 50%, transparent 65%);
+  mask-size: 300% 100%;
+  mask-repeat: no-repeat;
+  mask-position: 100% 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.root[data-status="submitting"] .dots::after {
+  opacity: 1;
+  transition-duration: var(--ui-dur-base);
+  animation: authorize-sweep var(--ui-dur-sweep) linear infinite;
+}
+
+@keyframes authorize-sweep {
+  from {
+    mask-position: 100% 0;
+  }
+  to {
+    mask-position: 0 0;
+  }
+}
+
+/* The solid line, drawn from the asking app toward the server. */
+.solid {
+  height: 1.5px;
+  margin-top: -0.75px;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-ink);
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+/* The result, on the middle of the line: a small disc that fades in,
+   never grows or swaps glyphs. */
+.result {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  border-radius: var(--ui-radius-full);
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.result > svg {
+  width: var(--ui-icon-xs);
+  height: var(--ui-icon-xs);
+  /* The medium line, drawn at 12px. */
+  --ui-icon-stroke: calc(var(--ui-icon-stroke-medium) * 16 / 12);
+}
+
+/* A ring of the card's surface parts the line around the disc. */
+.result {
+  box-shadow: 0 0 0 var(--ui-knockout) var(--ui-surface);
+}
+
+.result[data-result="connected"] {
+  background: var(--ui-ink);
+  color: var(--ui-on-ink);
+}
+
+.result[data-result="error"] {
+  background: color-mix(in oklch, var(--ui-danger) 10%, var(--ui-surface));
+  box-shadow:
+    0 0 0 var(--ui-hairline) var(--ui-border-danger),
+    0 0 0 var(--ui-knockout) var(--ui-surface);
+  color: var(--ui-danger);
+}
+
+/* Connected: the dots give way to the solid line as it draws, and the
+   check fades in once the line has reached it. */
+.root[data-status="connected"] .dots {
+  opacity: 0;
+  transition-duration: var(--ui-dur-glide);
+}
+
+.root[data-status="connected"] .solid {
+  clip-path: inset(0);
+  transition: clip-path var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+.root[data-status="connected"] .result[data-result="connected"] {
+  opacity: 1;
+  transition: opacity var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-glide) / 4);
+}
+
+/* Failed: the line steps back and the x fades in. */
+.root[data-status="error"] .dots {
+  opacity: 0.5;
+}
+
+.root[data-status="error"] .result[data-result="error"] {
+  opacity: 1;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+/* Cancelled: nothing is joined; the line steps back. */
+.root[data-status="denied"] .dots {
+  opacity: 0.4;
+}
+
+.body {
+  display: grid;
+  gap: var(--ui-space-5);
+}
+
+/* The result fades in while the card glides to its size: no rise, no
+   delay, so the card is never seen empty. */
+.body[data-enter] {
+  animation: authorize-in var(--ui-dur-base) var(--ui-ease-enter) backwards;
+}
+
+@keyframes authorize-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Centered: who wants what, and as whom. The list below stays aligned to
+   its boxes, because centered checkboxes don't line up. */
+.head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  gap: var(--ui-space-2);
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-md);
+  text-wrap: balance;
+}
+
+.title:focus {
+  outline: none;
+}
+
+.sub {
+  min-width: 0;
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+  overflow-wrap: anywhere;
+}
+
+/* The account select, the compact pill, under the heading. The row is the
+   card's full width so a long email is cut at its edge instead of running
+   past it; the pill centers in it. Its options read from the start. */
+.accountRow {
+  width: 100%;
+}
+
+.accountRow .account {
+  justify-items: center;
+  text-align: start;
+}
+
+/* Set off by a hairline above and below, so the list reads as the one
+   thing to check. */
+.scopes {
+  display: grid;
+  padding-block: var(--ui-space-4);
+  box-shadow:
+    inset 0 var(--ui-hairline) 0 var(--ui-border),
+    inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+}
+
+.scopes ul {
+  display: grid;
+  gap: var(--ui-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Required rows line their text up with the checkbox labels around them. */
+.scope {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  column-gap: var(--ui-space-2);
+  align-items: start;
+}
+
+/* A required permission: the same box as the checkboxes beside it, filled
+   in a neutral tone and without hover, so it reads as on and fixed. */
+.locked {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
+  border-radius: calc(var(--ui-radius-sm) / 2);
+  background: var(--ui-fill-strong);
+  color: var(--ui-muted);
+}
+
+.locked > svg {
+  width: var(--ui-icon-xs);
+  height: var(--ui-icon-xs);
+  /* The regular line, drawn at 12px. */
+  --ui-icon-stroke: calc(var(--ui-icon-stroke-regular) * 16 / 12);
+}
+
+.text {
+  display: grid;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.description {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-regular);
+  line-height: var(--ui-leading-sm);
+}
+
+/* Centered with the rest; the icon sits in the line like a word. */
+.warning,
+.error {
+  margin: 0;
+  text-align: center;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.warning > svg,
+.error > svg {
+  display: inline-block;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  margin-inline-end: var(--ui-space-1);
+  vertical-align: -3px;
+}
+
+.warning {
+  color: var(--ui-warning-text);
+}
+
+.warning > svg {
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  color: var(--ui-warning);
+}
+
+/* Its room opens and closes on the glide, and the return line under it
+   moves with it. */
+.errorSlot {
+  --animated-size-grow: var(--ui-dur-glide);
+  --animated-size-shrink: var(--ui-dur-base);
+}
+
+.error {
+  padding-top: var(--ui-gap-stack);
+  color: var(--ui-danger-text);
+  animation: authorize-in var(--ui-dur-base) var(--ui-ease-enter);
+}
+
+.error > svg {
+  color: var(--ui-danger);
+}
+
+/* Allow, then Cancel under it, then where the browser goes next. */
+.foot {
+  display: grid;
+}
+
+.buttons {
+  display: grid;
+  gap: var(--ui-gap-tight);
+}
+
+.host {
+  min-width: 0;
+  margin: var(--ui-gap-stack) 0 0;
+  text-align: center;
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  overflow-wrap: anywhere;
+}
+
+.host code {
+  color: var(--ui-muted);
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-code);
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .body[data-enter],
+  .error {
+    animation: none;
+  }
+  /* No band: the dots take the muted tone in place while submitting, and
+     the solid line fades in whole instead of drawing. */
+  .root[data-status="submitting"] .dots::after {
+    animation: none;
+    mask-image: none;
+  }
+  .solid,
+  .root[data-status="connected"] .solid {
+    clip-path: none;
+    opacity: 0;
+    transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+  }
+  .root[data-status="connected"] .solid {
+    opacity: 1;
+  }
+  .root[data-status="connected"] .result[data-result="connected"] {
+    transition-delay: 0s;
+  }
+}

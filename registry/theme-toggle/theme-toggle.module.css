@@ -1,0 +1,148 @@
+/* --moon is 0 for the sun and 1 for the moon; every shape is drawn from it,
+   so the two states are one drawing and only the number changes. */
+.toggle {
+  --moon: 0;
+}
+
+/* After hydration the button carries its state. Before it, the state comes
+   from <html data-theme> (set by ThemeScript before paint), so the icon is
+   right on the first frame and never flips when React takes over. */
+.toggle[data-state="dark"],
+:global(html[data-theme="dark"]) .toggle:not([data-state]) {
+  --moon: 1;
+}
+
+/* No script at all: the system's theme. */
+@media (prefers-color-scheme: dark) {
+  :global(html:not([data-theme])) .toggle:not([data-state]) {
+    --moon: 1;
+  }
+}
+
+.glyph {
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke, 1.5);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The outline is drawn as filled circles: the outer edge filled, the inner
+   edge masked away, half a stroke either side of each line. */
+.glyph circle {
+  --half: calc(var(--ui-icon-stroke, 1.5) * 0.5px);
+  stroke: none;
+}
+
+/* The one circle that paints; the rest are mask. */
+.ring {
+  fill: currentColor;
+}
+
+/* The sun's disc, which grows into the moon. */
+.disc {
+  --r: calc(2.75px + 3px * var(--moon));
+  cx: 8px;
+  cy: 8px;
+}
+
+/* The circle that bites the crescent out: off the top right for the sun,
+   over the disc for the moon. */
+.bite {
+  --r: 4.5px;
+  cx: 11.25px;
+  cy: 4.75px;
+  transform: translate(calc(4.5px - 4.5px * var(--moon)), calc(4.5px * var(--moon) - 4.5px));
+}
+
+.outer {
+  r: calc(var(--r) + var(--half));
+}
+
+.inner {
+  r: calc(var(--r) - var(--half));
+}
+
+.rays {
+  transform-box: view-box;
+  transform-origin: 8px 8px;
+  rotate: calc(45deg * var(--moon));
+  scale: calc(1 - 0.5 * var(--moon));
+  opacity: calc(1 - var(--moon));
+}
+
+/* Disc and bite glide: what a track holds lands without passing its mark,
+   so the crescent never over-bites and springs back. */
+.toggle[data-state] .disc {
+  transition: r var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+.toggle[data-state] .bite {
+  transition: transform var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+/* To the moon the rays turn and pull in as they fade, out of the way first. */
+.toggle[data-state="dark"] .rays {
+  transition:
+    rotate var(--ui-dur-base) var(--ui-ease-exit),
+    scale var(--ui-dur-base) var(--ui-ease-exit),
+    opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* Back to the sun they come out once the disc has shrunk a little, on the snap. */
+.toggle[data-state="light"] .rays {
+  transition:
+    rotate var(--ui-dur-snap) var(--ui-ease-snap) var(--ui-dur-press),
+    scale var(--ui-dur-snap) var(--ui-ease-snap) var(--ui-dur-press),
+    opacity var(--ui-dur-fast) var(--ui-ease-color) var(--ui-dur-press);
+}
+
+/* Reduced motion: no shape moves; the new icon fades in where the old one was. */
+@media (prefers-reduced-motion: reduce) {
+  .toggle[data-state] :is(.disc, .bite, .rays) {
+    transition: none;
+  }
+  .toggle[data-changed][data-state="dark"] .glyph {
+    animation: fade-to-moon var(--ui-dur-base) var(--ui-ease-color);
+  }
+  .toggle[data-changed][data-state="light"] .glyph {
+    animation: fade-to-sun var(--ui-dur-base) var(--ui-ease-color);
+  }
+}
+
+/* Two names for one fade, so each change restarts it. */
+@keyframes fade-to-moon {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-to-sun {
+  from {
+    opacity: 0;
+  }
+}
+
+/* The page crossfades while the theme changes (useTheme's setTheme). Every
+   snapshot holds still and the new one fades in over the old, with no
+   additive blend, so nothing flashes brighter mid-way. */
+:global(:root:active-view-transition-type(theme)::view-transition-group(*)) {
+  animation: none;
+}
+
+:global(:root:active-view-transition-type(theme)::view-transition-old(*)) {
+  display: block;
+  animation: none;
+}
+
+:global(:root:active-view-transition-type(theme)::view-transition-new(*)) {
+  animation: theme-in var(--ui-dur-base) var(--ui-ease-color) both;
+  mix-blend-mode: normal;
+}
+
+@keyframes theme-in {
+  from {
+    opacity: 0;
+  }
+}
