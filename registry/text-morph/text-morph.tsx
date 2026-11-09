@@ -209,18 +209,24 @@ export function TextMorph({ children, className }: { children: string; className
     const current = new Set(glyphs.map((g) => g.key));
     const leaving = last.glyphs.some((g) => !current.has(g.key));
     const lead = exit * (leaving ? 0.85 : 0.4);
+    // Arrivals finish with the width, never after it: each starts once the
+    // leaving letters clear, a little after the one before, and is timed to
+    // land on the same frame the glide does.
+    const arriving = glyphs.filter((g) => !last.lefts.has(g.key)).length;
+    const stagger = Math.min(15, (duration - lead - 120) / Math.max(1, arriving));
     let entering = 0;
     for (const g of glyphs) {
       const el = nodes.get(g.key)!;
       const before = last.lefts.get(g.key);
       if (before === undefined) {
+        const delay = lead + entering++ * stagger;
         el.animate(
           {
             opacity: [0, 1],
             transform: [enterFrom, "none"],
             filter: ["blur(2px)", "none"],
           },
-          { duration: duration * 0.75, easing: enter, delay: lead + entering++ * 15, fill: "backwards" },
+          { duration: Math.max(120, duration - delay), easing: enter, delay, fill: "backwards" },
         );
         continue;
       }
