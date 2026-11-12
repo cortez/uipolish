@@ -41,9 +41,6 @@ Button uses it for string labels.
 4. Leaving letters are drawn once more in a layer React never renders into,
    then fade and lift out.
 5. The wrapper's width animates from its old width to the new one.
-   Arriving letters are timed to finish with it, never after: the stagger
-   shrinks for long labels so the last letter still lands on the glide's
-   final frame.
 
 ## Motion
 
@@ -51,7 +48,7 @@ Button uses it for string labels.
 |---|---|---|
 | Shared letters slide, width follows | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
 | Leaving letters | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |
-| Arriving letters | Start after 40% of the leave time, or 85% when letters are leaving, then up to 15ms apart; each ends on the same frame as the width glide | `--ui-ease-enter` |
+| Arriving letters | `--ui-dur-glide` (320ms), after 40% of the leave time, or 85% when letters are leaving, +15ms per letter | `--ui-ease-enter` |
 
 The width animation is a sanctioned exception to "animate transform and
 opacity only": it's one inline box, and the alternative is a jump. Under

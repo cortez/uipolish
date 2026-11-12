@@ -2,7 +2,7 @@
   "name": "text-morph",
   "title": "Text morph",
   "summary": "Animates a label from one string to another. Shared letters slide into place, new ones fade in, and the width follows, with no animation library.",
-  "version": "0.1.5",
+  "version": "0.1.4",
   "dependencies": [
     "text"
   ],
