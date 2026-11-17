@@ -10,8 +10,7 @@ so a column of stats lines up at its end. Screen readers hear one sentence,
 <DiffStat added={22} removed={0} hideZero />   {/* a new file: "+22" */}
 ```
 
-It's the stat in File changes' rows and totals, Turn summary's file chips,
-and anywhere else a change is counted. `formatCount` (“1,204”) and
+Use it anywhere a change is counted: a file row, a total, a chip. `formatCount` (“1,204”) and
 `describeDiff` (the spoken sentence) are exported for a totals line or a
 tab's count.
 

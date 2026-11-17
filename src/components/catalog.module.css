@@ -1,10 +1,13 @@
-/* A directory: every demo at its real size, never scaled, four to a row
-   (three, then two, then one as the column narrows). Whole-pixel columns,
+/* A bento directory: every demo at its real size, never scaled, on a
+   three-column grid (two, then one as the column narrows). A card spans
+   as many columns as its demo needs (set by Catalog), and dense packing
+   fills the gaps. Whole-pixel columns,
    so no card's edge lands between pixels. */
 .grid {
   --cols: 1;
   display: grid;
   grid-template-columns: repeat(var(--cols), round(down, (100% - var(--ui-space-4) * (var(--cols) - 1)) / var(--cols), 1px));
+  grid-auto-flow: row dense;
   gap: var(--ui-space-6) var(--ui-space-4);
   width: 100%;
   margin: 0;
@@ -21,12 +24,6 @@
 @media (min-width: 960px) {
   .grid {
     --cols: 3;
-  }
-}
-
-@media (min-width: 1200px) {
-  .grid {
-    --cols: 4;
   }
 }
 
@@ -73,20 +70,31 @@
   transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
-/* Hover anywhere on it: the faintest fill shows what the link covers. */
+/* Hover anywhere on it: a barely-there tint shows what the link covers. */
 @media (hover: hover) {
   .item:hover .card {
-    background: var(--ui-fill);
+    background: color-mix(in oklch, var(--ui-foreground) 2%, transparent);
   }
 }
 
 /* A size container, so a demo's fluid spacing reads the card. Every demo
-   is drawn at one scale, 80%, so the directory shows more of each and all
-   of them stay comparable: the same zoom for every card, never a fit. */
+   at its real size, centered both ways.
+   It clips, so a demo too wide for its card shows as overflow, which is
+   how the card knows to span more columns. */
 .demo {
   min-width: 0;
+  overflow: hidden;
   container-type: inline-size;
-  zoom: 0.8;
+}
+
+/* Centered: what's inside a demo's scenarios (the label and the
+   component) takes its own width in the middle of the card. A scenario
+   itself stays full width, since some are size containers, which collapse
+   when shrink-wrapped. */
+.demo > [class*="stack"] > :not([class*="group"]),
+.demo > [class*="stack"] > [class*="group"] > * {
+  justify-self: center;
+  max-width: 100%;
 }
 
 /* A demo's own controls (Start over, Replay, state pickers) are for its

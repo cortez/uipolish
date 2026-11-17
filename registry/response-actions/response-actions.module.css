@@ -249,17 +249,17 @@
 }
 
 .send[data-ready]::before {
-  background: var(--ui-accent);
+  background: var(--ui-ink);
 }
 
 @media (hover: hover) {
   .send[data-ready]:hover::before {
-    background: color-mix(in oklch, var(--ui-accent) 90%, black);
+    background: color-mix(in oklch, var(--ui-ink) 86%, var(--ui-on-ink));
   }
 }
 
 .send[data-ready]:active::before {
-  background: color-mix(in oklch, var(--ui-accent) 82%, black);
+  background: color-mix(in oklch, var(--ui-ink) 78%, var(--ui-on-ink));
   scale: var(--ui-scale-press);
   transition-duration: var(--ui-dur-press);
 }

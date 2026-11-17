@@ -1,10 +1,12 @@
 import type { NextConfig } from "next";
 
-/** Docs pages that no longer exist: whole screens and apps. */
+/** Docs pages that no longer exist: whole screens, apps and feature-sized pieces. */
 const RETIRED = [
   "agent-task", "approvals-inbox", "billing", "chat-app", "knowledge-base", "onboarding", "pricing",
   "run-history", "settings", "sign-in", "team-members", "voice-session",
   "agent-console", "agent-workspace", "ai-chat-app",
+  "agent-settings", "authorize", "connections", "plan-approval", "tool-approval", "merge-status",
+  "file-changes", "turn-summary", "batch-progress", "background-run", "research-progress", "pipeline",
 ];
 
 const nextConfig: NextConfig = {
@@ -28,8 +30,8 @@ const nextConfig: NextConfig = {
       { source: "/components", destination: "/docs", permanent: true },
       { source: "/components/:name", destination: "/docs/:name", permanent: true },
       { source: "/docs/installation", destination: "/docs", permanent: true },
-      // UI Polish is components: the whole screens and apps that were here
-      // are retired, and their pages land on the docs.
+      // UI Polish is components: the screens, apps and feature-sized pieces
+      // that were here are retired, and their pages land on the docs.
       ...RETIRED.map((name) => ({ source: `/docs/${name}`, destination: "/docs", permanent: true })),
       // Retired pages.
       { source: "/pricing", destination: "/docs", permanent: true },

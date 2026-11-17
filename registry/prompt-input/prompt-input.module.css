@@ -389,7 +389,7 @@
   min-width: calc(var(--ui-control-sm) * var(--ui-capsule));
   padding-inline: var(--ui-space-2);
   overflow: clip;
-  background: var(--ui-accent);
+  background: var(--ui-ink);
   color: var(--ui-on-ink);
   font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
   white-space: nowrap;
@@ -403,12 +403,12 @@
 
 @media (hover: hover) {
   .send:hover:not([data-state="empty"], :disabled) {
-    background: color-mix(in oklch, var(--ui-accent) 90%, black);
+    background: color-mix(in oklch, var(--ui-ink) 86%, var(--ui-on-ink));
   }
 }
 
 .send:active:not([data-state="empty"], :disabled) {
-  background: color-mix(in oklch, var(--ui-accent) 82%, black);
+  background: color-mix(in oklch, var(--ui-ink) 78%, var(--ui-on-ink));
   scale: var(--ui-scale-press);
   transition-duration: var(--ui-dur-press);
 }

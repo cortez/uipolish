@@ -1,5 +1,6 @@
 /* Search: a field-like button in the top bar, the place to type. A light
-   edge, the label, and the shortcut at its end. On a phone, the icon only. */
+   edge, the label, and the shortcut at its end, all in the text color like
+   the rest of the bar. On a phone, the icon only. */
 .search {
   --ui-icon-stroke: var(--ui-icon-stroke-regular);
   display: flex;
@@ -12,17 +13,17 @@
   border-radius: var(--ui-radius-control);
   background: none;
   box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
-  color: var(--ui-muted);
+  color: var(--ui-foreground);
   font: inherit;
   text-align: start;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
 @media (hover: hover) {
   .search:hover {
-    color: var(--ui-foreground);
+    background: var(--ui-fill);
   }
 }
 
@@ -47,7 +48,7 @@
 }
 
 .kbd {
-  color: var(--ui-subtle);
+  color: inherit;
   font: inherit;
   font-size: var(--ui-text-sm);
 }

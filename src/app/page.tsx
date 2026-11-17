@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "@/components/link";
 import { ButtonLink } from "@registry/button/button-link";
 import { Catalog, type CatalogItem } from "@/components/catalog";
-import { PRIMITIVES } from "@/components/component-index";
 import { CopyPrompt } from "@/components/copy-prompt";
 import { SiteLayout } from "@/components/site-layout";
 import { getOpinions, listComponents, type ComponentMeta } from "@/lib/content";
@@ -18,18 +17,12 @@ export const metadata: Metadata = pageMetadata({ title: SITE_TITLE, description:
 
 export default async function Home() {
   const all = (await listComponents()).filter((c) => !c.primitive);
-  const primitive = (c: ComponentMeta) => PRIMITIVES.includes(c.name);
   const opinions = await getOpinions();
   const item = (c: ComponentMeta): CatalogItem => ({ name: c.name, title: c.title });
   const byTitle = (a: ComponentMeta, b: ComponentMeta) => a.title.localeCompare(b.title);
-  const groups = [
-    { id: "components", title: "Components", items: all.filter((c) => c.kit !== "agent" && !primitive(c)) },
-    { id: "agent-kit", title: "Agent kit", items: all.filter((c) => c.kit === "agent") },
-    { id: "primitives", title: "Primitives", items: all.filter(primitive) },
-  ].filter((g) => g.items.length > 0);
 
   return (
-    <SiteLayout wide>
+    <SiteLayout>
       <JsonLd nodes={homeLd()} />
       <header className={site.intro}>
         <h1 className={site.title}>React components for AI products, with every state already designed.</h1>
@@ -41,14 +34,12 @@ export default async function Home() {
         </div>
       </header>
 
-      {groups.map((g) => (
-        <section key={g.id} id={g.id} className={`${site.section} ${styles.wide}`} aria-labelledby={`${g.id}-title`}>
-          <h2 id={`${g.id}-title`} className={site.heading}>
-            {g.title}
-          </h2>
-          <Catalog items={g.items.sort(byTitle).map(item)} />
-        </section>
-      ))}
+      <section id="components" className={`${site.section} ${styles.wide}`} aria-labelledby="components-title">
+        <h2 id="components-title" className={site.heading}>
+          Components
+        </h2>
+        <Catalog items={all.sort(byTitle).map(item)} />
+      </section>
 
       <section className={site.section} aria-labelledby="install-title">
         <h2 id="install-title" className={site.heading}>

@@ -1,17 +1,13 @@
-/* One column for the top bar and the content, so the mark and the page
-   start on one edge. A reading width by default; the directory's width
-   with `wide`. Centered on a whole pixel, so no hairline lands between
-   pixels. */
+/* One column for the top bar and the content on every page, so the mark
+   and the page start on one edge everywhere. Text inside keeps its own
+   reading measure. Centered on a whole pixel, so no hairline lands
+   between pixels. */
 .page {
-  --page-max: calc(800px + var(--ui-space-5) * 2);
+  --page-max: calc(1120px + var(--ui-space-5) * 2);
   max-width: var(--page-max);
   margin-inline: auto;
   margin-inline: max(0px, round(down, (100% - var(--page-max)) / 2, 1px));
   padding: var(--ui-space-6) var(--ui-space-5) calc(var(--ui-space-8) * 2);
-}
-
-.wide {
-  --page-max: calc(1280px + var(--ui-space-5) * 2);
 }
 
 /* The page's title a section gap under the bar. */

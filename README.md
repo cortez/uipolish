@@ -81,11 +81,9 @@ control, Select, Sidebar, Skeleton, Slider, Stat, Switch, Tabs, Text field, Them
 Tooltip.
 
 **Agent kit:** components for AI products, grouped in the docs by
-`"kit": "agent"` in `meta.json`: Agent settings, Authorize, Background run,
-Batch progress, Code block, Connections, Diff stat, Diff view, File changes,
-Markdown, Merge status, Message thread, Model picker, Pipeline, Plan
-approval, Reasoning, Research progress, Sources, Tool approval, Tool steps,
-Turn summary, Usage meter and Voice input.
+`"kit": "agent"` in `meta.json`: Code block, Diff stat, Diff view, Markdown,
+Message thread, Model picker, Reasoning, Sources, Tool steps, Usage meter
+and Voice input.
 
 The interactive components run on [Base UI](https://base-ui.com)
 (`@base-ui/react`) for focus, keyboard, ARIA, positioning and dismissal; the
@@ -120,7 +118,7 @@ and at `/docs/tailwind`.
 
 Every component is also a shadcn registry item: `npx shadcn add
 https://uipolish.com/r/dialog.json`, or add the `@uipolish` registry to
-`components.json` and run `npx shadcn add @uipolish/authorize`. `/r/registry.json` lists every item;
+`components.json` and run `npx shadcn add @uipolish/model-picker`. `/r/registry.json` lists every item;
 `/r/theme.json` maps the roles onto a shadcn theme (`foundation/shadcn.css`).
 Setup: `foundation/shadcn.md`, served at `/docs/shadcn`.
 

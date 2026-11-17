@@ -34,7 +34,6 @@ const ALLOW = [
   { file: "registry/prompt-input/prompt-input.module.css", selector: ".remove", check: "color", reason: "A dark scrim over a photo thumbnail, under a white glyph: the same in both themes." },
   { file: "registry/icons/icons.module.css", selector: ".block", check: "stroke", reason: "A solid block drawn as one fat stroke (a stop square), not a line." },
   { file: "registry/usage-meter/usage-meter.module.css", selector: ".ringTrack", check: "stroke", reason: "A gauge's ring, read as an amount, not an icon line." },
-  { file: "registry/authorize/authorize.module.css", selector: ".mark", check: "icon-size", reason: "The app's own logo in the consent header, sized as a picture, not an icon." },
   { file: "registry/prompt-input/prompt-input.module.css", selector: ".fileIcon", check: "icon-size", reason: "A 40px tile for an attached file; the glyph inside it reads the scale." },
   { file: "registry/popover/popover.module.css", selector: ".arrow", check: "icon-size", reason: "The popup's arrow: part of its outline, not an icon." },
   { file: "registry/tooltip/tooltip.module.css", selector: ".arrow", check: "icon-size", reason: "The popup's arrow: part of its outline, not an icon." },

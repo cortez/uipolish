@@ -48,7 +48,7 @@ hover delays, the click that pins it, dismissal, focus and positioning.
 
 **Marks.** For a well-known site, pass `brand` (a name from `brand-marks`,
 such as `"wikipedia"`, `"reddit"` or `"stackoverflow"`): its real mark shows
-in its own color on a round tile, the same marks Research progress uses.
+in its own color on a round tile.
 Otherwise pass `favicon` with an image URL if you have one. Without either,
 or if the image fails to load, the domain's first letter shows in a circle.
 Nothing is fetched from a favicon service.

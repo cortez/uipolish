@@ -24,7 +24,6 @@ const ALLOW = [
   { file: "registry/sidebar/sidebar.tsx", match: "aria-label={label}", reason: "The sidebar toggle: an icon button in the sidebar's 32px header strip." },
   { file: "src/previews/popover.tsx", match: 'aria-label="About the card processing fee"', reason: "An info button inside a line of text, beside the term it explains." },
   { file: "src/previews/button.tsx", match: "<Button size=\"sm\">", reason: "The button preview shows the size scale, small included." },
-  { file: "registry/turn-summary/turn-summary.tsx", match: "className={styles.action}", reason: "Copy and More in the row under an answer, beside 13px meta text, as Response actions' 32px buttons." },
 ];
 
 function tsxFiles(dir) {

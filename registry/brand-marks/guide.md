@@ -13,8 +13,7 @@ import { BrandMark } from "../brand-marks/brand-marks";
 <BrandMark name="stripe" mono /> // in the text color
 ```
 
-Sources, research progress, connections and authorize use them for real
-services. Coding tools are in the set too (Claude, OpenAI, Codex,
+Sources uses them for real services. Coding tools are in the set too (Claude, OpenAI, Codex,
 Antigravity, Cursor, Visual Studio Code, Google Gemini, shadcn/ui, Model Context
 Protocol), for setup pickers and install steps.
 

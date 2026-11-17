@@ -258,7 +258,7 @@ describe("MCP", () => {
     });
     const list = (await res.json()).result.content[0].text;
     assert.match(list, /^- /);
-    assert.match(list, /- authorize \(agent kit\), v/);
+    assert.match(list, /- model-picker \(agent kit\), v/);
     assert.match(list, /- button, v/);
   });
 });

@@ -4,10 +4,10 @@ import { useEffect, useRef, useState, useSyncExternalStore, type ComponentType }
 import { useRouter } from "next/navigation";
 import type { Command, CommandPaletteProps } from "@registry/command-palette/command-palette";
 import { Icon } from "@registry/icons/icons";
-import { PRIMITIVES, START } from "./component-index";
+import { START } from "./component-index";
 import styles from "./site-search.module.css";
 
-type Item = { name: string; title: string; kit?: "agent" };
+type Item = { name: string; title: string };
 
 const noSubscribe = () => () => {};
 
@@ -69,14 +69,9 @@ export function SiteSearch({ components }: { components: Item[] }) {
   }, [Palette, wants]);
 
   const go = (href: string) => () => router.push(href);
-  const groups = [
-    { label: "Components", items: components.filter((c) => c.kit !== "agent" && !PRIMITIVES.includes(c.name)) },
-    { label: "Agent kit", items: components.filter((c) => c.kit === "agent") },
-    { label: "Primitives", items: components.filter((c) => PRIMITIVES.includes(c.name)) },
-  ];
   const commands: Command[] = [
     ...START.map((s) => ({ id: s.href, label: s.title, group: "Docs", onSelect: go(s.href) })),
-    ...groups.flatMap((g) => g.items.map((c) => ({ id: c.name, label: c.title, group: g.label, onSelect: go(`/docs/${c.name}`) }))),
+    ...components.map((c) => ({ id: c.name, label: c.title, group: "Components", onSelect: go(`/docs/${c.name}`) })),
   ];
 
   return (

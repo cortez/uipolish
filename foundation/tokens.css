@@ -69,21 +69,22 @@
   /* Sections of a screen or page: 48 narrow, 56 at 600px, 72 from 960px. */
   --ui-gap-section: round(clamp(40px, 2cqi + 28px, 56px), 8px);
 
-  /* Radius: sharp and small. 6 for small marks (a tag, a key cap, a row),
-     8 for every control (buttons, fields, chips, toggles, tabs), 12 for
-     boxes and cards. Full round is for dots and circles only. */
+  /* Radius: 6 for small marks (a tag, a key cap, a row), 8 for small
+     boxes, 12 for boxes and cards. Controls (buttons, fields, chips,
+     toggles, tabs) are fully round: pills. */
   --ui-radius-sm: 6px;
   --ui-radius-md: 8px;
   --ui-radius-lg: 12px;
-  --ui-radius-control: var(--ui-radius-md);
   --ui-radius-full: 9999px;
+  --ui-radius-control: var(--ui-radius-full);
 
   /* Control heights */
   --ui-control-sm: 32px;
   --ui-control-md: 40px;
   --ui-control-lg: 48px;
-  /* Icon-only buttons are squares, the control radius on their corners. */
-  --ui-capsule: 1;
+  /* Icon-only buttons are capsules, this much wider than tall, not circles:
+     an easier target, and one shape for every button. */
+  --ui-capsule: 1.375;
 
   /* Type */
   --ui-font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";

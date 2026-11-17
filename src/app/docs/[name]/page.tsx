@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "@/components/link";
 import { notFound } from "next/navigation";
 import { CopyPage } from "@/components/copy-page";
-import { TitleTag } from "@/components/info-tip";
 import { InstallCommand } from "@/components/install-command";
 import {
   getComponentGuide,
@@ -53,7 +52,6 @@ export default async function ComponentPage({
     await Promise.all(meta.dependencies.map(getComponentMeta))
   ).filter((d) => d !== null);
   const packages = packagesOf(await collect(name));
-  const tag = meta.kit === "agent" ? { label: "Agent kit", note: "For AI products." } : null;
   const ld = docsLd({
     path: `/docs/${name}`,
     headline: `${meta.title} React component`,
@@ -74,9 +72,6 @@ export default async function ComponentPage({
             note shows on hover, so the header is title, summary, action. */}
         <div className={styles.titleRow}>
           <h1 className={site.title}>{meta.title}</h1>
-          {tag && (
-            <TitleTag label={tag.label} note={tag.note} />
-          )}
         </div>
         <p className={site.text}>{meta.summary}</p>
         <div className={site.actions}>

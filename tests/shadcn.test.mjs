@@ -21,7 +21,7 @@ test("the index lists the style items and every component", async () => {
   const index = await res.json();
   assert.equal(index.name, "uipolish");
   const names = index.items.map((i) => i.name);
-  for (const n of ["tokens", "theme", "button", "authorize", "icons", "text-morph"]) assert.ok(names.includes(n), n);
+  for (const n of ["tokens", "theme", "button", "model-picker", "icons", "text-morph"]) assert.ok(names.includes(n), n);
 });
 
 test("a free item inlines its files and its dependencies' files at components/ui/<name>/", async () => {
@@ -47,10 +47,10 @@ test("the theme item adds the stylesheet imports", async () => {
 });
 
 test("an agent kit item installs with no key and lists Base UI", async () => {
-  const res = await get("/r/authorize.json");
+  const res = await get("/r/model-picker.json");
   assert.equal(res.status, 200);
   const item = await res.json();
-  assert.ok(item.files.some((f) => f.path === "components/ui/authorize/authorize.tsx"));
+  assert.ok(item.files.some((f) => f.path === "components/ui/model-picker/model-picker.tsx"));
   assert.ok(item.dependencies.some((d) => d.startsWith("@base-ui/react@")));
 });
 
