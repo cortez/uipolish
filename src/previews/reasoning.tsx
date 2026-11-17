@@ -88,7 +88,7 @@ export function ReasoningPreview() {
       <section className={styles.group}>
         <div className={own.head}>
           <h2 className={styles.label}>While thinking, then done</h2>
-          <Button variant="secondary" onClick={again}>
+          <Button variant="secondary" onClick={again} data-demo-controls="">
             Run again
           </Button>
         </div>

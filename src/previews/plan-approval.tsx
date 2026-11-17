@@ -151,14 +151,14 @@ export function PlanApprovalPreview() {
       <section className={styles.group}>
         <div className={own.head}>
           <h2 className={styles.label}>Copper plans Saturday supper</h2>
-          <div className={own.controls}>
+          <div className={own.controls} data-demo-controls="">
             <Switch
               size="sm"
               label="Texting fails"
               checked={failText}
               onChange={(e) => setFailText(e.target.checked)}
             />
-            <Button variant="secondary" onClick={replay}>
+            <Button variant="secondary" onClick={replay} data-demo-controls="">
               <Icon name="retry" />
               Replay
             </Button>

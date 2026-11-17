@@ -250,7 +250,7 @@ export function AgentSettingsPreview() {
             Saves land after a short wait, like a real server. Ledger turns down daily limits over $200.00. A revoked
             tool keeps Undo for six seconds after you move away from it.
           </p>
-          <Button variant="secondary" onClick={startOver}>
+          <Button variant="secondary" onClick={startOver} data-demo-controls="">
             Start over
           </Button>
         </div>

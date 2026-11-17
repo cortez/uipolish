@@ -61,7 +61,7 @@ export function AuthorizePreview() {
       <section className={styles.group}>
         <div className={styles.row} style={{ justifyContent: "space-between" }}>
           <h2 className={styles.label}>Copper connecting to Acme’s MCP server</h2>
-          <Button variant="secondary" onClick={again}>
+          <Button variant="secondary" onClick={again} data-demo-controls="">
             Start over
           </Button>
         </div>

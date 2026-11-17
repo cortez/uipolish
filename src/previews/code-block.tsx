@@ -109,7 +109,7 @@ export function CodeBlockPreview() {
       <section className={base.group}>
         <div className={styles.header}>
           <h2 className={base.heading}>Streaming</h2>
-          <Button variant="secondary" onClick={stream.replay}>
+          <Button variant="secondary" onClick={stream.replay} data-demo-controls="">
             Replay
           </Button>
         </div>

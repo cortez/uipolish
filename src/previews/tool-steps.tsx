@@ -203,7 +203,7 @@ export function ToolStepsPreview() {
       <section className={styles.group}>
         <div className={own.head}>
           <h2 className={styles.label}>Updating the shopping list for Saturday supper</h2>
-          <Button variant="secondary" onClick={again}>
+          <Button variant="secondary" onClick={again} data-demo-controls="">
             Run again
           </Button>
         </div>

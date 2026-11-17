@@ -162,7 +162,7 @@ export function TeamMembersPreview() {
 
   return (
     <div className={base.stack}>
-      <div className={styles.controls}>
+      <div className={styles.controls} data-demo-controls="">
         <Select
           aria-label="Preview state"
           value={view}

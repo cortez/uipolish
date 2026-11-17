@@ -191,7 +191,7 @@ export function SettingsPreview() {
         <div className={styles.gone}>
           <p className={styles.goneTitle}>Halden Robotics was deleted</p>
           <p className={base.note}>In your app, this is where Acme takes people to their other workspaces.</p>
-          <Button variant="secondary" onClick={reset}>
+          <Button variant="secondary" onClick={reset} data-demo-controls="">
             Start over
           </Button>
         </div>
@@ -201,7 +201,7 @@ export function SettingsPreview() {
 
   return (
     <div className={base.stack}>
-      <div className={styles.controls}>
+      <div className={styles.controls} data-demo-controls="">
         <Switch size="sm" label="Viewer" checked={viewer} onCheckedChange={setViewer} />
         <Switch size="sm" label="Loading" checked={loading} onCheckedChange={setLoading} />
         <Switch size="sm" label="Fail the next save" checked={failNext} onCheckedChange={setFailNext} />

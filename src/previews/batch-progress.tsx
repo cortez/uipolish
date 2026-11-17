@@ -197,7 +197,7 @@ export function BatchProgressPreview() {
   return (
     <div className={styles.stack}>
       <div className={own.head}>
-        <SegmentedControl size="sm" value={mode} onValueChange={(v) => {
+        <SegmentedControl data-demo-controls="" size="sm" value={mode} onValueChange={(v) => {
             clear();
             run.current++;
             setMode(v as Mode);
@@ -211,7 +211,7 @@ export function BatchProgressPreview() {
           <Segment value="rows">240 rows</Segment>
           <Segment value="thousand">1,000 photos</Segment>
         </SegmentedControl>
-        <Button variant="secondary" onClick={() => start(mode)}>
+        <Button variant="secondary" onClick={() => start(mode)} data-demo-controls="">
           Run again
         </Button>
       </div>

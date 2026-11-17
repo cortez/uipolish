@@ -142,7 +142,7 @@ export function UsageMeterPreview() {
           <Button variant="secondary" onClick={() => jump(1)}>
             Fill it
           </Button>
-          <Button variant="secondary" onClick={reset}>
+          <Button variant="secondary" onClick={reset} data-demo-controls="">
             Start over
           </Button>
         </div>

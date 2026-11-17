@@ -167,7 +167,7 @@ export function PricingPreview() {
 
   return (
     <div className={styles.stack}>
-      <div className={styles.row}>
+      <div className={styles.row} data-demo-controls="">
         <Select aria-label="Visitor" options={CURRENT} value={current} onValueChange={setCurrent} />
         <Checkbox label="Fail the next checkout" checked={failNext} onCheckedChange={setFailNext} />
         <Button
@@ -176,7 +176,7 @@ export function PricingPreview() {
             setCurrent("none");
             setRun((r) => r + 1);
           }}
-        >
+         data-demo-controls="">
           Start over
         </Button>
       </div>

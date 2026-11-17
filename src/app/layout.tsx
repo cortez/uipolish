@@ -1,25 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono } from "next/font/google";
-import localFont from "next/font/local";
+import { DM_Mono, DM_Sans } from "next/font/google";
 import { ThemeScript } from "@registry/theme-toggle/theme-script";
 import { AUTHOR, OG_IMAGE, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, siteUrl } from "@/lib/seo/site";
 import "../../foundation/tokens.css";
 import "./globals.css";
 
-// The site's type: General Sans for everything, Geist Mono for code: light
-// and geometric like General Sans, so code sits in a sentence without
-// shouting. The components themselves don't bring fonts; they read
-// --ui-font-*, which globals.css points at these. General Sans isn't on Google Fonts, so it's
-// self-hosted: the variable files from Fontshare, 200 to 700.
-const sans = localFont({
-  src: [
-    { path: "./fonts/GeneralSans-Variable.woff2", weight: "200 700", style: "normal" },
-    { path: "./fonts/GeneralSans-VariableItalic.woff2", weight: "200 700", style: "italic" },
-  ],
-  variable: "--font-sans",
-  display: "swap",
-});
-const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
+// The site's type: DM Sans for everything, DM Mono for code. The components
+// themselves don't bring fonts; they read --ui-font-*, which globals.css
+// points at these.
+const sans = DM_Sans({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-sans", display: "swap" });
+const mono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),

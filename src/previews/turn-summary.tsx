@@ -108,7 +108,7 @@ export function TurnSummaryPreview() {
         </div>
       </article>
       <div className={styles.row}>
-        <Button variant="secondary" onClick={() => setRun((r) => ({ n: r.n + 1, fail: false }))}>
+        <Button variant="secondary" onClick={() => setRun((r) => ({ n: r.n + 1, fail: false }))} data-demo-controls="">
           Replay
         </Button>
         <Button variant="ghost" onClick={() => setRun((r) => ({ n: r.n + 1, fail: true }))}>

@@ -349,7 +349,7 @@ function Demo() {
 
   return (
     <div className={base.stack}>
-      <div className={styles.controls}>
+      <div className={styles.controls} data-demo-controls="">
         <Select aria-label="Preview state" value={view} onValueChange={(v) => show(v as View)} options={VIEWS} />
         <Switch label="Fail the next decision" checked={failNext} onCheckedChange={setFailNext} />
       </div>

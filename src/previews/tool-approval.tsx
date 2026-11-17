@@ -138,10 +138,10 @@ export function ToolApprovalPreview() {
         <div className={own.head}>
           <h2 className={styles.label}>Copper moving Saturday supper to 7:30</h2>
           <div className={own.controls}>
-            <Button variant="secondary" onClick={expire} disabled={!first}>
+            <Button variant="secondary" onClick={expire} disabled={!first} data-demo-controls="">
               Let it expire
             </Button>
-            <Button variant="secondary" onClick={again}>
+            <Button variant="secondary" onClick={again} data-demo-controls="">
               Start over
             </Button>
           </div>

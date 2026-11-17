@@ -77,7 +77,7 @@ export function CodeInputPreview() {
         />
         <div className={base.row}>
           {status === "success" ? (
-            <Button variant="secondary" onClick={reset}>
+            <Button variant="secondary" onClick={reset} data-demo-controls="">
               Start over
             </Button>
           ) : (

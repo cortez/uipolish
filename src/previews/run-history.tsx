@@ -551,10 +551,10 @@ export function RunHistoryPreview() {
 
   return (
     <div className={styles.stack}>
-      <div className={styles.row}>
+      <div className={styles.row} data-demo-controls="">
         <Select aria-label="State" options={SCENARIOS} value={scenario} onValueChange={(v) => pick(v as Scenario)} />
         <Checkbox label="Fail the next request" checked={failNext} onCheckedChange={setFailNext} />
-        <Button variant="ghost" onClick={() => pick(scenario)}>
+        <Button variant="ghost" onClick={() => pick(scenario)} data-demo-controls="">
           Start over
         </Button>
       </div>

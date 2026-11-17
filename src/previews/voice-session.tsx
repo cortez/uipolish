@@ -493,7 +493,7 @@ export function VoiceSessionPreview() {
 
   return (
     <div className={styles.demo}>
-      <div className={styles.controls}>
+      <div className={styles.controls} data-demo-controls="">
         <Select aria-label="State" options={SCENARIOS} value={scenario} onValueChange={(v) => choose(v as Scenario)} />
         <Button variant="secondary" onClick={() => choose(scenario)}>
           {[<Icon key="i" name="retry" />, <span key="l">Replay</span>]}

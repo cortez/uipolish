@@ -9,7 +9,7 @@ export type CatalogItem = {
   name: string;
   title: string;
   summary: string;
-  /** "Agent kit", "Screen" or "Template": a word beside the name. */
+  /** "Screen" or "Template": a word beside the name. */
   tag?: string;
   /** A whole screen: two columns wide, and still (a picture of the app). */
   screen?: boolean;

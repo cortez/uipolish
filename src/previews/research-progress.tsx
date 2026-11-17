@@ -157,10 +157,10 @@ function Live() {
       <div className={own.head}>
         <h2 className={styles.label}>Copper researching Saturday’s menu</h2>
         <div className={own.actions}>
-          <Button variant="secondary" onClick={() => again(false)}>
+          <Button variant="secondary" onClick={() => again(false)} data-demo-controls="">
             Replay
           </Button>
-          <Button variant="secondary" onClick={() => again(true)}>
+          <Button variant="secondary" onClick={() => again(true)} data-demo-controls="">
             Replay with blocked pages
           </Button>
         </div>

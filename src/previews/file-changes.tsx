@@ -37,7 +37,7 @@ export function FileChangesPreview() {
   return (
     <div className={styles.stack}>
       <div className={styles.group}>
-        <SegmentedControl aria-label="List state" value={state} onValueChange={setState} size="sm">
+        <SegmentedControl data-demo-controls="" aria-label="List state" value={state} onValueChange={setState} size="sm">
           <Segment value="files">Files</Segment>
           <Segment value="loading">Loading</Segment>
           <Segment value="empty">Empty</Segment>

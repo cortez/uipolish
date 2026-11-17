@@ -250,11 +250,11 @@ function Live() {
     <section className={styles.group}>
       <div className={own.head}>
         <h2 className={styles.label}>An agent fixing a bug in Acme</h2>
-        <div className={own.actions}>
-          <Button variant="secondary" onClick={() => again(false)}>
+        <div className={own.actions} data-demo-controls="">
+          <Button variant="secondary" onClick={() => again(false)} data-demo-controls="">
             Replay
           </Button>
-          <Button variant="secondary" onClick={() => again(true)}>
+          <Button variant="secondary" onClick={() => again(true)} data-demo-controls="">
             Replay with failing tests
           </Button>
         </div>

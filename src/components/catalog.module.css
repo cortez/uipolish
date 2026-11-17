@@ -121,10 +121,11 @@
 
 .link {
   color: inherit;
-  text-decoration-line: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 3px;
-  transition: text-decoration-color var(--ui-dur-instant) var(--ui-ease-color);
+  text-decoration: none;
+}
+
+.link:focus-visible {
+  outline: none;
 }
 
 .link::after {
@@ -133,10 +134,22 @@
   inset: 0;
 }
 
+/* No underlines in a card. Hovering the name and blurb raises the card
+   onto the raised shadow (in dark mode, where there are no shadows, the
+   edge carries it); keyboard focus rings the whole card. */
+.card {
+  transition: box-shadow var(--ui-dur-fast) var(--ui-ease-color);
+}
+
 @media (hover: hover) {
-  .meta:hover .link {
-    text-decoration-color: var(--ui-border-strong);
+  .card:has(.meta:hover) {
+    box-shadow: 0 0 0 var(--ui-hairline) var(--ui-field-focus), var(--ui-shadow-raised);
   }
+}
+
+.card:has(.link:focus-visible) {
+  outline: var(--ui-ring-focus);
+  outline-offset: 2px;
 }
 
 .tag {
@@ -158,4 +171,11 @@
   .meta {
     padding-inline: var(--ui-space-4);
   }
+}
+
+/* A demo's own controls (Start over, Replay, a screen's state picker and
+   "Fail the next request") are for its docs page, not the catalog: here
+   the demos just play. Each preview marks them. */
+.frame [data-demo-controls] {
+  display: none;
 }

@@ -198,6 +198,5 @@ the conventions, for people and coding agents alike.
 
 ## License
 
-MIT. See [LICENSE](LICENSE). The site's fonts are General Sans, under the ITF
-Free Font License from [Fontshare](https://www.fontshare.com/fonts/general-sans),
-and Geist Mono, under the SIL Open Font License.
+MIT. See [LICENSE](LICENSE). The site's fonts (DM Sans and DM Mono) are under
+the SIL Open Font License.

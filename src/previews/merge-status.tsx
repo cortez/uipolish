@@ -62,7 +62,7 @@ export function MergeStatusPreview() {
             action={state === "draft" ? <Button variant="secondary" onClick={() => runChecks(false)}>Ready for review</Button> : undefined}
           />
         </div>
-        <div className={styles.row}>
+        <div className={styles.row} data-demo-controls="">
           <Button variant="secondary" onClick={() => runChecks(false)}>
             Run checks
           </Button>

@@ -40,7 +40,7 @@ export default async function Home() {
       name: c.name,
       title: c.title,
       summary: c.blurb ?? lead(c.summary),
-      tag: c.type === "template" ? "Template" : c.type === "block" ? "Screen" : c.kit === "agent" ? "Agent kit" : undefined,
+      tag: c.type === "template" ? "Template" : c.type === "block" ? "Screen" : undefined,
       screen: c.type !== undefined,
     }));
   return (

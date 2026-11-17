@@ -124,7 +124,7 @@ export function SignInPreview() {
   return (
     <div className={styles.stack}>
       <section className={styles.group}>
-        <div className={own.controls}>
+        <div className={own.controls} data-demo-controls="">
           <SegmentedControl
             size="sm"
             value={mode}
@@ -150,7 +150,7 @@ export function SignInPreview() {
             onValueChange={setLastUsed}
             options={LAST_USED}
           />
-          <Button variant="secondary" onClick={() => restart()}>
+          <Button variant="secondary" onClick={() => restart()} data-demo-controls="">
             Start over
           </Button>
         </div>

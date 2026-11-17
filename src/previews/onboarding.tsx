@@ -281,7 +281,7 @@ export function OnboardingPreview() {
   return (
     <div className={styles.stack}>
       <section className={styles.group}>
-        <div className={own.controls}>
+        <div className={own.controls} data-demo-controls="">
           <Select
             aria-label="State"
             className={own.state}
@@ -289,7 +289,7 @@ export function OnboardingPreview() {
             onValueChange={restart}
             options={SCENARIOS.map((s) => ({ value: s.value, label: s.label }))}
           />
-          <Button variant="secondary" onClick={() => restart()}>
+          <Button variant="secondary" onClick={() => restart()} data-demo-controls="">
             Start over
           </Button>
         </div>

@@ -116,7 +116,7 @@ export function MarkdownPreview() {
       <section className={styles.group}>
         <div className={own.head}>
           <h2 className={styles.label}>Streaming</h2>
-          <Button variant="secondary" onClick={replay}>
+          <Button variant="secondary" onClick={replay} data-demo-controls="">
             Replay
           </Button>
         </div>

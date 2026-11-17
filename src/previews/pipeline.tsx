@@ -181,11 +181,11 @@ export function PipelinePreview() {
   return (
     <div className={styles.stack}>
       <div className={own.head}>
-        <SegmentedControl size="sm" value={variant} onValueChange={(v) => setVariant(v as Variant)} aria-label="Run" widths="content">
+        <SegmentedControl data-demo-controls="" size="sm" value={variant} onValueChange={(v) => setVariant(v as Variant)} aria-label="Run" widths="content">
           <Segment value="passing">Passing</Segment>
           <Segment value="failing">Failing tests</Segment>
         </SegmentedControl>
-        <Button variant="secondary" onClick={() => play(variant, 0)}>
+        <Button variant="secondary" onClick={() => play(variant, 0)} data-demo-controls="">
           Replay
         </Button>
       </div>

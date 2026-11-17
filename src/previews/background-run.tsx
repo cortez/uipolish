@@ -183,7 +183,7 @@ export function BackgroundRunPreview() {
       <section className={styles.group}>
         <div className={own.head}>
           <h2 className={styles.label}>Copper’s runs</h2>
-          <Button variant="ghost" onClick={again}>
+          <Button variant="ghost" onClick={again} data-demo-controls="">
             Start over
           </Button>
         </div>
