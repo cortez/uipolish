@@ -2,7 +2,7 @@
 .title {
   font-family: var(--ui-font-display);
   font-size: var(--ui-text-display);
-  font-weight: var(--ui-weight-regular);
+  font-weight: var(--ui-weight-title);
   font-synthesis: none;
   line-height: var(--ui-leading-display);
   letter-spacing: var(--ui-tracking-title);

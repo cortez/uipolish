@@ -4,7 +4,7 @@
   "summary": "The public pricing page of an AI SaaS product: a monthly/yearly switch with the saving said quietly, plan cards whose prices roll between the two without moving anything, per-seat and usage-based notes (\"then $4 per 1,000 credits\"), one featured plan, an Enterprise row, a full comparison table with a sticky plan header and a plan picker on phones, and questions in an accordion. Choosing a plan waits on your async callback and says what went wrong if it fails.",
   "type": "block",
   "stage": "wide",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "dependencies": [
     "accordion",
     "badge",

@@ -1,9 +1,11 @@
-/* Three cards to a row on a laptop and up, two on a tablet, one on a
-   phone. Whole-pixel columns, so no card's edge lands between pixels. */
+/* Every demo at its real size: nothing is scaled or zoomed. Components sit
+   three to a row (two on a tablet, one on a phone); screens and templates
+   take a row each, the page column being wide enough for them as they are.
+   Whole-pixel columns, so no card's edge lands between pixels. */
 .grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--ui-space-5);
+  gap: var(--ui-space-7) var(--ui-space-5);
   width: 100%;
   margin: 0;
   padding: 0;
@@ -11,139 +13,96 @@
 }
 
 @media (min-width: 680px) {
-  .grid {
+  .grid:not(.screens) {
     grid-template-columns: repeat(2, round(down, (100% - var(--ui-space-5)) / 2, 1px));
   }
 }
 
 @media (min-width: 1024px) {
-  .grid {
+  .grid:not(.screens) {
     grid-template-columns: repeat(3, round(down, (100% - var(--ui-space-5) * 2) / 3, 1px));
   }
 }
 
+.grid > li {
+  display: grid;
+  min-width: 0;
+}
+
+/* The card, then the name under it: one link to the docs page. */
 .item {
   display: grid;
+  grid-template-rows: 1fr auto;
+  gap: var(--ui-space-3);
   min-width: 0;
-}
-
-/* One flat surface. No fade, no mask, no rule between demo and name. */
-.card {
-  position: relative;
-  display: grid;
-  grid-template-rows: auto 1fr;
-  min-width: 0;
+  color: inherit;
+  text-decoration: none;
   border-radius: calc(var(--ui-radius-lg) + var(--ui-space-2));
-  background: var(--ui-surface);
-  box-shadow: var(--ui-shadow-resting);
-  transition: box-shadow var(--ui-dur-fast) var(--ui-ease-color);
 }
 
-@media (hover: hover) {
-  .card:has(.meta:hover) {
-    box-shadow: 0 0 0 var(--ui-hairline) var(--ui-field-focus), var(--ui-shadow-raised);
-  }
+.item:focus-visible {
+  outline: none;
 }
 
-.card:has(.link:focus-visible) {
+.item:focus-visible .card {
   outline: var(--ui-ring-focus);
   outline-offset: 2px;
 }
 
-/* The demo's box: a fixed height, so nothing moves when it loads. Paint
-   containment keeps anything fixed inside a demo inside the card. */
-.stage {
-  height: 320px;
-  padding: var(--ui-space-5);
+/* One flat surface around the demo. Cards in a row are as tall as the
+   tallest demo in it, up to a cap; a longer demo is cut by the card's own
+   edge, never faded. Paint containment keeps anything fixed inside a
+   demo inside the card. */
+.card {
+  display: grid;
+  /* Centered; a demo longer than its card starts at the top instead. */
+  align-content: safe center;
+  min-height: 280px;
+  max-height: 560px;
+  padding: var(--ui-space-6) var(--ui-space-5);
+  border-radius: calc(var(--ui-radius-lg) + var(--ui-space-2));
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
   overflow: clip;
   contain: paint;
+  transition: box-shadow var(--ui-dur-fast) var(--ui-ease-color);
 }
 
-/* The demo, positioned on its own so it never stretches the card: whole
-   and centered when it fits, otherwise from the top. A size container, so
-   a demo's fluid spacing reads the card, not the window. */
-.fit {
-  position: relative;
-  width: 100%;
-  height: 100%;
+/* Hover anywhere on it: the card rises onto the raised shadow (in dark
+   mode, where there are no shadows, the edge carries it). */
+@media (hover: hover) {
+  .item:hover .card {
+    box-shadow: 0 0 0 var(--ui-hairline) var(--ui-field-focus), var(--ui-shadow-raised);
+  }
 }
 
-.content {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 100%;
-  translate: -50% 0;
-  transform-origin: top center;
+/* A size container, so a demo's fluid spacing reads the card. */
+.demo {
+  min-width: 0;
   container-type: inline-size;
 }
 
-.content[data-whole] {
-  top: 50%;
-  translate: -50% -50%;
-  transform-origin: center;
-}
-
-/* A screen is drawn at app width, then scaled to the card's width. */
-.screen {
-  width: 1040px;
+/* A screen keeps the card's padding, so it never touches the edge. */
+.screens .card {
+  max-height: 600px;
 }
 
 /* A demo's own controls (Start over, Replay, state pickers) are for its
    docs page; here the demos just play. Each preview marks them. A docs
-   demo stacks several scenarios; a card shows the first only (the first
-   thing that isn't a control). */
-.stage [data-demo-controls],
-.content:not(.screen) > [class*="stack"] > :not([data-demo-controls]) ~ * {
+   demo stacks several scenarios; a card shows the first one only (the
+   first thing that isn't a control). */
+.card [data-demo-controls],
+.grid:not(.screens) .demo > [class*="stack"] > :not([data-demo-controls]) ~ * {
   display: none;
 }
 
-/* The name and one line, 24 from the card's edge. The name's link covers
-   this part of the card. */
-.meta {
-  position: relative;
-  display: grid;
-  align-content: start;
-  gap: var(--ui-space-1);
-  padding: 0 var(--ui-space-5) var(--ui-space-5);
-}
-
-.title {
-  margin: 0;
-  font-size: var(--ui-text-md);
-  font-weight: var(--ui-weight-medium);
-  line-height: var(--ui-leading-md);
-}
-
-.link {
-  color: inherit;
-  text-decoration: none;
-}
-
-.link:focus-visible {
-  outline: none;
-}
-
-.link::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-}
-
-.summary {
-  margin: 0;
-  color: var(--ui-muted);
-  font-size: var(--ui-text-sm);
-  line-height: var(--ui-leading-sm);
-  text-wrap: pretty;
+/* The name: Body, in the text color. */
+.name {
+  color: var(--ui-foreground);
 }
 
 @media (max-width: 640px) {
-  .stage {
-    height: 300px;
-    padding: var(--ui-space-4);
-  }
-  .meta {
-    padding-inline: var(--ui-space-4);
+  .card {
+    padding: var(--ui-space-5) var(--ui-space-4);
   }
 }

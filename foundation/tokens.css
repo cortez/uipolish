@@ -110,11 +110,13 @@
   /* Under 16px, iOS zooms the page when a field is focused. */
   --ui-text-touch: 16px;
 
-  /* Weights: two. Regular to read, medium for titles, headings and labels.
-     Semibold is kept as a name so code that reads it still resolves. */
+  /* Weights: regular for everything, and the title weight for the Title
+     style only. Medium and semibold are kept as names, so code that reads
+     them still resolves, and they read as regular: three styles, no more. */
   --ui-weight-regular: 400;
-  --ui-weight-medium: 500;
-  --ui-weight-semibold: var(--ui-weight-medium);
+  --ui-weight-title: 500;
+  --ui-weight-medium: var(--ui-weight-regular);
+  --ui-weight-semibold: var(--ui-weight-regular);
 
   /* Tracking. None for body text: any letter-spacing turns optional ligatures off. */
   --ui-tracking-heading: -0.01em;

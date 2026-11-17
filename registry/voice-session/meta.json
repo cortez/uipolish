@@ -5,7 +5,7 @@
   "blurb": "A live voice call with an AI agent, transcript included.",
   "type": "block",
   "stage": "wide",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "dependencies": [
     "avatar",
     "badge",

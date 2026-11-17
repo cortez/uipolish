@@ -15,29 +15,18 @@ import styles from "./home.module.css";
 
 const COMMAND = `claude mcp add --transport http uipolish ${MCP_URL}`;
 
-/** A summary's opening phrase (before its colon or first full stop). */
-function lead(summary: string) {
-  const end = summary.search(/[:.](\s|$)/);
-  return (end === -1 ? summary : summary.slice(0, end)).trim() + ".";
-}
-
 export const metadata: Metadata = pageMetadata({ title: SITE_TITLE, description: SITE_DESCRIPTION, path: "/", absoluteTitle: true });
 
 export default async function Home() {
   const all = (await listComponents()).filter((c) => !c.primitive && !PRIMITIVES.includes(c.name));
   const opinions = await getOpinions();
-  const item = (c: ComponentMeta): CatalogItem => ({
-    name: c.name,
-    title: c.title,
-    summary: c.blurb ?? lead(c.summary),
-    screen: c.type !== undefined,
-  });
+  const item = (c: ComponentMeta): CatalogItem => ({ name: c.name, title: c.title });
   const byTitle = (a: ComponentMeta, b: ComponentMeta) => a.title.localeCompare(b.title);
   const groups = [
     { id: "agent-kit", title: "Agent kit", items: all.filter((c) => !c.type && c.kit === "agent") },
     { id: "components", title: "Components", items: all.filter((c) => !c.type && c.kit !== "agent") },
-    { id: "screens", title: "Screens", items: all.filter((c) => c.type === "block") },
-    { id: "templates", title: "Templates", items: all.filter((c) => c.type === "template") },
+    { id: "screens", title: "Screens", items: all.filter((c) => c.type === "block"), screens: true },
+    { id: "templates", title: "Templates", items: all.filter((c) => c.type === "template"), screens: true },
   ].filter((g) => g.items.length > 0);
 
   return (
@@ -65,7 +54,7 @@ export default async function Home() {
             <h2 id={`${g.id}-title`} className={styles.heading}>
               {g.title}
             </h2>
-            <Catalog items={g.items.sort(byTitle).map(item)} />
+            <Catalog items={g.items.sort(byTitle).map(item)} screens={g.screens} />
           </section>
         ))}
 

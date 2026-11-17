@@ -325,7 +325,7 @@
   margin: 0;
   color: var(--vs-now-text);
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-title);
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-title);
   white-space: nowrap;
@@ -745,7 +745,7 @@
 .helpTitle {
   margin: 0;
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-title);
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-title);
 }
@@ -854,7 +854,7 @@
 .summaryTitle {
   margin: 0;
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-title);
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-title);
 }

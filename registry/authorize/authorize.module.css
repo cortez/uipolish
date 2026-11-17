@@ -71,7 +71,7 @@
     var(--ui-shadow-raised);
   color: var(--authorize-letter);
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-title);
   line-height: 1;
   letter-spacing: var(--ui-tracking-title);
 }

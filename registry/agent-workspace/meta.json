@@ -4,7 +4,7 @@
   "summary": "A working Next.js app for coding with agents, in three calm panes: a sidebar with workspaces, pinned and recent sessions (shared ones with their faces) and the team's presence; open sessions as tabs over a conversation whose tool calls fold to one line, with the files each turn changed as chips; and a changes pane with the pull request's merge status, all files, changes with diff stats, checks, review and a run panel. A scripted mock agent edits, tests, opens the pull request and runs its checks until you connect a model (Anthropic, OpenAI or any OpenAI-compatible API) or your own agent; the agent, sign-in and storage each sit behind one small file.",
   "type": "template",
   "stage": "wide",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "dependencies": [
     "avatar",
     "badge",

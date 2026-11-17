@@ -52,6 +52,13 @@ h3 {
   font-weight: var(--ui-weight-medium);
 }
 
+/* Three type styles, so nothing is bold by the browser's default either. */
+b,
+strong,
+th {
+  font-weight: var(--ui-weight-medium);
+}
+
 ::selection {
   background: var(--ui-selection);
 }

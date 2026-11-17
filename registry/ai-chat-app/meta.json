@@ -4,7 +4,7 @@
   "summary": "A working AI chat app for the Next.js App Router: sign-in with an emailed code, a sidebar with workspaces and chat history, chats that stream from Claude, OpenAI or any OpenAI-compatible API (or a mock until one is set) with reasoning, tool steps and sources, and settings for the assistant, billing and members. Auth, storage and the model each sit behind one small file you swap.",
   "type": "template",
   "stage": "wide",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "dependencies": [
     "agent-settings",
     "alert",
