@@ -257,7 +257,7 @@
   inset-block: var(--ui-space-2);
   inset-inline-start: calc(50% - var(--ui-hairline) / 2);
   width: var(--ui-hairline);
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-border-strong);
   scale: 1 0.6;
   transition:

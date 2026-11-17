@@ -120,7 +120,7 @@
 .liveDot {
   width: 6px;
   height: 6px;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-accent);
   animation: pa-breathe var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;
 }
@@ -373,7 +373,7 @@
   height: 24px;
   padding-inline: 9px;
   box-shadow: inset 0 0 0 var(--ui-hairline) var(--chip-edge);
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: light-dark(
     color-mix(in oklch, var(--chip-tone) var(--chip-tint), transparent),
     color-mix(in oklch, var(--chip-tone) var(--chip-tint-dark), transparent)
@@ -596,7 +596,7 @@
   inset-inline: var(--pa-edge);
   height: 2px;
   overflow: hidden;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   opacity: 0;
   transition: opacity var(--ui-dur-base) var(--ui-ease-color);
 }

@@ -52,7 +52,7 @@
   gap: var(--ui-gap-tight);
   margin-inline: calc(var(--ui-pad-tag-sm) * -1);
   padding: var(--ui-gap-tight) var(--ui-pad-tag-sm);
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   color: var(--ui-foreground);
   font-family: var(--ui-font-mono);
   font-size: var(--ui-text-sm);

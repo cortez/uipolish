@@ -138,7 +138,7 @@
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
   height: var(--ui-control-sm);
   gap: 6px;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-fill);
   box-shadow: none;
   font-size: var(--ui-text-sm);

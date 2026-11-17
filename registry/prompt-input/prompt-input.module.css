@@ -35,7 +35,7 @@
   height: var(--ui-control-sm);
   padding-inline: 14px;
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-surface);
   box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
   color: var(--ui-muted);
@@ -334,7 +334,7 @@
   flex-shrink: 0;
   height: var(--ui-control-sm);
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -389,7 +389,7 @@
   min-width: calc(var(--ui-control-sm) * var(--ui-capsule));
   padding-inline: var(--ui-space-2);
   overflow: clip;
-  background: var(--ui-ink);
+  background: var(--ui-accent);
   color: var(--ui-on-ink);
   font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
   white-space: nowrap;
@@ -403,12 +403,12 @@
 
 @media (hover: hover) {
   .send:hover:not([data-state="empty"], :disabled) {
-    background: color-mix(in oklch, var(--ui-ink) 86%, var(--ui-on-ink));
+    background: color-mix(in oklch, var(--ui-accent) 90%, black);
   }
 }
 
 .send:active:not([data-state="empty"], :disabled) {
-  background: color-mix(in oklch, var(--ui-ink) 78%, var(--ui-on-ink));
+  background: color-mix(in oklch, var(--ui-accent) 82%, black);
   scale: var(--ui-scale-press);
   transition-duration: var(--ui-dur-press);
 }

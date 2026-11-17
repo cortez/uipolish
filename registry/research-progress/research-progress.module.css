@@ -146,7 +146,7 @@
   flex-shrink: 0;
   width: var(--research-mark);
   height: var(--research-mark);
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
 }
 
 .glyph {

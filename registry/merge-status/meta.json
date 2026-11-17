@@ -4,7 +4,7 @@
   "summary": "A pull request in one line: its number linking out, where it stands (draft, checks running, a check failed, conflicts, ready, merged) in its status color, and the move it's waiting for: a Merge button in the success color once it's ready, busy until the merge lands.",
   "blurb": "A pull request's state and Merge button in one line.",
   "kit": "agent",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "dependencies": [
     "button",
     "icons",

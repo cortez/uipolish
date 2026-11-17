@@ -34,7 +34,7 @@
 }
 
 .row {
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
 }
 
 .short {

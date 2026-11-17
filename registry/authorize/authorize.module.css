@@ -146,7 +146,7 @@
 .solid {
   height: 1.5px;
   margin-top: -0.75px;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-ink);
   clip-path: inset(0 100% 0 0);
   transition: clip-path var(--ui-dur-instant) var(--ui-ease-exit);
@@ -160,7 +160,7 @@
   place-items: center;
   width: var(--ui-icon-md);
   height: var(--ui-icon-md);
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   grid-area: 1 / 1;
   opacity: 0;
   transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);

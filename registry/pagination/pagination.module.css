@@ -142,7 +142,7 @@
   inset-inline-start: 0;
   width: var(--pagination-slot);
   height: var(--pagination-height);
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-fill-strong);
   translate: calc(
       var(--pagination-dir) *

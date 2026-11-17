@@ -3,7 +3,7 @@
   "title": "File changes",
   "summary": "The files an agent changed, one 32px row each: what happened to the file, its folder muted and cut from the start so the name stays whole, and lines added and removed. A totals line, selection that follows the arrow keys, loading and empty states, and a chip for naming a file inline.",
   "kit": "agent",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "dependencies": [
     "diff-stat",
     "icons",

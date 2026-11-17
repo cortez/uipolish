@@ -205,7 +205,7 @@
   padding: 0;
   margin: 0;
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: none;
   color: var(--ui-muted);
   cursor: pointer;

@@ -16,7 +16,7 @@
   height: var(--ui-control-sm);
   padding: 0 12px 0 10px;
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: none;
   color: var(--ui-muted);
   isolation: isolate;
@@ -131,7 +131,7 @@
   width: 20px;
   height: 4px;
   overflow: hidden;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-fill-strong);
 }
 
@@ -274,7 +274,7 @@
   position: relative;
   height: 8px;
   overflow: hidden;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
 }
 
 /* From the danger tone the bar gets an edge, a hairline off it, so it still says "nearly out" once
@@ -359,7 +359,7 @@
 .swatch {
   width: 8px;
   height: 8px;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--usage-other);
   transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
 }

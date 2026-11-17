@@ -86,7 +86,7 @@
   flex-shrink: 0;
   width: var(--ui-control-sm);
   height: var(--ui-control-sm);
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-fill);
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);

@@ -49,7 +49,7 @@
   position: relative;
   height: var(--progress-height);
   overflow: hidden;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-fill-strong);
 }
 
@@ -112,7 +112,7 @@
   position: relative;
   height: var(--progress-height);
   overflow: hidden;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-fill-strong);
 }
 

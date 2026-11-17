@@ -272,7 +272,7 @@ ol.list {
   width: calc(var(--ui-hairline) * 2);
   height: 1.1em;
   margin-inline-start: 2px;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-muted);
   vertical-align: -0.2em;
   animation: caret var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;

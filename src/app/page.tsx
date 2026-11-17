@@ -29,7 +29,7 @@ export default async function Home() {
   ].filter((g) => g.items.length > 0);
 
   return (
-    <SiteLayout>
+    <SiteLayout wide>
       <JsonLd nodes={homeLd()} />
       <header className={site.intro}>
         <h1 className={site.title}>React components for AI products, with every state already designed.</h1>

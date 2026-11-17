@@ -116,7 +116,7 @@
 
 .morphPads {
   min-width: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
 }
 
 @media (max-width: 560px) {

@@ -3,7 +3,7 @@
   "title": "Agent settings",
   "summary": "A whole settings screen for an AI agent, built from the kit: model, MCP connections, what it may do without asking, a daily spending limit and memory. Every change saves in its row, and a sticky section nav follows you down the page.",
   "kit": "agent",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "dependencies": [
     "animated-size",
     "badge",

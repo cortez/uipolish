@@ -4,7 +4,7 @@
   "summary": "Mic button whose circle opens into a recording bar with a scrolling waveform, a timer and Stop. A blocked mic gets a plain explanation.",
   "blurb": "A mic button that opens into a recording bar with a waveform.",
   "kit": "agent",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "dependencies": [
     "icons",
     "text-morph"

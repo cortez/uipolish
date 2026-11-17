@@ -1,0 +1,101 @@
+"use client";
+
+import { useEffect, useRef, useState, useSyncExternalStore, type ComponentType } from "react";
+import { useRouter } from "next/navigation";
+import type { Command, CommandPaletteProps } from "@registry/command-palette/command-palette";
+import { Icon } from "@registry/icons/icons";
+import { PRIMITIVES, START } from "./component-index";
+import styles from "./site-search.module.css";
+
+type Item = { name: string; title: string; kit?: "agent" };
+
+const noSubscribe = () => () => {};
+
+// The palette loads on first use (or when the pointer or focus reaches the
+// button), so pages that never search don't carry it.
+let palette: Promise<ComponentType<CommandPaletteProps>> | null = null;
+function loadPalette(set: (C: ComponentType<CommandPaletteProps>) => void) {
+  palette ??= import("@registry/command-palette/command-palette").then((m) => m.CommandPalette);
+  palette.then(set, () => {
+    palette = null; // Offline for a moment: the next try fetches it again.
+  });
+}
+
+/** Search, in the top bar of every page: the button, and ⌘K (Ctrl+K) from
+ *  anywhere. It finds every docs page and component. The one ⌘K on the site. */
+export function SiteSearch({ components }: { components: Item[] }) {
+  const router = useRouter();
+  const button = useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false);
+  const [Palette, setPalette] = useState<ComponentType<CommandPaletteProps> | null>(null);
+  const [wants, setWants] = useState(false);
+  const warm = () => loadPalette((C) => setPalette(() => C));
+  const openSearch = () => {
+    if (Palette) return setOpen(true);
+    setWants(true);
+    warm();
+  };
+  // The shortcut as this platform writes it; the Mac form on the server.
+  const mod = useSyncExternalStore(
+    noSubscribe,
+    () => (/Mac|iPhone|iPad/.test(navigator.userAgent) ? "⌘" : "Ctrl "),
+    () => "⌘",
+  );
+
+  // Until the palette has loaded, ⌘K is ours; once it has, the palette
+  // handles the shortcut itself.
+  useEffect(() => {
+    if (Palette) return;
+    function onKey(event: KeyboardEvent) {
+      if (!(event.metaKey || event.ctrlKey) || event.altKey || event.shiftKey) return;
+      if (event.key.toLowerCase() !== "k") return;
+      event.preventDefault();
+      setWants(true);
+      loadPalette((C) => setPalette(() => C));
+    }
+    addEventListener("keydown", onKey);
+    return () => removeEventListener("keydown", onKey);
+  }, [Palette]);
+
+  // A search asked for while the palette loaded opens once it has mounted
+  // closed, so it opens with its usual transition.
+  useEffect(() => {
+    if (!Palette || !wants) return;
+    const frame = requestAnimationFrame(() => {
+      setWants(false);
+      setOpen(true);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [Palette, wants]);
+
+  const go = (href: string) => () => router.push(href);
+  const groups = [
+    { label: "Components", items: components.filter((c) => c.kit !== "agent" && !PRIMITIVES.includes(c.name)) },
+    { label: "Agent kit", items: components.filter((c) => c.kit === "agent") },
+    { label: "Primitives", items: components.filter((c) => PRIMITIVES.includes(c.name)) },
+  ];
+  const commands: Command[] = [
+    ...START.map((s) => ({ id: s.href, label: s.title, group: "Docs", onSelect: go(s.href) })),
+    ...groups.flatMap((g) => g.items.map((c) => ({ id: c.name, label: c.title, group: g.label, onSelect: go(`/docs/${c.name}`) }))),
+  ];
+
+  return (
+    <>
+      {Palette && (
+        <Palette
+          open={open}
+          onOpenChange={setOpen}
+          commands={commands}
+          label="Search UI Polish"
+          placeholder="Search components and docs…"
+          triggerRef={button}
+        />
+      )}
+      <button ref={button} type="button" className={styles.search} onClick={openSearch} onPointerEnter={warm} onFocus={warm}>
+        <Icon name="search" />
+        <span className={styles.label}>Search</span>
+        <kbd className={styles.kbd}>{mod}K</kbd>
+      </button>
+    </>
+  );
+}

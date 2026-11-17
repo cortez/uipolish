@@ -100,7 +100,7 @@
   gap: 2px;
   height: 6px;
   overflow: hidden;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
 }
 
 .track[data-kind="bar"] {

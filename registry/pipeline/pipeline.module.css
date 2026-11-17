@@ -94,7 +94,7 @@
   width: 6px;
   height: 6px;
   flex-shrink: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-subtle);
 }
 
@@ -292,7 +292,7 @@
   place-items: center;
   width: var(--mark);
   height: var(--mark);
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-success);
   /* Cut out of the node by the card's surface; the tab never tints behind it. */
   box-shadow: 0 0 0 var(--ui-knockout) var(--ui-surface);
@@ -385,7 +385,7 @@
   inset-inline-end: calc(-50% + var(--node) / 2 + var(--node-gap));
   height: var(--line);
   overflow: hidden;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-border-strong);
   pointer-events: none;
 }
@@ -482,7 +482,7 @@
   margin: 0;
   padding: 0 var(--ui-space-2);
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: transparent;
   color: var(--ui-accent-text);
   font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
@@ -605,7 +605,7 @@
   margin: 0;
   padding: 0 var(--ui-space-3) 0 var(--ui-space-2);
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-surface);
   box-shadow: var(--ui-shadow-floating);
   color: var(--ui-foreground);

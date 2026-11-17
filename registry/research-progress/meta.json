@@ -3,7 +3,7 @@
   "title": "Research progress",
   "summary": "The live view of an agent researching the web, as one quiet line: “Reading 4 of 9 sources”, a few of the sites’ marks and the elapsed time. Open it for the searches and every source, each with its status, and the reason any couldn’t be read.",
   "kit": "agent",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "dependencies": [
     "animated-size",
     "brand-marks",

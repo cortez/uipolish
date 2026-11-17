@@ -136,7 +136,7 @@
   content: "";
   width: 6px;
   height: 6px;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: currentColor;
 }
 

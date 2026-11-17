@@ -43,7 +43,7 @@
   min-width: 0;
   min-height: 24px;
   padding: 3px var(--crumb-pad);
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   color: inherit;
   text-decoration: none;
   transition:
@@ -116,7 +116,7 @@ a.crumb:focus-visible {
   margin: 0;
   padding: 0 var(--crumb-pad);
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: none;
   color: inherit;
   font: inherit;

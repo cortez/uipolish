@@ -4,7 +4,7 @@
   "summary": "The work behind an agent's answer, folded to one quiet line, “17 tool calls, 3 messages”, that opens to its notes and tool calls; and the footer under the answer, with the files it changed and their diff stats, how long it took, Copy and More.",
   "blurb": "An agent's work folded to one line, and the answer's footer.",
   "kit": "agent",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "dependencies": [
     "button",
     "dropdown-menu",

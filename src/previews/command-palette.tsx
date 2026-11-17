@@ -134,7 +134,7 @@ export function CommandPalettePreview() {
           </span>
         </button>
         <p className={styles.note} aria-live="polite">
-          {last ? `Last command: ${last}` : "Press ⌘K or Ctrl+K anywhere. Try “alder”, “sig”, “dark”, or a guest like “priya”."}
+          {last ? `Last command: ${last}` : "Open it from the field. Try “alder”, “sig”, “dark”, or a guest like “priya”."}
         </p>
       </section>
 
@@ -144,6 +144,8 @@ export function CommandPalettePreview() {
         commands={commands}
         sources={sources}
         triggerRef={triggerRef}
+        // The site's own search has ⌘K; this demo opens from its field.
+        hotkey={false}
         placeholder="Search events, guests, commands…"
         emptyHint="Try a guest’s name, an address like “Alder”, or a command like “new”."
       />

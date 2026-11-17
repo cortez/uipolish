@@ -19,10 +19,10 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-fill);
   opacity: 0;
-  clip-path: inset(0 0 0 calc(100% - var(--ui-control-sm)) round var(--ui-radius-full));
+  clip-path: inset(0 0 0 calc(100% - var(--ui-control-sm)) round var(--ui-radius-control));
   pointer-events: none;
   transition:
     clip-path var(--ui-dur-base) var(--ui-ease-collapse),
@@ -30,12 +30,12 @@
 }
 
 :is([dir="rtl"]) .capsule {
-  clip-path: inset(0 calc(100% - var(--ui-control-sm)) 0 0 round var(--ui-radius-full));
+  clip-path: inset(0 calc(100% - var(--ui-control-sm)) 0 0 round var(--ui-radius-control));
 }
 
 .root:is([data-status="recording"], [data-status="done"]) .capsule {
   opacity: 1;
-  clip-path: inset(0 0 0 0 round var(--ui-radius-full));
+  clip-path: inset(0 0 0 0 round var(--ui-radius-control));
   transition:
     clip-path var(--ui-dur-panel) var(--ui-ease-expand),
     opacity var(--ui-dur-instant) var(--ui-ease-color);
@@ -176,7 +176,7 @@
   width: 6px;
   height: 6px;
   margin-inline-end: 6px;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-danger);
   animation: voice-live calc(var(--ui-dur-pulse) * 2) var(--ui-ease-pulse) infinite alternate;
   transition:
@@ -221,7 +221,7 @@
   height: var(--ui-control-sm);
   padding: 0;
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: none;
   color: var(--ui-muted);
   isolation: isolate;

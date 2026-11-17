@@ -21,7 +21,6 @@ const ALLOW = [
   { file: "registry/dialog/dialog.tsx", match: 'aria-label="Close"', reason: "The corner close on the dialog's title line, sized by --close-size." },
   { file: "src/components/site-head.tsx", match: "href={DONATE_URL}", reason: "Donate, a quiet text link beside the 32px theme toggle in the page header." },
   { file: "src/components/site-head.tsx", match: 'aria-label="UI Polish on GitHub"', reason: "GitHub, an icon beside the 32px theme toggle in the page header." },
-  { file: "src/components/docs-shell.tsx", match: 'aria-label="Open the docs menu"', reason: "The docs menu button in the phone top bar, beside the mark and level with the 32px theme toggle." },
   { file: "registry/sidebar/sidebar.tsx", match: "aria-label={label}", reason: "The sidebar toggle: an icon button in the sidebar's 32px header strip." },
   { file: "src/previews/popover.tsx", match: 'aria-label="About the card processing fee"', reason: "An info button inside a line of text, beside the term it explains." },
   { file: "src/previews/button.tsx", match: "<Button size=\"sm\">", reason: "The button preview shows the size scale, small included." },

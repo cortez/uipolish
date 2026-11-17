@@ -181,7 +181,7 @@
   margin: calc(var(--toast-inset) - var(--ui-space-3)) 0 0 calc(var(--ui-space-1) * -1);
   padding: 0;
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: transparent;
   color: var(--ui-subtle);
   cursor: pointer;

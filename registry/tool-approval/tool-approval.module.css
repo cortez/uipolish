@@ -148,7 +148,7 @@
   margin-inline: -10px;
   padding: 0 10px;
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: transparent;
   color: var(--ui-muted);
   font: var(--ui-weight-medium) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
@@ -383,7 +383,7 @@
   margin-inline: -10px;
   padding: 0 10px;
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: transparent;
   color: var(--ui-muted);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);

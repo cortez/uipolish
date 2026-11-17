@@ -20,7 +20,7 @@
   padding-inline: var(--badge-pad);
   /* Not `middle`: that centers on the x-height and makes the line taller. */
   vertical-align: top;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--badge-fill);
   box-shadow: inset 0 0 0 var(--ui-hairline) var(--badge-edge);
   color: var(--badge-text);
@@ -89,7 +89,7 @@
   flex-shrink: 0;
   width: 6px;
   height: 6px;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--badge-dot);
 }
 

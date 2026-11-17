@@ -1,22 +1,34 @@
-/* Every demo at its real size: nothing is scaled or zoomed. Two to a row
-   in the page column, one on a phone.
-   Whole-pixel columns, so no card's edge lands between pixels. */
+/* A directory: every demo at its real size, never scaled, four to a row
+   (three, then two, then one as the column narrows). Whole-pixel columns,
+   so no card's edge lands between pixels. */
 .grid {
+  --cols: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--ui-space-7) var(--ui-space-5);
+  grid-template-columns: repeat(var(--cols), round(down, (100% - var(--ui-space-4) * (var(--cols) - 1)) / var(--cols), 1px));
+  gap: var(--ui-space-6) var(--ui-space-4);
   width: 100%;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-@media (min-width: 680px) {
+@media (min-width: 640px) {
   .grid {
-    grid-template-columns: repeat(2, round(down, (100% - var(--ui-space-5)) / 2, 1px));
+    --cols: 2;
   }
 }
 
+@media (min-width: 960px) {
+  .grid {
+    --cols: 3;
+  }
+}
+
+@media (min-width: 1200px) {
+  .grid {
+    --cols: 4;
+  }
+}
 
 .grid > li {
   display: grid;
@@ -43,35 +55,38 @@
   outline-offset: 2px;
 }
 
-/* No surface: no fill, no shadow, no edge. The demo sits on the page,
-   set apart from the next by space alone. Cards in a row are as tall as
-   the tallest demo in it, up to a cap; a longer demo is cut at the card's
-   bounds, never faded. Paint containment keeps anything fixed inside a
-   demo inside the card. */
+/* A light edge and no fill: the demo sits on the page inside one hairline.
+   Cards in a row are as tall as the tallest demo in it, up to a cap; a
+   longer demo is cut at the edge, never faded. Paint containment keeps
+   anything fixed inside a demo inside the card. */
 .card {
   display: grid;
   /* Centered; a demo longer than its card starts at the top instead. */
   align-content: safe center;
-  min-height: 280px;
-  max-height: 560px;
-  padding: var(--ui-space-6) var(--ui-space-5);
-  border-radius: calc(var(--ui-radius-lg) + var(--ui-space-2));
+  min-height: 240px;
+  max-height: 480px;
+  padding: var(--ui-space-5) var(--ui-space-4);
+  border-radius: var(--ui-radius-lg);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
   overflow: clip;
   contain: paint;
-  transition: box-shadow var(--ui-dur-fast) var(--ui-ease-color);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
-/* Hover anywhere on it: the lightest edge shows what the link covers. */
+/* Hover anywhere on it: the faintest fill shows what the link covers. */
 @media (hover: hover) {
   .item:hover .card {
-    box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+    background: var(--ui-fill);
   }
 }
 
-/* A size container, so a demo's fluid spacing reads the card. */
+/* A size container, so a demo's fluid spacing reads the card. Every demo
+   is drawn at one scale, 80%, so the directory shows more of each and all
+   of them stay comparable: the same zoom for every card, never a fit. */
 .demo {
   min-width: 0;
   container-type: inline-size;
+  zoom: 0.8;
 }
 
 /* A demo's own controls (Start over, Replay, state pickers) are for its
@@ -88,8 +103,3 @@
   color: var(--ui-foreground);
 }
 
-@media (max-width: 640px) {
-  .card {
-    padding: var(--ui-space-5) var(--ui-space-4);
-  }
-}

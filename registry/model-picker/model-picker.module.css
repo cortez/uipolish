@@ -12,7 +12,7 @@
   height: var(--ui-control-sm);
   padding: 0 var(--trigger-pad-end) 0 var(--trigger-pad-start);
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: none;
   color: var(--ui-muted);
   isolation: isolate;

@@ -1,16 +1,23 @@
-/* 48 clear of the sidebar at the narrowest. 96 above the title and 128
-   under the last block, so neither end feels cut off. */
-.main {
-  --main-max: calc(800px + var(--ui-space-7) * 2);
-  width: 100%;
-  max-width: var(--main-max);
-  min-width: 0;
+/* One column for the top bar and the content, so the mark and the page
+   start on one edge. A reading width by default; the directory's width
+   with `wide`. Centered on a whole pixel, so no hairline lands between
+   pixels. */
+.page {
+  --page-max: calc(800px + var(--ui-space-5) * 2);
+  max-width: var(--page-max);
   margin-inline: auto;
-  /* Centered on a whole pixel: an odd leftover width (a classic scrollbar
-     takes 15px) put the column, and every hairline in it, on a half pixel,
-     where a 1x screen smears a line's sides across two pixels. */
-  margin-inline: max(0px, round(down, (100% - var(--main-max)) / 2, 1px));
-  padding: calc(var(--ui-space-8) * 1.5) var(--ui-space-7) calc(var(--ui-space-8) * 2);
+  margin-inline: max(0px, round(down, (100% - var(--page-max)) / 2, 1px));
+  padding: var(--ui-space-6) var(--ui-space-5) calc(var(--ui-space-8) * 2);
+}
+
+.wide {
+  --page-max: calc(1280px + var(--ui-space-5) * 2);
+}
+
+/* The page's title a section gap under the bar. */
+.main {
+  min-width: 0;
+  padding-top: var(--ui-gap-section);
 }
 
 /* Pages breathe more than the shared rhythm: intro to first block 48. */
@@ -18,8 +25,8 @@
   padding-bottom: var(--ui-space-7);
 }
 
-@media (max-width: 860px) {
-  .main {
-    padding: var(--ui-space-7) var(--ui-space-4) var(--ui-space-8);
+@media (max-width: 640px) {
+  .page {
+    padding: var(--ui-space-5) var(--ui-space-4) var(--ui-space-8);
   }
 }

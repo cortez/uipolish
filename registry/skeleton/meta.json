@@ -3,7 +3,7 @@
   "title": "Skeleton",
   "summary": "Placeholders shaped like the content on its way, with text lines exactly as tall as the text, so the swap moves nothing. One element per bone; one soft diagonal sheen crosses every skeleton on the page together, and nothing shows for loads under 300ms.",
   "blurb": "Placeholders shaped like the content, so the swap moves nothing.",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "dependencies": [
     "text"
   ]

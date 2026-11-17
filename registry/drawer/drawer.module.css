@@ -188,7 +188,7 @@
   width: var(--ui-space-6);
   height: var(--ui-space-1);
   margin-block-start: var(--ui-space-2);
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: color-mix(in oklch, var(--ui-foreground) 16%, transparent);
 }
 
@@ -248,7 +248,7 @@
   margin-inline-end: calc((16px - var(--close-width)) / 2);
   padding: 0;
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: transparent;
   color: var(--ui-muted);
   cursor: pointer;

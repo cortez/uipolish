@@ -529,7 +529,7 @@
   inset-inline-start: 2px;
   width: 4px;
   height: 4px;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-subtle);
 }
 

@@ -1,48 +1,30 @@
-/* The header every page shares: the mark top left, the theme toggle and
-   GitHub top right, on one line 24 from the top (20 on phones). Both rows
-   are a small control tall, so their centers line up. */
-.mark,
-.actions {
+/* The top bar: the mark at the left, the actions at the right, centered on
+   one line a small control tall. */
+.bar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-4);
   min-height: var(--ui-control-sm);
 }
 
-/* The mark's box is as wide as the logo, not the column. */
-.mark {
-  width: fit-content;
-}
-
-/* Nav text's 12px inset, +1px optical: text has a 1px side bearing, the
-   mark's round stroke has none. */
-.wordmark {
-  margin-inline-start: calc(var(--ui-space-3) + 1px);
-}
-
-/* At the page's end, 24 in; pulled 8 toward the edge so the toggle's icon,
-   not the ghost capsule around it, sits on the gutter. */
 .actions {
-  position: absolute;
-  z-index: 1;
-  top: var(--ui-space-6);
-  inset-inline-end: calc(var(--ui-space-6) - var(--ui-space-2));
+  display: flex;
+  align-items: center;
   gap: var(--ui-space-2);
+  /* The last ghost button's icon, not its box, on the column's edge. */
+  margin-inline-end: calc(var(--ui-space-2) * -1);
 }
 
-/* A wide screen keeps them pinned top right as the page scrolls. */
-@media (min-width: 861px) {
-  .actions {
-    position: fixed;
-    z-index: 20;
-  }
+.link {
+  padding-inline: var(--ui-space-2);
+  color: var(--ui-muted);
+  text-decoration: none;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
-@media (max-width: 860px) {
-  .actions {
-    top: var(--ui-space-5);
-    inset-inline-end: calc(var(--ui-space-4) - var(--ui-space-2));
-  }
-  .wordmark {
-    margin-inline-start: 0;
+@media (hover: hover) {
+  .link:hover {
+    color: var(--ui-foreground);
   }
 }

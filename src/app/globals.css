@@ -1,7 +1,5 @@
 /* The site's fonts, from layout.tsx, behind the roles the components read. */
 :root {
-  --ui-font-sans: var(--font-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
-  --ui-font-mono: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace;
   --ui-font-display: var(--ui-font-sans);
 }
 

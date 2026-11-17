@@ -48,9 +48,9 @@
      panel − inset: 24 − 12 = 12, a rounded row, never a pill. */
   --ui-inset-menu: var(--ui-space-3);
   /* A card or panel: 16 in a phone-wide container, 24 from 560px. */
-  --ui-pad-card: round(clamp(16px, 4cqi + 1.6px, 24px), 4px);
+  --ui-pad-card: round(clamp(12px, 4cqi - 2.4px, 20px), 4px);
   /* A screen or page-level block: 24 narrow, 40 from 760px. */
-  --ui-pad-section: round(clamp(24px, 4cqi + 9.6px, 40px), 4px);
+  --ui-pad-section: round(clamp(20px, 3cqi + 6px, 32px), 4px);
 
   /* Between things. Each step is wider than the one inside it, so the
      grouping reads before anything else does. */
@@ -62,29 +62,28 @@
   --ui-gap-stack: var(--ui-space-3);
   /* Groups inside a card or section, and a section's heading above its
      content: 16 narrow, 24 from 760px. */
-  --ui-gap-group: round(clamp(16px, 2cqi + 8.8px, 24px), 4px);
+  --ui-gap-group: round(clamp(12px, 2cqi + 4.8px, 20px), 4px);
   /* Cards and panels in a layout, and a screen's title above its content:
      16 narrow, 24 at 560px, 32 from 760px. */
-  --ui-gap-block: round(clamp(16px, 4cqi + 1.6px, 32px), 4px);
+  --ui-gap-block: round(clamp(16px, 2cqi + 8.8px, 24px), 4px);
   /* Sections of a screen or page: 48 narrow, 56 at 600px, 72 from 960px. */
-  --ui-gap-section: round(clamp(48px, 4cqi + 33.6px, 72px), 8px);
+  --ui-gap-section: round(clamp(40px, 2cqi + 28px, 56px), 8px);
 
-  /* Radius */
-  --ui-radius-sm: 10px;
-  --ui-radius-md: 14px;
-  /* Every box and card: 24, which is also the 8px inset around a 32px
-     button plus that button's half-height, so a code block's corner and
-     its Copy button stay concentric. */
-  --ui-radius-lg: 24px;
+  /* Radius: sharp and small. 6 for small marks (a tag, a key cap, a row),
+     8 for every control (buttons, fields, chips, toggles, tabs), 12 for
+     boxes and cards. Full round is for dots and circles only. */
+  --ui-radius-sm: 6px;
+  --ui-radius-md: 8px;
+  --ui-radius-lg: 12px;
+  --ui-radius-control: var(--ui-radius-md);
   --ui-radius-full: 9999px;
 
   /* Control heights */
   --ui-control-sm: 32px;
   --ui-control-md: 40px;
   --ui-control-lg: 48px;
-  /* Icon-only buttons are capsules, this much wider than tall, not circles:
-     an easier target, and one shape for every button. */
-  --ui-capsule: 1.375;
+  /* Icon-only buttons are squares, the control radius on their corners. */
+  --ui-capsule: 1;
 
   /* Type */
   --ui-font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";

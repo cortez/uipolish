@@ -14,7 +14,7 @@
   min-width: var(--ui-control-md);
   padding-inline: 20px;
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: none;
   color: var(--button-fg);
   isolation: isolate;
@@ -91,10 +91,10 @@
    shadow: no glint along the top, nothing darker under the bottom edge. */
 .button[data-variant="primary"] {
   --button-depth: var(--ui-shadow-control);
-  --button-bg: var(--ui-ink);
+  --button-bg: var(--ui-accent);
   --button-bg-hover: color-mix(in oklch, var(--button-bg) 92%, var(--button-fg));
   --button-bg-press: color-mix(in oklch, var(--button-bg) 85%, var(--button-fg));
-  --button-fg: var(--ui-on-ink);
+  --button-fg: var(--ui-on-accent);
 }
 
 .button[data-variant="secondary"] {
