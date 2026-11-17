@@ -474,7 +474,7 @@
   position: relative;
   flex: 1 1 auto;
   min-width: 0;
-  animation: data-table-arrive var(--ui-dur-fast) var(--ui-ease-enter) 300ms both;
+  animation: data-table-arrive var(--ui-dur-fast) var(--ui-ease-enter) var(--ui-delay-busy) both;
 }
 
 .placeholderRows {

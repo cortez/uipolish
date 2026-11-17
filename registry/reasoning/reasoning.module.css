@@ -77,7 +77,7 @@
   font-weight: var(--ui-weight-regular);
   font-variant-numeric: tabular-nums;
   transition:
-    grid-template-columns var(--ui-dur-move) var(--ui-ease-move),
+    grid-template-columns var(--ui-dur-glide) var(--ui-ease-glide),
     opacity var(--ui-dur-instant) var(--ui-ease-exit);
 }
 
@@ -140,7 +140,7 @@
 }
 
 .line[data-entering] {
-  animation: line-in var(--ui-dur-move) var(--ui-ease-enter) 60ms both;
+  animation: line-in var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) both;
 }
 
 .line[data-leaving] {

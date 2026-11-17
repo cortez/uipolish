@@ -26,8 +26,11 @@
     width var(--animated-size-grow, var(--ui-dur-panel)) var(--animated-size-ease, var(--ui-ease-expand));
 }
 
+/* Closing folds on the collapse curve: on the expand curve it would drop
+   most of the height at once and crawl shut. */
 .root[data-armed][data-direction="shrink"] {
   transition-duration: var(--animated-size-shrink, var(--ui-dur-base));
+  transition-timing-function: var(--animated-size-ease, var(--ui-ease-collapse));
 }
 
 .root[data-moving][data-axis="height"] {

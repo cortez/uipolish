@@ -77,7 +77,7 @@ People who can't tell red from green, and screen readers, get the label.
 A badge has one state: what it says. There's no hover, press, focus or
 disabled look, because nothing about it responds. If its content changes
 (a count going up), it changes in place; figures of equal width keep 18
-and 11 the same size.
+and 11 the same size, and the digits that change roll (see Motion).
 
 ## Layout
 
@@ -104,8 +104,21 @@ and 11 the same size.
 
 ## Motion
 
-None. A badge doesn't move or animate when it appears or changes; a status
-arriving later is announced by whatever region it's in, not by the badge.
+A badge doesn't move or animate when it appears, and a label (a status)
+swaps in place. A count is the one thing that moves: it's a `TextMorph`, so
+when it changes only the digits that differ roll, up as the count grows and
+down as it drops, and the badge eases to its new width when it gains or
+loses a digit (9 → 10, 99 → `99+`).
+
+| What | Duration | Easing |
+|---|---|---|
+| A changed digit rolls out and in; width follows | `--ui-dur-glide` | `--ui-ease-glide` |
+| The leaving digit fades | `--ui-dur-instant` | `--ui-ease-color` |
+| The arriving digit fades in | `--ui-dur-fast` | `--ui-ease-enter` |
+
+Nothing animates on first paint. Under `prefers-reduced-motion: reduce` the
+new count replaces the old at once. A status arriving later is announced by
+whatever region it's in, not by the badge.
 
 ## Accessibility
 

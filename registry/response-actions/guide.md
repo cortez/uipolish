@@ -61,7 +61,7 @@ the user expects.
 | Copy ↔ check | `--ui-dur-move` | `--ui-ease-move` (from the icon set) |
 | Thumb fills or empties | `--ui-dur-instant` | `--ui-ease-color` |
 | Press in / release | 0ms / `--ui-dur-snap` | `--ui-ease-snap` |
-| Field opens (rows 0fr → 1fr) | `--ui-dur-base` | `--ui-ease-enter` |
+| Field opens (rows 0fr → 1fr) | `--ui-dur-base` (a small field, so the short step) | `--ui-ease-expand` |
 | Field closes | `--ui-dur-fast` | `--ui-ease-collapse` |
 | Field content fades in with the box | `--ui-dur-fast` | `--ui-ease-enter` |
 | Note fades in / out | `--ui-dur-fast` / `--ui-dur-instant` | `--ui-ease-enter` / `--ui-ease-exit` |

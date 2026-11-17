@@ -23,7 +23,7 @@
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   transition:
-    width var(--ui-dur-move) var(--ui-ease-move),
+    width var(--ui-dur-glide) var(--ui-ease-glide),
     color var(--ui-dur-instant) var(--ui-ease-color);
 }
 

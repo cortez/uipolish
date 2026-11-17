@@ -174,8 +174,8 @@
   mask-size: 300% 100%;
   mask-repeat: no-repeat;
   animation:
-    menu-dim var(--ui-dur-base) var(--ui-ease-color) 120ms forwards,
-    menu-sweep var(--ui-dur-sweep) linear 120ms infinite;
+    menu-dim var(--ui-dur-base) var(--ui-ease-color) var(--ui-dur-instant) forwards,
+    menu-sweep var(--ui-dur-sweep) linear var(--ui-dur-instant) infinite;
 }
 
 @keyframes menu-dim {

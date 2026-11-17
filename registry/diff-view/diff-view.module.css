@@ -260,7 +260,7 @@
 
 .foldBody[data-open] .foldInner {
   opacity: 1;
-  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) 60ms;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
 }
 
 .srOnly {

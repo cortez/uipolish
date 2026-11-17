@@ -8,7 +8,7 @@ import styles from "./showcase.module.css";
 
 export default function Showcase() {
   const id = useId();
-  const [guests, setGuests] = useState("14");
+  const [guests, setGuests] = useState("8");
   const error = guests === "" ? "Enter how many guests are coming" : Number(guests) > 12 ? "The table seats 12" : null;
 
   return (

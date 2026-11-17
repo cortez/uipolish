@@ -340,7 +340,7 @@
 /* The label crossfades, offset half a beat, and rolls a few px the way the tooltip travelled. */
 .viewport > [data-current] {
   transition:
-    opacity var(--ui-dur-fast) var(--ui-ease-enter) 60ms,
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
     translate var(--ui-dur-glide) var(--ui-ease-glide);
 }
 

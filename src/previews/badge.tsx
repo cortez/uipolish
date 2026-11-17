@@ -1,4 +1,8 @@
+"use client";
+
+import { useState } from "react";
 import { Badge } from "@registry/badge/badge";
+import { Button } from "@registry/button/button";
 import base from "./preview.module.css";
 import styles from "./badge.module.css";
 
@@ -17,6 +21,7 @@ const TABS = [
 ] as const;
 
 export function BadgePreview() {
+  const [unread, setUnread] = useState(8);
   return (
     <div className={base.stack}>
       <section className={base.group}>
@@ -50,6 +55,23 @@ export function BadgePreview() {
           <Badge count={24} label="24 guests" />
           <Badge count={140} label="140 guests" />
         </div>
+      </section>
+
+      <section className={base.group}>
+        <h2 className={base.label}>A count that changes</h2>
+        <div className={base.row}>
+          <span className={styles.tab}>
+            Replies
+            <Badge size="sm" tone="accent" count={unread} label={`${unread} unread replies`} />
+          </span>
+          <Button variant="secondary" onClick={() => setUnread((n) => n + 1)}>
+            A reply arrives
+          </Button>
+          <Button variant="ghost" onClick={() => setUnread((n) => Math.max(0, n - 1))} disabled={unread === 0}>
+            Read one
+          </Button>
+        </div>
+        <p className={base.note}>Only the digits that change roll: up as replies arrive, down as they&rsquo;re read.</p>
       </section>
 
       <section className={base.group}>

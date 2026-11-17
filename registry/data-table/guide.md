@@ -176,12 +176,13 @@ instead, and raise `rowHeight` for two-line cells.
 | Resize line growing | `--ui-dur-snap` | `--ui-ease-snap` |
 | Loading hairlines and label | `--ui-dur-fast` after 300ms | `--ui-ease-enter` |
 | A new message under the grid | `--ui-dur-fast` | `--ui-ease-enter` |
+| The count under the grid ("3 cells need a look") changes: its digits roll, down as cells are fixed | `--ui-dur-glide` | `--ui-ease-glide` (text morph) |
 
 When a sort is cleared, the arrow fades out as the direction it was and
 only then turns back to up, ready to preview the next click. Columns resize
 live, with no animation: the edge follows the pointer. Under
-`prefers-reduced-motion: reduce` the arrow and the resize line change at
-once; color and opacity feedback stays.
+`prefers-reduced-motion: reduce` the arrow, the resize line and the count
+change at once; color and opacity feedback stays.
 
 ## Accessibility
 

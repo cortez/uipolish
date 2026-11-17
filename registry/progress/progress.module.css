@@ -53,7 +53,8 @@
   background: var(--ui-fill-strong);
 }
 
-/* Translated, not scaled, so the leading end keeps its round cap. */
+/* Translated, not scaled, so the leading end keeps its round cap. Glides,
+   with no overshoot: the track holds it, so it lands on the amount. */
 .fill {
   position: absolute;
   inset: 0;
@@ -61,7 +62,7 @@
   background: var(--progress-fill);
   translate: calc((var(--progress) - 1) * 100%) 0;
   transition:
-    translate var(--ui-dur-move) var(--ui-ease-move),
+    translate var(--ui-dur-glide) var(--ui-ease-glide),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 

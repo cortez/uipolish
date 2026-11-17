@@ -29,7 +29,7 @@
 }
 
 .control[data-loading] .icon svg {
-  animation: search-breathe var(--ui-dur-pulse) var(--ui-ease-pulse) 300ms infinite alternate;
+  animation: search-breathe var(--ui-dur-pulse) var(--ui-ease-pulse) var(--ui-delay-busy) infinite alternate;
 }
 
 @keyframes search-breathe {

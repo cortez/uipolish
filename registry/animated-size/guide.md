@@ -69,7 +69,7 @@ own.
 | What | Duration | Easing |
 |---|---|---|
 | Growing | `--ui-dur-panel` (280ms) | `--ui-ease-expand` |
-| Shrinking | `--ui-dur-base` (200ms) | `--ui-ease-expand` |
+| Shrinking | `--ui-dur-base` (200ms) | `--ui-ease-collapse`: eases in, folds, stops with no tail |
 | First size, size while hidden, size on the frame it's shown, size after a container resize | 0ms | n/a |
 
 Animating `height` and `width` is an exception to "transform and opacity

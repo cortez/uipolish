@@ -147,8 +147,8 @@
   mask-repeat: no-repeat;
   mask-position: 100% 0;
   animation:
-    inline-dim var(--ui-dur-base) var(--ui-ease-color) 300ms forwards,
-    inline-sweep var(--ui-dur-sweep) linear 300ms infinite;
+    inline-dim var(--ui-dur-base) var(--ui-ease-color) var(--ui-delay-busy) forwards,
+    inline-sweep var(--ui-dur-sweep) linear var(--ui-delay-busy) infinite;
 }
 
 @keyframes inline-dim {
@@ -241,7 +241,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .input[aria-busy] {
-    animation: inline-dim var(--ui-dur-base) var(--ui-ease-color) 300ms forwards;
+    animation: inline-dim var(--ui-dur-base) var(--ui-ease-color) var(--ui-delay-busy) forwards;
     mask-position: 0 0;
   }
   .error[data-shown] .errorText {

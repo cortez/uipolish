@@ -3,7 +3,7 @@
   "title": "Inline edit",
   "summary": "Text that becomes an input where it stands, in the same font and the same place, so not a letter moves. Enter saves, Escape restores, and an error keeps you editing.",
   "blurb": "Text that turns into an input right where it stands.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dependencies": [
     "field",
     "icons"

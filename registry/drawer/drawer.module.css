@@ -9,8 +9,10 @@
 /* The scrim is a sibling, not ::backdrop any more, so it gets the timings too. */
 .backdrop,
 .drawer {
-  --drawer-open: 420ms;
-  --drawer-close: 280ms;
+  /* A whole surface crossing the screen: the height-opening duration and a
+     half again on the way in (420ms), the panel duration on the way out. */
+  --drawer-open: calc(var(--ui-dur-panel) * 1.5);
+  --drawer-close: var(--ui-dur-panel);
 }
 
 .drawer {

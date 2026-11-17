@@ -4,6 +4,7 @@ import { useId, useMemo, useRef, useState, type KeyboardEvent, type Ref } from "
 import { NumberField } from "@base-ui/react/number-field";
 import { FieldMessage } from "../field/field";
 import { Icon } from "../icons/icons";
+import { TextMorph } from "../text-morph/text-morph";
 import styles from "./number-input.module.css";
 
 type NumberInputProps = {
@@ -64,33 +65,6 @@ function setText(input: HTMLInputElement, text: string) {
   const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
   setter?.call(input, text);
   input.dispatchEvent(new Event("input", { bubbles: true }));
-}
-
-/**
- * The shown number. Each character is keyed by its place from the right, so a
- * step remounts only the digits that changed, and those rise into place by a
- * few pixels. Nothing animates width or position: in tabular figures the kept
- * digits never move, and the field's box never changes.
- */
-function Digits({ text, value }: { text: string; value: number }) {
-  // Starts still: a remount (after typing, say) shows the number as it is.
-  const [last, setLast] = useState({ text, value, previous: text, dir: 0 });
-  if (last.text !== text) setLast({ text, value, previous: last.text, dir: Math.sign(value - last.value) || 1 });
-  const chars = Array.from(text);
-  const before = Array.from(last.previous);
-  return (
-    <span className={styles.digits} data-dir={last.dir > 0 ? "up" : "down"}>
-      {chars.map((char, i) => {
-        const place = chars.length - i;
-        const changed = last.dir !== 0 && before[before.length - place] !== char;
-        return (
-          <span key={`${place}:${char}`} className={styles.digit} data-changed={changed || undefined}>
-            {char}
-          </span>
-        );
-      })}
-    </span>
-  );
 }
 
 /** Base UI's NumberField with − and + buttons, a rolling value, and a note when typing is pulled into range. */
@@ -300,7 +274,8 @@ export function NumberInput({
           />
           {!editing && (
             <span className={styles.morph} aria-hidden="true">
-              <Digits text={number} value={value} />
+              {/* Digits that change roll, up when the value grows; the rest hold still. */}
+              <TextMorph>{number}</TextMorph>
             </span>
           )}
         </div>

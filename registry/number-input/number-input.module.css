@@ -110,47 +110,6 @@
   pointer-events: none;
 }
 
-.digits {
-  display: inline-flex;
-}
-
-/* Transform and opacity only, so a change moves no box. Digits that stay
-   aren't remounted and don't animate. */
-.digit {
-  display: inline-block;
-}
-
-.digit[data-changed] {
-  animation: number-digit-in var(--ui-dur-fast) var(--ui-ease-enter);
-}
-
-.digits[data-dir="up"] {
-  --digit-from: 0.25em;
-}
-
-.digits[data-dir="down"] {
-  --digit-from: -0.25em;
-}
-
-@keyframes number-digit-in {
-  from {
-    opacity: 0;
-    translate: 0 var(--digit-from);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .digit[data-changed] {
-    animation-name: number-digit-fade;
-  }
-}
-
-@keyframes number-digit-fade {
-  from {
-    opacity: 0;
-  }
-}
-
 /* iOS zooms the page into any field under 16px. */
 @media (pointer: coarse) {
   .input,

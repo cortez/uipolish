@@ -86,7 +86,10 @@
   }
 }
 
-/* Starts at twelve o'clock and fills clockwise. */
+/* Starts at twelve o'clock and fills clockwise. The arc, the mini bar and the
+   breakdown's segments ease to a new amount on the glide: they're held by
+   their track, so they land on the value without passing it (a full ring
+   never laps itself). */
 .ring {
   flex-shrink: 0;
   width: 16px;
@@ -114,7 +117,7 @@
   stroke-linecap: round;
   stroke-dasharray: 100 200;
   transition:
-    stroke-dashoffset var(--ui-dur-move) var(--ui-ease-move),
+    stroke-dashoffset var(--ui-dur-glide) var(--ui-ease-glide),
     stroke var(--ui-dur-instant) var(--ui-ease-color),
     opacity var(--ui-dur-instant) var(--ui-ease-color);
 }
@@ -143,7 +146,7 @@
   background: var(--usage-arc);
   translate: calc((var(--usage) - 1) * 100%) 0;
   transition:
-    translate var(--ui-dur-move) var(--ui-ease-move),
+    translate var(--ui-dur-glide) var(--ui-ease-glide),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
@@ -292,7 +295,7 @@
   /* min(used × 1000, 1) is 0 when nothing is used, so an empty bar has no gap at its start. */
   clip-path: inset(0 0 0 calc(var(--used) * 100% + min(var(--used) * 1000, 1) * 2px));
   transition:
-    clip-path var(--ui-dur-move) var(--ui-ease-move),
+    clip-path var(--ui-dur-glide) var(--ui-ease-glide),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
@@ -306,7 +309,7 @@
   background: var(--usage-other);
   clip-path: inset(0 calc((1 - var(--end)) * 100% + 2px) 0 calc(var(--start) * 100%));
   transition:
-    clip-path var(--ui-dur-move) var(--ui-ease-move),
+    clip-path var(--ui-dur-glide) var(--ui-ease-glide),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
@@ -441,9 +444,6 @@
 
 .countBox {
   justify-items: start;
-}
-
-.count {
   font-weight: var(--ui-weight-medium);
 }
 

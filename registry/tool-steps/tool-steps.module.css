@@ -198,7 +198,7 @@
 
 .icon[data-status="done"] .tick {
   stroke-dashoffset: 0;
-  transition: stroke-dashoffset var(--ui-dur-base) var(--ui-ease-draw) 60ms;
+  transition: stroke-dashoffset var(--ui-dur-base) var(--ui-ease-draw) calc(var(--ui-dur-instant) / 2);
 }
 
 .icon [data-icon="failed"] {

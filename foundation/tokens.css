@@ -207,6 +207,9 @@
   --ui-ease-pulse: cubic-bezier(0.37, 0, 0.63, 1);
   --ui-dur-pulse: 700ms;
   --ui-dur-sweep: 2400ms;
+  /* Busy delay: work that ends sooner shows no busy state, so quick saves
+     don't flash a spinner or a dim. Matches use-delayed-busy.ts. */
+  --ui-delay-busy: 300ms;
 
   /* Color. Text roles hold 4.5:1 on canvas and surface in both themes, and
      no more than they need: the darkest text isn't black and the lightest

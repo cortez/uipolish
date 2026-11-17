@@ -83,7 +83,7 @@
 .panel[data-open] {
   grid-template-rows: 1fr;
   transition-duration: var(--ui-dur-base);
-  transition-timing-function: var(--ui-ease-enter);
+  transition-timing-function: var(--ui-ease-expand);
 }
 
 /* Registered so the clip's soft lower edge can animate with the height. */
@@ -109,7 +109,7 @@
   opacity: 1;
   transition:
     opacity var(--ui-dur-fast) var(--ui-ease-enter),
-    --panel-edge var(--ui-dur-base) var(--ui-ease-enter);
+    --panel-edge var(--ui-dur-base) var(--ui-ease-expand);
 }
 
 .form {
