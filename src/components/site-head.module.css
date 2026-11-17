@@ -16,21 +16,3 @@
   margin-inline-end: calc(var(--ui-space-2) * -1);
 }
 
-/* Everything in the bar is the text color; hover is a light fill, like
-   the ghost buttons beside it. */
-.link {
-  display: inline-flex;
-  align-items: center;
-  height: var(--ui-control-sm);
-  padding-inline: var(--ui-space-3);
-  border-radius: var(--ui-radius-control);
-  color: var(--ui-foreground);
-  text-decoration: none;
-  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
-}
-
-@media (hover: hover) {
-  .link:hover {
-    background: var(--ui-fill);
-  }
-}

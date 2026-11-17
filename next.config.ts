@@ -27,17 +27,22 @@ const nextConfig: NextConfig = {
   // Components live inside the docs now.
   async redirects() {
     return [
-      { source: "/components", destination: "/docs", permanent: true },
+      { source: "/components", destination: "/", permanent: true },
       { source: "/components/:name", destination: "/docs/:name", permanent: true },
-      { source: "/docs/installation", destination: "/docs", permanent: true },
+      { source: "/docs/installation", destination: "/#get-started", permanent: true },
       // UI Polish is components: the screens, apps and feature-sized pieces
       // that were here are retired, and their pages land on the docs.
-      ...RETIRED.map((name) => ({ source: `/docs/${name}`, destination: "/docs", permanent: true })),
+      ...RETIRED.map((name) => ({ source: `/docs/${name}`, destination: "/", permanent: true })),
       // Retired pages.
-      { source: "/pricing", destination: "/docs", permanent: true },
-      { source: "/thanks", destination: "/docs", permanent: true },
-      { source: "/docs/license", destination: "/docs", permanent: true },
+      { source: "/pricing", destination: "/", permanent: true },
+      { source: "/thanks", destination: "/", permanent: true },
+      { source: "/docs/license", destination: "/", permanent: true },
       { source: "/docs/theme", destination: "/", permanent: true },
+      // Get started is a dialog on every page now.
+      { source: "/docs", destination: "/#get-started", permanent: true },
+      { source: "/docs/rules", destination: "/#get-started", permanent: true },
+      { source: "/docs/tailwind", destination: "/#get-started", permanent: true },
+      { source: "/docs/shadcn", destination: "/#get-started", permanent: true },
     ];
   },
 };

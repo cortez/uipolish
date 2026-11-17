@@ -19,6 +19,7 @@ const ALLOW = [
   { file: "registry/code-block/code-block.tsx", match: "onClick={handleCopy}", reason: "Copy, inside the code block's header strip." },
   { file: "src/components/install-command.tsx", match: "className={styles.copy}", reason: "The copy button inside the install command's pill." },
   { file: "registry/dialog/dialog.tsx", match: 'aria-label="Close"', reason: "The corner close on the dialog's title line, sized by --close-size." },
+  { file: "src/components/get-started.tsx", match: "ref={trigger}", reason: "Get started, a quiet text button in the top bar beside search and the 32px theme toggle." },
   { file: "src/components/site-head.tsx", match: "href={DONATE_URL}", reason: "Donate, a quiet text link beside the 32px theme toggle in the page header." },
   { file: "src/components/site-head.tsx", match: 'aria-label="UI Polish on GitHub"', reason: "GitHub, an icon beside the 32px theme toggle in the page header." },
   { file: "registry/sidebar/sidebar.tsx", match: "aria-label={label}", reason: "The sidebar toggle: an icon button in the sidebar's 32px header strip." },

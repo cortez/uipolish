@@ -50,10 +50,8 @@ export async function llmsText(full: boolean): Promise<string> {
     full
       ? `- [Short index](${abs("/llms.txt")})`
       : `- [Full reference](${abs("/llms-full.txt")}): everything below plus every component guide, in one file`,
-    `- [Introduction](${abs("/docs")}): connect your agent, and the tools it gets`,
-    `- [Tailwind CSS](${abs("/docs/tailwind")}): use the components in a Tailwind v4 project`,
-    `- [Design rules](${abs("/docs/rules")}): the rules as one file: a Claude Code skill (${abs("/skill.md")}) or for AGENTS.md (${abs("/rules.md")})`,
-    `- [shadcn/ui](${abs("/docs/shadcn")}): install with \`npx shadcn add\` (registry at ${abs("/r/registry.json")})`,
+    `- Design rules: the rules as one file: a Claude Code skill (${abs("/skill.md")}) or for AGENTS.md (${abs("/rules.md")})`,
+    `- shadcn/ui: install with \`npx shadcn add\` (registry at ${abs("/r/registry.json")})`,
     `- [OpenAPI spec](${abs("/openapi.json")}): the REST API, for agents without MCP`,
     `- [Contact](${abs("/contact")})`,
   );

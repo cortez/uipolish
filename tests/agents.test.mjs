@@ -35,19 +35,17 @@ describe("Markdown content negotiation", () => {
     assert.match(res.headers.get("content-type"), /^text\/html/);
   });
 
-  test(".md suffixes and docs pages", async () => {
-    for (const [path, heading] of [["/docs/button.md", "# Button"], ["/docs.md", "# Introduction"], ["/index.md", "# UI Polish"], ["/docs/tailwind.md", "# Tailwind CSS"]]) {
+  test(".md suffixes and the rules file", async () => {
+    for (const [path, heading] of [["/docs/button.md", "# Button"], ["/index.md", "# UI Polish"], ["/rules.md", "# UI Polish"]]) {
       const res = await get(path);
       assert.equal(res.status, 200, path);
       assert.match(res.headers.get("content-type"), /^text\/markdown/, path);
       assert.ok((await res.text()).includes(heading), path);
     }
-    const res = await get("/docs/shadcn", md);
-    assert.match(await res.text(), /^# shadcn\/ui/m);
   });
 
-  test("docs pages offer to copy themselves as Markdown", async () => {
-    for (const path of ["/docs", "/docs/shadcn", "/docs/tailwind", "/docs/button"]) {
+  test("component pages offer to copy themselves as Markdown", async () => {
+    for (const path of ["/docs/button", "/docs/dialog"]) {
       assert.match(await (await get(path, html)).text(), /Copy page/, path);
     }
   });
@@ -215,11 +213,11 @@ describe("Agent guidance and trust", () => {
     assert.equal(page.match(/<h1\b/g)?.length, 1);
     const text = page.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
     assert.ok(text.length > 500);
-    // A client-rendered shell sits under 1%. The home page is short and
-    // light (a few KB of text), and every page carries the search's list of
-    // components in Next's serialized data, so that data is most of its
-    // HTML; 2% still proves the text is in the HTML.
-    assert.ok(text.length / page.length >= 0.02, `content ratio ${((100 * text.length) / page.length).toFixed(2)}%`);
+    // A client-rendered shell sits under 1%. The home page is a title, the
+    // components' names and the rules, and every page carries the search's
+    // list of components in Next's serialized data, so that data is most
+    // of its HTML; 1.5% still proves the text is in the HTML.
+    assert.ok(text.length / page.length >= 0.015, `content ratio ${((100 * text.length) / page.length).toFixed(2)}%`);
   });
 });
 

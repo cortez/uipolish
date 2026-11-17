@@ -96,7 +96,7 @@ export default async function ComponentPage({
           Installation
         </h2>
         <p className={site.text}>
-          With UI Polish <Link href="/docs">connected</Link>, ask your agent:
+          With UI Polish <a href="#get-started">connected</a>, ask your agent:
         </p>
         <div className={site.actions}>
           <InstallCommand

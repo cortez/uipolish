@@ -1,5 +1,5 @@
 import { DocsPager } from "@/components/docs-pager";
-import { START, sortComponents } from "@/components/component-index";
+import { sortComponents } from "@/components/component-index";
 import { SiteHead } from "@/components/site-head";
 import { listComponents } from "@/lib/content";
 import styles from "./site-layout.module.css";
@@ -17,7 +17,7 @@ export async function SiteLayout({ children, pager = false }: { children: React.
       <SiteHead components={components} />
       <main className={styles.main}>
         {children}
-        {pager && <DocsPager pages={[...START, ...components.map((c) => ({ href: `/docs/${c.name}`, title: c.title }))]} />}
+        {pager && <DocsPager pages={[...components.map((c) => ({ href: `/docs/${c.name}`, title: c.title }))]} />}
       </main>
     </div>
   );

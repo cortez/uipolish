@@ -26,7 +26,7 @@ before(async () => {
   server = await startServer();
   browser = await chromium.launch();
   const { components } = await (await fetch(`${server.url}/api/components`)).json();
-  pages = ["/", "/docs", "/docs/tailwind", "/contact", ...components.map((c) => `/docs/${c.name}`)];
+  pages = ["/", "/contact", ...components.map((c) => `/docs/${c.name}`)];
 });
 
 after(async () => {
@@ -44,16 +44,8 @@ async function check(width) {
       const out = [];
       const extra = document.documentElement.scrollWidth - innerWidth;
       if (extra > 0) out.push(`scrolls sideways by ${extra}px`);
-      // The docs sidebar belongs beside the page on wide screens and under
-      // it, hidden until the menu button slides the page aside, on narrow ones.
-      const list = document.querySelector('nav[aria-label="Docs"] [aria-label="Docs pages"]');
-      if (list) {
-        const side = document.getElementById("docs-sidebar");
-        const shown = getComputedStyle(side).visibility !== "hidden" && list.getBoundingClientRect().height > 0;
-        if (shown !== desktop) out.push(`docs sidebar list ${shown ? "shown" : "hidden"}`);
-      }
       return out;
-    }, width > 860);
+    });
     for (const f of found) problems.push(`${path}: ${f}`);
     await page.close();
   }
@@ -61,10 +53,10 @@ async function check(width) {
   return problems;
 }
 
-test("pages fit a phone, with the docs sidebar tucked away", { skip: !chromium && "Playwright isn't installed" }, async () => {
+test("pages fit a phone", { skip: !chromium && "Playwright isn't installed" }, async () => {
   assert.deepEqual(await check(375), []);
 });
 
-test("pages fit a desktop, with the docs sidebar beside them", { skip: !chromium && "Playwright isn't installed" }, async () => {
+test("pages fit a desktop", { skip: !chromium && "Playwright isn't installed" }, async () => {
   assert.deepEqual(await check(1280), []);
 });

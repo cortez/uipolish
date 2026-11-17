@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, useSyncExternalStore, type ComponentType }
 import { useRouter } from "next/navigation";
 import type { Command, CommandPaletteProps } from "@registry/command-palette/command-palette";
 import { Icon } from "@registry/icons/icons";
-import { START } from "./component-index";
 import styles from "./site-search.module.css";
 
 type Item = { name: string; title: string };
@@ -22,7 +21,7 @@ function loadPalette(set: (C: ComponentType<CommandPaletteProps>) => void) {
 }
 
 /** Search, in the top bar of every page: the button, and ⌘K (Ctrl+K) from
- *  anywhere. It finds every docs page and component. The one ⌘K on the site. */
+ *  anywhere. It finds every component. The one ⌘K on the site. */
 export function SiteSearch({ components }: { components: Item[] }) {
   const router = useRouter();
   const button = useRef<HTMLButtonElement>(null);
@@ -70,7 +69,6 @@ export function SiteSearch({ components }: { components: Item[] }) {
 
   const go = (href: string) => () => router.push(href);
   const commands: Command[] = [
-    ...START.map((s) => ({ id: s.href, label: s.title, group: "Docs", onSelect: go(s.href) })),
     ...components.map((c) => ({ id: c.name, label: c.title, group: "Components", onSelect: go(`/docs/${c.name}`) })),
   ];
 

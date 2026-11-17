@@ -8,13 +8,6 @@ export const AI_COMPONENTS = ["prompt-input", "message-thread", "reasoning", "to
  *  their own group: each works on its own too. */
 export const PRIMITIVES = ["animated-size", "brand-marks", "field", "icons", "listbox", "text", "text-morph"];
 
-/** The pages before the components, in the order the docs list them. */
-export const START = [
-  { href: "/docs", title: "Introduction" },
-  { href: "/docs/rules", title: "Design rules" },
-  { href: "/docs/tailwind", title: "Tailwind CSS" },
-  { href: "/docs/shadcn", title: "shadcn/ui" },
-];
 
 export function sortComponents(components: ComponentMeta[]) {
   // One list, A to Z.

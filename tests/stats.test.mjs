@@ -51,7 +51,7 @@ test("usage is counted anonymously and reported to the token holder only", async
   await rpc("tools/call", { name: "get_component", arguments: { name: "button", tailwind: true } });
   // An item the shadcn CLI installs.
   assert.equal((await fetch(server.url + "/r/button.json")).status, 200);
-  await fetch(server.url + "/docs", { headers: { accept: "text/html", referer: "https://news.ycombinator.com/item?id=1", "user-agent": "Mozilla/5.0" } });
+  await fetch(server.url + "/contact", { headers: { accept: "text/html", referer: "https://news.ycombinator.com/item?id=1", "user-agent": "Mozilla/5.0" } });
   await fetch(server.url + "/docs/button.md");
   await new Promise((r) => setTimeout(r, 500));
 
@@ -70,7 +70,7 @@ test("usage is counted anonymously and reported to the token holder only", async
   assert.equal(report.components.registryInstalls, 1);
   assert.deepEqual(report.components.registryTop, [{ name: "button", count: 1 }]);
   assert.equal(report.visitors.views, 1);
-  assert.deepEqual(report.visitors.topPages, [{ name: "docs", count: 1 }]);
+  assert.deepEqual(report.visitors.topPages, [{ name: "contact", count: 1 }]);
   assert.deepEqual(report.visitors.referrers, [{ name: "news-ycombinator-com", count: 1 }]);
   assert.equal(report.visitors.markdownReads, 1);
 
