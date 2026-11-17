@@ -15,7 +15,9 @@
   --row-inset: calc((var(--row-height) - var(--badge-size)) / 2);
   --item-radius: calc(var(--inner-radius) - var(--row-inset));
   --inner-radius: calc(var(--ui-radius-lg) - var(--zone-pad));
-  --zone-bg: var(--ui-canvas);
+  /* Empty, a soft light from the top settling into the canvas: a well,
+     not a flat box. */
+  --zone-bg: radial-gradient(ellipse 80% 70% at 50% 0%, var(--ui-surface), var(--ui-canvas));
   --zone-edge: var(--ui-border-strong);
   position: relative;
   display: grid;
@@ -28,9 +30,7 @@
   background: var(--zone-bg);
   box-shadow: inset 0 0 0 var(--ui-hairline) var(--zone-edge);
   font-family: var(--ui-font-sans);
-  transition:
-    box-shadow var(--ui-dur-instant) var(--ui-ease-color),
-    background-color var(--ui-dur-instant) var(--ui-ease-color);
+  transition: box-shadow var(--ui-dur-instant) var(--ui-ease-color);
 }
 
 .zone[data-has] {
@@ -48,11 +48,11 @@
 }
 
 /* The one state that has to read from across the screen: a file held over
-   the zone. The edge takes the focused field's color, the well tints a step,
-   and the prompt comes up to the text color. */
+   the zone. The well takes the accent's tint and edge, the prompt comes up
+   to the text color, and the icon tile rises to meet the file. */
 .zone[data-dragging] {
-  --zone-bg: color-mix(in oklch, var(--ui-canvas), var(--ui-foreground) 5%);
-  --zone-edge: var(--ui-field-focus);
+  --zone-bg: var(--ui-accent-tint);
+  --zone-edge: var(--ui-border-accent);
 }
 
 .zone[data-has][data-dragging] {
@@ -136,7 +136,37 @@
   display: grid;
   place-items: center;
   color: var(--ui-muted);
-  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    translate var(--ui-dur-move) var(--ui-ease-move),
+    scale var(--ui-dur-move) var(--ui-ease-move);
+}
+
+/* Empty: the icon sits in a raised tile with the avatar's soft inner
+   light, so the zone has something to look at. It lifts on hover, and
+   higher when a file is held over it. */
+.zone:not([data-has]) .mark {
+  width: var(--ui-control-md);
+  height: var(--ui-control-md);
+  border-radius: var(--ui-radius-md);
+  background: radial-gradient(
+    circle at 50% 0%,
+    var(--ui-surface),
+    var(--ui-fill-strong-solid) 120%
+  );
+  box-shadow: var(--ui-shadow-resting);
+  color: var(--ui-foreground);
+}
+
+@media (hover: hover) {
+  .zone:not([data-has], [data-disabled]) .browse:hover .mark {
+    translate: 0 -2px;
+  }
+}
+
+.zone[data-dragging]:not([data-has]) .mark {
+  translate: 0 -4px;
+  scale: 1.06;
 }
 
 .zone[data-has] .mark {
@@ -361,6 +391,11 @@
   .row,
   .row[data-leaving] {
     animation: none;
+  }
+  .zone .mark,
+  .zone .browse:hover .mark {
+    translate: none;
+    scale: none;
   }
   .wash {
     transition: none;
