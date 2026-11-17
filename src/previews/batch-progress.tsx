@@ -196,7 +196,7 @@ export function BatchProgressPreview() {
 
   return (
     <div className={styles.stack}>
-      <div className={own.head}>
+      <div className={own.head} data-demo-controls="">
         <SegmentedControl data-demo-controls="" size="sm" value={mode} onValueChange={(v) => {
             clear();
             run.current++;

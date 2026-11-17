@@ -1,7 +1,7 @@
 /* One column, left aligned. Four type styles and no others: the title
    (2xl medium), headings (md medium), text (md regular, muted) and small
-   (sm regular). No fades, no masks, no rules between rows: space alone
-   groups things. */
+   (sm regular). Every component as a live card, grouped; no fades, no
+   masks, no rules between rows: space alone groups things. */
 
 /* Everything shares one column, so every edge lines up. */
 .bar,
@@ -33,7 +33,7 @@
 /* ---- The four styles ---- */
 
 .title {
-  max-width: 24ch;
+  max-width: 32ch;
   margin: 0;
   font-size: var(--ui-text-2xl);
   font-weight: var(--ui-weight-medium);
@@ -59,56 +59,13 @@
   text-wrap: pretty;
 }
 
-.small {
-  color: var(--ui-muted);
-  font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-regular);
-  line-height: var(--ui-leading-sm);
-}
-
 /* ---- Hero ---- */
-
-.hero .text {
-  max-width: 44ch;
-  margin-top: var(--ui-space-3);
-}
 
 .actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--ui-space-2);
   margin-top: var(--ui-space-6);
-}
-
-/* ---- The one demo: a card around the whole component, nothing cut ---- */
-
-.showcase {
-  display: grid;
-  gap: var(--ui-space-3);
-  margin: 0;
-}
-
-.stage {
-  display: grid;
-  justify-items: center;
-  align-content: center;
-  /* The demo's height, held before it renders in the browser. */
-  min-height: 480px;
-  padding: var(--ui-space-7) var(--ui-space-5);
-  border-radius: calc(var(--ui-radius-lg) + var(--ui-space-2));
-  background: var(--ui-surface);
-  box-shadow: var(--ui-shadow-resting);
-}
-
-.stage > * {
-  width: min(440px, 100%);
-}
-
-/* The demo's own controls are for its docs page, and only its first
-   scenario shows here, so the card stays one component tall. */
-.stage [data-demo-controls],
-.stage > * > :not(:first-child) {
-  display: none;
 }
 
 /* ---- Sections ---- */
@@ -135,15 +92,13 @@
 }
 
 /* Links read as the text they sit in, in the text color: no underline. */
-.link,
-.item {
+.link {
   color: var(--ui-foreground);
   text-decoration: none;
 }
 
 @media (hover: hover) {
-  .link:hover,
-  .item:hover {
+  .link:hover {
     color: var(--ui-muted);
   }
 }
@@ -161,113 +116,6 @@
   margin-top: var(--ui-space-4);
 }
 
-/* ---- The directory: four groups of plain links ----
-   Four even columns: the agent kit, the components across two (it's the
-   longest list), then screens with templates under them. */
-
-.directory {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-template-areas:
-    "kit components components screens"
-    "kit components components templates";
-  grid-template-rows: auto 1fr;
-  gap: var(--ui-space-7) var(--ui-space-6);
-  width: 100%;
-}
-
-.kit {
-  grid-area: kit;
-}
-
-.components {
-  grid-area: components;
-}
-
-.components .list {
-  display: block;
-  columns: 2;
-  column-gap: var(--ui-space-6);
-}
-
-.components .list li {
-  break-inside: avoid;
-  padding-bottom: var(--ui-space-2);
-}
-
-.screens {
-  grid-area: screens;
-}
-
-.templates {
-  grid-area: templates;
-}
-
-.group {
-  display: grid;
-  align-content: start;
-  gap: var(--ui-space-3);
-}
-
-.list {
-  display: grid;
-  gap: var(--ui-space-2);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  line-height: var(--ui-leading-md);
-}
-
-/* ---- The rules ---- */
-
-.rules {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(5, auto);
-  grid-auto-flow: column;
-  column-gap: var(--ui-space-7);
-  row-gap: var(--ui-space-3);
-  width: 100%;
-  max-width: 720px;
-  padding: 0;
-  list-style: none;
-  line-height: var(--ui-leading-md);
-  counter-reset: rule;
-}
-
-.rules li {
-  display: grid;
-  grid-template-columns: 2ch minmax(0, 1fr);
-  column-gap: var(--ui-space-3);
-  counter-increment: rule;
-}
-
-.rules li::before {
-  content: counter(rule);
-  color: var(--ui-muted);
-  font-variant-numeric: tabular-nums;
-  text-align: end;
-}
-
-@media (max-width: 860px) {
-  .directory {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-areas:
-      "kit screens"
-      "kit templates"
-      "components components";
-    grid-template-rows: auto 1fr auto;
-  }
-}
-
-@media (max-width: 480px) {
-  .directory {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "kit" "components" "screens" "templates";
-    grid-template-rows: none;
-  }
-}
-
 @media (max-width: 640px) {
   .bar,
   .hero,
@@ -280,13 +128,5 @@
   }
   .hero {
     padding-top: calc(var(--ui-gap-section) * 1.5);
-  }
-  .stage {
-    padding: var(--ui-space-5) var(--ui-space-4);
-  }
-  .rules {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: none;
-    grid-auto-flow: row;
   }
 }

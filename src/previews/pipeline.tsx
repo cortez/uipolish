@@ -180,7 +180,7 @@ export function PipelinePreview() {
 
   return (
     <div className={styles.stack}>
-      <div className={own.head}>
+      <div className={own.head} data-demo-controls="">
         <SegmentedControl data-demo-controls="" size="sm" value={variant} onValueChange={(v) => setVariant(v as Variant)} aria-label="Run" widths="content">
           <Segment value="passing">Passing</Segment>
           <Segment value="failing">Failing tests</Segment>
