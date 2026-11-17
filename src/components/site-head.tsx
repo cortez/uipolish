@@ -5,23 +5,21 @@ import { ButtonLink } from "@registry/button/button-link";
 import { ThemeToggle } from "@registry/theme-toggle/theme-toggle";
 import styles from "./site-head.module.css";
 
-/** The mark, top left on every page: in the docs sidebar, or in the same
- *  box on a page without one. */
-export function SiteMark({ placement }: { placement: "sidebar" | "page" }) {
+/** The mark, top left on every page, at the top of the sidebar. */
+export function SiteMark() {
   return (
-    <div className={`${styles.mark} ${styles[placement]}`}>
+    <div className={styles.mark}>
       <Wordmark className={styles.wordmark} />
     </div>
   );
 }
 
-/** Donate (when it's set up), the theme toggle and GitHub, top right on every page, level with the mark; on a
- *  wide screen they stay pinned there as the page scrolls. `inline`
- *  puts them in the page's own flow instead, at the end of a header row
- *  that sits in the content column (pages without the docs sidebar). */
-export function SiteActions({ inline = false }: { inline?: boolean }) {
+/** Donate (when it's set up), the theme toggle and GitHub, top right on
+ *  every page, level with the mark; on a wide screen they stay pinned
+ *  there as the page scrolls. */
+export function SiteActions() {
   return (
-    <div className={inline ? `${styles.actions} ${styles.inline}` : styles.actions}>
+    <div className={styles.actions}>
       {DONATE_URL && (
         <ButtonLink href={DONATE_URL} target="_blank" rel="noopener" variant="ghost" size="sm">
           Donate

@@ -4,13 +4,12 @@ import { ButtonLink } from "@registry/button/button-link";
 import { Catalog, type CatalogItem } from "@/components/catalog";
 import { PRIMITIVES } from "@/components/component-index";
 import { CopyPrompt } from "@/components/copy-prompt";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteActions } from "@/components/site-head";
-import { Wordmark } from "@/components/wordmark";
+import { SiteLayout } from "@/components/site-layout";
 import { getOpinions, listComponents, type ComponentMeta } from "@/lib/content";
 import { JsonLd, homeLd } from "@/lib/seo/json-ld";
 import { SITE_DESCRIPTION, SITE_TITLE, pageMetadata } from "@/lib/seo/site";
 import { AGENT_PROMPT, MCP_URL } from "@/lib/setup";
+import site from "./site.module.css";
 import styles from "./home.module.css";
 
 const COMMAND = `claude mcp add --transport http uipolish ${MCP_URL}`;
@@ -30,15 +29,11 @@ export default async function Home() {
   ].filter((g) => g.items.length > 0);
 
   return (
-    <>
-      <div className={styles.bar}>
-        <Wordmark />
-        <SiteActions inline />
-      </div>
-
-      <header className={styles.hero}>
-        <h1 className={styles.title}>React components for AI products, with every state already designed.</h1>
-        <div className={styles.actions}>
+    <SiteLayout>
+      <JsonLd nodes={homeLd()} />
+      <header className={site.intro}>
+        <h1 className={site.title}>React components for AI products, with every state already designed.</h1>
+        <div className={site.actions}>
           <CopyPrompt prompt={AGENT_PROMPT} label="Copy agent instructions" />
           <ButtonLink as={Link} href="/docs" variant="secondary">
             Browse components
@@ -46,46 +41,37 @@ export default async function Home() {
         </div>
       </header>
 
-      <main className={styles.main}>
-        <JsonLd nodes={homeLd()} />
-
-        {groups.map((g) => (
-          <section key={g.id} id={g.id} className={styles.section} aria-labelledby={`${g.id}-title`}>
-            <h2 id={`${g.id}-title`} className={styles.heading}>
-              {g.title}
-            </h2>
-            <Catalog items={g.items.sort(byTitle).map(item)} />
-          </section>
-        ))}
-
-        <section className={styles.section} aria-labelledby="install-title">
-          <h2 id="install-title" className={styles.heading}>
-            Connect your agent
+      {groups.map((g) => (
+        <section key={g.id} id={g.id} className={`${site.section} ${styles.wide}`} aria-labelledby={`${g.id}-title`}>
+          <h2 id={`${g.id}-title`} className={site.heading}>
+            {g.title}
           </h2>
-          <p className={styles.text}>
-            Run this in Claude Code, then ask for a component by name. No account, no key. Another agent?{" "}
-            <Link href="/docs" className={styles.link}>
-              See its setup
-            </Link>
-            .
-          </p>
-          <code className={styles.command}>{COMMAND}</code>
+          <Catalog items={g.items.sort(byTitle).map(item)} />
+        </section>
+      ))}
+
+      <section className={site.section} aria-labelledby="install-title">
+        <h2 id="install-title" className={site.heading}>
+          Connect your agent
+        </h2>
+        <p className={site.text}>
+          Run this in Claude Code, then ask for a component by name. No account, no key. Another agent?{" "}
+          <Link href="/docs">See its setup</Link>.
+        </p>
+        <code className={styles.command}>{COMMAND}</code>
+        <div className={site.actions}>
           <CopyPrompt prompt={COMMAND} label="Copy command" variant="secondary" />
-        </section>
+        </div>
+      </section>
 
-        <section className={styles.section} aria-labelledby="rules-title">
-          <h2 id="rules-title" className={styles.heading}>
-            The rules
-          </h2>
-          <p className={styles.text}>
-            {opinions.map((o) => o.title.replace(/\.$/, "")).join(". ")}.{" "}
-            <Link href="/docs/rules" className={styles.link}>
-              Read the rules
-            </Link>
-          </p>
-        </section>
-      </main>
-      <SiteFooter />
-    </>
+      <section className={site.section} aria-labelledby="rules-title">
+        <h2 id="rules-title" className={site.heading}>
+          The rules
+        </h2>
+        <p className={site.text}>
+          {opinions.map((o) => o.title.replace(/\.$/, "")).join(". ")}. <Link href="/docs/rules">Read the rules</Link>
+        </p>
+      </section>
+    </SiteLayout>
   );
 }

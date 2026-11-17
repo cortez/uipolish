@@ -1,133 +1,16 @@
-/* One column, left aligned. Four type styles and no others: the title
-   (2xl medium), headings (md medium), text (md regular, muted) and small
-   (sm regular). Every component as a live card, grouped; no fades, no
-   masks, no rules between rows: space alone groups things. */
+/* The home page is a page like any other in the shared layout, using the
+   shared styles in site.module.css. Only two things are its own. */
 
-/* Everything shares one column, so every edge lines up. */
-.bar,
-.hero,
-.main,
-.main + footer {
-  max-width: 1120px;
-  margin-inline: auto;
-  margin-inline: max(0px, round(down, (100% - 1120px) / 2, 1px));
-  padding-inline: var(--ui-space-5);
+/* The component grids take the whole column, not the text measure. */
+.wide {
+  max-width: none;
 }
 
-/* The top bar: 24 down, the mark and the controls centered on one line. */
-.bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--ui-space-4);
-  padding-top: var(--ui-space-6);
-}
-
-/* The hero: one title and the two ways in, a section gap under the bar.
-   At body size it needs no more room than any section. */
-.hero {
-  display: grid;
-  justify-items: start;
-  padding-top: var(--ui-gap-section);
-}
-
-/* ---- The four styles ---- */
-
-.title {
-  max-width: 32ch;
-  margin: 0;
-  font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-title);
-  line-height: var(--ui-leading-2xl);
-  letter-spacing: var(--ui-tracking-heading);
-  text-wrap: balance;
-}
-
-.heading {
-  margin: 0;
-  font-size: var(--ui-text-md);
-  font-weight: var(--ui-weight-medium);
-  line-height: var(--ui-leading-md);
-}
-
-.text {
-  max-width: 60ch;
-  margin: 0;
-  color: var(--ui-muted);
-  font-size: var(--ui-text-md);
-  font-weight: var(--ui-weight-regular);
-  line-height: var(--ui-leading-prose);
-  text-wrap: pretty;
-}
-
-/* ---- Hero ---- */
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--ui-space-2);
-  margin-top: var(--ui-space-6);
-}
-
-/* ---- Sections ---- */
-
-.main {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  padding-bottom: var(--ui-gap-section);
-}
-
-.section {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  justify-items: start;
-  padding-top: var(--ui-gap-section);
-}
-
-.section > .text {
-  margin-top: var(--ui-space-1);
-}
-
-.section > :not(.heading, .text) {
-  margin-top: var(--ui-gap-block);
-}
-
-/* Links read as the text they sit in, in the text color: no underline. */
-.link {
-  color: var(--ui-foreground);
-  text-decoration: none;
-}
-
-@media (hover: hover) {
-  .link:hover {
-    color: var(--ui-muted);
-  }
-}
-
-/* The command, whole, wrapping where it must: no scroller, no fade. */
+/* The install command, whole, wrapping where it must: no scroller, no fade. */
 .command {
   max-width: 100%;
   font-family: var(--ui-font-mono);
   font-size: var(--ui-text-md);
   line-height: var(--ui-leading-md);
   overflow-wrap: anywhere;
-}
-
-.section > .command + * {
-  margin-top: var(--ui-space-4);
-}
-
-@media (max-width: 640px) {
-  .bar,
-  .hero,
-  .main,
-  .main + footer {
-    padding-inline: var(--ui-space-4);
-  }
-  .bar {
-    padding-top: var(--ui-space-5);
-  }
-  .hero {
-    padding-top: var(--ui-gap-section);
-  }
 }

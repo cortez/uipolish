@@ -13,7 +13,7 @@
   padding: calc(var(--ui-space-8) * 1.5) var(--ui-space-7) calc(var(--ui-space-8) * 2);
 }
 
-/* Docs breathe more than the shared rhythm: intro to first block 48. */
+/* Pages breathe more than the shared rhythm: intro to first block 48. */
 .main > header {
   padding-bottom: var(--ui-space-7);
 }

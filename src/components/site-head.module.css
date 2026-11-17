@@ -19,15 +19,6 @@
   margin-inline-start: calc(var(--ui-space-3) + 1px);
 }
 
-/* A page without the sidebar: the mark in the box the sidebar would put it
-   in (24 from the top, 12 in), so it never moves between pages. */
-.page {
-  position: absolute;
-  z-index: 1;
-  top: var(--ui-space-6);
-  inset-inline-start: var(--ui-space-3);
-}
-
 /* At the page's end, 24 in; pulled 8 toward the edge so the toggle's icon,
    not the ghost capsule around it, sits on the gutter. */
 .actions {
@@ -47,26 +38,11 @@
 }
 
 @media (max-width: 860px) {
-  .page,
   .actions {
     top: var(--ui-space-5);
-  }
-  .page {
-    inset-inline-start: var(--ui-space-4);
+    inset-inline-end: calc(var(--ui-space-4) - var(--ui-space-2));
   }
   .wordmark {
     margin-inline-start: 0;
   }
-  .actions {
-    inset-inline-end: calc(var(--ui-space-4) - var(--ui-space-2));
-  }
-}
-
-/* In flow, at the end of a header row in the content column. Two classes,
-   so it outranks the pinned and phone positions above in any order. The
-   negative margin keeps the toggle's icon, not its capsule, on the column's
-   edge, as the pinned position does with the window's. */
-.actions.inline {
-  position: static;
-  margin-inline-end: calc(var(--ui-space-2) * -1);
 }
