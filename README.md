@@ -196,6 +196,11 @@ anything in `foundation/`, run `npm run skill`. Run `npm run typecheck`,
 `npm run lint` and `npm test` before opening a PR. [AGENTS.md](AGENTS.md) has
 the conventions, for people and coding agents alike.
 
+## Donate
+
+UI Polish is free and open source. If it saves you time, you can
+[donate](https://buy.polar.sh/polar_cl_Ne3B69dlezuutkrSoXOkzyIERxDUwm34SFCyX02eXVx).
+
 ## License
 
 MIT. See [LICENSE](LICENSE). The site's fonts (DM Sans and DM Mono) are under
