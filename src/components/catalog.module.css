@@ -43,9 +43,10 @@
   outline-offset: 2px;
 }
 
-/* One flat surface around the demo. Cards in a row are as tall as the
-   tallest demo in it, up to a cap; a longer demo is cut by the card's own
-   edge, never faded. Paint containment keeps anything fixed inside a
+/* No surface: no fill, no shadow, no edge. The demo sits on the page,
+   set apart from the next by space alone. Cards in a row are as tall as
+   the tallest demo in it, up to a cap; a longer demo is cut at the card's
+   bounds, never faded. Paint containment keeps anything fixed inside a
    demo inside the card. */
 .card {
   display: grid;
@@ -55,19 +56,15 @@
   max-height: 560px;
   padding: var(--ui-space-6) var(--ui-space-5);
   border-radius: calc(var(--ui-radius-lg) + var(--ui-space-2));
-  background: var(--ui-surface);
-  box-shadow: var(--ui-shadow-resting);
   overflow: clip;
   contain: paint;
   transition: box-shadow var(--ui-dur-fast) var(--ui-ease-color);
 }
 
-/* Hover anywhere on it: the card rises onto the raised shadow, with the
-   lightest edge (in dark mode, where there are no shadows, the edge
-   carries it). */
+/* Hover anywhere on it: the lightest edge shows what the link covers. */
 @media (hover: hover) {
   .item:hover .card {
-    box-shadow: 0 0 0 var(--ui-hairline) var(--ui-border-strong), var(--ui-shadow-raised);
+    box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
   }
 }
 

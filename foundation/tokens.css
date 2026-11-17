@@ -234,7 +234,9 @@
   --ui-border-control: color-mix(in oklch, var(--ui-foreground) 45%, var(--ui-surface));
   --ui-border: var(--ui-border-strong);
   --ui-border-subtle: var(--ui-border);
-  --ui-border-tint: 32%;
+  /* Soft: a colored edge is a quiet line in its hue, never an outline
+     that competes with the fill or the text inside it. */
+  --ui-border-tint: 14%;
   --ui-fill: color-mix(in oklch, var(--ui-foreground) 4.5%, transparent);
   --ui-fill-strong: color-mix(in oklch, var(--ui-foreground) 8%, transparent);
   /* The same two fills, opaque, for what must hide what's under it (a
