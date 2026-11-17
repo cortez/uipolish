@@ -4,7 +4,7 @@
   "summary": "A passwordless sign-in and sign-up screen: work email, then a one-time code with a resend countdown, plus optional OAuth providers and SSO by work domain. Wrong, expired and rate-limited codes, blocked domains and failed providers each say what to do next.",
   "type": "block",
   "stage": "wide",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "dependencies": [
     "alert",
     "animated-size",

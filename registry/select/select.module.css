@@ -142,7 +142,7 @@
   background: var(--ui-fill);
   box-shadow: none;
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
 }
 
 .field[data-size="sm"] .chevron {
@@ -344,7 +344,7 @@
   padding: var(--ui-space-2) var(--ui-pad-row) var(--ui-space-1);
   color: var(--ui-subtle);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
 }
 

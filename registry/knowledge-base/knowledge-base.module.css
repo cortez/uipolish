@@ -145,7 +145,7 @@
 .sectionTitle {
   margin: 0;
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-semibold);
+  font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-heading);
   text-wrap: balance;
@@ -804,7 +804,7 @@
 
 .tileExt {
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-semibold);
+  font-weight: var(--ui-weight-regular);
   line-height: 1;
   letter-spacing: var(--ui-tracking-control);
 }
@@ -834,7 +834,7 @@
   background: color-mix(in oklch, var(--kb-at) 13%, var(--ui-surface));
   color: var(--kb-at-text);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: 1;
   transition:
     background-color var(--ui-dur-base) var(--ui-ease-color),
@@ -1034,7 +1034,7 @@
 
 .usageLabel {
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
 }
 
@@ -1148,7 +1148,7 @@
 .triesLabel {
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
 }
 
@@ -1174,7 +1174,7 @@
   font: inherit;
   font-size: var(--ui-text-sm);
   /* A pill you press: medium, like every button and chip label. */
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
   text-align: start;
   overflow-wrap: anywhere;
@@ -1268,7 +1268,7 @@
   margin: 0;
   color: var(--ui-accent-text);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
 }
 
@@ -1352,7 +1352,7 @@
 .chunkName {
   composes: wrap from "../text/text.module.css";
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
 }
 

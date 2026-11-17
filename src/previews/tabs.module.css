@@ -13,7 +13,7 @@
   padding: 0 0 var(--ui-space-2);
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   text-align: start;
 }
 

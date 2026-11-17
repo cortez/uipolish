@@ -4,7 +4,7 @@
   "summary": "The settings screen of an AI product's workspace: name, URL, logo, time zone and deleting the workspace; API keys with scopes and expiry, the secret shown once, revoke and flags for expired or unused keys; the default model, per-feature models, a monthly spend limit with an alert threshold, rate limits and usage against them; and notification switches per channel with a test send. One save bar holds unsaved changes, with inline validation, optimistic saves that roll back, a leave guard, a read-only viewer state and loading skeletons.",
   "type": "block",
   "stage": "wide",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "dependencies": [
     "alert",
     "badge",

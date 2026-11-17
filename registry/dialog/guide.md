@@ -91,7 +91,7 @@ when it opens, so a reflexive Enter does nothing harmful.
 
 ## Layout
 
-- **Header.** The title is the Heading step (22/28, semibold, tracked
+- **Header.** The title is the Title step (22/28, medium, tracked
   `--ui-tracking-heading`), the description Body in muted, 4px under it.
   The top padding is a step short of the sides (28 against 32), since the
   title's line height already puts air above its capitals.

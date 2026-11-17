@@ -10,15 +10,17 @@ A type step is a size **with the line-height it is set on**, plus a weight.
 Never ship a bare `font-size`, and never pick a value between steps: if a step
 is missing, the scale is wrong, not the component.
 
-**Three sizes, and only three.** A fourth size is never the answer: pick
-the nearest of these, or change the layout. Hierarchy past three comes from
-weight, color and space, never a bigger face.
+**Four styles, and only four.** Three sizes and two weights, in exactly
+these pairings. A fifth style is never the answer: pick the nearest of
+these, or change the layout. Hierarchy past four comes from color and
+space, never another size or weight.
 
 | Style | Token | Size | Line-height | Weight | Use |
 |---|---|---|---|---|---|
-| Title | `2xl` (`display` is the same) | 22px | 28px | 500 (550 in components) | Page and screen titles, h1, section headings, big figures |
-| Body | `md` | 15px | 22px | 400; 500 for control labels | Text, controls, menus, fields, subheads |
-| Small | `sm` | 13px | 18px | 400; 500 for badges | Secondary text, captions, field messages, meta |
+| Title | `2xl` (`display` is the same) | 22px | 28px | 500 | Page and screen titles, h1, big figures |
+| Heading | `md` | 15px | 22px | 500 | Section headings, subheads, control labels, buttons |
+| Body | `md` | 15px | 22px | 400 | Text, menus, fields, values |
+| Small | `sm` | 13px | 18px | 400 | Secondary text, captions, badges, field messages, meta |
 
 Running text of more than a couple of lines takes `--ui-leading-prose` (1.6)
 at Body size. Inline code is mono at `--ui-text-code` (0.875em) of the text
@@ -26,7 +28,7 @@ it sits in, which is the same style in another face, not a new one.
 
 Tokens: `--ui-text-{sm,md,2xl}`, `--ui-leading-{sm,md,2xl}` (`display`
 and the old `xs`, `lg` and `xl` steps alias into these),
-`--ui-leading-prose`, `--ui-text-code`, `--ui-weight-{regular,medium,semibold}`,
+`--ui-leading-prose`, `--ui-text-code`, `--ui-weight-{regular,medium}` (`semibold` aliases medium),
 `--ui-measure`, `--ui-text-touch`.
 
 - Line-heights are px for the UI steps so rows line up: 13px text in a 20px
@@ -34,8 +36,9 @@ and the old `xs`, `lg` and `xl` steps alias into these),
   not its own 18px.
 - Controls, pills and badges use `line-height: 1` so padding alone sets the
   box. That's a rule, not a step.
-- Weight: 400 to read, 500 for labels and controls (12–14px UI text at 400
-  looks thin), 550–600 for titles. Large display type never goes past 600.
+- Weight: 400 to read, 500 for titles, headings, labels and controls.
+  Nothing heavier, and small text is never bold: a badge or caption is set
+  apart by color and its box, not weight.
 - Mono uses the step it sits in: code blocks at `sm` / `md` leading, inline
   code at `--ui-text-code` (mono sets wider than the text face, so the same
   size looks bigger).

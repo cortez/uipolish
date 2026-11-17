@@ -4,7 +4,7 @@
   "summary": "Numbered citation markers for AI answers, each with a preview card on hover, focus or tap. Markers and the source list highlight each other.",
   "blurb": "Numbered citations with a preview card for each source.",
   "kit": "agent",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "dependencies": [
     "brand-marks",
     "icons",

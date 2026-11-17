@@ -274,7 +274,7 @@ button.stepButton:focus-visible {
   composes: wrap from "../text/text.module.css";
   margin: 0;
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-semibold);
+  font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-title);
   text-wrap: balance;
@@ -663,7 +663,7 @@ button.stepButton:focus-visible {
   margin: 0;
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
 }
 
@@ -973,7 +973,7 @@ button.stepButton:focus-visible {
   margin: 0;
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
   white-space: nowrap;
   transition: color var(--ui-dur-instant) var(--ui-ease-color);

@@ -65,7 +65,7 @@
   margin-inline-start: var(--ui-space-2);
   color: var(--ui-success-text);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   font-variant-numeric: tabular-nums;
 }
 
@@ -355,7 +355,7 @@
   margin: 0;
   color: var(--ui-foreground);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
 }
 
@@ -564,7 +564,7 @@
   min-height: var(--ui-control-md);
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: 1;
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
@@ -579,7 +579,7 @@
   padding: var(--ui-space-6) var(--ui-space-3) var(--ui-space-3);
   color: var(--ui-foreground);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-semibold);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
   text-align: start;
 }

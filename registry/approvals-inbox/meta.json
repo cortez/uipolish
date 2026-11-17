@@ -4,7 +4,7 @@
   "summary": "A review queue for anything that needs a sign-off: expenses, time off, discounts, access, refunds, payments, posts and config changes, asked for by people or by agents. A list on the left, filtered by status and searchable, optionally grouped by requester or due date; the request in full on the right, drawn as the payment, message, post, diff, deletion, key/value change or code it is (or your own preview), with the requester's note and who it reaches. Approve, decline with a note, or edit then approve, from the keyboard too, with due dates, bulk approve and an undo window before anything is sent.",
   "type": "block",
   "stage": "wide",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "dependencies": [
     "alert",
     "animated-size",

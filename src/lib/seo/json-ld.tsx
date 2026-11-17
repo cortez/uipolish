@@ -1,4 +1,3 @@
-import type { Faq } from "@/lib/faq";
 import { SUPPORT_EMAIL } from "@/lib/info-pages";
 import { AUTHOR, OG_IMAGE, SITE_DESCRIPTION, SITE_NAME, SITE_SLOGAN, abs, siteUrl } from "./site";
 
@@ -59,17 +58,7 @@ const software = () => ({
 });
 
 /** Home: who, what site, what product. */
-const faqPage = (faq: Faq[]) => ({
-  "@type": "FAQPage",
-  "@id": id("questions"),
-  mainEntity: faq.map((q) => ({
-    "@type": "Question",
-    name: q.question,
-    acceptedAnswer: { "@type": "Answer", text: q.answer },
-  })),
-});
-
-export const homeLd = (faq: Faq[]) => [organization(), website(), software(), faqPage(faq)];
+export const homeLd = () => [organization(), website(), software()];
 
 /** A docs page: TechArticle plus its breadcrumb trail ([label, path], root first). */
 export function docsLd(a: {

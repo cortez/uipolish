@@ -241,7 +241,7 @@
   margin: 0;
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
 }
 
@@ -398,7 +398,7 @@
 .countdown {
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -497,7 +497,7 @@
   max-width: 40ch;
   margin: 0;
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-semibold);
+  font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-heading);
   text-wrap: balance;
@@ -537,7 +537,7 @@
   margin: 0;
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
 }
 
@@ -613,7 +613,7 @@
 .amount {
   margin: 0;
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-semibold);
+  font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-heading);
   font-variant-numeric: tabular-nums;
@@ -639,7 +639,7 @@
   gap: 4px var(--ui-space-2);
   margin: 0;
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
 }
 
@@ -872,7 +872,7 @@
   color: var(--ui-muted);
   font: inherit;
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;

@@ -60,7 +60,7 @@
   composes: wrap from "../../registry/text/text.module.css";
   max-width: 100%;
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-md);
 }
 

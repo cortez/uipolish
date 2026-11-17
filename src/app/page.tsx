@@ -1,121 +1,126 @@
 import type { Metadata } from "next";
 import Link from "@/components/link";
-import { Accordion, AccordionItem } from "@registry/accordion/accordion";
 import { ButtonLink } from "@registry/button/button-link";
-import { CopyPrompt } from "@/components/copy-prompt";
-import { getFaq } from "@/lib/faq";
-import { getOpinions, listComponents, type ComponentMeta } from "@/lib/content";
-import { AGENT_PROMPT } from "@/lib/setup";
-import { Catalog, type CatalogItem } from "@/components/catalog";
 import { PRIMITIVES } from "@/components/component-index";
+import { CopyPrompt } from "@/components/copy-prompt";
+import { HomeShowcase } from "@/components/home-showcase";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteActions } from "@/components/site-head";
 import { Wordmark } from "@/components/wordmark";
+import { getOpinions, listComponents, type ComponentMeta } from "@/lib/content";
 import { JsonLd, homeLd } from "@/lib/seo/json-ld";
 import { SITE_DESCRIPTION, SITE_TITLE, pageMetadata } from "@/lib/seo/site";
-import site from "./site.module.css";
+import { AGENT_PROMPT, MCP_URL } from "@/lib/setup";
 import styles from "./home.module.css";
 
-/** A summary's opening phrase (before its colon or first full stop), so the
- *  cards stay even; the docs page has the whole summary. */
-function lead(summary: string) {
-  const end = summary.search(/[:.](\s|$)/);
-  return (end === -1 ? summary : summary.slice(0, end)).trim() + ".";
-}
+/** The one live demo on the home page: a component that holds its size,
+ *  shown whole. Every other demo is on its docs page. */
+const SHOWCASE = "authorize";
+
+const COMMAND = `claude mcp add --transport http uipolish ${MCP_URL}`;
 
 export const metadata: Metadata = pageMetadata({ title: SITE_TITLE, description: SITE_DESCRIPTION, path: "/", absoluteTitle: true });
 
 export default async function Home() {
-  const faq = await getFaq();
-  const components = (await listComponents()).filter((c) => !c.primitive);
+  const all = (await listComponents()).filter((c) => !c.primitive && !PRIMITIVES.includes(c.name));
   const opinions = await getOpinions();
-  // One catalog, blocks and templates in it like any component: the agent
-  // kit first (what the page is about), then whole screens and apps, then
-  // everything else, each group A to Z.
-  const rank = (c: ComponentMeta) =>
-    c.kit === "agent" ? 0 : c.type === "block" ? 1 : c.type === "template" ? 2 : PRIMITIVES.includes(c.name) ? 4 : 3;
-  const catalog: CatalogItem[] = components
-    .sort((a, b) => rank(a) - rank(b) || a.title.localeCompare(b.title))
-    .map((c) => ({
-      name: c.name,
-      title: c.title,
-      summary: c.blurb ?? lead(c.summary),
-      tag: c.type === "template" ? "Template" : c.type === "block" ? "Screen" : undefined,
-      screen: c.type !== undefined,
-    }));
+  const byTitle = (a: ComponentMeta, b: ComponentMeta) => a.title.localeCompare(b.title);
+  const groups: { key: "kit" | "components" | "screens" | "templates"; title: string; items: ComponentMeta[] }[] = [
+    { key: "kit", title: "Agent kit", items: all.filter((c) => !c.type && c.kit === "agent").sort(byTitle) },
+    { key: "components", title: "Components", items: all.filter((c) => !c.type && c.kit !== "agent").sort(byTitle) },
+    { key: "screens", title: "Screens", items: all.filter((c) => c.type === "block").sort(byTitle) },
+    { key: "templates", title: "Templates", items: all.filter((c) => c.type === "template").sort(byTitle) },
+  ];
+
   return (
     <>
-      {/* The content column's top: the mark at its left, level with the theme
-          toggle at its right. Then a long quiet drop to the one large line on
-          the page, what it is under it in the muted color, and the two ways in. */}
-      <header className={styles.hero}>
+      <div className={styles.bar}>
         <Wordmark />
         <SiteActions inline />
-        <div className={styles.statement}>
-          <h1 className={styles.display}>Every state, already designed.</h1>
-          <p className={styles.lede}>
-            React components and complete screens for AI products. Your coding agent installs them and builds
-            everything else to match.
-          </p>
-          <div className={styles.heroActions}>
-            <CopyPrompt prompt={AGENT_PROMPT} label="Copy agent instructions" />
-            <ButtonLink as={Link} href="/docs" variant="secondary">
-              Browse components
-            </ButtonLink>
-          </div>
+      </div>
+
+      <header className={styles.hero}>
+        <h1 className={styles.title}>Every state, already designed.</h1>
+        <p className={styles.text}>
+          React components and complete screens for AI products. Your coding agent installs them and builds everything
+          else to match.
+        </p>
+        <div className={styles.actions}>
+          <CopyPrompt prompt={AGENT_PROMPT} label="Copy agent instructions" />
+          <ButtonLink as={Link} href="/docs" variant="secondary">
+            Browse components
+          </ButtonLink>
         </div>
       </header>
+
       <main className={styles.main}>
-        <JsonLd nodes={homeLd(faq)} />
+        <JsonLd nodes={homeLd()} />
 
+        <figure className={styles.showcase}>
+          <div className={styles.stage}>
+            <HomeShowcase name={SHOWCASE} />
+          </div>
+          <figcaption className={styles.small}>
+            <Link href={`/docs/${SHOWCASE}`} className={styles.link}>
+              Authorize
+            </Link>
+            , the consent screen an MCP server shows an agent. Live: try it.
+          </figcaption>
+        </figure>
 
-        <section id="components" className={styles.catalog} aria-labelledby="components-title">
-          <h2 id="components-title" className={site.heading}>
-            All components
+        <section className={styles.section} aria-labelledby="install-title">
+          <h2 id="install-title" className={styles.heading}>
+            Connect your agent
           </h2>
-          <Catalog items={catalog} />
+          <p className={styles.text}>
+            Run this in Claude Code, then ask for a component by name. No account, no key. Another agent?{" "}
+            <Link href="/docs" className={styles.link}>
+              See its setup
+            </Link>
+            .
+          </p>
+          <code className={styles.command}>{COMMAND}</code>
+          <CopyPrompt prompt={COMMAND} label="Copy command" variant="secondary" />
         </section>
 
-        <section id="opinions" className={styles.section} aria-labelledby="opinions-title">
-          <div className={styles.sectionHead}>
-            <h2 id="opinions-title" className={site.heading}>
-              The rules
-            </h2>
-            <p className={styles.lede}>
-              Ten decisions every component shares. Change one token and every component follows.
-            </p>
-          </div>
-          <div className={styles.sectionBody}>
-            <ol className={styles.rules}>
-              {opinions.map((o) => (
-                <li key={o.title} className={styles.rule}>
-                  <h3 className={styles.ruleTitle}>{o.title.replace(/\.$/, "")}</h3>
-                </li>
+        <section className={styles.section} aria-labelledby="components-title">
+          <h2 id="components-title" className={styles.heading}>
+            Everything in it
+          </h2>
+          <p className={styles.text}>Each one has a live demo and a guide your agent reads before using it.</p>
+          <div className={styles.directory}>
+            {groups
+              .filter((g) => g.items.length > 0)
+              .map((g) => (
+                <nav key={g.key} aria-label={g.title} className={`${styles.group} ${styles[g.key]}`}>
+                  <h3 className={styles.heading}>{g.title}</h3>
+                  <ul className={styles.list}>
+                    {g.items.map((c) => (
+                      <li key={c.name}>
+                        <Link href={`/docs/${c.name}`} className={styles.item}>
+                          {c.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
               ))}
-            </ol>
-            <div className={`${site.actions} ${styles.actions}`}>
-              <ButtonLink as={Link} href="/docs/rules" variant="secondary">
-                Read every rule
-              </ButtonLink>
-            </div>
           </div>
         </section>
 
-        <section id="questions" className={`${styles.section} ${styles.questions}`} aria-labelledby="questions-title">
-          <div className={styles.sectionHead}>
-            <h2 id="questions-title" className={site.heading}>
-              Questions
-            </h2>
-          </div>
-          <div className={styles.sectionBody}>
-            <Accordion hash headingLevel={3} className={styles.faq}>
-              {faq.map((q) => (
-                <AccordionItem key={q.id} value={q.id} title={q.question}>
-                  {q.answer}
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
+        <section className={styles.section} aria-labelledby="rules-title">
+          <h2 id="rules-title" className={styles.heading}>
+            The rules
+          </h2>
+          <p className={styles.text}>Ten decisions every component shares. Change one token and every component follows.</p>
+          <ol className={styles.rules}>
+            {opinions.map((o) => (
+              <li key={o.title}>{o.title.replace(/\.$/, "")}</li>
+            ))}
+          </ol>
+          <ButtonLink as={Link} href="/docs/rules" variant="secondary">
+            Read every rule
+          </ButtonLink>
         </section>
       </main>
       <SiteFooter />

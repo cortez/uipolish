@@ -96,7 +96,7 @@
   padding: var(--ui-space-2) var(--ui-pad-row) var(--ui-space-1);
   color: var(--ui-subtle);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
   user-select: none;
 }
@@ -194,7 +194,7 @@
   color: var(--ui-muted);
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   font-style: normal;
   line-height: 1;
 }

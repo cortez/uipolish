@@ -9,7 +9,7 @@ const COPIED = "Paste into your agent";
 
 /** One button that copies a prompt for a coding agent. The prompt itself
  *  stays out of sight; the label says what it is and whether it worked. */
-export function CopyPrompt({ prompt, label }: { prompt: string; label: string }) {
+export function CopyPrompt({ prompt, label, variant }: { prompt: string; label: string; variant?: "primary" | "secondary" }) {
   const [state, setState] = useState<"idle" | "copied" | "blocked">("idle");
   const timer = useRef(0);
   useEffect(() => () => clearTimeout(timer.current), []);
@@ -29,7 +29,7 @@ export function CopyPrompt({ prompt, label }: { prompt: string; label: string })
   }
 
   return (
-    <Button onClick={copy}>
+    <Button variant={variant} onClick={copy}>
       <Icon name={state === "copied" ? "check" : "copy"} />
       {/* All three labels share one grid cell, so the widest sets the width
           and nothing beside the button moves. Only the current one shows; the

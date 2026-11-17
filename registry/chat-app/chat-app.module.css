@@ -139,7 +139,7 @@
   padding: 0 10px var(--ui-space-1);
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
 }
 
@@ -331,7 +331,7 @@
 .listEmptyTitle {
   margin: 0;
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
   overflow-wrap: anywhere;
 }
@@ -563,7 +563,7 @@
 
 .starterTitle {
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
 }
 

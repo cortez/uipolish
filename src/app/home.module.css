@@ -1,193 +1,292 @@
-/* One column, left aligned, everything at body size. The page opens on
-   its name top left, level with the theme toggle top right, then
-   the tiles; each section after them two section gaps below the last. */
-.main {
-  --room: calc(var(--ui-gap-section) * 2);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-}
+/* One column, left aligned. Four type styles and no others: the title
+   (2xl medium), headings (md medium), text (md regular, muted) and small
+   (sm regular). No fades, no masks, no rules between rows: space alone
+   groups things. */
 
-/* The header shares the content column, so the name lines up with the
-   tiles and the footer, and the theme toggle ends where they end.
-   The name and the actions share the first row, 24 down, centered on each
-   other; what it is and the buttons run under them, the column's width. */
+/* Everything shares one column, so every edge lines up. */
+.bar,
+.hero,
 .main,
-.main + footer,
-.hero {
-  max-width: 1360px;
+.main + footer {
+  max-width: 1120px;
   margin-inline: auto;
-  margin-inline: max(0px, round(down, (100% - 1360px) / 2, 1px));
+  margin-inline: max(0px, round(down, (100% - 1120px) / 2, 1px));
   padding-inline: var(--ui-space-5);
 }
 
-.hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+/* The top bar: 24 down, the mark and the controls centered on one line. */
+.bar {
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-4);
   padding-top: var(--ui-space-6);
-  padding-bottom: var(--room, calc(var(--ui-gap-section) * 2));
 }
 
-/* The page's title, two section gaps under the mark: the space, not the
-   size, makes it the hero. A short measure, so it reads as a line. */
-.statement {
-  grid-column: 1 / -1;
+.hero {
   display: grid;
   justify-items: start;
   padding-top: calc(var(--ui-gap-section) * 2);
+  padding-bottom: var(--ui-gap-section);
 }
 
-.display {
+/* ---- The four styles ---- */
+
+.title {
   max-width: 24ch;
+  margin: 0;
   font-size: var(--ui-text-2xl);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-heading);
+  text-wrap: balance;
 }
 
-.statement .lede {
+.heading {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.text {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-regular);
+  line-height: var(--ui-leading-prose);
+  text-wrap: pretty;
+}
+
+.small {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-regular);
+  line-height: var(--ui-leading-sm);
+}
+
+/* ---- Hero ---- */
+
+.hero .text {
   max-width: 44ch;
-  margin-top: var(--ui-space-4);
+  margin-top: var(--ui-space-3);
 }
 
-.heroActions {
+.actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--ui-space-2);
   margin-top: var(--ui-space-6);
 }
 
-.lede {
-  max-width: 60ch;
+/* ---- The one demo: a card around the whole component, nothing cut ---- */
+
+.showcase {
+  display: grid;
+  gap: var(--ui-space-3);
   margin: 0;
-  color: var(--ui-muted);
-  text-wrap: pretty;
 }
 
-/* Every section below the tiles: the same space above it, its head, then
-   its content. One rhythm, so nothing stacks into a gap. */
-.section {
+.stage {
   display: grid;
-  /* One column that can shrink to the screen. */
+  justify-items: center;
+  align-content: center;
+  /* The demo's height, held before it renders in the browser. */
+  min-height: 480px;
+  padding: var(--ui-space-7) var(--ui-space-5);
+  border-radius: calc(var(--ui-radius-lg) + var(--ui-space-2));
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+}
+
+.stage > * {
+  width: min(440px, 100%);
+}
+
+/* The demo's own controls are for its docs page, and only its first
+   scenario shows here, so the card stays one component tall. */
+.stage [data-demo-controls],
+.stage > * > :not(:first-child) {
+  display: none;
+}
+
+/* ---- Sections ---- */
+
+.main {
+  display: grid;
   grid-template-columns: minmax(0, 1fr);
-  justify-items: start;
-  gap: var(--ui-gap-block);
-  padding-top: var(--room);
-  scroll-margin-top: var(--ui-space-8);
-}
-
-.sectionHead {
-  display: grid;
-  justify-items: start;
-  gap: var(--ui-space-1);
-}
-
-.sectionBody {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  justify-items: start;
-  gap: var(--ui-gap-block);
-  width: 100%;
-  min-width: 0;
-}
-
-/* On a wide screen a section reads like a page of a book: its name and
-   what it is in a narrow column at the left, held in view while its
-   content scrolls past in the wide column at the right. */
-@media (min-width: 960px) {
-  .section {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-    column-gap: var(--ui-space-8);
-    align-items: start;
-  }
-
-  .sectionHead {
-    position: sticky;
-    top: var(--ui-space-6);
-  }
-
-  .sectionHead .lede {
-    max-width: 32ch;
-  }
-}
-
-/* The last section ends a section gap above the footer, not the double
-   gap between sections. */
-.questions {
   padding-bottom: var(--ui-gap-section);
 }
 
-.faq {
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: start;
+  padding-top: var(--ui-gap-section);
+}
+
+.section > .text {
+  margin-top: var(--ui-space-1);
+}
+
+.section > :not(.heading, .text) {
+  margin-top: var(--ui-gap-block);
+}
+
+/* Links read as the text they sit in, in the text color: no underline. */
+.link,
+.item {
+  color: var(--ui-foreground);
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .link:hover,
+  .item:hover {
+    color: var(--ui-muted);
+  }
+}
+
+/* The command, whole, wrapping where it must: no scroller, no fade. */
+.command {
+  max-width: 100%;
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  overflow-wrap: anywhere;
+}
+
+.section > .command + * {
+  margin-top: var(--ui-space-4);
+}
+
+/* ---- The directory: four groups of plain links ----
+   Four even columns: the agent kit, the components across two (it's the
+   longest list), then screens with templates under them. */
+
+.directory {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-areas:
+    "kit components components screens"
+    "kit components components templates";
+  grid-template-rows: auto 1fr;
+  gap: var(--ui-space-7) var(--ui-space-6);
   width: 100%;
 }
 
-/* The rules: a numbered list of titles as wide as the questions; the
-   reasons are one link away. Numbers hang in their own column, in the muted color, and
-   rows part with the same hairline as the accordion below. */
-.rules {
-  width: 100%;
+.kit {
+  grid-area: kit;
+}
+
+.components {
+  grid-area: components;
+}
+
+.components .list {
+  display: block;
+  columns: 2;
+  column-gap: var(--ui-space-6);
+}
+
+.components .list li {
+  break-inside: avoid;
+  padding-bottom: var(--ui-space-2);
+}
+
+.screens {
+  grid-area: screens;
+}
+
+.templates {
+  grid-area: templates;
+}
+
+.group {
+  display: grid;
+  align-content: start;
+  gap: var(--ui-space-3);
+}
+
+.list {
+  display: grid;
+  gap: var(--ui-space-2);
   margin: 0;
   padding: 0;
   list-style: none;
+  line-height: var(--ui-leading-md);
+}
+
+/* ---- The rules ---- */
+
+.rules {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(5, auto);
+  grid-auto-flow: column;
+  column-gap: var(--ui-space-7);
+  row-gap: var(--ui-space-3);
+  width: 100%;
+  max-width: 720px;
+  padding: 0;
+  list-style: none;
+  line-height: var(--ui-leading-md);
   counter-reset: rule;
 }
 
-.rule {
+.rules li {
   display: grid;
   grid-template-columns: 2ch minmax(0, 1fr);
-  column-gap: var(--ui-space-4);
-  padding-block: var(--ui-space-3);
+  column-gap: var(--ui-space-3);
   counter-increment: rule;
 }
 
-.rule + .rule {
-  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
-}
-
-.rule::before {
+.rules li::before {
   content: counter(rule);
   color: var(--ui-muted);
-  font-size: var(--ui-text-md);
-  line-height: var(--ui-leading-md);
+  font-variant-numeric: tabular-nums;
   text-align: end;
 }
 
-.ruleTitle {
-  grid-column: 2;
-  margin: 0;
-  font-size: var(--ui-text-md);
-  font-weight: var(--ui-weight-regular);
-  line-height: var(--ui-leading-md);
-  text-wrap: pretty;
+@media (max-width: 860px) {
+  .directory {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "kit screens"
+      "kit templates"
+      "components components";
+    grid-template-rows: auto 1fr auto;
+  }
 }
 
-
-.main .actions {
-  justify-content: start;
-}
-
-/* The catalog: its name, then every card, across the whole column. */
-.catalog {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--ui-gap-block);
-  scroll-margin-top: var(--ui-space-8);
+@media (max-width: 480px) {
+  .directory {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "kit" "components" "screens" "templates";
+    grid-template-rows: none;
+  }
 }
 
 @media (max-width: 640px) {
+  .bar,
+  .hero,
   .main,
-  .main + footer,
-  .hero {
+  .main + footer {
     padding-inline: var(--ui-space-4);
   }
-  /* On a phone the header row is the top bar: 20 down, 16 in, and what it
-     is starts a section gap below it, where a docs page's title starts. */
-  .hero {
+  .bar {
     padding-top: var(--ui-space-5);
-    padding-inline: var(--ui-space-4);
-    padding-bottom: var(--ui-gap-section);
   }
-  .statement {
+  .hero {
     padding-top: calc(var(--ui-gap-section) * 1.5);
+  }
+  .stage {
+    padding: var(--ui-space-5) var(--ui-space-4);
+  }
+  .rules {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    grid-auto-flow: row;
   }
 }

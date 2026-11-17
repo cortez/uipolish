@@ -4,7 +4,7 @@
   "summary": "A working console for running AI agents, for the Next.js App Router: emailed-code sign-in, a sidebar with workspaces, live runs with their full traces, an approvals inbox that pauses a run until someone decides, a knowledge base the agents search, per-agent model, tools, permissions and limits, usage against a monthly limit, and workspace settings. Runs come from a mock runner until a model is set (Anthropic, OpenAI or any OpenAI-compatible API), or until you plug yours in; the runner, auth and storage each sit behind one small file you swap.",
   "type": "template",
   "stage": "wide",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "dependencies": [
     "agent-settings",
     "approvals-inbox",

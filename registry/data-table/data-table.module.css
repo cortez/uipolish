@@ -159,7 +159,7 @@
   background: var(--ui-surface);
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
   white-space: nowrap;
   outline: none;

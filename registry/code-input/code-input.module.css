@@ -108,7 +108,7 @@
   /* Must stay over 16px, below which iOS zooms the page into a field. */
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-semibold);
+  font-weight: var(--ui-weight-medium);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0;
   line-height: 1;

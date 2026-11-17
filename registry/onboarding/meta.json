@@ -4,7 +4,7 @@
   "summary": "The first-run setup for an AI product, in four steps: the workspace, the tools the agent may use (each with its own consent and a connect that can fail or stall), what the agent may do without asking, and a first task it streams in front of you. The panel's height glides between steps, steps slide the way you're going, and every answer is handed back to save and resume.",
   "type": "block",
   "stage": "wide",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "dependencies": [
     "animated-size",
     "brand-marks",

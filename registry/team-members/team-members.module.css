@@ -345,7 +345,7 @@
   padding-inline: 14px;
   color: var(--ui-foreground);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
 }
 
 .actionCell {

@@ -222,10 +222,10 @@ describe("Agent guidance and trust", () => {
     assert.equal(page.match(/<h1\b/g)?.length, 1);
     const text = page.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
     assert.ok(text.length > 500);
-    // A client-rendered shell sits under 1%. The home page is a gallery of live
-    // components, so its markup is heavy by design; 4.5% still proves the text
-    // is in the HTML.
-    assert.ok(text.length / page.length >= 0.045, `content ratio ${((100 * text.length) / page.length).toFixed(2)}%`);
+    // A client-rendered shell sits under 1%. The home page is short and
+    // light (a few KB of text), so Next's serialized page data is most of
+    // its HTML; 2.5% still proves the text is in the HTML.
+    assert.ok(text.length / page.length >= 0.025, `content ratio ${((100 * text.length) / page.length).toFixed(2)}%`);
   });
 });
 

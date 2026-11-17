@@ -4,7 +4,7 @@
   "summary": "The agent app's list of MCP servers: one quiet row each, a switch, and a status line that says what's wrong and the one thing that fixes it. Adds a server by URL and hands sign-in to the browser.",
   "blurb": "The agent app's list of MCP servers and their status.",
   "kit": "agent",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "dependencies": [
     "animated-size",
     "button",

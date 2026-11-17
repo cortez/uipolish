@@ -3,7 +3,7 @@
   "title": "Tool approval",
   "summary": "The card an agent shows when a tool call needs your OK. Says what will happen in words, weighs sends, deletes and payments, and settles into one line once you answer.",
   "kit": "agent",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "dependencies": [
     "animated-size",
     "button",

@@ -13,7 +13,7 @@
 
 .total {
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-semibold);
+  font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-2xl);
 }
 

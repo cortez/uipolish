@@ -438,7 +438,7 @@
 .chip .chipTitle {
   max-width: 200px;
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
 }
 
 .chip[data-active] {

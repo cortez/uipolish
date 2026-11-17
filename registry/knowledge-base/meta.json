@@ -4,7 +4,7 @@
   "summary": "The screen where a team gives its AI agent documents to answer from: upload files, add a site or sitemap, or connect Google Drive, Notion or Dropbox; watch each source move through reading, chunking and indexing with counts that never shift; retry failures, re-sync, remove, see usage against the plan, and test which passages a question retrieves.",
   "type": "block",
   "stage": "wide",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "dependencies": [
     "alert",
     "batch-progress",

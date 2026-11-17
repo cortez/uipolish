@@ -375,7 +375,7 @@ button.title:active {
 .blockLabel {
   color: var(--ui-subtle);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
 }
 
 .block pre {

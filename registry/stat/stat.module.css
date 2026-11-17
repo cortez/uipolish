@@ -18,7 +18,7 @@
   overflow: clip;
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-md);
   white-space: nowrap;
 }
@@ -34,7 +34,7 @@
 .figure {
   color: var(--ui-foreground);
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-semibold);
+  font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-2xl);
   white-space: nowrap;
 }

@@ -3,7 +3,7 @@
 A one-time code as a row of boxes, one per character: digits by default,
 or letters and digits with `characters="alphanumeric"`. Typing moves along,
 Backspace steps back, a paste or the platform's autofill fills every box at
-once, and the value never has holes in it. Digits are 22px (the title size) semibold with
+once, and the value never has holes in it. Digits are 22px (the title size) medium with
 tabular figures, so every box holds the same weight of ink; each fades in
 and settles 2px as it lands.
 
