@@ -16,11 +16,10 @@
 }
 
 .item {
-  /* One row: icon, text, action, close. The buttons sit --toast-inset from
-     the edge, so the corner is concentric with them: inset + half a 32px
-     button. */
+  /* One row: icon, text, action, close, 8px in from the edge. The corner
+     is lg, the box radius, not a capsule. */
   --toast-inset: var(--ui-space-2);
-  --toast-radius: calc(var(--toast-inset) + var(--ui-control-sm) / 2);
+  --toast-radius: var(--ui-radius-lg);
   position: absolute;
   right: 0;
   bottom: 0;

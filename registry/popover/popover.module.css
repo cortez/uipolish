@@ -10,7 +10,9 @@
   position: relative;
   box-sizing: border-box;
   padding: var(--popover-pad);
-  border-radius: calc(var(--popover-pad) + var(--ui-control-sm) / 2);
+  /* A box on the scale: lg, like a menu or a card. Its content sits a full
+     16px in, clear of the curve. */
+  border-radius: var(--ui-radius-lg);
   background: var(--ui-surface-glass);
   backdrop-filter: blur(var(--ui-glass-blur));
   -webkit-backdrop-filter: blur(var(--ui-glass-blur));

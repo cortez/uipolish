@@ -168,6 +168,12 @@ anything in `foundation/`, run `npm run skill`. Run `npm run typecheck`,
 `npm run lint` and `npm test` before opening a PR. [AGENTS.md](AGENTS.md) has
 the conventions, for people and coding agents alike.
 
+## WebMCP
+
+In a browser with a built-in agent (`document.modelContext`), every page of
+uipolish.com offers `list_components`, `get_component` and `get_rules`, the
+same read-only tools as the MCP server.
+
 ## Support
 
 UI Polish is free and open source. If it saves you time, you can

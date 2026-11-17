@@ -52,7 +52,7 @@ place instead of adding another.
 One row on light glass: the icon in a 32px box, the title and description,
 the action, then dismiss. The card is `--ui-surface-glass` over a
 `--ui-glass-blur` (4px) backdrop blur with the floating shadow. The buttons
-sit 8px in, so the corner is concentric with them: 8 + 16 = 24px. Icons are
+sit 8px in, and the corner is lg (16px), the box radius. Icons are
 `info`, `check-circle` and `alert` from Icons.
 
 ## States

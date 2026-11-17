@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { ThemeScript } from "@registry/theme-toggle/theme-script";
 import { AUTHOR, OG_IMAGE, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, siteUrl } from "@/lib/seo/site";
+import { WebMcp } from "@/components/web-mcp";
 import "../../foundation/tokens.css";
 import "./globals.css";
 
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         {children}
+        <WebMcp />
       </body>
     </html>
   );

@@ -82,14 +82,13 @@ same place and weight as initials would sit.
 The circle is `size` square from the first render, so a photo arriving
 moves nothing. The letters are drawn in a 40-unit SVG, like an icon, so
 they scale with the circle instead of adding type sizes: two letters at
-15 units, one at 19. A hairline in `--ui-border` sits inside the
-edge, over the photo, so a white background in a photo doesn't melt into a
-white surface.
+15 units, one at 19. There's no edge: the
+fill is a soft radial, lighter at the top and settling into
+`--ui-fill-strong-solid`, the badge's quiet gradient turned round.
 
 In a group, each circle overlaps the one before it by a fifth of its
 width, with a 2px ring in the surface color, so the overlap reads as a
-clean cut, and the hairline inside each edge separates circles of the same
-fill. Avatars in a group show one initial: two would be cut by the next
+clean cut. Avatars in a group show one initial: two would be cut by the next
 circle. The ring is a shadow and adds nothing to the group's size. On a
 different background, set `--avatar-ring` to that color. The +N is a
 circle like the rest: its number is 40% of the circle (10px at least) and

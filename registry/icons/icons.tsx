@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type ComponentProps, type CSSProperties } from "react";
+import { useId, useLayoutEffect, useRef, useState, type ComponentProps, type CSSProperties } from "react";
 import styles from "./icons.module.css";
 
 /*
@@ -117,8 +117,8 @@ const ICONS = {
     b: { d: "M8.5 5.34 L12.75 8 L12.75 8 L8.5 10.66 Z", solid: true },
   },
   pause: {
-    a: { d: "M4.5 3.5 L6.75 3.5 L6.75 12.5 L4.5 12.5 Z", solid: true },
-    b: { d: "M9.25 3.5 L11.5 3.5 L11.5 12.5 L9.25 12.5 Z", solid: true },
+    a: { d: "M4.25 3.5 L6 3.5 L6 12.5 L4.25 12.5 Z", solid: true },
+    b: { d: "M10 3.5 L11.75 3.5 L11.75 12.5 L10 12.5 Z", solid: true },
   },
   search: {
     ring: { d: "M11.75 7.25a4.5 4.5 0 1 1-9 0a4.5 4.5 0 1 1 9 0" },
@@ -312,7 +312,7 @@ const canMorphD = () => (morphD ??= typeof CSS !== "undefined" && CSS.supports("
 
 function morphs(from: Stroke, to: Stroke) {
   if (Boolean(from.block) !== Boolean(to.block) || Boolean(from.cut) !== Boolean(to.cut) || Boolean(from.solid) !== Boolean(to.solid)) return false;
-  return from.d === to.d || (canMorphD() && shape(from.d) === shape(to.d));
+  return from.d === to.d || shape(from.d) === shape(to.d);
 }
 
 function initial(name: IconName): State {
@@ -347,6 +347,43 @@ function next(prev: State, name: IconName): State {
 
 const HIDE = 0.3;
 
+const nums = (d: string) => (d.match(/-?[\d.]+(?:e-?\d+)?/g) ?? []).map(Number);
+
+/** The glide curve, close enough: a quick start that settles with no overshoot. */
+const glide = (t: number) => 1 - Math.pow(1 - t, 3.2);
+
+/**
+ * A stroke whose `d` morphs. Where CSS can transition `d`, the stylesheet
+ * does it; elsewhere this tweens the attribute itself, number by number,
+ * over --ui-dur-glide, so a morph is a morph in every browser.
+ */
+function MorphPath({ d, ...props }: ComponentProps<"path"> & { d: string }) {
+  const ref = useRef<SVGPathElement>(null);
+  const shown = useRef(d);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    const from = shown.current;
+    shown.current = d;
+    if (!el || from === d || canMorphD() || shape(from) !== shape(d)) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const a = nums(from);
+    const b = nums(d);
+    const parts = d.split(/-?[\d.]+(?:e-?\d+)?/);
+    const ms = parseFloat(getComputedStyle(el).getPropertyValue("--ui-dur-glide")) || 320;
+    const start = performance.now();
+    let frame = 0;
+    const step = (now: number) => {
+      const k = glide(Math.min(1, (now - start) / ms));
+      el.setAttribute("d", parts.map((s, i) => (i < a.length ? s + (a[i] + (b[i] - a[i]) * k).toFixed(3) : s)).join(""));
+      if (k < 1) frame = requestAnimationFrame(step);
+    };
+    el.setAttribute("d", from);
+    frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
+  }, [d]);
+  return <path ref={ref} d={d} {...props} />;
+}
+
 // CSS `d` is set only after the first change; until then the attribute draws.
 function dash(l: Live, morphing: boolean): CSSProperties | undefined {
   const f = l.s.f ?? 0;
@@ -372,7 +409,7 @@ export function Icon({ name, className, ...props }: IconProps) {
 
   const cuts = state.live.filter((l) => l.s.cut);
   const path = (l: Live, extra?: string) => (
-    <path
+    <MorphPath
       key={l.id + (extra ?? "")}
       d={l.s.d}
       pathLength={1}

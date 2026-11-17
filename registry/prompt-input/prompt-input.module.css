@@ -309,6 +309,9 @@
    one, and the word widens it. */
 .send.send {
   min-width: calc(var(--ui-control-sm) * var(--ui-capsule));
+  /* No gap: the label's leading space is the gap, so the arrow alone sits
+     dead center. */
+  gap: 0;
   padding-inline: var(--ui-space-2);
   overflow: clip;
   font-size: var(--ui-text-sm);

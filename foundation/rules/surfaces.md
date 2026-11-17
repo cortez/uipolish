@@ -55,11 +55,11 @@ mode for free.
   - A colored edge, only for status or a component's own hue:
     `--ui-border-accent`, `-success`, `-warning`, `-danger`, or a hue (a
     phase, a brand) mixed at `--ui-border-tint`.
-  - `--ui-border-control`: an empty checkbox or radio. A small control
-    resting on the surface has nothing but its edge to be found by, so it
-    takes 3:1 against the surface (WCAG 1.4.11); the one edge is about
-    1.2:1. It is solid, from the text color, and a clear step from the one
-    edge, so the two never read as near-twins.
+  - `--ui-border-control` over `--ui-fill-control`: an empty checkbox or
+    radio. A soft edge (the text color at 28%) over a soft top-to-bottom
+    fill, so the box is found by its shape and shade together, never by a
+    hard line. It is a clear step from the one edge, so the two never read
+    as near-twins; its label is always part of the target.
 
   Nothing else at rest: a button and a card rest on the one edge. No
   hand-picked alphas, no other `color-mix` of the text color for an edge,
@@ -267,8 +267,8 @@ for real-looking services read as fake.
   | Role | Radius | Examples |
   |---|---|---|
   | Things you press | full | buttons, segmented controls, tabs, chips, a compact select in a toolbar |
-  | Inline marks | xs (4) | inline code, a check box, a focus ring on text |
-| Small marks | sm (8) | tags, key caps, table cells, a day in a calendar |
+  | Inline marks | xs (4) | inline code, key caps, a check box, a focus ring on text |
+| Small marks | sm (8) | table cells, a day in a calendar |
 | Fields you type in or choose from | md (12) | text field, select, combobox, date, number, each code box |
   | Boxes, panels and cards | lg (16) | cards, tables, code blocks, diffs, menus, dialogs, command palette, drop zone, composer |
   | Anything nested | outer − gap | options in a list, a button inside a field |

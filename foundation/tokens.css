@@ -228,11 +228,11 @@
      Colored ones mix a hue at --ui-border-tint: the status edges below, or
      a component's own hue (a phase, a brand) at the same strength. */
   --ui-border-strong: light-dark(oklch(0.954 0 0), oklch(0.26 0 0));
-  /* A small control that rests empty on the surface (an unchecked box, a
-     radio): the edge is all there is to find it by, so it takes 3:1
-     against the surface (WCAG 1.4.11), from the text color like every
-     edge, still a step under --ui-muted so hover reads. */
-  --ui-border-control: color-mix(in oklch, var(--ui-foreground) 45%, var(--ui-surface));
+  /* An empty checkbox or radio: a soft edge over a soft fill, the badge's
+     quiet gradient, so the box is found by its shape and shade together
+     rather than by a hard line. */
+  --ui-border-control: color-mix(in oklch, var(--ui-foreground) 28%, var(--ui-surface));
+  --ui-fill-control: linear-gradient(to bottom, var(--ui-surface), var(--ui-fill-solid));
   --ui-border: var(--ui-border-strong);
   --ui-border-subtle: var(--ui-border);
   /* Soft: a colored edge is a quiet line in its hue, never an outline

@@ -51,9 +51,9 @@
   border: 0;
   border-radius: var(--ui-radius-xs);
   appearance: none;
-  background: var(--ui-surface);
-  /* An empty box's edge is all there is to find it by: the control edge,
-     at 3:1; hover steps it to the muted color. */
+  background: var(--ui-fill-control);
+  /* An empty box: a soft edge over a soft fill; hover steps the edge to the
+     muted color. */
   box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-control);
   color: var(--ui-foreground);
   cursor: inherit;
