@@ -1,0 +1,31 @@
+/* Shared layout for the home page's showcases: only arrangement, never a
+   look. A component's look is its own. */
+
+/* Side by side, wrapping, centered: buttons, badges, chips, avatars. */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-3);
+}
+
+/* One above another, as wide as a field: fields, lists, cards. */
+.stack {
+  display: grid;
+  gap: var(--ui-space-3);
+  width: 100%;
+  max-width: 320px;
+}
+
+/* A wider stack, for things that need the room: tables, diffs, threads. */
+.wide {
+  display: grid;
+  gap: var(--ui-space-3);
+  width: 100%;
+}
+
+/* Voice input's idle text, at the inset its other states use. */
+.voiceIdle {
+  padding-inline-start: var(--voice-inset);
+}
