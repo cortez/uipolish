@@ -43,8 +43,7 @@ in a tile. Every chevron in the same role is the same size.
 | `arrow-up`/`down`/`left`/`right`, `send` | s, h1, h2 | Left and right share the shaft, so a flip moves only the head (up and down likewise). `send` is `arrow-up`. |
 | `chevron-up`/`down`/`left`/`right` | a, b | Two rigid arms, each turned 45° about its own midpoint. A flip turns both arms through level to the other side; they keep their length and the chevron stays centered. |
 | `mic` | capsule, cradle, stand | Mic to stop: the mic retracts the way it was drawn while the block sweeps in. |
-| `stop` | block | One 4-unit stroke round a small square, which round joins fill out to a rounded block, so it sweeps in like any stroke. Send to stop: the arrow retracts into its tip, the block sweeps in. |
-| `play`, `pause` | l, t | The left edge stays the left bar; the triangle's point (one bent stroke) straightens into the right bar, on the glide so it never bows past straight. |
+| `play`, `pause`, `stop` | a, b | Solid, not stroked: each is two filled four-point shapes with softly rounded corners, the points in the same order. Play is its triangle split down the middle, pause its two bars, stop its square split in half, so any one morphs into any other point to point (play to pause: the triangle's halves square off into the bars), on the glide so the halves never part. Send to stop: the arrow retracts into its tip while the square fades and grows in. |
 | `info`, `alert`, `check-circle` | ring, stem, dot (tick) | One ring; the stem and dot swap ends between `info` and `alert`, and the tick draws in for `check-circle`. `warning` is its own triangle. |
 | `more`, `pencil`, `sidebar` | dots; body, edge; frame, rail | Row and card overflow menus, rename or edit, and showing or hiding a side panel. |
 | `upload`, `file`, `retry`, `calendar` | | Static. |

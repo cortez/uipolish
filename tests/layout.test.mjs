@@ -40,7 +40,7 @@ async function check(width) {
   for (const path of pages) {
     const page = await context.newPage();
     await page.goto(server.url + path, { waitUntil: "networkidle" });
-    const found = await page.evaluate((desktop) => {
+    const found = await page.evaluate(() => {
       const out = [];
       const extra = document.documentElement.scrollWidth - innerWidth;
       if (extra > 0) out.push(`scrolls sideways by ${extra}px`);

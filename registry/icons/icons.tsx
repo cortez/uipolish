@@ -19,6 +19,9 @@ type Stroke = {
   cut?: boolean;
   /** Draw as a solid rounded block. */
   block?: boolean;
+  /** A filled shape with softly rounded corners (play, pause, stop). Solid
+   *  shapes morph point to point, and fade and scale in and out. */
+  solid?: boolean;
   /** Degrees, about its own midpoint. */
   rot?: number;
   /** Meets another stroke end to end at rest: morphs without overshoot and
@@ -95,23 +98,27 @@ const ICONS = {
   "chevron-down": { a: { d: CHEVRON_V[0], rot: 45 }, b: { d: CHEVRON_V[1], rot: -45 } },
   "chevron-left": { a: { d: CHEVRON_H[0], rot: -45 }, b: { d: CHEVRON_H[1], rot: 45 } },
   "chevron-right": { a: { d: CHEVRON_H[0], rot: 45 }, b: { d: CHEVRON_H[1], rot: -45 } },
-  stop: { block: { d: "M6 6 L10 6 L10 10 L6 10 Z", block: true } },
+  // Play, pause and stop are solid, and each is two four-point shapes with
+  // the corners in the same order (top-left, top-right, bottom-right,
+  // bottom-left): play is its triangle split down the middle, pause its two
+  // bars, stop its square split in half. So any one morphs into any other
+  // point to point, with nothing drawn in or erased.
+  stop: {
+    a: { d: "M4.5 4.5 L8 4.5 L8 11.5 L4.5 11.5 Z", solid: true },
+    b: { d: "M8 4.5 L11.5 4.5 L11.5 11.5 L8 11.5 Z", solid: true },
+  },
   mic: {
     capsule: { d: "M8 2.25a2.25 2.25 0 0 0-2.25 2.25v3.25a2.25 2.25 0 0 0 4.5 0V4.5A2.25 2.25 0 0 0 8 2.25Z" },
     cradle: { d: "M3.75 7.5a4.25 4.25 0 0 0 8.5 0" },
     stand: { d: "M8 11.75v2" },
   },
-  // Pause's right bar is drawn with play's commands (a line through its own
-  // midpoint), so it bends out into the triangle's point while the left bar
-  // stays put: one motion, nothing erased or drawn in. On the glide (seam),
-  // so the bar never bows past straight on its way back.
   play: {
-    l: { d: "M5.25 12.5 L5.25 3.5", seam: true },
-    t: { d: "M5.25 3.5 L12.25 8 L5.25 12.5", seam: true },
+    a: { d: "M4.75 3 L8.5 5.34 L8.5 10.66 L4.75 13 Z", solid: true },
+    b: { d: "M8.5 5.34 L12.75 8 L12.75 8 L8.5 10.66 Z", solid: true },
   },
   pause: {
-    l: { d: "M5.75 12.25 L5.75 3.75", seam: true },
-    t: { d: "M10.25 3.75 L10.25 8 L10.25 12.25", seam: true },
+    a: { d: "M4.5 3.5 L6.75 3.5 L6.75 12.5 L4.5 12.5 Z", solid: true },
+    b: { d: "M9.25 3.5 L11.5 3.5 L11.5 12.5 L9.25 12.5 Z", solid: true },
   },
   search: {
     ring: { d: "M11.75 7.25a4.5 4.5 0 1 1-9 0a4.5 4.5 0 1 1 9 0" },
@@ -288,7 +295,7 @@ let morphD: boolean | undefined;
 const canMorphD = () => (morphD ??= typeof CSS !== "undefined" && CSS.supports("d", 'path("M0 0")'));
 
 function morphs(from: Stroke, to: Stroke) {
-  if (Boolean(from.block) !== Boolean(to.block) || Boolean(from.cut) !== Boolean(to.cut)) return false;
+  if (Boolean(from.block) !== Boolean(to.block) || Boolean(from.cut) !== Boolean(to.cut) || Boolean(from.solid) !== Boolean(to.solid)) return false;
   return from.d === to.d || (canMorphD() && shape(from.d) === shape(to.d));
 }
 
@@ -353,7 +360,7 @@ export function Icon({ name, className, ...props }: IconProps) {
       key={l.id + (extra ?? "")}
       d={l.s.d}
       pathLength={1}
-      className={[styles.stroke, l.s.block && styles.block, l.s.seam && styles.seam, l.s.fx && styles[l.s.fx], extra].filter(Boolean).join(" ")}
+      className={[styles.stroke, l.s.block && styles.block, l.s.solid && styles.solid, l.s.seam && styles.seam, l.s.fx && styles[l.s.fx], extra].filter(Boolean).join(" ")}
       data-off={l.on ? undefined : ""}
       data-enter={l.enter ? "" : undefined}
       style={dash(l, state.gen > 0)}

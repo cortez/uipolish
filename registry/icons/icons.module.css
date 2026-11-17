@@ -116,6 +116,44 @@
   stroke-width: 4;
 }
 
+/* Solid: filled, with a thin stroke in the same color rounding its
+   corners. No dash, so it's whole at rest; it morphs on the glide curve
+   (no overshoot, so the halves of a shape never part), and leaves and
+   arrives by fading and scaling about its own center. */
+.solid {
+  fill: currentColor;
+  stroke-width: 1.5;
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+  transition:
+    d var(--ui-dur-glide) var(--ui-ease-glide),
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+.solid[data-off] {
+  stroke-dashoffset: 0;
+  opacity: 0;
+  scale: 0.6;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    scale var(--ui-dur-fast) var(--ui-ease-exit);
+}
+
+.solid[data-enter] {
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) * 0.6),
+    scale var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) * 0.6);
+}
+
+@starting-style {
+  .icon[data-ready] .solid[data-enter] {
+    stroke-dashoffset: 0;
+    opacity: 0;
+    scale: 0.6;
+  }
+}
+
 /* Mask copy of a cut stroke: gaps the other strokes on both sides of it. */
 .cut {
   stroke: black;
