@@ -1,0 +1,9 @@
+{
+  "name": "empty-state",
+  "title": "Empty state",
+  "summary": "The message for an empty list or view: a clean isometric line drawing with crisp corners (a stack, a box, a folder, a tray, a magnifier, a calendar or an unplugged cord), drawn once as it comes into view, with a title, one sentence and one action.",
+  "version": "0.8.1",
+  "dependencies": [
+    "icons"
+  ]
+}

@@ -1,0 +1,417 @@
+/* 50, like the popovers: one opened inside the drawer portals later, so it stacks above. */
+.viewport {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* The scrim is a sibling, not ::backdrop any more, so it gets the timings too. */
+.backdrop,
+.drawer {
+  --drawer-open: 420ms;
+  --drawer-close: 280ms;
+}
+
+.drawer {
+  --drawer-pad: var(--ui-space-5);
+  --drawer-width: 420px;
+  --drawer-safe: env(safe-area-inset-bottom, 0px);
+  position: fixed;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--ui-surface);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+  /* Visible so the sheet's ::after strip shows when pulled up; .frame clips instead. */
+  overflow: visible;
+  overscroll-behavior: contain;
+  outline: none;
+  pointer-events: auto;
+  /* Base UI sets the swipe offsets while a finger drags the sheet. */
+  transform: translate3d(var(--drawer-swipe-movement-x, 0px), var(--drawer-swipe-movement-y, 0px), 0);
+  transition: transform var(--drawer-open) var(--ui-ease-expand);
+}
+
+/* Released short of dismissing: glide back. */
+.drawer[data-settled] {
+  transition: transform var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+.drawer[data-swiping] {
+  user-select: none;
+  transition-duration: 0ms;
+}
+
+/* Off screen, clear of the shadow, so nothing of the panel shows. */
+.drawer[data-starting-style],
+.drawer[data-ending-style] {
+  transform: translate3d(0, calc(100% + 24px), 0);
+}
+
+/* Keyed to data-from, which the component renders with the panel: Base
+   UI's data-swipe-direction arrives a frame later, so on the first open
+   the panel used to start from the wrong side and land almost at once. */
+.drawer[data-mode="side"][data-from="right"]:is([data-starting-style], [data-ending-style]) {
+  transform: translate3d(calc(100% + 24px), 0, 0);
+}
+
+.drawer[data-mode="side"][data-from="left"]:is([data-starting-style], [data-ending-style]) {
+  transform: translate3d(calc(-100% - 24px), 0, 0);
+}
+
+/* A flick hands over its speed: the faster the release, the shorter the exit. */
+.drawer[data-ending-style] {
+  transition: transform calc(var(--drawer-close) * var(--drawer-swipe-strength, 1)) var(--ui-ease-expand);
+}
+
+.drawer[data-size="sm"] {
+  --drawer-width: 360px;
+}
+
+.drawer[data-size="lg"] {
+  --drawer-width: 560px;
+}
+
+.drawer[data-mode="side"] {
+  inset-block: 0;
+  inset-inline: auto 0;
+  width: var(--drawer-width);
+  max-width: calc(100% - var(--ui-space-7));
+  height: 100dvh;
+  max-height: none;
+  /* The floating shadow carries the edge, on the open side too. */
+  box-shadow: var(--ui-shadow-floating);
+}
+
+.drawer[data-mode="side"][data-side="start"] {
+  inset-inline: 0 auto;
+}
+
+.drawer[data-mode="sheet"] {
+  inset-inline: 0;
+  inset-block: auto var(--drawer-keyboard, 0px);
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  max-height: calc(100dvh - var(--drawer-keyboard, 0px) - var(--ui-space-7));
+  margin-inline: auto;
+  border-start-start-radius: var(--ui-radius-lg);
+  border-start-end-radius: var(--ui-radius-lg);
+  /* The floating shadow carries the edge: one ring, so the top line is the
+     same weight as every other box's. */
+  box-shadow: var(--ui-shadow-floating);
+}
+
+.drawer[data-mode="sheet"][data-keyboard] {
+  --drawer-safe: 0px;
+}
+
+.drawer[data-mode="sheet"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  height: var(--ui-space-8);
+  background: var(--ui-surface);
+}
+
+/* ---------- Scrim ---------- */
+
+.backdrop {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  min-height: 100dvh;
+  background: var(--ui-scrim);
+  opacity: calc(1 - var(--drawer-swipe-progress, 0));
+  transition: opacity var(--drawer-open) var(--ui-ease-expand);
+}
+
+.backdrop[data-starting-style],
+.backdrop[data-ending-style] {
+  opacity: 0;
+}
+
+.backdrop[data-swiping] {
+  transition-duration: 0ms;
+}
+
+.backdrop[data-ending-style] {
+  transition-duration: calc(var(--drawer-close) * var(--drawer-swipe-strength, 1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .backdrop[data-ending-style] {
+    transition-duration: var(--ui-dur-instant);
+  }
+  .drawer,
+  .drawer[data-settled],
+  .drawer[data-ending-style] {
+    transition: opacity var(--ui-dur-instant) var(--ui-ease-enter);
+  }
+  .drawer[data-starting-style],
+  .drawer[data-ending-style],
+  .drawer[data-mode="side"]:is([data-starting-style], [data-ending-style]) {
+    transform: none;
+    opacity: 0;
+  }
+}
+
+/* ---------- Layout ---------- */
+
+.frame {
+  display: grid;
+  /* Named rows, so an absent handle, body or footer doesn't shift the others. */
+  grid-template-rows: [handle] auto [header] auto [body] minmax(0, 1fr) [footer] auto;
+  height: 100%;
+  max-height: inherit;
+  border-radius: inherit;
+  overflow: clip;
+}
+
+.drawer[data-mode="sheet"] .frame {
+  height: auto;
+}
+
+.handle {
+  display: none;
+}
+
+.drawer[data-mode="sheet"] .handle {
+  display: block;
+  grid-row: handle;
+  justify-self: center;
+  width: var(--ui-space-6);
+  height: var(--ui-space-1);
+  margin-block-start: var(--ui-space-2);
+  border-radius: var(--ui-radius-full);
+  background: color-mix(in oklch, var(--ui-foreground) 16%, transparent);
+}
+
+.header {
+  grid-row: header;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+  padding: var(--drawer-pad) var(--drawer-pad) var(--ui-space-4);
+}
+
+.drawer[data-mode="sheet"] .header {
+  padding-block-start: var(--ui-space-3);
+}
+
+.drawer[data-mode="sheet"] :is(.handle, .header, .footer) {
+  touch-action: none;
+}
+
+.heading {
+  display: grid;
+  flex: 1;
+  gap: var(--ui-space-1);
+  min-width: 0;
+  padding-top: var(--ui-space-1);
+}
+
+.title {
+  margin: 0;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-heading);
+  text-wrap: balance;
+}
+
+.description {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.close {
+  --close-size: var(--ui-control-sm);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  --close-width: calc(var(--close-size) * var(--ui-capsule));
+  width: var(--close-width);
+  height: var(--close-size);
+  margin-block-start: calc(var(--ui-space-1) + var(--ui-leading-2xl) / 2 - var(--close-size) / 2);
+  margin-inline-end: calc((16px - var(--close-width)) / 2);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-muted);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.close svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  stroke-width: var(--ui-icon-stroke-medium);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .close:hover {
+    background: var(--ui-fill);
+    color: var(--ui-foreground);
+  }
+}
+
+.close:active {
+  background: var(--ui-fill-strong);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.close:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+@media (pointer: coarse) {
+  .close {
+    --close-size: var(--ui-control-md);
+  }
+}
+
+.body {
+  grid-row: body;
+  min-height: 0;
+  padding: var(--ui-space-1) var(--drawer-pad) var(--drawer-pad);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.drawer[data-mode="sheet"] .body:last-child {
+  padding-block-end: calc(var(--drawer-pad) + var(--drawer-safe));
+}
+
+.footer {
+  grid-row: footer;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ui-space-2) var(--ui-space-3);
+  padding: var(--ui-space-4) var(--drawer-pad);
+}
+
+.drawer[data-mode="sheet"] .footer {
+  padding-block-end: max(var(--ui-space-4), var(--drawer-safe));
+}
+
+.header + .footer {
+  padding-block-start: var(--ui-space-2);
+}
+
+.header::after,
+.footer::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: var(--ui-hairline);
+  background: var(--ui-border);
+  pointer-events: none;
+}
+
+.header::after {
+  bottom: 0;
+  opacity: 0;
+}
+
+.footer::before {
+  top: 0;
+}
+
+.header + .footer::before {
+  content: none;
+}
+
+@supports (timeline-scope: --a) {
+  .frame {
+    timeline-scope: --drawer-scroll;
+  }
+
+  .body {
+    scroll-timeline: --drawer-scroll block;
+  }
+
+  .header::after {
+    animation: drawer-edge-in linear both;
+    animation-timeline: --drawer-scroll;
+    animation-range: 0 var(--ui-space-4);
+  }
+
+  .footer::before {
+    animation: drawer-edge-out linear both;
+    animation-timeline: --drawer-scroll;
+    animation-range: calc(100% - var(--ui-space-4)) 100%;
+  }
+}
+
+/* Chromium keeps an animation's last value once its scroll timeline goes inactive,
+   so a body that now fits would keep stale edges. The script sets data-fits. */
+.frame:has(> .body[data-fits]) .header::after,
+.frame:has(> .body[data-fits]) .footer::before {
+  animation: none;
+}
+
+@keyframes drawer-edge-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes drawer-edge-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--ui-space-2);
+  margin-inline-start: auto;
+}
+
+.drawer[data-mode="sheet"] .actions {
+  flex: 1 1 100%;
+}
+
+.drawer[data-mode="sheet"] .actions > * {
+  flex: 1 1 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .close:active {
+    scale: none;
+  }
+}

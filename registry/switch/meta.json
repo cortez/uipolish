@@ -1,0 +1,12 @@
+{
+  "name": "switch",
+  "title": "Switch",
+  "summary": "Base UI switch with role=\"switch\": the segmented control in miniature, a sunken track with a raised pill that glides across. Two sizes on the control scale and a busy state for saves.",
+  "version": "0.5.3",
+  "dependencies": [
+    "button"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

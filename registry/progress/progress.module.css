@@ -1,0 +1,163 @@
+.root {
+  --progress-height: 4px;
+  --progress-fill: var(--ui-foreground);
+  display: grid;
+  gap: var(--ui-space-2);
+  min-width: 0;
+  font-family: var(--ui-font-sans);
+}
+
+.root[data-tone="warning"] {
+  --progress-fill: var(--ui-warning);
+}
+
+.root[data-tone="danger"] {
+  --progress-fill: var(--ui-danger);
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  min-width: 0;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.label {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-foreground);
+  font-weight: var(--ui-weight-medium);
+}
+
+.value {
+  flex-shrink: 0;
+  color: var(--ui-muted);
+  white-space: nowrap;
+}
+
+.value[data-live] {
+  min-width: 4ch;
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+/* Linear */
+
+.track {
+  position: relative;
+  height: var(--progress-height);
+  overflow: hidden;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill-strong);
+}
+
+/* Translated, not scaled, so the leading end keeps its round cap. */
+.fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--progress-fill);
+  translate: calc((var(--progress) - 1) * 100%) 0;
+  transition:
+    translate var(--ui-dur-move) var(--ui-ease-move),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+:is([dir="rtl"]) .fill {
+  translate: calc((1 - var(--progress)) * 100%) 0;
+}
+
+.fill[data-indeterminate] {
+  inset: 0 auto 0 0;
+  width: 30%;
+  translate: none;
+  transition: none;
+  animation: progress-sweep calc(var(--ui-dur-sweep) / 1.6) linear infinite;
+}
+
+:is([dir="rtl"]) .fill[data-indeterminate] {
+  inset: 0 0 0 auto;
+  animation-name: progress-sweep-rtl;
+}
+
+/* 0.3 must match the pill's 30% width. */
+@keyframes progress-sweep {
+  from {
+    translate: -100% 0;
+  }
+  to {
+    translate: calc(100% / 0.3) 0;
+  }
+}
+
+@keyframes progress-sweep-rtl {
+  from {
+    translate: 100% 0;
+  }
+  to {
+    translate: calc(-100% / 0.3) 0;
+  }
+}
+
+/* Steps */
+
+.segments {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.segment {
+  position: relative;
+  height: var(--progress-height);
+  overflow: hidden;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill-strong);
+}
+
+/* Clipped, not scaled, so the rounded ends stay round. */
+.segment::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--progress-fill);
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path var(--ui-dur-fast) var(--ui-ease-exit);
+}
+
+:is([dir="rtl"]) .segment::after {
+  clip-path: inset(0 0 0 100%);
+}
+
+.segment[data-state="done"]::after {
+  clip-path: inset(0);
+  transition: clip-path var(--ui-dur-base) var(--ui-ease-draw);
+}
+
+.segment[data-state="current"] {
+  background: color-mix(in oklch, var(--ui-foreground) 22%, transparent);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.caption {
+  display: block;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill,
+  .segment::after,
+  .segment[data-state="done"]::after {
+    transition: none;
+  }
+  .fill[data-indeterminate] {
+    inset: 0;
+    width: auto;
+    animation: none;
+    opacity: 0.35;
+  }
+}

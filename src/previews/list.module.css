@@ -1,0 +1,4 @@
+.header {
+  display: grid;
+  gap: var(--ui-space-1);
+}

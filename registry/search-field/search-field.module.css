@@ -1,0 +1,137 @@
+.field {
+  composes: field from "../field/field.module.css";
+}
+
+.label {
+  composes: label from "../field/field.module.css";
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+.control {
+  composes: shell from "../field/field.module.css";
+  display: flex;
+  align-items: center;
+  padding-inline: var(--shell-inset);
+  cursor: text;
+}
+
+.icon {
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--ui-control-sm);
+  height: var(--ui-control-sm);
+  color: var(--ui-muted);
+}
+
+.control[data-loading] .icon svg {
+  animation: search-breathe var(--ui-dur-pulse) var(--ui-ease-pulse) 300ms infinite alternate;
+}
+
+@keyframes search-breathe {
+  to {
+    opacity: 0.3;
+  }
+}
+
+.input {
+  composes: bare from "../field/field.module.css";
+  flex: 1;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.input::-webkit-search-cancel-button,
+.input::-webkit-search-decoration,
+.input::-webkit-search-results-button,
+.input::-webkit-search-results-decoration {
+  display: none;
+  -webkit-appearance: none;
+}
+
+.end {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center end;
+  min-width: var(--ui-control-sm);
+  height: var(--ui-control-sm);
+}
+
+.end > * {
+  grid-area: 1 / 1;
+}
+
+.clear {
+  composes: inset from "../field/field.module.css";
+}
+
+/* Doubled so it outranks the inset rule in any stylesheet order. */
+.clear.clear {
+  /* visibility takes it out of the tab order once faded. */
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    visibility 0s linear var(--ui-dur-instant);
+}
+
+.control[data-filled]:not([data-disabled]) .clear {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    visibility 0s;
+}
+
+@media (pointer: coarse) {
+  .clear.clear::after {
+    inset: calc(var(--shell-inset) * -1);
+  }
+}
+
+.key {
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-width: 20px;
+  height: 20px;
+  margin-inline-end: calc((var(--ui-control-sm) - 20px) / 2);
+  padding-inline: 6px;
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-fill);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border);
+  color: var(--ui-muted);
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  font-style: normal;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.control:not(:focus-within, [data-filled]) .key {
+  opacity: 1;
+  transition-duration: var(--ui-dur-fast);
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .key {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .control[data-loading] .icon svg {
+    animation-duration: calc(var(--ui-dur-pulse) * 3);
+  }
+}

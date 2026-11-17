@@ -1,0 +1,31 @@
+/* The tool name stays on one line; its description takes the rest. */
+.tool {
+  font-size: var(--ui-text-sm);
+  white-space: nowrap;
+}
+
+/* On a phone each tool stacks over its description, so the text keeps the
+   full width instead of a narrow column. */
+@media (max-width: 640px) {
+  .tools thead {
+    display: none;
+  }
+  .tools tr {
+    display: grid;
+    padding-block: var(--ui-space-3);
+  }
+  /* Rows split by the same hairline as every table; the cells inside a row
+     drop theirs, so nothing lines the hidden header or splits a tool from
+     its description. */
+  .tools tbody tr + tr {
+    box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+  }
+  .tools tbody tr > * {
+    min-width: 0;
+    padding-block: 0;
+    box-shadow: none;
+  }
+  .tools .tool {
+    padding-bottom: var(--ui-space-1);
+  }
+}

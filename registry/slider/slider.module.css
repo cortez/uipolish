@@ -1,0 +1,212 @@
+/* A label row over a control row. The control row is a control height
+   (--slider-h): the whole hit area, with a sunken track and a raised thumb
+   centered in it. */
+.root {
+  --slider-h: var(--ui-control-sm);
+  --slider-track-h: 6px;
+  --slider-knob-h: 20px;
+  /* A capsule, like every pressable thing: wider than tall. */
+  --slider-knob-w: calc(var(--slider-knob-h) * var(--ui-capsule));
+  --slider-fraction: 0;
+  /* The switch's thumb: the raised surface in light, a light gray in dark,
+     where a knob the color of the surface would read as a hole. */
+  --slider-knob: light-dark(var(--ui-surface), color-mix(in oklch, var(--ui-foreground) 86%, var(--ui-surface)));
+  --slider-range: var(--ui-accent);
+  display: grid;
+  min-width: 0;
+  font-family: var(--ui-font-sans);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  user-select: none;
+}
+
+.label {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-foreground);
+  font-weight: var(--ui-weight-medium);
+}
+
+/* The longest value sits hidden in the same cell, so the readout never changes width. */
+.value {
+  display: grid;
+  flex-shrink: 0;
+  justify-items: end;
+  color: var(--ui-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.sizer,
+.shown {
+  grid-area: 1 / 1;
+}
+
+.sizer {
+  visibility: hidden;
+}
+
+/* Base UI's Slider.Control: a press anywhere on the row sets the value, a drag follows. */
+.control {
+  position: relative;
+  height: var(--slider-h);
+  cursor: pointer;
+  touch-action: pan-y;
+}
+
+@media (pointer: coarse) {
+  .control::after {
+    content: "";
+    position: absolute;
+    inset: calc((var(--slider-h) - var(--ui-control-md)) / 2) 0;
+  }
+}
+
+/* Holds the drawn parts. The thumb's layer slides past the end, so it's clipped,
+   with room for the thumb to grow on press. */
+.rail {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  overflow-clip-margin: var(--ui-space-1);
+  pointer-events: none;
+}
+
+/* Sunken, like the segmented control's track: the faint fill and a hairline inner edge. */
+.track {
+  position: absolute;
+  top: 50%;
+  inset-inline: 0;
+  height: var(--slider-track-h);
+  margin-top: calc(var(--slider-track-h) / -2);
+  overflow: clip;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  pointer-events: none;
+}
+
+/* The full track, slid back so its end sits under the thumb's center. */
+.range {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--slider-range);
+  translate: calc((var(--slider-fraction) - 1) * (100% - var(--slider-knob-w)) - var(--slider-knob-w) / 2) 0;
+  transition:
+    translate var(--ui-dur-glide) var(--ui-ease-glide),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+:is([dir="rtl"]) .root .range {
+  translate: calc((1 - var(--slider-fraction)) * (100% - var(--slider-knob-w)) + var(--slider-knob-w) / 2) 0;
+}
+
+/* A full-width layer slid by the value, so the thumb moves on the compositor. */
+.knobLayer {
+  position: absolute;
+  inset: 0;
+  translate: calc(var(--slider-fraction) * (100% - var(--slider-knob-w))) 0;
+  pointer-events: none;
+  transition: translate var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+:is([dir="rtl"]) .root .knobLayer {
+  translate: calc(var(--slider-fraction) * (var(--slider-knob-w) - 100%)) 0;
+}
+
+/* Raised, like the segmented control's pill: surface, a firm hairline, a hint of lift. */
+.knob {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: 0;
+  width: var(--slider-knob-w);
+  height: var(--slider-knob-h);
+  margin-top: calc(var(--slider-knob-h) / -2);
+  border-radius: var(--ui-radius-full);
+  background: var(--slider-knob);
+  box-shadow:
+    0 0 0 var(--ui-hairline) var(--ui-border-strong),
+    var(--ui-shadow-control);
+  /* Drives the focus ring: dark on the knob in both themes. */
+  color: light-dark(var(--ui-foreground), var(--ui-surface));
+  transition:
+    scale var(--ui-dur-snap) var(--ui-ease-snap),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* A drag or a held key: the thumb and range sit under the input, no easing. */
+.root[data-follow] :is(.range, .knobLayer) {
+  transition: none;
+}
+
+/* Base UI's track and thumb lie over the drawn ones and draw nothing. */
+.hitTrack {
+  height: 100%;
+}
+
+/* The thumb holds the focusable range input; as wide as the drawn thumb, so their centers match. */
+.thumb {
+  top: 50%;
+  width: var(--slider-knob-w);
+  height: 100%;
+  outline: none;
+}
+
+@media (hover: hover) {
+  .root:not([data-disabled]) .control:hover {
+    --slider-knob: light-dark(
+      var(--ui-fill-solid),
+      color-mix(in oklch, var(--ui-foreground) 92%, var(--ui-surface))
+    );
+  }
+}
+
+/* Calm press: the thumb grows a touch at once and springs back on release. */
+.root:not([data-disabled]) .control:active .knob {
+  scale: 1.08;
+  transition-duration: var(--ui-dur-press), var(--ui-dur-instant);
+}
+
+.root:has(.thumb :focus-visible) .knob {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.root:has(.thumb :focus-visible) .value,
+.root[data-follow] .value {
+  color: var(--ui-foreground);
+}
+
+/* One layer at half opacity, so the thumb, range and track dim together without seams. */
+.root[data-disabled] {
+  opacity: 0.5;
+}
+
+.root[data-disabled] .control {
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .range {
+    transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+  }
+  .knobLayer {
+    transition: none;
+  }
+  .knob {
+    transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+  }
+  .root:not([data-disabled]) .control:active .knob {
+    scale: none;
+  }
+}

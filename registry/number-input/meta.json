@@ -1,0 +1,14 @@
+{
+  "name": "number-input",
+  "title": "Number input",
+  "summary": "Spinbutton whose − and + buttons speed up while held. A typed value outside min or max is pulled into range, with a note that says so.",
+  "version": "0.6.0",
+  "dependencies": [
+    "field",
+    "icons",
+    "text"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

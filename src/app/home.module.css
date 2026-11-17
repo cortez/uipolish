@@ -1,0 +1,195 @@
+/* One column, left aligned, everything at body size. The page opens on
+   its name top left, level with the theme toggle top right, then
+   the tiles; each section after them two section gaps below the last. */
+.main {
+  --room: calc(var(--ui-gap-section) * 2);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* The header shares the content column, so the name lines up with the
+   tiles and the footer, and the theme toggle ends where they end.
+   The name and the actions share the first row, 24 down, centered on each
+   other; what it is and the buttons run under them, the column's width. */
+.main,
+.main + footer,
+.hero {
+  max-width: 1120px;
+  margin-inline: auto;
+  margin-inline: max(0px, round(down, (100% - 1120px) / 2, 1px));
+  padding-inline: var(--ui-space-5);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  padding-top: var(--ui-space-6);
+  padding-bottom: var(--ui-gap-section);
+}
+
+.hero > :not(h1, :first-child + *) {
+  grid-column: 1 / -1;
+}
+
+.hero > h1 {
+  margin: 0;
+}
+
+.hero .lede {
+  max-width: 46ch;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+  margin-top: var(--ui-space-4);
+}
+
+.lede {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--ui-muted);
+  line-height: var(--ui-leading-prose);
+  text-wrap: pretty;
+}
+
+/* Every section below the tiles: the same space above it, its head, then
+   its content. One rhythm, so nothing stacks into a gap. */
+.section {
+  display: grid;
+  /* One column that can shrink to the screen. */
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: start;
+  gap: var(--ui-gap-block);
+  padding-top: var(--room);
+  scroll-margin-top: var(--ui-space-8);
+}
+
+.sectionHead {
+  display: grid;
+  justify-items: start;
+  gap: var(--ui-space-1);
+}
+
+/* The last section ends a section gap above the footer, not the double
+   gap between sections. */
+.questions {
+  padding-bottom: var(--ui-gap-section);
+}
+
+.faq {
+  width: 100%;
+  max-width: 640px;
+}
+
+/* The rules: a numbered list of titles as wide as the questions; the
+   reasons are one link away. Numbers hang in their own column, in the muted color, and
+   rows part with the same hairline as the accordion below. */
+.rules {
+  width: 100%;
+  max-width: 640px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: rule;
+}
+
+.rule {
+  display: grid;
+  grid-template-columns: 2ch minmax(0, 1fr);
+  column-gap: var(--ui-space-4);
+  padding-block: var(--ui-space-3);
+  counter-increment: rule;
+}
+
+.rule + .rule {
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+.rule::before {
+  content: counter(rule);
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-align: end;
+}
+
+.ruleTitle {
+  grid-column: 2;
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+
+.main .actions {
+  justify-content: start;
+}
+
+/* ---- Blocks: the first rows, fading into the way to the rest ----
+   The shown tiles stay whole and sharp. One more row follows, inert, and
+   a mask (not a wash of the page color, so it works on any background and
+   in both themes) eases it from half strength to nothing. The actions sit
+   in the faded half of that row, so the grid hands off to them. */
+.preview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+}
+
+/* The fading row and the actions share one cell: the actions at its foot.
+   The row's own padding is the grid's gap, so the masked box starts at
+   the gap and the tiles' edges never meet the mask's edge. It reaches
+   past the tiles on either side so their hairlines and shadow aren't cut. */
+.more {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ghost,
+.cta {
+  grid-area: 1 / 1;
+}
+
+.ghost {
+  margin-inline: calc(var(--ui-space-4) * -1);
+  padding: var(--ui-gap-block) var(--ui-space-4) var(--ui-space-8);
+  -webkit-mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.55), rgb(0 0 0 / 0.2) 40%, transparent 72%);
+  mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.55), rgb(0 0 0 / 0.2) 40%, transparent 72%);
+  pointer-events: none;
+  user-select: none;
+}
+
+.main .cta {
+  align-self: end;
+  margin-block: 0;
+}
+
+/* One column on a phone: three tiles, then one fading. */
+@media (max-width: 640px) {
+  .shown > li:nth-child(n + 4),
+  .ghost li:nth-child(n + 2) {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .main,
+  .main + footer,
+  .hero {
+    padding-inline: var(--ui-space-4);
+  }
+  /* On a phone the header row is the top bar: 20 down, 16 in, and what it
+     is starts a section gap below it, where a docs page's title starts. */
+  .hero {
+    padding-top: var(--ui-space-5);
+    padding-inline: var(--ui-space-4);
+  }
+  .hero .lede {
+    margin-top: var(--ui-gap-section);
+  }
+}

@@ -1,0 +1,25 @@
+/* The info mark inside a tag chip: a step under the chip's text, in its
+   color, at the chip's end. */
+.mark {
+  margin-inline-start: var(--ui-gap-tight);
+  width: var(--ui-icon-xs);
+  height: var(--ui-icon-xs);
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+/* A bare button around a chip: the chip is the visible control. */
+.trigger {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: none;
+  font: inherit;
+  cursor: help;
+}
+
+.trigger:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}

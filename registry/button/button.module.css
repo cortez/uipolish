@@ -1,0 +1,218 @@
+.button {
+  --button-bg: transparent;
+  --button-bg-hover: var(--ui-fill);
+  --button-bg-press: var(--ui-fill-strong);
+  --button-fg: var(--ui-foreground);
+  --button-edge: transparent;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  height: var(--ui-control-md);
+  min-width: var(--ui-control-md);
+  padding-inline: 20px;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: none;
+  color: var(--button-fg);
+  isolation: isolate;
+  font: var(--ui-weight-medium) var(--ui-text-md) / 1 var(--ui-font-sans);
+  letter-spacing: var(--ui-tracking-control);
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* Fill and edge on their own layer, so a press scales the shape, not the label. */
+.button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--button-bg);
+  box-shadow:
+    inset 0 0 0 var(--ui-hairline) var(--button-edge),
+    var(--button-depth, 0 0 transparent);
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+/* Icon only (one element, named by aria-label): a capsule, not a circle,
+   like every other button. */
+.button[data-icon-only] {
+  width: calc(var(--ui-control-md) * var(--ui-capsule));
+  padding-inline: 0;
+}
+
+.button[data-size="sm"][data-icon-only] {
+  width: calc(var(--ui-control-sm) * var(--ui-capsule));
+}
+
+.button[data-size="lg"][data-icon-only] {
+  width: calc(var(--ui-control-lg) * var(--ui-capsule));
+}
+
+.button[data-size="sm"] {
+  height: var(--ui-control-sm);
+  min-width: var(--ui-control-sm);
+  padding-inline: 14px;
+}
+
+/* A small button looks 32px but takes a 40px touch: the hit area grows 4px
+   above and below on touch screens, so it stays in its row's height. */
+@media (pointer: coarse) {
+  .button[data-size="sm"]::after {
+    content: "";
+    position: absolute;
+    inset: calc((var(--ui-control-sm) - var(--ui-control-md)) / 2) 0;
+  }
+}
+
+.button[data-size="lg"] {
+  height: var(--ui-control-lg);
+  min-width: var(--ui-control-lg);
+  padding-inline: var(--ui-space-5);
+  font-size: var(--ui-text-md);
+}
+
+/* Hover and press mix from --button-bg and --button-fg, so overrides get
+   matching shades. Filled or not, every button sits on the one control
+   shadow: no glint along the top, nothing darker under the bottom edge. */
+.button[data-variant="primary"] {
+  --button-depth: var(--ui-shadow-control);
+  --button-bg: var(--ui-ink);
+  --button-bg-hover: color-mix(in oklch, var(--button-bg) 92%, var(--button-fg));
+  --button-bg-press: color-mix(in oklch, var(--button-bg) 85%, var(--button-fg));
+  --button-fg: var(--ui-on-ink);
+}
+
+.button[data-variant="secondary"] {
+  --button-bg: var(--ui-surface);
+  --button-edge: var(--ui-border-strong);
+  --button-depth: var(--ui-shadow-control);
+}
+
+.button[data-variant="danger"] {
+  --button-depth: var(--ui-shadow-control);
+  --button-bg: var(--ui-danger);
+  --button-bg-hover: color-mix(in oklch, var(--button-bg) 93%, black);
+  --button-bg-press: color-mix(in oklch, var(--button-bg) 86%, black);
+  --button-fg: var(--ui-on-danger);
+}
+
+@media (hover: hover) {
+  .button:hover:not(:disabled, [aria-busy])::before {
+    background: var(--button-bg-hover);
+  }
+  .button[data-variant="secondary"]:hover:not(:disabled, [aria-busy])::before {
+    background: var(--ui-fill-solid);
+  }
+}
+
+.button:active:not(:disabled, [aria-busy])::before {
+  --button-depth: 0 0 transparent;
+  background: var(--button-bg-press);
+  transition-duration: var(--ui-dur-press);
+}
+.button:active:not(:disabled, [aria-busy], [aria-haspopup])::before {
+  scale: var(--ui-scale-press);
+}
+
+.button:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.button[aria-busy] {
+  cursor: default;
+}
+
+@property --button-dim {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+.content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  /* Room for descenders inside the busy mask, cancelled by the negative margin.
+     Always on, so turning busy on never moves the label. */
+  margin: -4px -6px;
+  padding: var(--ui-space-1) 6px;
+}
+
+.content svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+/* Shown only once the work has lasted 300ms (use-delayed-busy.ts), so the
+   shimmer starts at once when it does. */
+.button[data-busy-shown] .content {
+  --button-dim: 1;
+  mask-image: linear-gradient(
+    90deg,
+    rgb(0 0 0 / var(--button-dim)) 35%,
+    black 50%,
+    rgb(0 0 0 / var(--button-dim)) 65%
+  );
+  mask-size: 300% 100%;
+  mask-repeat: no-repeat;
+  animation:
+    button-dim var(--ui-dur-base) var(--ui-ease-color) forwards,
+    button-sweep var(--ui-dur-sweep) linear infinite;
+}
+
+@keyframes button-dim {
+  to {
+    --button-dim: 0.4;
+  }
+}
+
+@keyframes button-sweep {
+  from {
+    mask-position: 100% 0;
+  }
+  to {
+    mask-position: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button::before {
+    transition-property: background-color, box-shadow;
+  }
+  .button:active:not(:disabled, [aria-busy], [aria-haspopup])::before {
+    scale: none;
+  }
+  .button[data-busy-shown] .content {
+    --button-dim: 0.5;
+    animation: none;
+  }
+}
+
+/* block: the full width of its container, label still centered. */
+.button[data-block] {
+  display: grid;
+  width: 100%;
+}

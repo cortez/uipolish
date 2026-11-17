@@ -1,0 +1,513 @@
+/* A batch at a glance, then item by item. The header says what's running
+   and how far along it is; a track fills as items settle; the list below
+   holds one row per item on hairlines, windowed so a thousand scroll as
+   easily as ten. Rows are placed by index at a fixed height, so a row that
+   changes state never moves its neighbours. */
+.root {
+  /* Done is ink softened toward the surface, so a finished thousand reads
+     as a calm field rather than a solid block. */
+  --bp-done: color-mix(in oklch, var(--ui-ink) light-dark(62%, 58%), var(--ui-surface));
+  --bp-working: color-mix(in oklch, var(--ui-foreground) 24%, transparent);
+  --bp-pad: var(--ui-pad-card);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ui-gap-stack);
+  padding: var(--bp-pad) var(--bp-pad) 0;
+  overflow: clip;
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+}
+
+.root[data-phase="empty"] {
+  padding-bottom: var(--bp-pad);
+}
+
+/* ---------- Header: what, and the controls ---------- */
+
+/* Holds a small button's height whether or not one shows, so nothing below
+   moves as Pause and Stop give way to Retry. */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-gap-stack);
+  min-height: var(--ui-control-md);
+  margin-block: calc(var(--ui-space-1) * -1);
+}
+
+.title {
+  min-width: 0;
+  margin: 0;
+  font: var(--ui-weight-medium) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  text-wrap: balance;
+}
+
+/* While it runs the title carries a light band, like a status being read. */
+.root[data-phase="running"] .title {
+  mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.6) 35%, #000 50%, rgb(0 0 0 / 0.6) 65%);
+  mask-size: 300% 100%;
+  animation: shimmer var(--ui-dur-sweep) linear infinite;
+}
+
+@keyframes shimmer {
+  from {
+    mask-position: 100% 0;
+  }
+  to {
+    mask-position: 0 0;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--ui-gap-tight);
+  margin-inline-end: -14px;
+}
+
+.actions:has(> [data-variant="secondary"]) {
+  margin-inline-end: 0;
+}
+
+/* Pause and Resume in one cell: the button is as wide as "Resume" either way. */
+.swap {
+  display: inline-grid;
+}
+
+.swap > * {
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+
+.swap > [data-shown] {
+  visibility: visible;
+}
+
+/* ---------- The track and the numbers under it ---------- */
+
+.progress {
+  display: grid;
+  gap: var(--ui-space-2);
+}
+
+.track {
+  position: relative;
+  display: flex;
+  gap: 2px;
+  height: 6px;
+  overflow: hidden;
+  border-radius: var(--ui-radius-full);
+}
+
+.track[data-kind="bar"] {
+  background: var(--ui-fill-strong);
+}
+
+/* One segment per item, in order: failures sit where they happened. */
+.segment {
+  flex: 1 1 0;
+  min-width: 0;
+  background: var(--ui-fill-strong);
+  transition: background-color var(--ui-dur-base) var(--ui-ease-color);
+}
+
+/* Many items: one bar, layered from the left. Done over failed over skipped
+   over in flight, each scaled to where its count ends, so the parts stack
+   without a gap and each grows on the glide, never jumping. */
+.fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 50%;
+  scale: var(--to) 1;
+  transition: scale var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+.segment[data-status="working"],
+.fill[data-status="working"] {
+  background: var(--bp-working);
+}
+
+.segment[data-status="done"],
+.fill[data-status="done"] {
+  background: var(--bp-done);
+}
+
+.segment[data-status="failed"],
+.fill[data-status="failed"] {
+  background: var(--ui-danger);
+}
+
+.segment[data-status="skipped"],
+.fill[data-status="skipped"] {
+  background: var(--ui-border-strong);
+}
+
+/* In flight, a segment breathes, so the track shows where the work is. */
+.root[data-phase="running"] .segment[data-status="working"] {
+  animation: breathe var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;
+}
+
+@keyframes breathe {
+  from {
+    background-color: var(--ui-fill-strong);
+  }
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 var(--ui-gap-stack);
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+/* On a narrow card the clock takes its own line in every state, so the
+   list never moves when a settled summary would have wrapped. */
+.root[data-narrow] .meta {
+  flex-direction: column;
+}
+
+.tally,
+.clock {
+  display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.tally .part:first-child {
+  color: var(--ui-foreground);
+}
+
+.part + .part::before {
+  content: "·";
+  padding-inline: var(--ui-space-1) 6px;
+  color: var(--ui-subtle);
+}
+
+.part[data-tone="danger"] {
+  color: var(--ui-danger-text);
+}
+
+/* ---------- Numbers that change in place ---------- */
+
+.digits {
+  white-space: pre-wrap;
+}
+
+/* Transform and opacity only: a changed character rolls, the old one lifting
+   out as the new one rises in half a beat later, so the two never sit on
+   top of each other. The rest aren't remounted and don't move. */
+.digit {
+  position: relative;
+  display: inline-block;
+  white-space: pre;
+}
+
+.is {
+  display: inline-block;
+}
+
+.digit[data-changed] .is {
+  animation: digit-in var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 3) backwards;
+}
+
+.was {
+  position: absolute;
+  inset: 0;
+  animation: digit-out var(--ui-dur-instant) var(--ui-ease-color) forwards;
+}
+
+@keyframes digit-in {
+  from {
+    opacity: 0;
+    translate: 0 0.3em;
+  }
+}
+
+@keyframes digit-out {
+  to {
+    opacity: 0;
+    translate: 0 -0.3em;
+  }
+}
+
+/* ---------- Filters ---------- */
+
+.listHead {
+  display: flex;
+  min-width: 0;
+  padding-top: var(--ui-space-1);
+}
+
+.filters {
+  max-width: 100%;
+}
+
+.filter {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.count {
+  color: var(--ui-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.count[data-tone="danger"] {
+  color: var(--ui-danger-text);
+}
+
+/* ---------- The list ---------- */
+
+/* Edge to edge in the card, under one hairline. Its height is set by the
+   batch, never the filter, so switching to "Failed" doesn't fold the card. */
+.list {
+  margin-inline: calc(var(--bp-pad) * -1);
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+.scroll {
+  height: calc(var(--row) * var(--rows));
+}
+
+.rows {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  position: absolute;
+  inset: 0 0 auto;
+  display: grid;
+  grid-template-columns: var(--ui-icon-md) minmax(0, 1.1fr) minmax(0, 1fr) auto auto;
+  grid-template-areas: "mark name detail time action";
+  align-items: center;
+  column-gap: var(--ui-gap-stack);
+  height: var(--row);
+  padding-inline: var(--bp-pad) calc(var(--bp-pad) - var(--ui-space-2));
+  box-shadow: inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+  translate: 0 var(--y);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.row:not(:has(.action)) {
+  padding-inline-end: var(--bp-pad);
+}
+
+.row[data-last] {
+  box-shadow: none;
+}
+
+/* Two lines on a narrow card: the name and its time, then what happened. */
+.root[data-narrow] .row {
+  grid-template-columns: var(--ui-icon-md) minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "mark name time action"
+    ". detail detail action";
+  align-content: center;
+  row-gap: 2px;
+}
+
+.name {
+  grid-area: name;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row[data-status="queued"] .name {
+  color: var(--ui-muted);
+}
+
+.detail {
+  grid-area: detail;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ui-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row[data-status="queued"] .detail,
+.row[data-status="skipped"] .detail {
+  color: var(--ui-subtle);
+}
+
+.row[data-status="failed"] .detail {
+  color: var(--ui-danger-text);
+}
+
+/* A fixed width, in tabular figures, so times line up down the list. */
+.time {
+  grid-area: time;
+  min-width: 5ch;
+  color: var(--ui-subtle);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+/* The column for a row's retry, held on every row so the times line up. */
+.action {
+  grid-area: action;
+  display: grid;
+  place-items: center;
+  width: calc(var(--ui-control-md) * var(--ui-capsule));
+}
+
+/* ---------- Status marks ---------- */
+
+.mark {
+  grid-area: mark;
+  display: grid;
+  place-items: center;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  color: var(--ui-border-strong);
+}
+
+.root[data-narrow] .mark {
+  align-self: center;
+}
+
+.mark > svg {
+  grid-area: 1 / 1;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  overflow: visible;
+  stroke-width: var(--ui-icon-stroke);
+  opacity: 0;
+  scale: 0.9;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.mark[data-status="queued"] > [data-mark="queued"],
+.mark[data-status="working"] > [data-mark="working"],
+.mark[data-status="done"] > [data-mark="done"],
+.mark[data-status="failed"] > [data-mark="failed"],
+.mark[data-status="skipped"] > [data-mark="skipped"] {
+  opacity: 1;
+  scale: 1;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.mark[data-status="working"] {
+  color: var(--ui-foreground);
+}
+
+.mark[data-status="done"] {
+  color: var(--bp-done);
+}
+
+.mark [data-mark="failed"] {
+  color: var(--ui-danger);
+}
+
+.mark[data-status="skipped"] {
+  color: var(--ui-subtle);
+}
+
+/* The one turning glyph: a short arc, a slow turn. It holds still when paused. */
+.arc {
+  stroke-dasharray: 0.28 1;
+  stroke-linecap: round;
+  transform-origin: center;
+  animation: turn calc(var(--ui-dur-panel) * 3) linear infinite;
+}
+
+.root:not([data-phase="running"]) .arc {
+  animation-play-state: paused;
+}
+
+@keyframes turn {
+  to {
+    rotate: 1turn;
+  }
+}
+
+/* The check draws in as an item lands. */
+.tick {
+  stroke-width: var(--ui-icon-stroke);
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: 1.05;
+  transition: stroke-dashoffset var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.mark[data-status="done"] .tick {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--ui-dur-base) var(--ui-ease-draw) var(--ui-dur-instant);
+}
+
+/* ---------- Empty ---------- */
+
+.none,
+.empty {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: balance;
+}
+
+/* A filter with nothing in it holds the list's space, its line centered there. */
+.none {
+  display: grid;
+  place-items: center;
+  height: calc(var(--row) * var(--rows));
+  padding-inline: var(--bp-pad);
+  text-align: center;
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+/* Reduced motion: nothing turns, rolls, sweeps or grows. Every state still
+   changes, at once: the arc breathes in place, the bar steps. */
+@media (prefers-reduced-motion: reduce) {
+  .root[data-phase="running"] .title,
+  .root[data-phase="running"] .segment[data-status="working"],
+  .digit[data-changed] .is {
+    animation: none;
+  }
+  .was {
+    display: none;
+  }
+  .fill,
+  .segment {
+    transition: none;
+  }
+  .mark > svg {
+    scale: 1;
+  }
+  .arc {
+    animation: breathe-arc var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;
+  }
+  .tick,
+  .mark[data-status="done"] .tick {
+    transition: none;
+  }
+}
+
+@keyframes breathe-arc {
+  from {
+    opacity: 0.35;
+  }
+}

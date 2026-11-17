@@ -1,0 +1,47 @@
+/* The key field 16 above the steps, 12 between steps.
+   minmax(0, 1fr): a long command must not widen the column past the page. */
+.picker {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ui-space-4);
+  max-width: 560px;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ui-space-3);
+}
+
+/* Text for a newly picked agent replaces the old in place: a fade, no
+   travel. The command pill between them stays. */
+.body p {
+  margin: 0;
+  color: var(--ui-muted);
+  animation: swap var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+/* Commands, paths and flags in the steps: the guides' inline code. One
+   that wraps keeps its padding and corners on each line. */
+.body p code {
+  padding: 1px 6px;
+  border-radius: calc(var(--ui-radius-sm) / 2);
+  background: var(--ui-fill);
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-code);
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+@keyframes swap {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .body p {
+    animation: none;
+  }
+}

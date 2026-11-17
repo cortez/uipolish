@@ -1,0 +1,347 @@
+/* Doubled to win over the Modal's own rules, whatever order the sheets load in. */
+.palette.palette {
+  --modal-width: 600px;
+  --palette-radius: var(--ui-radius-lg);
+  --palette-pad: var(--ui-inset-menu);
+  --palette-inner-radius: calc(var(--palette-radius) - var(--palette-pad));
+
+  border-radius: var(--palette-radius);
+  /* The viewport pads by --ui-space-5 already; this sets the gap from the top of the screen. */
+  align-self: start;
+  margin-top: calc(min(14dvh, 120px) - var(--ui-space-5));
+  max-height: calc(100dvh - min(14dvh, 120px) - var(--ui-space-5));
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Search field ---------- */
+
+.search {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--ui-space-3);
+  height: 56px;
+  padding-inline: calc(var(--palette-pad) + var(--ui-pad-row));
+  /* Not a border: that would add its width and push everything off the grid. */
+  box-shadow: inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+}
+
+.searchIcon {
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  flex-shrink: 0;
+  color: var(--ui-subtle);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--ui-subtle);
+}
+
+/* Only the field takes focus; the caret shows where it is. */
+.input:focus-visible {
+  outline: none;
+}
+
+/* ---------- Results ---------- */
+
+/* Only this box animates its height, so the rows never re-layout per frame. */
+.viewport {
+  flex-shrink: 1;
+  min-height: 0;
+  overflow: clip;
+  transition: height var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+.viewport[data-instant] {
+  transition: none;
+}
+
+.scroller {
+  max-height: min(400px, calc(100dvh - min(14dvh, 120px) - 160px));
+  padding: var(--palette-pad);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-padding-block: var(--palette-pad);
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+
+.scroller:empty {
+  padding: 0;
+}
+
+.listbox:empty {
+  display: none;
+}
+
+.group + .group {
+  margin-top: var(--ui-space-2);
+}
+
+.heading {
+  padding: var(--ui-space-2) var(--ui-pad-row) var(--ui-space-1);
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+  user-select: none;
+}
+
+.option {
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  min-height: var(--ui-control-md);
+  padding: var(--ui-space-2) var(--ui-pad-row);
+  border-radius: var(--palette-inner-radius);
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  cursor: pointer;
+  user-select: none;
+  scroll-margin-block: var(--ui-space-6);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.option[data-active] {
+  background: var(--ui-fill);
+  transition-duration: 0s;
+}
+
+.option:active {
+  background: var(--ui-fill-strong);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  color: var(--ui-muted);
+}
+
+.icon svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  stroke-width: var(--ui-icon-stroke);
+}
+
+.option[data-active] .icon {
+  color: var(--ui-foreground);
+}
+
+.label {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.text {
+  composes: wrap from "../text/text.module.css";
+}
+
+/* Color only, so the label never changes width. */
+.text[data-dim] {
+  color: var(--ui-muted);
+}
+
+.match {
+  background: none;
+  color: var(--ui-foreground);
+}
+
+.hint {
+  flex-shrink: 0;
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.shortcut {
+  display: flex;
+  flex-shrink: 0;
+  gap: 2px;
+}
+
+.key {
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-width: 20px;
+  height: 20px;
+  padding-inline: 6px;
+  border-radius: min(var(--palette-inner-radius), 10px);
+  background: var(--ui-fill);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border);
+  color: var(--ui-muted);
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  font-style: normal;
+  line-height: 1;
+}
+
+/* The shortcut and the Enter key share one cell, at the row's end. The
+   highlighted row shows Enter, since that's what runs it now; the others
+   show their shortcut. Hidden, not removed, so the cell keeps its width. */
+.keys {
+  display: grid;
+  flex-shrink: 0;
+  justify-items: end;
+}
+
+.keys > * {
+  grid-area: 1 / 1;
+}
+
+.enter,
+.option[data-active] .shortcut {
+  visibility: hidden;
+}
+
+.option[data-active] .enter {
+  visibility: visible;
+}
+
+/* ---------- Loading, empty, footer ---------- */
+
+.loading {
+  margin-top: var(--ui-space-2);
+  animation: fade-in var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.listbox:empty + .loading {
+  margin-top: 0;
+}
+
+.loadingRow {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  min-height: var(--ui-control-md);
+  padding-inline: var(--ui-pad-row);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+}
+
+.loadingLabel {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-foreground);
+}
+
+.loadingText {
+  composes: sweep from "../text/text.module.css";
+}
+
+.empty {
+  display: grid;
+  gap: var(--ui-space-1);
+  padding: var(--ui-space-6) var(--ui-space-4);
+  text-align: center;
+  animation: fade-in var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.emptyTitle {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+}
+
+.emptyHint {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  text-wrap: balance;
+}
+
+.footer {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--ui-space-4);
+  padding: var(--palette-pad);
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: 1;
+}
+
+.footer span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+
+/* 16px input text so iOS doesn't zoom on focus. */
+@media (pointer: coarse) {
+  .option {
+    min-height: var(--ui-control-lg);
+  }
+  .input {
+    font-size: var(--ui-text-touch);
+  }
+  .footer,
+  .enter {
+    display: none;
+  }
+  .option[data-active] .shortcut {
+    visibility: visible;
+  }
+}
+
+@media (max-width: 480px) {
+  /* 8px off the top and sides, like a dialog docked at the bottom on phones. */
+  .palette.palette {
+    margin-top: calc(var(--ui-space-2) - var(--ui-space-5));
+    max-height: calc(100dvh - 2 * var(--ui-space-2));
+  }
+  .scroller {
+    max-height: min(400px, calc(100dvh - 160px));
+  }
+  .hint {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewport {
+    transition: none;
+  }
+  .loading,
+  .empty {
+    animation: none;
+  }
+  .loadingLabel {
+    color: var(--ui-muted);
+  }
+}

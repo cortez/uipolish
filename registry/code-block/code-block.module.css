@@ -1,0 +1,248 @@
+.block {
+  --block-inset: var(--ui-space-2);
+  --block-action: var(--ui-control-sm);
+  /* Every box's radius; also the inset plus half the action, so the corner
+     and the Copy pill stay concentric. */
+  --block-radius: var(--ui-radius-lg);
+  position: relative;
+  min-width: 0;
+  border-radius: var(--block-radius);
+  background: var(--ui-surface);
+  /* A box at rest, like a card: the one edge and the one soft shadow. */
+  box-shadow: var(--ui-shadow-resting);
+  font-family: var(--ui-font-sans);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2);
+  padding: var(--block-inset) var(--block-inset) var(--block-inset) var(--ui-space-5);
+}
+
+.name {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.action.action {
+  padding-inline: var(--ui-space-3);
+  color: var(--ui-muted);
+}
+
+@media (hover: hover) {
+  .action.action:hover {
+    color: var(--ui-foreground);
+  }
+}
+
+.action.action[aria-pressed="true"] {
+  --button-bg: var(--ui-fill);
+  --button-bg-hover: var(--ui-fill-strong);
+  color: var(--ui-foreground);
+}
+
+@media (pointer: coarse) {
+  .block {
+    --block-action: var(--ui-control-md);
+  }
+  .action.action {
+    height: var(--block-action);
+  }
+}
+
+/* ---------- Body ---------- */
+
+.scroller {
+  position: relative;
+  overflow: auto;
+  overscroll-behavior-x: contain;
+  border-radius: 0 0 var(--block-radius) var(--block-radius);
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+
+.scroller:focus-visible {
+  outline: none;
+}
+
+/* Ring on the block: on the scroller the edge-fade mask would hide it. */
+.block:has(.scroller:focus-visible) {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.scroller[data-fade-end] {
+  mask-image: linear-gradient(to left, transparent, black var(--ui-space-6));
+}
+
+.scroller[data-fade-start] {
+  mask-image: linear-gradient(to right, transparent, black var(--ui-space-6));
+}
+
+.scroller[data-fade-start][data-fade-end] {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black var(--ui-space-6),
+    black calc(100% - var(--ui-space-6)),
+    transparent
+  );
+}
+
+.pre {
+  /* Keeps the right padding when scrolled. */
+  width: max-content;
+  min-width: 100%;
+  margin: 0;
+  padding: var(--ui-space-1) var(--ui-space-5) var(--ui-space-5);
+  counter-reset: line;
+}
+
+.scroller[data-wrap] .pre {
+  width: auto;
+}
+
+.code {
+  display: block;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  tab-size: 2;
+  white-space: pre;
+}
+
+.scroller[data-wrap] .code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.line {
+  display: block;
+  min-height: 1lh;
+}
+
+/* Numbers are generated content so copying the code never picks them up. */
+.pre[data-numbers] .line {
+  display: grid;
+  grid-template-columns: calc(var(--digits) * 1ch) minmax(0, 1fr);
+  column-gap: var(--ui-space-4);
+}
+
+.pre[data-numbers] .line::before {
+  content: counter(line);
+  counter-increment: line;
+  color: var(--ui-subtle);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+  user-select: none;
+}
+
+.scroller:not([data-wrap]) .pre[data-numbers] .line {
+  grid-template-columns: calc(var(--digits) * 1ch) max-content;
+}
+
+/* ---------- Tokens ---------- */
+
+/* Four quiet hues from the accent and status text roles, the rest in the
+   text grays. Keywords, strings, numbers and types carry the color; names
+   (functions, properties) stay in the text color, so a block reads as text
+   with a few marks rather than a rainbow. Mixes with the foreground go
+   through oklab, so the gray adds no hue of its own; the one hue-to-hue mix
+   goes through oklch, so blue and red meet at violet. 30-40% foreground in
+   each keeps them calm and above 4.5:1 in both themes. */
+.block {
+  --code-keyword: color-mix(in oklab, var(--ui-accent-text) 65%, var(--ui-foreground));
+  --code-control: var(--code-keyword);
+  --code-string: color-mix(in oklab, var(--ui-success-text) 65%, var(--ui-foreground));
+  --code-number: color-mix(in oklab, var(--ui-warning-text) 70%, var(--ui-foreground));
+  --code-function: var(--ui-foreground);
+  --code-type: color-mix(
+    in oklab,
+    color-mix(in oklch, var(--ui-danger-text) 60%, var(--ui-accent-text)) 60%,
+    var(--ui-foreground)
+  );
+  --code-attr: color-mix(in oklab, var(--ui-accent-text) 35%, var(--ui-foreground));
+  --code-property: var(--ui-foreground);
+  --code-punctuation: var(--ui-muted);
+  --code-comment: var(--ui-subtle);
+}
+
+.keyword {
+  color: var(--code-keyword);
+}
+
+.control {
+  color: var(--code-control);
+}
+
+.string {
+  color: var(--code-string);
+}
+
+.number,
+.literal,
+.value {
+  color: var(--code-number);
+}
+
+.function {
+  color: var(--code-function);
+}
+
+.type,
+.tag,
+.selector {
+  color: var(--code-type);
+}
+
+.attr,
+.variable {
+  color: var(--code-attr);
+}
+
+.property,
+.key {
+  color: var(--code-property);
+}
+
+.punctuation {
+  color: var(--code-punctuation);
+}
+
+.comment {
+  color: var(--code-comment);
+}
+
+/* ---------- Streaming ---------- */
+
+.block[aria-busy] .line > span > span {
+  animation: code-in var(--ui-dur-base) var(--ui-ease-enter) backwards;
+}
+
+@keyframes code-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .block[aria-busy] .line > span > span {
+    animation: none;
+  }
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}

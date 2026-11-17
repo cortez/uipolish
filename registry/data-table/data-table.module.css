@@ -1,0 +1,539 @@
+/* Each inline edge's mask alpha (1 solid, 0 faded). Registered so they can transition. */
+@property --data-table-start {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+@property --data-table-end {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+.root {
+  --data-table-head: 40px;
+  --data-table-pad: var(--ui-space-3);
+  --data-table-edge: var(--ui-space-4);
+  --data-table-fade: var(--ui-space-6);
+  /* Mixed into the surface, not translucent, so sticky cells stay opaque. */
+  --data-table-selected: light-dark(
+    color-mix(in oklch, var(--ui-accent) 7%, var(--ui-surface)),
+    color-mix(in oklch, var(--ui-accent) 15%, var(--ui-surface))
+  );
+
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  height: 440px;
+  min-width: 0;
+  overflow: clip;
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+}
+
+/* Drawn on top so the sticky header and column backgrounds never cover the edge. */
+.root::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  pointer-events: none;
+}
+
+/* ---------- Scrolling ---------- */
+
+.viewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  /* Inline only: stops swipe-back and rubber-banding away from the sticky column. */
+  overscroll-behavior-inline: none;
+  scroll-padding-block-start: calc(var(--data-table-head) + var(--ui-hairline));
+  scroll-padding-inline-start: var(--data-table-sticky, 0px);
+  border-radius: inherit;
+  outline: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+
+  /* Layer 1 is the edge fade; layers 2 and 3 keep classic scrollbars unmasked. */
+  mask-image:
+    linear-gradient(
+      var(--data-table-direction, to right),
+      rgb(0 0 0 / var(--data-table-start, 1)),
+      black var(--data-table-fade, 32px),
+      black calc(100% - var(--data-table-fade, 32px)),
+      rgb(0 0 0 / var(--data-table-end, 1))
+    ),
+    linear-gradient(black, black),
+    linear-gradient(black, black);
+  mask-repeat: no-repeat;
+  mask-size:
+    calc(100% - var(--data-table-bar-block, 0px)) 100%,
+    var(--data-table-bar-block, 0px) 100%,
+    100% var(--data-table-bar-inline, 0px);
+  mask-position:
+    left top,
+    right top,
+    left bottom;
+}
+
+:is([dir="rtl"]) .viewport {
+  --data-table-direction: to left;
+  mask-position:
+    right top,
+    left top,
+    left bottom;
+}
+
+.viewport[data-more-end] {
+  --data-table-end: 0;
+}
+
+.viewport[data-more-start]:not([data-sticky-columns]) {
+  --data-table-start: 0;
+}
+
+.viewport[data-ready] {
+  transition:
+    --data-table-start var(--ui-dur-fast) var(--ui-ease-color),
+    --data-table-end var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: max(100%, var(--data-table-total, 0px));
+  min-height: 100%;
+}
+
+/* ---------- Header ---------- */
+
+.head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--ui-surface);
+}
+
+/* The header's and each row's bottom line: a hairline drawn over the cells
+   (a box-shadow on the row would sit under the opaque sticky cells). */
+.head::after,
+.row::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  box-shadow: inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+  pointer-events: none;
+}
+
+.head::after {
+  z-index: 4;
+}
+
+/* Over the sticky cells (z-index 1, earlier in the row), under the header. */
+.row::after {
+  z-index: 1;
+}
+
+.headRow {
+  display: grid;
+  grid-template-columns: var(--data-table-template);
+  height: var(--data-table-head);
+}
+
+.headCell {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  border-radius: calc(var(--ui-radius-sm) / 2);
+  background: var(--ui-surface);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+  outline: none;
+}
+
+.sortButton,
+.headStatic {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--ui-space-1);
+  min-width: 0;
+  padding-inline: var(--data-table-pad);
+  border-radius: inherit;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+}
+
+.sortButton {
+  margin: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.headCell[data-align="end"] :is(.sortButton, .headStatic) {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  text-align: end;
+}
+
+.headCell:first-child :is(.sortButton, .headStatic) {
+  padding-inline-start: var(--data-table-edge);
+}
+
+.headLabel {
+  composes: truncate from "../text/text.module.css";
+}
+
+.headCell[data-sorted] {
+  color: var(--ui-foreground);
+}
+
+.sortIcon {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.headCell[data-sorted] .sortIcon {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .sortButton:hover {
+    background: var(--ui-fill);
+    color: var(--ui-foreground);
+  }
+
+  .headCell:not([data-sorted]) .sortButton:hover .sortIcon {
+    opacity: 0.5;
+  }
+}
+
+.sortButton:active {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+/* ---------- Resize handle ---------- */
+
+.resize {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: -12px;
+  z-index: 2;
+  width: 24px;
+  border-radius: calc(var(--ui-radius-sm) / 2);
+  outline: none;
+  touch-action: none;
+}
+
+.resize::before {
+  content: "";
+  position: absolute;
+  inset-block: var(--ui-space-2);
+  inset-inline-start: calc(50% - var(--ui-hairline) / 2);
+  width: var(--ui-hairline);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-border-strong);
+  scale: 1 0.6;
+  transition:
+    scale var(--ui-dur-snap) var(--ui-ease-snap),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .resize:hover::before {
+    scale: 1;
+    background: var(--ui-muted);
+  }
+}
+
+.headCell[data-resizing] .resize::before,
+.resize:focus-visible::before {
+  scale: 1;
+  background: var(--ui-foreground);
+}
+
+.resize:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+@media (pointer: coarse) {
+  .resize {
+    inset-inline-end: -20px;
+    width: 40px;
+  }
+}
+
+/* ---------- Body ---------- */
+
+.body {
+  position: relative;
+  flex: 1 0 auto;
+}
+
+/* Sticky cells repeat --row-bg, so set row colors through it. */
+.row {
+  --row-base: var(--ui-surface);
+  --row-bg: var(--row-base);
+  position: absolute;
+  inset-inline: 0;
+  display: grid;
+  grid-template-columns: var(--data-table-template);
+  height: var(--data-table-row);
+  background: var(--row-bg);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.row[aria-selected="true"] {
+  --row-base: var(--data-table-selected);
+}
+
+.root[data-focused] .row[data-active] {
+  --row-bg: color-mix(in oklch, var(--row-base), var(--ui-foreground) 4%);
+}
+
+.cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-width: 0;
+  padding-inline: var(--data-table-pad);
+  border-radius: calc(var(--ui-radius-sm) / 2);
+  outline: none;
+}
+
+.cell:first-child {
+  padding-inline-start: var(--data-table-edge);
+}
+
+.cell[data-align="end"] {
+  justify-content: flex-end;
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+.value {
+  composes: truncate from "../text/text.module.css";
+}
+
+.cell:focus-visible,
+.headCell:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+/* ---------- Sticky column ---------- */
+
+.cell[data-sticky],
+.headCell[data-sticky] {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  border-radius: 0;
+}
+
+/* Above other headers' resize handles, which would show through as they scroll under. */
+.headCell[data-sticky] {
+  z-index: 3;
+}
+
+.cell[data-sticky] {
+  background: var(--row-bg);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+:is(.cell, .headCell)[data-sticky][data-col="1"] {
+  inset-inline-start: var(--data-table-sticky-second, 0px);
+}
+
+:is(.cell, .headCell)[data-sticky-last]::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  width: var(--ui-hairline);
+  background: var(--ui-border);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+.viewport[data-more-start] :is(.cell, .headCell)[data-sticky-last]::after {
+  opacity: 1;
+}
+
+.viewport :is(.cell, .headCell)[data-sticky-last]:focus-visible::after {
+  opacity: 0;
+}
+
+/* ---------- Selection ---------- */
+
+.cell.selectCell,
+.headCell.selectCell {
+  padding: 0;
+}
+
+.check {
+  flex: 1 1 auto;
+  align-items: center;
+  height: 100%;
+  padding-inline-start: var(--data-table-edge);
+}
+
+/* ---------- Cells that need a look ---------- */
+
+.cell[data-invalid] {
+  color: var(--ui-danger-text);
+}
+
+.issueIcon {
+  --ui-icon-stroke: calc(var(--ui-icon-stroke-regular) * 16 / 14);
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  margin-inline-start: auto;
+}
+
+.cell[data-align="end"] .issueIcon {
+  order: -1;
+  margin-inline-start: 0;
+}
+
+.footer {
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+  min-height: var(--data-table-head);
+  margin: 0;
+  padding: calc((var(--data-table-head) - var(--ui-leading-md)) / 2) var(--data-table-edge);
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.footer[data-issue] {
+  color: var(--ui-foreground);
+}
+
+.footerIcon {
+  --ui-icon-stroke: calc(var(--ui-icon-stroke-regular) * 16 / 14);
+  flex-shrink: 0;
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  margin-top: calc((var(--ui-leading-md) - 14px) / 2);
+  color: var(--ui-danger-text);
+}
+
+.footerText {
+  min-width: 0;
+  animation: data-table-arrive var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.footerWhere {
+  font-weight: var(--ui-weight-medium);
+}
+
+/* ---------- Loading and empty ---------- */
+
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+
+.placeholderCell {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  animation: data-table-arrive var(--ui-dur-fast) var(--ui-ease-enter) 300ms both;
+}
+
+.placeholderRows {
+  display: grid;
+  grid-auto-rows: var(--data-table-row);
+}
+
+.placeholderRows span {
+  box-shadow: inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+}
+
+.loadingLine {
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: var(--data-table-row);
+}
+
+.loadingLabel {
+  composes: sweep from "../text/text.module.css";
+  position: sticky;
+  inset-inline-start: 0;
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding-inline: var(--data-table-edge);
+  color: var(--ui-muted);
+}
+
+.emptyCell {
+  position: sticky;
+  inset-inline-start: 0;
+  display: grid;
+  place-items: center;
+  width: var(--data-table-viewport-width, 100%);
+  max-width: 100%;
+  min-height: 100%;
+  overflow: auto;
+}
+
+.emptyText {
+  margin: 0;
+  padding: var(--ui-space-6) var(--ui-space-4);
+  color: var(--ui-muted);
+  text-align: center;
+}
+
+@keyframes data-table-arrive {
+  from {
+    opacity: 0;
+  }
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resize::before {
+    transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+  }
+}

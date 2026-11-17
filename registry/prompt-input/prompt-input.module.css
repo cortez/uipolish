@@ -1,0 +1,523 @@
+.root {
+  position: relative;
+  display: grid;
+  gap: var(--ui-space-2);
+  /* Keeps clear of the phone's home indicator. */
+  padding-block-end: env(safe-area-inset-bottom, 0px);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+/* Suggestions */
+
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+  margin: 0 0 var(--ui-space-1);
+  padding: 0;
+  list-style: none;
+}
+
+.suggestions li {
+  animation: suggestion-in var(--ui-dur-fast) var(--ui-ease-enter) backwards;
+}
+
+@keyframes suggestion-in {
+  from {
+    opacity: 0;
+    translate: 0 4px;
+  }
+}
+
+.suggestion {
+  position: relative;
+  height: var(--ui-control-sm);
+  padding-inline: 14px;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  color: var(--ui-muted);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+@media (hover: hover) {
+  .suggestion:hover:not(:disabled) {
+    background: var(--ui-fill-solid);
+    color: var(--ui-foreground);
+  }
+}
+
+.suggestion:active:not(:disabled) {
+  background: var(--ui-fill-strong-solid);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.suggestion:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+/* Composer */
+
+.composer {
+  position: relative;
+  display: grid;
+  --composer-pad: var(--ui-space-2);
+  --composer-radius: calc(var(--ui-control-sm) / 2 + var(--composer-pad));
+  padding: var(--composer-pad);
+  border-radius: var(--composer-radius);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  cursor: default;
+  transition: box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .composer:hover:not(:focus-within, [data-disabled]) {
+    box-shadow:
+      inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
+  }
+}
+
+.composer:focus-within {
+  box-shadow:
+    inset 0 0 0 1px var(--ui-field-focus);
+  transition-duration: 0s;
+}
+
+.composer[data-disabled] {
+  opacity: 0.5;
+  cursor: default;
+  transition: none;
+}
+
+/* Attachments */
+
+.attachments {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+  margin: 0;
+  --attachments-pad: calc(var(--ui-space-3) - var(--composer-pad));
+  --attachment-radius: calc(var(--composer-radius) - var(--composer-pad) - var(--attachments-pad));
+  padding: var(--attachments-pad) var(--attachments-pad) var(--ui-space-1);
+  list-style: none;
+  cursor: default;
+}
+
+.attachment {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  height: 56px;
+  border-radius: var(--attachment-radius);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  animation: attachment-in var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@keyframes attachment-in {
+  from {
+    opacity: 0;
+    scale: 0.97;
+  }
+}
+
+.attachment[data-kind="image"] {
+  width: 56px;
+  background: var(--ui-fill);
+}
+
+.attachment[data-kind="file"] {
+  max-width: 232px;
+  --attachment-pad: 8px;
+  padding: var(--attachment-pad) var(--ui-space-3) var(--attachment-pad) var(--attachment-pad);
+}
+
+.thumbnail {
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: inherit;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.thumbnail[data-loaded] {
+  opacity: 1;
+}
+
+.attachment[data-kind="image"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border);
+  pointer-events: none;
+}
+
+.fileIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: calc(var(--attachment-radius) - var(--attachment-pad));
+  background: var(--ui-fill);
+  color: var(--ui-muted);
+}
+
+.fileIcon svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke-medium);
+  stroke-linejoin: round;
+}
+
+.fileText {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.fileName,
+.fileMeta {
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.fileName {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-foreground);
+  font-weight: var(--ui-weight-medium);
+}
+
+.fileMeta {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-subtle);
+}
+
+.remove {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: oklch(0 0 0 / 0.45);
+  color: white;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.attachment[data-kind="file"] .remove {
+  inset: var(--attachment-pad) auto auto var(--attachment-pad);
+  width: 40px;
+  height: 40px;
+  border-radius: calc(var(--attachment-radius) - var(--attachment-pad));
+  background: var(--ui-fill-strong-solid);
+  color: var(--ui-foreground);
+}
+
+.remove svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  transition: scale var(--ui-dur-press) var(--ui-ease-snap);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .remove {
+    opacity: 0;
+  }
+  .attachment:hover .remove,
+  .remove:focus-visible {
+    opacity: 1;
+  }
+  .remove:hover {
+    background: oklch(0 0 0 / 0.55);
+  }
+  .attachment[data-kind="file"] .remove:hover {
+    background: color-mix(in oklch, var(--ui-surface), var(--ui-foreground) 12%);
+  }
+}
+
+.remove:active svg {
+  scale: var(--ui-scale-press);
+}
+
+.remove:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--ui-field-focus);
+}
+
+/* Textarea */
+
+.textarea {
+  display: block;
+  width: 100%;
+  /* Text 16px in from the composer's edge. */
+  --textarea-pad: calc(var(--ui-space-4) - var(--composer-pad));
+  min-height: calc(2 * var(--ui-leading-md) + var(--textarea-pad) + var(--composer-pad));
+  max-height: calc(var(--prompt-input-rows, 8) * var(--ui-leading-md) + var(--textarea-pad) + var(--composer-pad));
+  margin: 0;
+  padding: var(--textarea-pad) var(--textarea-pad) var(--composer-pad);
+  border: 0;
+  background: transparent;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  resize: none;
+  outline: none;
+  overflow-y: auto;
+  field-sizing: content;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+
+.textarea:focus-visible {
+  outline: none;
+}
+
+/* Wrapping would size the empty field to two rows, then snap to one on typing. */
+.textarea::placeholder {
+  overflow: hidden;
+  color: var(--ui-subtle);
+  overflow-wrap: anywhere;
+}
+
+.textarea:disabled {
+  cursor: default;
+}
+
+/* Toolbar */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  min-height: var(--ui-control-sm);
+}
+
+.footer {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--ui-space-1);
+  min-width: 0;
+}
+
+.iconButton,
+.send {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: var(--ui-control-sm);
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.iconButton {
+  width: calc(var(--ui-control-sm) * var(--ui-capsule));
+  padding: 0;
+  background: transparent;
+  color: var(--ui-muted);
+}
+
+.iconButton svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke);
+  stroke-linecap: round;
+}
+
+@media (hover: hover) {
+  .iconButton:hover:not(:disabled) {
+    background: var(--ui-fill);
+    color: var(--ui-foreground);
+  }
+}
+
+.iconButton:active:not(:disabled) {
+  background: var(--ui-fill-strong);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+@media (pointer: coarse) {
+  .iconButton::before,
+  .send::before,
+  .suggestion::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+}
+
+/* Send / Stop */
+
+.send {
+  min-width: calc(var(--ui-control-sm) * var(--ui-capsule));
+  padding-inline: var(--ui-space-2);
+  overflow: clip;
+  background: var(--ui-ink);
+  color: var(--ui-on-ink);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  white-space: nowrap;
+}
+
+.send[data-state="empty"] {
+  background: var(--ui-fill-strong);
+  color: var(--ui-subtle);
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .send:hover:not([data-state="empty"], :disabled) {
+    background: color-mix(in oklch, var(--ui-ink) 86%, var(--ui-on-ink));
+  }
+}
+
+.send:active:not([data-state="empty"], :disabled) {
+  background: color-mix(in oklch, var(--ui-ink) 78%, var(--ui-on-ink));
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.send:disabled {
+  cursor: default;
+}
+
+.iconButton:focus-visible,
+.send:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.send {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+.sendLabel {
+  display: inline-flex;
+}
+
+/* Drop target */
+
+.dropzone {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-2);
+  border-radius: inherit;
+  background: color-mix(in oklch, var(--ui-surface) 92%, transparent);
+  outline: var(--ui-hairline) dashed var(--ui-field-focus);
+  outline-offset: -1px;
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.dropzone svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke-medium);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.composer[data-dragging] .dropzone {
+  opacity: 1;
+}
+
+/* Hint */
+
+.hint {
+  min-height: var(--ui-leading-md);
+  margin: 0;
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-align: center;
+  text-wrap: balance;
+}
+
+.hint[data-notice] {
+  color: var(--ui-danger-text);
+}
+
+.hint {
+  transition: color var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+.hintText[data-swap] {
+  animation: hint-swap var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@keyframes hint-swap {
+  from {
+    opacity: 0;
+  }
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+/* iOS zooms into any field under 16px. */
+@media (pointer: coarse) {
+  .textarea {
+    font-size: var(--ui-text-touch);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .suggestions li,
+  .attachment,
+  .hintText {
+    animation: none;
+  }
+  .send:active,
+  .iconButton:active,
+  .suggestion:active,
+  .remove:active svg {
+    scale: none;
+  }
+}

@@ -1,0 +1,259 @@
+/* Base UI places this; the surface inside animates. */
+.positioner {
+  z-index: 50;
+  outline: none;
+}
+
+.surface {
+  position: relative;
+  box-sizing: border-box;
+  width: max-content;
+  min-width: 220px;
+  max-width: min(320px, calc(100vw - 16px));
+  max-height: min(calc(100dvh - 16px), var(--available-height, 100dvh));
+  /* Rows sit one inset in from the panel and take its concentric radius:
+     a rounded row, not a pill, with its text a full --ui-pad-row in. */
+  --menu-inset: var(--ui-inset-menu);
+  --menu-row-radius: calc(var(--ui-radius-lg) - var(--menu-inset));
+  padding: var(--menu-inset);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-floating);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  user-select: none;
+  outline: none;
+  transform-origin: var(--transform-origin);
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-fast) var(--ui-ease-enter),
+    filter var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.surface[data-starting-style],
+.surface[data-ending-style] {
+  opacity: 0;
+  scale: 0.97;
+  filter: blur(2px);
+}
+
+.surface[data-ending-style] {
+  transition-duration: var(--ui-dur-instant);
+  transition-timing-function: var(--ui-ease-exit);
+}
+
+.highlight {
+  position: absolute;
+  top: 0;
+  left: var(--menu-inset);
+  right: var(--menu-inset);
+  border-radius: var(--menu-row-radius);
+  background: var(--ui-fill-strong);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    translate var(--ui-dur-snap) var(--ui-ease-snap),
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.highlight[data-visible] {
+  opacity: 1;
+}
+
+.highlight[data-jump] {
+  transition-property: opacity, background-color;
+}
+
+.highlight[data-tone="danger"] {
+  background: var(--ui-danger-tint);
+}
+
+.surface:has(.item:active:not([data-disabled], [aria-busy])) > .highlight {
+  background: color-mix(in oklch, var(--ui-foreground) 16%, transparent);
+  transition-duration: var(--ui-dur-press);
+}
+.surface:has(.item[data-tone="danger"]:active) > .highlight {
+  background: color-mix(in oklch, var(--ui-danger) 20%, transparent);
+}
+
+.item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-2) var(--ui-pad-row);
+  border-radius: var(--menu-row-radius);
+  outline: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.item[data-tone="danger"] {
+  color: var(--ui-danger-text);
+}
+
+.item[data-disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.leading {
+  display: none;
+  flex-shrink: 0;
+  place-items: center;
+  width: 16px;
+  height: var(--ui-leading-md);
+  color: var(--ui-muted);
+}
+
+.item[data-tone="danger"] .leading {
+  color: inherit;
+}
+
+.surface:has(.leading[data-filled]) .leading {
+  display: grid;
+}
+
+.leading svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  stroke-width: var(--ui-icon-stroke);
+}
+
+.indicator {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  color: var(--ui-foreground);
+}
+
+.dot[data-checked]::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: var(--ui-radius-full);
+  background: currentColor;
+}
+
+.text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---------- Busy ---------- */
+
+@property --menu-dim {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+.item[aria-busy] {
+  cursor: default;
+}
+
+.item[aria-busy] .label {
+  --menu-dim: 1;
+  /* Room inside the mask for descenders, given back so nothing moves. */
+  margin-block: -4px;
+  padding-block: var(--ui-space-1);
+  mask-image: linear-gradient(
+    90deg,
+    rgb(0 0 0 / var(--menu-dim)) 35%,
+    #000 50%,
+    rgb(0 0 0 / var(--menu-dim)) 65%
+  );
+  mask-size: 300% 100%;
+  mask-repeat: no-repeat;
+  animation:
+    menu-dim var(--ui-dur-base) var(--ui-ease-color) 120ms forwards,
+    menu-sweep var(--ui-dur-sweep) linear 120ms infinite;
+}
+
+@keyframes menu-dim {
+  to {
+    --menu-dim: 0.4;
+  }
+}
+
+@keyframes menu-sweep {
+  from {
+    mask-position: 100% 0;
+  }
+  to {
+    mask-position: 0 0;
+  }
+}
+
+.description {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.shortcut {
+  flex-shrink: 0;
+  margin-inline-start: var(--ui-space-4);
+  color: var(--ui-subtle);
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-regular);
+  line-height: var(--ui-leading-md);
+}
+
+.chevron {
+  flex-shrink: 0;
+  width: var(--ui-icon-chevron);
+  height: var(--ui-icon-chevron);
+  margin-block-start: calc((var(--ui-leading-md) - 16px) / 2);
+  margin-inline-start: var(--ui-space-4);
+  margin-inline-end: -4px;
+  color: var(--ui-subtle);
+}
+
+.group {
+  display: grid;
+}
+
+.groupLabel {
+  padding: var(--ui-space-2) var(--ui-pad-row) var(--ui-space-1);
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+}
+
+.separator {
+  height: var(--ui-hairline);
+  margin: var(--ui-space-2) calc(-1 * var(--menu-inset));
+  background: var(--ui-border);
+}
+
+@media (pointer: coarse) {
+  .item {
+    padding-block: calc((var(--ui-control-lg) - var(--ui-leading-md)) / 2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .surface {
+    transition: none;
+  }
+  .surface {
+    scale: none;
+  }
+  .highlight {
+    transition-property: opacity, background-color;
+  }
+  .item[aria-busy] .label {
+    --menu-dim: 0.5;
+    animation: none;
+  }
+}

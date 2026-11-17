@@ -1,0 +1,307 @@
+.root {
+  display: grid;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+/* Only the 16px icons take layout space; the larger buttons overflow it evenly. */
+.row {
+  --row-spill: calc((var(--ui-control-sm) - 16px) / 2);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 16px;
+  margin-inline-start: calc(var(--row-spill) * -1);
+}
+
+/* ---------- Icon buttons ---------- */
+
+.action {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: calc(var(--ui-control-sm) * var(--ui-capsule));
+  height: var(--ui-control-sm);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: none;
+  color: var(--ui-muted);
+  isolation: isolate;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* The fill is its own layer: a press shrinks the shape, never the icon. */
+.action::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+@media (hover: hover) {
+  .action:hover {
+    color: var(--ui-foreground);
+  }
+  .action:hover::before {
+    background: var(--ui-fill);
+  }
+}
+
+.action:active::before {
+  background: var(--ui-fill-strong);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.action:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.action[aria-pressed="true"] {
+  color: var(--ui-foreground);
+}
+
+.action svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  pointer-events: none;
+}
+
+.glyph,
+.thumb {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.thumb {
+  fill: transparent;
+  transition: fill var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.action[aria-pressed="true"] .thumb {
+  fill: currentColor;
+}
+
+/* ---------- Note ---------- */
+
+.note {
+  composes: truncateLines from "../text/text.module.css";
+  --truncate-lines: 2;
+  flex: 1;
+  min-width: 0;
+  margin-inline-start: var(--ui-space-2);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: balance;
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.note[data-shown] {
+  opacity: 1;
+  transition-duration: var(--ui-dur-fast);
+  transition-timing-function: var(--ui-ease-enter);
+}
+
+.note[data-tone="danger"] {
+  color: var(--ui-danger-text);
+}
+
+/* ---------- Feedback field ---------- */
+
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--ui-dur-fast) var(--ui-ease-collapse);
+}
+
+/* A small field right under a click: it opens on the base duration, not
+   the panel one, so it's there by the time the eye gets to it. */
+.panel[data-open] {
+  grid-template-rows: 1fr;
+  transition-duration: var(--ui-dur-base);
+  transition-timing-function: var(--ui-ease-enter);
+}
+
+/* Registered so the clip's soft lower edge can animate with the height. */
+@property --panel-edge {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.panelInner {
+  --panel-edge: var(--ui-space-5);
+  min-height: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(#000 calc(100% - var(--panel-edge)), transparent);
+  opacity: 0;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    --panel-edge var(--ui-dur-fast) var(--ui-ease-collapse);
+}
+
+.panel[data-open] .panelInner {
+  --panel-edge: 0px;
+  opacity: 1;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    --panel-edge var(--ui-dur-base) var(--ui-ease-enter);
+}
+
+.form {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  max-width: 420px;
+  padding-top: var(--ui-space-4);
+}
+
+.field {
+  --field-inset: 4px;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+  height: var(--ui-control-md);
+  padding: var(--field-inset);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  cursor: default;
+}
+
+.field:focus-within {
+  box-shadow: inset 0 0 0 1px var(--ui-field-focus);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 var(--ui-space-2) 0 var(--ui-space-3);
+  border: 0;
+  background: transparent;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  caret-color: var(--ui-foreground);
+  outline: none;
+}
+
+.input::placeholder {
+  overflow: hidden;
+  color: var(--ui-subtle);
+  text-overflow: ellipsis;
+}
+
+.send {
+  position: relative;
+  flex-shrink: 0;
+  height: calc(var(--ui-control-md) - 2 * var(--field-inset));
+  padding-inline: var(--ui-space-3);
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: none;
+  color: var(--ui-subtle);
+  isolation: isolate;
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  white-space: nowrap;
+  cursor: default;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.send::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--ui-fill-strong);
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.send[data-ready] {
+  color: var(--ui-on-ink);
+  cursor: pointer;
+}
+
+.send[data-ready]::before {
+  background: var(--ui-ink);
+}
+
+@media (hover: hover) {
+  .send[data-ready]:hover::before {
+    background: color-mix(in oklch, var(--ui-ink) 86%, var(--ui-on-ink));
+  }
+}
+
+.send[data-ready]:active::before {
+  background: color-mix(in oklch, var(--ui-ink) 78%, var(--ui-on-ink));
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.send:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+/* The field is 16px on touch so iOS doesn't zoom. */
+@media (pointer: coarse) {
+  .action::after,
+  .send::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+  .row {
+    gap: var(--ui-space-2);
+  }
+  .input {
+    font-size: var(--ui-text-touch);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action::before,
+  .send::before {
+    transition-property: background-color;
+  }
+  .action:active::before,
+  .send[data-ready]:active::before {
+    scale: none;
+  }
+  .panel,
+  .panel[data-open],
+  .panelInner,
+  .panel[data-open] .panelInner {
+    transition: none;
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "plan-approval",
+  "title": "Plan approval",
+  "summary": "The moment an agent proposes a multi-step plan and the person reviews it before anything runs. Approve or skip each step from the keyboard, then watch the steps check in as the plan runs.",
+  "kit": "agent",
+  "version": "0.2.3",
+  "dependencies": [
+    "badge",
+    "button",
+    "icons",
+    "kbd",
+    "text"
+  ]
+}

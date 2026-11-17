@@ -1,0 +1,193 @@
+/* One row, as tall as the 40px button it ends with: the number in the text
+   color with its link mark, the state in its status color, and the button
+   pushed to the end. Color is only the state's. */
+
+.bar {
+  --merge-mark: var(--ui-muted);
+  --merge-text: var(--ui-muted);
+
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-inline);
+  min-width: 0;
+  min-height: var(--ui-control-md);
+  container-type: inline-size;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-regular);
+  line-height: var(--ui-leading-sm);
+}
+
+.bar[data-tone="neutral"] {
+  --merge-mark: var(--ui-foreground);
+}
+
+.bar[data-tone="working"] {
+  --merge-mark: var(--ui-accent);
+}
+
+.bar[data-tone="success"] {
+  --merge-mark: var(--ui-success);
+  --merge-text: var(--ui-success-text);
+}
+
+.bar[data-tone="warning"] {
+  --merge-mark: var(--ui-warning);
+  --merge-text: var(--ui-warning-text);
+}
+
+.bar[data-tone="danger"] {
+  --merge-mark: var(--ui-danger);
+  --merge-text: var(--ui-danger-text);
+}
+
+/* The number: a link pill whose text lines up with what's above it. */
+.number {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--ui-gap-tight);
+  margin-inline: calc(var(--ui-pad-tag-sm) * -1);
+  padding: var(--ui-gap-tight) var(--ui-pad-tag-sm);
+  border-radius: var(--ui-radius-full);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* The pill's padding hangs into the gap; the dot keeps its own room. */
+.number + .dot {
+  margin-inline-start: var(--ui-pad-tag-sm);
+}
+
+a.number {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (hover: hover) {
+  a.number:hover {
+    background: var(--ui-fill);
+  }
+}
+
+a.number:active {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+a.number:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.number .external {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  color: var(--ui-muted);
+}
+
+.dot {
+  flex-shrink: 0;
+  color: var(--ui-subtle);
+}
+
+.state {
+  composes: truncate from "../text/text.module.css";
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  /* Never under the button: in a tight row the state gives way and fades
+     out at its end (the kit's truncate), only when it's actually cut. */
+  color: var(--merge-text);
+  transition: color var(--ui-dur-base) var(--ui-ease-color);
+}
+
+/* Text morph keeps its own white-space (pre), so spaces survive the morph. */
+.text {
+  min-width: 0;
+}
+
+.state .glyph {
+  flex-shrink: 0;
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  color: var(--merge-mark);
+  transition: color var(--ui-dur-base) var(--ui-ease-color);
+}
+
+/* The two marks drawn here are the icon set's ring, at its stroke. */
+.ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke);
+}
+
+/* A draft isn't asking for anything yet: the ring, dashed. */
+.glyph[data-mark="draft"] .ring {
+  stroke-dasharray: 2 1.43;
+}
+
+/* Working: Tool steps' running mark, a dot breathing inside the ring. */
+.pulse {
+  fill: currentColor;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: merge-breathe var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;
+}
+
+@keyframes merge-breathe {
+  from {
+    scale: 0.7;
+  }
+  to {
+    scale: 1.4;
+  }
+}
+
+@keyframes merge-fade {
+  to {
+    opacity: 0.45;
+  }
+}
+
+/* A narrow pane drops the separator, so the state keeps more room. */
+@container (max-width: 400px) {
+  .dot {
+    display: none;
+  }
+}
+
+.action {
+  display: flex;
+  flex-shrink: 0;
+  margin-inline-start: auto;
+}
+
+/* Ready: the one primary move on the panel, in the success color. */
+.action .merge[data-ready] {
+  --button-bg: var(--ui-success);
+  --button-fg: var(--ui-on-success);
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: merge-fade calc(var(--ui-dur-pulse) * 3) var(--ui-ease-pulse) infinite alternate;
+  }
+  .state,
+  .state .glyph {
+    transition: none;
+  }
+}

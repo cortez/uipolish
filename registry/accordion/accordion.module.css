@@ -1,0 +1,207 @@
+.root {
+  display: grid;
+  /* One column the root's width: an auto one grows to the longest title
+     and pushes the accordion past a narrow container. */
+  grid-template-columns: minmax(0, 1fr);
+  --accordion-pace: 1.25;
+  --accordion-open: calc(var(--ui-dur-panel) * var(--accordion-pace));
+  --accordion-close: calc(var(--ui-dur-base) * var(--accordion-pace));
+  /* Otherwise a taller box leaves gaps under closed items. */
+  align-content: start;
+  min-width: 0;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+.item + .item {
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+.heading {
+  /* Each row measures itself, so a narrow one can move its value under
+     its title (below). */
+  container: accordion-row / inline-size;
+  margin: 0;
+  font: inherit;
+  letter-spacing: normal;
+  scroll-margin-top: var(--header-height, 0px);
+}
+
+.trigger {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ui-space-4);
+  width: calc(100% + 2 * var(--ui-space-3));
+  margin-inline: calc(-1 * var(--ui-space-3));
+  padding: var(--ui-space-3);
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  background: transparent;
+  color: inherit;
+  font: var(--ui-weight-medium) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  text-align: start;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.title {
+  min-width: 0;
+  text-wrap: balance;
+}
+
+/* The title never shrinks (it would wrap) until its cap; the value gives way first. */
+.trigger[data-meta] {
+  --meta-min: calc(4 * var(--ui-text-sm));
+}
+
+.trigger[data-meta] .title {
+  flex-shrink: 0;
+  max-width: calc(100% - var(--meta-min) - var(--ui-space-4) - var(--ui-space-2) - 16px);
+}
+
+.meta {
+  composes: wrap from "../text/text.module.css";
+  position: relative;
+  flex: 0 1 auto;
+  margin-inline-start: auto;
+  margin-inline-end: calc(var(--ui-space-2) - var(--ui-space-4));
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-regular);
+  line-height: var(--ui-leading-md);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+.title,
+.meta {
+  align-self: baseline;
+}
+
+/* In a narrow row the value goes under the title, so neither is squeezed
+   into a column a word wide; the chevron stays beside the title. */
+@container accordion-row (max-width: 480px) {
+  .trigger[data-meta] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--ui-space-4);
+  }
+  .trigger[data-meta] .title {
+    max-width: none;
+  }
+  .trigger[data-meta] .meta {
+    grid-row: 2;
+    max-width: 100%;
+    margin-inline: 0;
+    text-align: start;
+  }
+  .trigger[data-meta] .chevron {
+    grid-row: 1;
+    grid-column: 2;
+  }
+}
+
+.pause {
+  composes: srOnly from "../text/text.module.css";
+}
+
+.chevron {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--ui-muted);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .trigger:hover:not(:disabled, [data-disabled]) .chevron {
+    color: var(--ui-foreground);
+  }
+}
+
+.trigger:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.trigger:disabled,
+.trigger[data-disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Base UI's Panel measures its content into --accordion-panel-height and
+   marks the first and last frames with data-starting-style and data-ending-style. */
+.panel {
+  height: var(--accordion-panel-height, auto);
+  overflow: hidden;
+  opacity: 1;
+}
+
+.panel[data-starting-style],
+.panel[data-ending-style] {
+  height: 0;
+  opacity: 0;
+}
+
+/* Before JS: an item named by the URL is open in the first paint. */
+.root:not([data-ready]) .item:has(> .heading:target) > .panel {
+  display: block;
+  height: auto;
+  opacity: 1;
+}
+
+/* …and in a single accordion, that item is the only one open. */
+.root[data-type="single"]:not([data-ready]):has(> .item > .heading:target)
+  .item:not(:has(> .heading:target))
+  > .panel {
+  height: 0;
+  opacity: 0;
+}
+
+/* Closing: the text fades while the height eases in, then the space folds. */
+.root[data-ready] .panel {
+  transition:
+    height var(--accordion-close) var(--ui-ease-collapse),
+    opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+/* In a swap, the closing item takes the opening's timing so content below holds still. */
+.root[data-ready][data-type="single"]:has(> .item[data-open]) .item:not([data-open]) > .panel {
+  transition:
+    height var(--accordion-open) var(--ui-ease-expand),
+    opacity var(--ui-dur-instant) var(--ui-ease-enter);
+}
+
+.root[data-ready] .item[data-open] > .panel {
+  transition:
+    height var(--accordion-open) var(--ui-ease-expand),
+    opacity calc(var(--ui-dur-fast) * var(--accordion-pace)) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+/* Bottom padding sits inside the clipped panel so it folds away with the rest. */
+.content {
+  padding-bottom: var(--ui-space-3);
+  max-width: 65ch;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.content > :first-child {
+  margin-top: 0;
+}
+
+.content > :last-child {
+  margin-bottom: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root[data-ready] .panel,
+  .root[data-ready] .item[data-open] > .panel {
+    transition: none;
+  }
+}

@@ -1,0 +1,172 @@
+/* One conversation, filling the page: header, thread, composer. The thread
+   and composer share the Chat app block's measure and spacing. */
+
+.root {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  container-type: inline-size;
+}
+
+.thread {
+  min-height: 0;
+}
+
+.composer {
+  display: grid;
+  width: 100%;
+  max-width: calc(var(--message-thread-width, 680px) + 2 * var(--ui-space-4));
+  margin-inline: auto;
+  padding: 0 var(--ui-space-4) max(var(--ui-space-2), env(safe-area-inset-bottom));
+}
+
+/* A closed alert folds to nothing; its gap goes with it. */
+.notice[data-shown] {
+  margin-bottom: var(--ui-space-2);
+}
+
+/* New chat */
+
+.welcome {
+  display: grid;
+  justify-items: center;
+  gap: var(--ui-space-5);
+  width: 100%;
+  max-width: 560px;
+}
+
+.greeting {
+  margin: 0;
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-title);
+  text-align: center;
+  text-wrap: balance;
+}
+
+.starters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ui-space-2);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.starters li {
+  display: grid;
+  animation: starter-in var(--ui-dur-fast) var(--ui-ease-enter) backwards;
+}
+
+@keyframes starter-in {
+  from {
+    opacity: 0;
+    translate: 0 4px;
+  }
+}
+
+.starter {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  padding: var(--ui-space-3) 14px;
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+  text-align: start;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+@media (hover: hover) {
+  .starter:hover {
+    background: var(--ui-fill);
+  }
+}
+
+.starter:active {
+  scale: var(--ui-scale-press);
+  transition-duration: 0s;
+}
+
+.starter:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.starterTitle {
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+}
+
+.starterDetail {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+/* Narrow: one column, and two starters are enough on a phone. */
+@container (max-width: 640px) {
+  .starters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .starters li:nth-child(n + 3) {
+    display: none;
+  }
+}
+
+/* Loading a chat: nothing for the first 300ms, then a light band across the words. */
+.loading {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.55) 35%, black 50%, rgb(0 0 0 / 0.55) 65%);
+  mask-size: 300% 100%;
+  mask-repeat: no-repeat;
+  animation: sweep var(--ui-dur-sweep) linear infinite;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) 300ms;
+}
+
+@starting-style {
+  .loading {
+    opacity: 0;
+  }
+}
+
+@keyframes sweep {
+  from {
+    mask-position: 100% 0;
+  }
+  to {
+    mask-position: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .starters li {
+    animation: none;
+  }
+
+  .starter:active {
+    scale: none;
+  }
+
+  .loading {
+    mask-image: none;
+    animation: none;
+  }
+}

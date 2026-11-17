@@ -1,0 +1,288 @@
+.root {
+  --diff-bg: var(--ui-canvas);
+  --diff-add-ink: var(--ui-success-text);
+  --diff-del-ink: var(--ui-danger-text);
+  --diff-add-tint: var(--ui-success-tint);
+  --diff-del-tint: var(--ui-danger-tint);
+  --diff-line: 20px;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+
+  position: relative;
+  min-width: 0;
+  overflow: clip;
+  border-radius: var(--ui-radius-lg);
+  background: var(--diff-bg);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+/* Overlay, not inset shadow: tinted rows would cover an inset edge. */
+.root::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  pointer-events: none;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  min-height: var(--ui-control-md);
+  padding: 0 var(--ui-space-4);
+  box-shadow: inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+}
+
+.name {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-muted);
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+/* On the inner text so its mask multiplies with the truncation fade. */
+.root[data-streaming] .name {
+  color: var(--ui-foreground);
+}
+
+.nameSweep {
+  composes: sweep from "../text/text.module.css";
+  --sweep-dim: 0.45;
+}
+
+.stats {
+  display: inline-flex;
+  gap: var(--ui-space-1);
+  flex-shrink: 0;
+  font: var(--ui-weight-medium) var(--ui-text-sm) / var(--ui-leading-md) var(--ui-font-mono);
+  font-variant-ligatures: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.added,
+.removed {
+  min-width: 4ch;
+  text-align: end;
+}
+
+.added {
+  color: var(--diff-add-ink);
+}
+
+.removed {
+  color: var(--diff-del-ink);
+}
+
+.scroller {
+  overflow: auto;
+  border-radius: 0 0 var(--ui-radius-md) var(--ui-radius-md);
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+
+.scroller:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.lines {
+  width: max-content;
+  min-width: 100%;
+  padding-block: var(--ui-space-1);
+  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--diff-line) var(--ui-font-mono);
+  font-variant-ligatures: none;
+}
+
+.line {
+  --row-tint: transparent;
+  display: flex;
+  min-height: var(--diff-line);
+  background: linear-gradient(var(--row-tint), var(--row-tint));
+}
+
+.line[data-type="add"] {
+  --row-tint: var(--diff-add-tint);
+}
+
+.line[data-type="del"] {
+  --row-tint: var(--diff-del-tint);
+}
+
+/* Tint over the block color keeps the sticky gutter opaque. */
+.gutter {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, calc(var(--digits) * 1ch + var(--ui-space-3))) 3ch;
+  flex-shrink: 0;
+  padding-inline-start: var(--ui-space-1);
+  background: linear-gradient(var(--row-tint), var(--row-tint)), var(--diff-bg);
+  color: var(--ui-subtle);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.number {
+  text-align: end;
+}
+
+/* + and − carry the change without color: forced colors, print. */
+.mark {
+  text-align: center;
+}
+
+.line[data-type="add"] .mark {
+  color: var(--diff-add-ink);
+}
+
+.line[data-type="del"] .mark {
+  color: var(--diff-del-ink);
+}
+
+.code {
+  padding-inline-end: var(--ui-space-4);
+  color: inherit;
+  text-decoration: none;
+  white-space: pre;
+}
+
+.line[data-type="same"] .code {
+  color: var(--ui-muted);
+}
+
+.emph {
+  background: var(--row-tint);
+}
+
+.empty {
+  margin: 0;
+  padding: var(--ui-space-5) var(--ui-space-4);
+  color: var(--ui-muted);
+  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-md) var(--ui-font-sans);
+  text-align: center;
+}
+
+.foldButton {
+  display: block;
+  width: 100%;
+  height: var(--ui-control-sm);
+  padding: 0;
+  border: 0;
+  background: var(--ui-fill);
+  color: var(--ui-muted);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / var(--ui-leading-md) var(--ui-font-sans);
+  text-align: start;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .foldButton:hover {
+    background: var(--ui-fill-strong);
+    color: var(--ui-foreground);
+  }
+}
+
+.foldButton:active {
+  background: color-mix(in oklch, var(--ui-foreground) 14%, transparent);
+  transition-duration: var(--ui-dur-press);
+}
+
+.foldButton:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.foldContent {
+  position: sticky;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+}
+
+.foldGutter {
+  display: grid;
+  place-items: center end;
+  width: calc(2 * (var(--digits) * 1ch + var(--ui-space-3)) + var(--ui-space-1));
+  font-family: var(--ui-font-mono);
+}
+
+.foldGutter svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+}
+
+.foldLabel {
+  display: inline-flex;
+  align-items: baseline;
+  padding-inline: var(--ui-space-2) var(--ui-space-4);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.count {
+  margin-inline-start: var(--ui-space-2);
+  color: var(--ui-subtle);
+  font-weight: var(--ui-weight-regular);
+}
+
+.foldBody {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse);
+}
+
+.foldBody[data-open] {
+  grid-template-rows: 1fr;
+  transition-duration: var(--ui-dur-panel);
+}
+
+.foldInner {
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.foldBody[data-open] .foldInner {
+  opacity: 1;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) 60ms;
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (pointer: coarse) {
+  .foldButton {
+    height: var(--ui-control-md);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root[data-streaming] .name {
+    color: var(--ui-muted);
+    mask-image: none;
+    animation: none;
+  }
+  .foldBody,
+  .foldBody[data-open],
+  .foldInner,
+  .foldBody[data-open] .foldInner {
+    transition: none;
+  }
+}

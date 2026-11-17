@@ -1,0 +1,252 @@
+/* The segmented control in miniature: a sunken track with a raised pill in it.
+   The visible track is --switch-h tall; its hit area is a control height
+   (--switch-hit), so it lines up with a button of that size beside it. */
+.root {
+  --switch-h: 24px;
+  --switch-w: 44px;
+  --switch-pad: 3px;
+  --switch-hit: var(--ui-control-md);
+  --switch-thumb-h: calc(var(--switch-h) - var(--switch-pad) * 2);
+  /* A capsule, like every pressable thing: wider than tall. */
+  --switch-thumb-w: calc(var(--switch-thumb-h) * var(--ui-capsule));
+  --switch-travel: calc(var(--switch-w) - var(--switch-thumb-w) - var(--switch-pad) * 2);
+  /* How far a press stretches the thumb toward its new side. */
+  --switch-reach: 3px;
+
+  /* Off: the segmented control's track and pill. The track takes the strong
+     fill: with no labels in it, the faint one barely reads as a control. */
+  --switch-track: var(--ui-fill-strong);
+  --switch-track-hover: color-mix(in oklch, var(--ui-foreground) 11%, transparent);
+  --switch-track-press: color-mix(in oklch, var(--ui-foreground) 14%, transparent);
+  /* The raised surface in light. In dark a knob the color of the surface reads
+     as a hole in a dark track, so it's a light gray there, the slider's too. */
+  --switch-thumb: light-dark(var(--ui-surface), color-mix(in oklch, var(--ui-foreground) 86%, var(--ui-surface)));
+
+  position: relative;
+  display: inline-flex;
+  /* Puts the switch on the label's first line (see .control). */
+  align-items: baseline;
+  gap: var(--ui-space-3);
+  max-width: 100%;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.root[data-size="sm"] {
+  --switch-h: 20px;
+  --switch-w: 36px;
+  --switch-pad: 2px;
+  --switch-hit: var(--ui-control-sm);
+}
+
+.root[data-side="end"] {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  gap: var(--ui-space-5);
+  width: 100%;
+}
+
+/* On: the accent, as on a checked checkbox and a slider's range. */
+.root:has(.track[data-checked]) {
+  --switch-track: var(--ui-accent);
+  --switch-track-hover: color-mix(in oklch, var(--ui-accent) 86%, var(--ui-on-accent));
+  --switch-track-press: color-mix(in oklch, var(--ui-accent) 78%, var(--ui-on-accent));
+  --switch-thumb: var(--ui-on-accent);
+}
+
+/* With no text its baseline is its bottom edge; the shift centers it on the first line's capitals. */
+.control {
+  --optical: calc(var(--switch-h) / 2 - 0.5cap);
+  position: relative;
+  flex-shrink: 0;
+  width: var(--switch-w);
+  height: var(--switch-h);
+  margin-top: calc(var(--optical) * -1);
+  translate: 0 var(--optical);
+  /* The thumb animates insets; this keeps that layout contained. */
+  contain: layout;
+}
+
+/* Without the `cap` unit (Safari before 17.2) --optical is invalid and the
+   control drops onto the baseline, 2-6px high. The system faces' capitals
+   are about 0.7em tall, so half of that stands in. */
+@supports not (height: 1cap) {
+  .control {
+    --optical: calc(var(--switch-h) / 2 - 0.35em);
+  }
+}
+
+/* Without a label there's no line to sit on. */
+.control:only-child {
+  margin-top: 0;
+  translate: none;
+}
+
+/* The hit area: a control height, a little past the track's ends. Lays out nothing. */
+.control::after {
+  content: "";
+  position: absolute;
+  inset: calc((var(--switch-h) - var(--switch-hit)) / 2) -2px;
+}
+
+/* Base UI's Switch.Root: the focusable role="switch" element, drawn as the track. */
+.track {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: var(--ui-radius-full);
+  background: var(--switch-track);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  /* Drives the focus ring color. */
+  color: var(--ui-foreground);
+  cursor: inherit;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* On: the accent fill is its own edge, like a checked checkbox, so no gray
+   ring haloes the blue in dark mode. */
+.track[data-checked] {
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-accent);
+  color: var(--ui-on-accent);
+  transition-duration: var(--ui-dur-fast);
+}
+
+/* Raised, like the segmented control's pill: placed by its two edges, so a
+   press can stretch it toward its new side; logical insets cover RTL. */
+.thumb {
+  position: absolute;
+  top: var(--switch-pad);
+  bottom: var(--switch-pad);
+  inset-inline-start: var(--switch-pad);
+  inset-inline-end: calc(var(--switch-pad) + var(--switch-travel));
+  border-radius: var(--ui-radius-full);
+  background: var(--switch-thumb);
+  box-shadow:
+    0 0 0 var(--ui-hairline) var(--ui-border-strong),
+    var(--ui-shadow-control);
+  color: var(--ui-muted);
+  pointer-events: none;
+  transition:
+    inset-inline-start var(--ui-dur-glide) var(--ui-ease-glide),
+    inset-inline-end var(--ui-dur-glide) var(--ui-ease-glide),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.thumb[data-checked] {
+  inset-inline-start: calc(var(--switch-pad) + var(--switch-travel));
+  inset-inline-end: var(--switch-pad);
+  /* On the accent, the thumb needs no ring: its light fill is the edge. */
+  box-shadow: var(--ui-shadow-control);
+  color: var(--ui-accent);
+}
+
+/* Press: the thumb reaches toward its new side at once; the release glides on from there. */
+.root:active:not([data-disabled], [data-busy]) .thumb {
+  transition-duration: var(--ui-dur-press);
+}
+
+.root:active:not([data-disabled], [data-busy]) .thumb[data-unchecked] {
+  inset-inline-end: calc(var(--switch-pad) + var(--switch-travel) - var(--switch-reach));
+}
+
+.root:active:not([data-disabled], [data-busy]) .thumb[data-checked] {
+  inset-inline-start: calc(var(--switch-pad) + var(--switch-travel) - var(--switch-reach));
+}
+
+@media (hover: hover) {
+  .root:hover:not([data-disabled], [data-busy]) .track {
+    background: var(--switch-track-hover);
+  }
+}
+
+.root:active:not([data-disabled], [data-busy]) .track {
+  background: var(--switch-track-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.track:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+/* Busy: a working dot breathes in the thumb, once the save has taken 300ms. */
+.thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--ui-radius-full);
+  background: currentColor;
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.root[data-busy-shown] .thumb::after {
+  opacity: 1;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
+  animation: switch-working var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;
+}
+
+@keyframes switch-working {
+  from {
+    scale: 1;
+  }
+  to {
+    scale: 0.6;
+  }
+}
+
+.root[data-busy] {
+  cursor: default;
+}
+
+.text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.label {
+  composes: wrap from "../text/text.module.css";
+  font-weight: var(--ui-weight-medium);
+}
+
+.description {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.root[data-disabled] {
+  cursor: default;
+}
+
+.root[data-disabled] :is(.control, .label) {
+  opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumb,
+  .root:active:not([data-disabled], [data-busy]) .thumb {
+    transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+  }
+  .root:active:not([data-disabled], [data-busy]) .thumb[data-unchecked] {
+    inset-inline-end: calc(var(--switch-pad) + var(--switch-travel));
+  }
+  .root:active:not([data-disabled], [data-busy]) .thumb[data-checked] {
+    inset-inline-start: calc(var(--switch-pad) + var(--switch-travel));
+  }
+  /* The dot stays, still and a little dimmer, so the meaning does too. */
+  .root[data-busy-shown] .thumb::after {
+    animation: none;
+    opacity: 0.7;
+  }
+}

@@ -1,0 +1,299 @@
+.region {
+  position: fixed;
+  z-index: 50;
+  bottom: max(var(--ui-space-4), env(safe-area-inset-bottom));
+  width: min(360px, 100vw - 2 * var(--ui-space-4));
+  outline: none;
+  font-family: var(--ui-font-sans);
+}
+
+.region[data-position="bottom-right"] {
+  right: max(var(--ui-space-4), env(safe-area-inset-right));
+}
+
+.region[data-position="bottom-left"] {
+  left: max(var(--ui-space-4), env(safe-area-inset-left));
+}
+
+.item {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  --toast-inset: var(--ui-space-4);
+  --toast-close: 24px;
+  --toast-radius: calc(var(--toast-inset) + var(--toast-close) / 2);
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  outline: none;
+  transform-origin: 50% 100%;
+  translate: 0 var(--toast-y, 0);
+  scale: var(--toast-scale, 1);
+  transition:
+    translate var(--ui-dur-move) var(--ui-ease-move),
+    scale var(--ui-dur-move) var(--ui-ease-move),
+    opacity var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+/* Leaving: it fades where it was while the rest move up. */
+.item[data-ending-style] {
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-exit);
+}
+
+/* Bridges the gap between expanded toasts so the pointer never "leaves". */
+.item::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  left: 0;
+  height: var(--ui-space-2);
+}
+
+.card {
+  position: relative;
+  border-radius: var(--toast-radius);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-floating);
+  color: var(--ui-foreground);
+  clip-path: var(--toast-clip, none);
+  touch-action: pan-y;
+  user-select: none;
+  cursor: default;
+  /* Base UI sets the swipe offset; released short of dismissing, it snaps back. */
+  translate: var(--toast-swipe-movement-x, 0px) 0;
+  transition:
+    clip-path var(--ui-dur-move) var(--ui-ease-move),
+    translate var(--ui-dur-snap) var(--ui-ease-snap);
+  animation: toast-in var(--ui-dur-base) var(--ui-ease-enter);
+}
+
+.item[data-swiping] .card {
+  transition: clip-path var(--ui-dur-move) var(--ui-ease-move);
+}
+
+.item[data-ending-style] .card {
+  transform: translateY(4px);
+  transition: transform var(--ui-dur-fast) var(--ui-ease-exit);
+}
+
+/* Swiped away: carries on off the side at the finger's pace. */
+.item[data-ending-style][data-swipe-direction] .card {
+  transform: none;
+  transition: translate var(--ui-dur-fast) linear;
+}
+
+.item[data-ending-style][data-swipe-direction="right"] .card {
+  translate: calc(100% + 32px) 0;
+}
+
+.item[data-ending-style][data-swipe-direction="left"] .card {
+  translate: calc(-100% - 32px) 0;
+}
+
+.item:focus-visible .card {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.content {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+  min-height: 56px;
+  padding: var(--ui-space-3) var(--toast-inset) var(--ui-space-3)
+    calc(var(--toast-inset) + (var(--toast-close) - 16px) / 2);
+  opacity: var(--toast-content, 1);
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--ui-icon-md);
+  height: var(--ui-control-sm);
+  color: var(--ui-foreground);
+}
+
+.icon svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  stroke-width: var(--ui-icon-stroke);
+}
+
+/* Relies on pathLength={1} on the path, which makes the dash math length-free. */
+.tick {
+  stroke-dasharray: 1 2;
+  animation: toast-tick var(--ui-dur-base) var(--ui-ease-draw) 120ms backwards;
+}
+
+@keyframes toast-tick {
+  from {
+    stroke-dashoffset: 1.05;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.item[data-type="error"] .icon {
+  color: var(--ui-danger-text);
+}
+
+.item[data-type="default"] .icon {
+  color: var(--ui-muted);
+}
+
+.text {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  min-width: 0;
+  padding-block: calc((var(--ui-control-sm) - var(--ui-leading-md)) / 2);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.description {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.action {
+  flex-shrink: 0;
+}
+
+.close {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--toast-close);
+  height: var(--toast-close);
+  margin: calc(var(--toast-inset) - var(--ui-space-3)) 0 0 calc(var(--ui-space-1) * -1);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-subtle);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.close::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}
+
+.close svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .close:hover {
+    background: var(--ui-fill);
+    color: var(--ui-foreground);
+  }
+}
+
+.close:active {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+.close:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+/* Registered so the gradient's radius can animate. */
+@property --toast-dot {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 2.5px;
+}
+
+.pulse {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  background:
+    radial-gradient(circle closest-side, currentColor calc(var(--toast-dot) - 0.5px), transparent var(--toast-dot)),
+    radial-gradient(
+      circle closest-side,
+      transparent 4.3px,
+      currentColor 4.6px 5.9px,
+      transparent 6.2px
+    );
+  animation: toast-breathe var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;
+}
+
+@keyframes toast-breathe {
+  from {
+    --toast-dot: 1.75px;
+  }
+  to {
+    --toast-dot: 3.5px;
+  }
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+    filter: blur(2px);
+  }
+}
+
+@keyframes toast-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes toast-dim {
+  to {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    transition: opacity var(--ui-dur-fast) var(--ui-ease-color);
+  }
+  .item[data-ending-style] .card,
+  .item[data-ending-style][data-swipe-direction] .card {
+    transform: none;
+    translate: none;
+  }
+  .card {
+    transition: none;
+    animation-name: toast-fade;
+    animation-duration: var(--ui-dur-fast);
+  }
+  .tick {
+    animation: none;
+  }
+  .pulse {
+    --toast-dot: 2.75px;
+    animation: toast-dim calc(var(--ui-dur-pulse) * 3) var(--ui-ease-pulse) infinite alternate;
+  }
+}

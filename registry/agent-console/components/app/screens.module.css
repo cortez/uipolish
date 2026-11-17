@@ -1,0 +1,194 @@
+/* Agents and Usage: the screens the console composes itself. Their header
+   matches the blocks' (display title, a measure-wide lede, 24 under it). */
+
+.head {
+  display: grid;
+  gap: var(--ui-space-2);
+  padding-bottom: var(--ui-space-5);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-display);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-display);
+  letter-spacing: var(--ui-tracking-title);
+  text-wrap: balance;
+}
+
+.lede {
+  max-width: var(--ui-measure);
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+/* Loading or failed, in the space the screen will take. */
+.state {
+  display: grid;
+  place-items: center;
+  min-height: 360px;
+}
+
+/* Shows only once a load has taken 300ms. */
+.loading {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  animation: appear var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) * 2.5) both;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- Agents ---------- */
+
+.panel {
+  padding-top: var(--ui-space-5);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.agent {
+  display: grid;
+  gap: var(--ui-space-7);
+}
+
+/* A box on the page: the resting shadow carries its edge. */
+.card {
+  display: grid;
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-5);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+}
+
+.cardHead {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-md);
+  text-wrap: balance;
+}
+
+.cardLede {
+  max-width: var(--ui-measure);
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+/* Inside the card, so the edge alone; the field's inset sits 10px under the card's 24 (24 − 14). */
+.textarea {
+  width: 100%;
+  min-height: 132px;
+  padding: var(--ui-space-3) var(--ui-space-3);
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-edge);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  field-sizing: content;
+  resize: vertical;
+  outline: none;
+  transition: box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.textarea:focus {
+  box-shadow: inset 0 0 0 1px var(--ui-field-focus);
+}
+
+/* Inputs stay 16px on phones, so iOS doesn't zoom into them. */
+@media (pointer: coarse) {
+  .textarea {
+    font-size: var(--ui-text-touch);
+  }
+}
+
+.cardFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ui-space-2);
+  min-height: var(--ui-control-md);
+}
+
+.note {
+  flex: 1;
+  min-width: 12em;
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.note[data-tone="done"] {
+  color: var(--ui-success-text);
+}
+
+.note[data-tone="error"] {
+  color: var(--ui-danger-text);
+}
+
+/* ---------- Usage ---------- */
+
+.usage {
+  display: grid;
+  gap: var(--ui-space-6);
+}
+
+/* Four figures in a row, two by two on a phone, never one per line. */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--ui-space-5) var(--ui-space-4);
+}
+
+.section {
+  display: grid;
+  gap: var(--ui-space-3);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-md);
+}
+
+/* The header row and three agents, no more. */
+.table {
+  height: calc(44px * 4 + var(--ui-hairline) * 2);
+}
+
+/* ---------- Settings ---------- */
+
+/* The settings nav sticks under the page bar, which scrolls away. */
+.settings {
+  --settings-top: var(--ui-space-5);
+}

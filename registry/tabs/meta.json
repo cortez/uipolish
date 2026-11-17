@@ -1,0 +1,12 @@
+{
+  "name": "tabs",
+  "title": "Tabs",
+  "summary": "Tabs built on Base UI, with a pill that stretches from one tab to the next. Optional URL sync supports back and forward, and panels crossfade in place.",
+  "version": "0.5.4",
+  "dependencies": [
+    "text-morph"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

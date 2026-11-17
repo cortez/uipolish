@@ -1,0 +1,10 @@
+{
+  "name": "code-input",
+  "title": "Code input",
+  "summary": "One-time code boxes that fill from a paste or platform autofill and step back on Backspace. The active box shows a dark edge and a caret, invalid shows in the edges; an optional status folds the boxes into a centered, edgeless Verifying pill that turns to Verified, or opens back up on a wrong code.",
+  "version": "0.4.2",
+  "dependencies": [
+    "text",
+    "text-morph"
+  ]
+}

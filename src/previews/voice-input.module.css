@@ -1,0 +1,34 @@
+.modes {
+  justify-self: start;
+}
+
+/* A composer-like bar: 32px controls, 6px padding all round, so the round
+   buttons and the recording bar sit concentric with the 22px corners
+   (22 - 16 = 6). The idle text brings its own inset. */
+.composer {
+  --composer-pad: calc(var(--ui-radius-lg) - var(--ui-control-sm) / 2);
+  padding: var(--composer-pad);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+}
+
+.idle {
+  overflow: hidden;
+  padding-inline-start: var(--voice-inset);
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-md);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.result {
+  display: flex;
+  align-items: flex-start;
+  min-height: var(--ui-control-md);
+}
+
+.audio {
+  width: 100%;
+  height: var(--ui-control-md);
+}

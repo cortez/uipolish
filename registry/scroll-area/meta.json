@@ -1,0 +1,7 @@
+{
+  "name": "scroll-area",
+  "title": "Scroll area",
+  "summary": "Scroll container whose edges fade with a mask only where more content remains. It works on any background and scrolls by keyboard.",
+  "version": "0.1.3",
+  "dependencies": []
+}

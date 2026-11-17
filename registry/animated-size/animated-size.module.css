@@ -1,0 +1,49 @@
+.root {
+  min-width: 0;
+}
+
+.root[data-axis="width"],
+.root[data-axis="both"] {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+}
+
+.content {
+  display: flow-root;
+}
+
+.root[data-axis="width"] > .content,
+.root[data-axis="both"] > .content {
+  /* Its own width, not the box's: the box follows it. */
+  width: max-content;
+}
+
+/* Set these on an ancestor to pace one use differently. */
+.root[data-armed] {
+  transition:
+    height var(--animated-size-grow, var(--ui-dur-panel)) var(--animated-size-ease, var(--ui-ease-expand)),
+    width var(--animated-size-grow, var(--ui-dur-panel)) var(--animated-size-ease, var(--ui-ease-expand));
+}
+
+.root[data-armed][data-direction="shrink"] {
+  transition-duration: var(--animated-size-shrink, var(--ui-dur-base));
+}
+
+.root[data-moving][data-axis="height"] {
+  overflow-y: clip;
+}
+
+.root[data-moving][data-axis="width"] {
+  overflow-x: clip;
+}
+
+.root[data-moving][data-axis="both"] {
+  overflow: clip;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root[data-armed] {
+    transition: none;
+  }
+}

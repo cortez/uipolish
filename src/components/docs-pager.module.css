@@ -1,0 +1,55 @@
+/* Two halves, previous left and next right; a lone next keeps its side.
+   As wide as the sections and the card under it, so all three share an
+   edge. */
+.pager {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* Halves on whole pixels, so both boxes' hairlines land crisp. */
+  grid-template-columns: round(down, (100% - var(--ui-space-3)) / 2, 1px) minmax(0, 1fr);
+  gap: var(--ui-space-3);
+  max-width: 720px;
+  margin-top: var(--ui-space-8);
+}
+
+.link {
+  display: grid;
+  gap: 2px;
+  padding: var(--ui-space-4) var(--ui-space-5);
+  border-radius: var(--ui-radius-lg);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  font-weight: var(--ui-weight-medium);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.link[data-next] {
+  grid-column: 2;
+  text-align: end;
+}
+
+.dir {
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  font-weight: var(--ui-weight-regular);
+}
+
+@media (hover: hover) {
+  .link:hover {
+    box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
+  }
+}
+
+.link:active {
+  background: var(--ui-fill);
+  transition-duration: var(--ui-dur-press);
+}
+
+.link:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--ui-field-focus);
+}

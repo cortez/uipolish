@@ -1,0 +1,552 @@
+/* The frame: the sidebar on the canvas, the conversation on the surface
+   one step up, the changes pane back on the canvas beside it. No lines
+   between them; the change of surface is the edge. */
+
+.shell {
+  display: flex;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--ui-canvas);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+.main {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+}
+
+/* The product's mark: brackets round a spark, in the icon stroke, on the
+   switcher's ink tile. */
+.mark {
+  width: var(--ui-icon-xs);
+  height: var(--ui-icon-xs);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: calc(var(--ui-icon-stroke-medium) * 16 / 12);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---------- Sidebar parts ---------- */
+
+/* A teammate's face, centered on the icon column, with a presence dot cut
+   out of whatever is under it. */
+.presence {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.presence::after {
+  content: "";
+  position: absolute;
+  inset-block-end: -1px;
+  inset-inline-end: -1px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--ui-radius-full);
+  box-shadow: 0 0 0 var(--ui-knockout) var(--ui-canvas);
+}
+
+.presence[data-presence="online"]::after {
+  background: var(--ui-success);
+}
+
+.presence[data-presence="away"]::after {
+  background: var(--ui-warning);
+}
+
+.presence[data-presence="offline"]::after {
+  display: none;
+}
+
+/* The agent is working on it: one still accent dot, the size of the
+   presence dots. Status is all the color it carries. */
+.working {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-accent);
+}
+
+/* Faces at a shared session's end: cut out of the canvas, and the row's
+   fills under them. */
+.faces {
+  --avatar-ring: var(--ui-canvas);
+}
+
+/* The bottom bar: the plan on the rows' text column, Help and Settings at
+   the end. */
+.footer {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-inline);
+  min-height: var(--ui-control-md);
+  padding-inline-start: calc((var(--ui-control-sm) * var(--ui-capsule) - var(--ui-icon-md)) / 2);
+}
+
+.footerActions {
+  display: flex;
+  margin-inline-start: auto;
+}
+
+/* Folded to the rail, Settings alone, centered like the rail's icons. */
+.footerRail {
+  display: grid;
+  place-items: center;
+  min-height: var(--ui-control-md);
+}
+
+/* ---------- Shortcuts ---------- */
+
+.shortcuts {
+  display: grid;
+  gap: var(--ui-gap-tight);
+  margin: 0;
+}
+
+.shortcut {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-inline);
+  min-height: var(--ui-control-sm);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.shortcut dt {
+  flex: 1;
+  color: var(--ui-foreground);
+}
+
+.shortcut dd {
+  margin: 0;
+}
+
+/* ---------- One session, three panes ---------- */
+
+.screen {
+  --panel-width: 380px;
+  --bar-height: 48px;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 0 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.screen[data-panel="open"] {
+  grid-template-columns: minmax(0, 1fr) auto var(--panel-width);
+}
+
+/* The conversation: on the surface, the bar on top, the thread and the
+   composer under it. */
+.center {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-width: 0;
+  min-height: 0;
+  background: var(--ui-surface);
+}
+
+.side {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--ui-canvas);
+}
+
+.screen:not([data-panel="open"]) .side {
+  visibility: hidden;
+}
+
+/* The edge between the conversation and the changes: nothing at rest (the
+   surfaces meet), a hairline under the pointer and while dragging. 8px to
+   grab, drawn over the seam so it takes no width. */
+.splitter {
+  position: relative;
+  z-index: 1;
+  width: 0;
+  cursor: col-resize;
+  touch-action: none;
+  outline: none;
+}
+
+.splitter::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline: -4px;
+}
+
+.splitter::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: var(--ui-hairline);
+  background: var(--ui-field-focus);
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .splitter:hover::after {
+    opacity: 1;
+  }
+}
+
+.splitter:active::after,
+.splitter:focus-visible::after {
+  opacity: 1;
+}
+
+.screen:not([data-panel="open"]) .splitter {
+  display: none;
+}
+
+/* ---------- The bar over the conversation ---------- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-tight);
+  min-height: var(--bar-height);
+  padding-inline: var(--ui-gap-inline);
+  padding-top: env(safe-area-inset-top);
+}
+
+.barActions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  margin-inline-start: auto;
+}
+
+/* The bar's icon buttons: muted, coming up to the text color. */
+.barButton {
+  flex-shrink: 0;
+  color: var(--ui-muted);
+}
+
+@media (hover: hover) {
+  .barButton:hover {
+    color: var(--ui-foreground);
+  }
+}
+
+.barButton[data-popup-open],
+.barButton[aria-pressed="true"] {
+  color: var(--ui-foreground);
+}
+
+/* ---------- Tabs of open sessions ---------- */
+
+.tabsNav {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--ui-gap-tight);
+  min-width: 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 2px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+/* One open session: a 32px rounded rectangle, the title cut with a fade,
+   Rename and Close at its end on hover and on the current tab. The current
+   one takes the kit's flat pill, as the current row everywhere. */
+.tab {
+  --tab-action: calc(24px * var(--ui-capsule));
+
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  max-width: 220px;
+  min-width: 0;
+  height: var(--ui-control-sm);
+  border-radius: var(--ui-radius-sm);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .tab:hover {
+    background: var(--ui-fill);
+  }
+}
+
+.tab[data-current] {
+  background: var(--ui-track-pill);
+}
+
+.tabMain {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-inline);
+  min-width: 0;
+  height: 100%;
+  padding-inline: var(--ui-pad-row);
+  border: 0;
+  border-radius: inherit;
+  background: none;
+  color: var(--ui-muted);
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-regular);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+span.tabMain {
+  cursor: default;
+}
+
+.tab[data-current] .tabMain,
+.tab:hover .tabMain {
+  color: var(--ui-foreground);
+}
+
+.tabMain:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.tabTitle {
+  flex: 1;
+}
+
+/* Rename and Close: 24px capsules over the title's end, shown on hover,
+   focus and the current tab; the title makes room so it fades before them. */
+.tabActions {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 4px;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.tab:is(:hover, :focus-within, [data-current]) .tabActions {
+  opacity: 1;
+}
+
+.tab:has(.tabActions):is(:hover, :focus-within, [data-current]) .tabMain {
+  padding-inline-end: calc(var(--tab-action) * 2 + 4px);
+}
+
+.tabAction {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--tab-action);
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-muted);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.tabAction svg {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+}
+
+@media (hover: hover) {
+  .tabAction:hover {
+    background: var(--ui-fill-strong);
+    color: var(--ui-foreground);
+  }
+}
+
+.tabAction:active {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+.tabAction:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+/* Touch has no hover: the current tab keeps its actions, the rest none. */
+@media (hover: none) {
+  .tab:not([data-current]) .tabActions {
+    display: none;
+  }
+  .tab:not([data-current]) .tabMain {
+    padding-inline-end: var(--ui-pad-row);
+  }
+  .tabAction::after {
+    content: "";
+    position: absolute;
+    inset: -8px -2px;
+  }
+}
+
+.tabInput {
+  width: 220px;
+  max-width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding-inline: var(--ui-pad-row);
+  border: 0;
+  border-radius: inherit;
+  outline: none;
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 1px var(--ui-field-focus);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+@media (pointer: coarse) {
+  .tabInput {
+    font-size: var(--ui-text-touch);
+  }
+}
+
+/* New session: the strip's own small capsule, after the last tab. */
+.tabNew {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: calc(var(--ui-control-sm) * var(--ui-capsule));
+  height: var(--ui-control-sm);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-muted);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.tabNew svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+}
+
+@media (hover: hover) {
+  .tabNew:hover {
+    background: var(--ui-fill);
+    color: var(--ui-foreground);
+  }
+}
+
+.tabNew:active {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+.tabNew:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+/* ---------- Loading, missing, failed ---------- */
+
+.fallback {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: var(--ui-pad-section);
+}
+
+.loadingLine {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+/* ---------- Narrow: one pane at a time ---------- */
+
+/* A phone, or a window or frame too narrow for the panes side by side
+   (measured by SessionScreen, so it follows the screen's own width). */
+.runPane,
+.paneBar {
+  display: none;
+}
+
+.screen[data-compact],
+.screen[data-compact][data-panel="open"] {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+
+.screen[data-compact] > :is(.center, .side, .runPane) {
+  grid-area: 1 / 1;
+}
+
+.screen[data-compact] .side,
+.screen[data-compact] .runPane,
+.screen[data-compact] .splitter {
+  display: none;
+  visibility: visible;
+}
+
+.screen[data-pane="changes"] .center,
+.screen[data-pane="run"] .center {
+  display: none;
+}
+
+.screen[data-compact][data-pane="changes"] .side {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  padding-top: env(safe-area-inset-top);
+}
+
+.screen[data-compact][data-pane="run"] .runPane {
+  display: grid;
+  min-height: 0;
+  padding-top: env(safe-area-inset-top);
+  background: var(--ui-canvas);
+}
+
+.screen[data-compact] .paneBar {
+  display: block;
+  grid-area: 2 / 1;
+}

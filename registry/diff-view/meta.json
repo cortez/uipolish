@@ -1,0 +1,11 @@
+{
+  "name": "diff-view",
+  "title": "Diff view",
+  "summary": "Unified diff with the changed part of each line marked and unchanged stretches folded. In streaming mode, new lines fade in as they arrive.",
+  "kit": "agent",
+  "version": "0.1.5",
+  "dependencies": [
+    "icons",
+    "text"
+  ]
+}

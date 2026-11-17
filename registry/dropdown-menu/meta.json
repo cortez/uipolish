@@ -1,0 +1,13 @@
+{
+  "name": "dropdown-menu",
+  "title": "Dropdown menu",
+  "summary": "Menu button with checkbox, radio and submenu items. Submenus forgive a diagonal pointer path, and pointer and keyboard share one highlight.",
+  "version": "0.5.0",
+  "dependencies": [
+    "icons",
+    "text-morph"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

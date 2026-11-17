@@ -1,0 +1,250 @@
+/* Negative margin cancels the padding, so the text sits where plain text would. */
+.root {
+  --inline-pad-x: var(--ui-space-2);
+  --inline-pad-y: var(--ui-space-1);
+  position: relative;
+  display: inline-grid;
+  box-sizing: border-box;
+  max-width: calc(100% + var(--inline-pad-x) * 2);
+  margin: calc(var(--inline-pad-y) * -1) calc(var(--inline-pad-x) * -1);
+  padding: var(--inline-pad-y) var(--inline-pad-x);
+  border-radius: var(--ui-radius-sm);
+  --inline-edge: transparent;
+  box-shadow: inset 0 0 0 1px var(--inline-edge);
+  transition:
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.root[data-block] {
+  display: grid;
+  width: fit-content;
+}
+
+.root[data-editing] {
+  --inline-edge: var(--ui-field-focus);
+  background: var(--ui-surface);
+  transition-duration: 0s;
+}
+
+.root[data-invalid] {
+  --inline-edge: var(--ui-danger);
+  transition-duration: var(--ui-dur-fast);
+}
+
+/* Text and textarea must match type and wrapping exactly, or the overlay drifts. */
+.text,
+.input {
+  margin: 0;
+  text-wrap: inherit;
+  color: inherit;
+  font: inherit;
+  font-feature-settings: inherit;
+  font-variant-numeric: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  text-transform: inherit;
+  text-align: inherit;
+  white-space: break-spaces;
+  overflow-wrap: break-word;
+}
+
+.text {
+  grid-area: 1 / 1;
+  min-width: 1ch;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.text[data-placeholder] {
+  color: var(--ui-subtle);
+}
+
+.root[data-editing] .text {
+  visibility: hidden;
+}
+
+/* ---------- Text as a control ---------- */
+
+.trigger {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .trigger:hover {
+    background: var(--ui-fill);
+  }
+}
+
+.trigger:active {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+.trigger:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+@media (pointer: coarse) {
+  .trigger::after {
+    content: "";
+    position: absolute;
+    inset-block: min(0px, calc((100% - 40px) / 2));
+    inset-inline: 0;
+  }
+}
+
+/* ---------- Editor ---------- */
+
+.input {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: var(--inline-pad-y) var(--inline-pad-x);
+  border: 0;
+  border-radius: inherit;
+  background: none;
+  overflow: hidden;
+  resize: none;
+  outline: none;
+  caret-color: var(--ui-foreground);
+}
+
+.input::placeholder {
+  color: var(--ui-subtle);
+  opacity: 1;
+}
+
+@property --inline-dim {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+.input[aria-busy] {
+  mask-image: linear-gradient(
+    90deg,
+    rgb(0 0 0 / var(--inline-dim)) 35%,
+    #000 50%,
+    rgb(0 0 0 / var(--inline-dim)) 65%
+  );
+  mask-size: 300% 100%;
+  mask-repeat: no-repeat;
+  mask-position: 100% 0;
+  animation:
+    inline-dim var(--ui-dur-base) var(--ui-ease-color) 300ms forwards,
+    inline-sweep var(--ui-dur-sweep) linear 300ms infinite;
+}
+
+@keyframes inline-dim {
+  to {
+    --inline-dim: 0.45;
+  }
+}
+
+@keyframes inline-sweep {
+  from {
+    mask-position: 100% 0;
+  }
+  to {
+    mask-position: 0 0;
+  }
+}
+
+/* iOS zooms into fields under 16px; the text grows too so the two still match. */
+@media (pointer: coarse) {
+  .text,
+  .input {
+    font-size: max(1em, var(--ui-text-touch));
+  }
+}
+
+/* ---------- Error ---------- */
+
+.message {
+  position: absolute;
+  inset-block-start: calc(100% + var(--ui-space-1));
+  inset-inline-start: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+  width: max-content;
+  max-width: min(320px, calc(100vw - var(--ui-space-6)));
+  padding: var(--ui-space-1) var(--ui-space-3) var(--ui-space-1) var(--ui-space-2);
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-surface);
+  box-shadow:
+    0 0 0 var(--ui-hairline) var(--ui-border-strong),
+    var(--ui-shadow-raised);
+  color: var(--ui-danger-text);
+  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-md) var(--ui-font-sans);
+  letter-spacing: normal;
+  text-align: start;
+  text-transform: none;
+  white-space: normal;
+  text-wrap: pretty;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    visibility 0s linear var(--ui-dur-instant);
+}
+
+.error[data-shown] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    visibility 0s;
+}
+
+@starting-style {
+  .error[data-shown] {
+    opacity: 0;
+  }
+}
+
+.errorIcon {
+  composes: errorIcon from "../field/field.module.css";
+  flex-shrink: 0;
+}
+
+.error[data-shown] .errorText {
+  animation: inline-error-swap var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@keyframes inline-error-swap {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input[aria-busy] {
+    animation: inline-dim var(--ui-dur-base) var(--ui-ease-color) 300ms forwards;
+    mask-position: 0 0;
+  }
+  .error[data-shown] .errorText {
+    animation: none;
+  }
+}

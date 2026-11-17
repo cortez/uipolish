@@ -1,0 +1,1216 @@
+/* A voice call with an agent, in one card. The shell carries who you're
+   talking to and the time; inside, a stage shows who's speaking and what the
+   agent is doing, the transcript runs beside it, and the controls sit at the
+   foot. One color, --vs-now, follows whoever has the floor: the text color for the
+   agent, the accent for you, amber while the line reconnects. */
+
+.root {
+  /* The agent is the text color, you are the accent: two colors the page
+     already has, no hue of the card's own. */
+  --vs-agent: var(--ui-foreground);
+  --vs-agent-text: var(--ui-foreground);
+  --vs-user: var(--ui-accent);
+  --vs-user-text: var(--ui-accent-text);
+  --vs-now: var(--ui-subtle);
+  --vs-now-text: var(--ui-foreground);
+  /* Panels step up from the shell: white on a grey shell in light, a lighter grey in dark. */
+  --vs-panel: light-dark(var(--ui-surface), var(--ui-fill-strong-solid));
+  --vs-gap: var(--ui-space-2);
+  --vs-side: 380px;
+  --vs-disc: 136px;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+
+  container-type: inline-size;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--vs-gap);
+  height: 100%;
+  min-height: 0;
+  padding: var(--vs-gap);
+  border-radius: var(--ui-radius-lg);
+  background-color: var(--ui-surface);
+  background-image: linear-gradient(var(--ui-fill), var(--ui-fill));
+  box-shadow: var(--ui-shadow-resting);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+}
+
+.root[data-tone="user"] {
+  --vs-now: var(--vs-user);
+  --vs-now-text: var(--vs-user-text);
+}
+
+.root[data-tone="agent"] {
+  --vs-now: var(--vs-agent);
+  --vs-now-text: var(--vs-agent-text);
+}
+
+.root[data-tone="muted"] {
+  --vs-now-text: var(--ui-muted);
+}
+
+.root[data-tone="warning"] {
+  --vs-now: var(--ui-warning);
+  --vs-now-text: var(--ui-warning-text);
+}
+
+.root[data-tone="danger"] {
+  --vs-now: var(--ui-danger);
+  --vs-now-text: var(--ui-danger-text);
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+.reserve {
+  visibility: hidden;
+}
+
+.glyph {
+  flex-shrink: 0;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke, 1.5);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The mute slash draws across the mic, cutting a gap in it as it goes. */
+.slash,
+.slashCut {
+  stroke-dasharray: 1 3;
+  stroke-dashoffset: 1.3;
+  transition: stroke-dashoffset var(--ui-dur-fast) var(--ui-ease-draw);
+}
+
+.slashCut {
+  stroke-width: 3.5;
+}
+
+.glyph[data-off] :is(.slash, .slashCut) {
+  stroke-dashoffset: 0;
+  transition-duration: var(--ui-dur-base);
+}
+
+/* ---------- Head: who, about what, how long ---------- */
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  min-height: var(--ui-control-md);
+  padding: 2px var(--ui-space-2) 0;
+}
+
+.heading {
+  flex: 1;
+  min-width: 0;
+}
+
+.agentName {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-md);
+  letter-spacing: var(--ui-tracking-heading);
+}
+
+.topic {
+  composes: wrap from "../text/text.module.css";
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  margin: 0;
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  transition: color var(--ui-dur-base) var(--ui-ease-color);
+}
+
+.timer[data-shown] {
+  color: var(--ui-foreground);
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-border-strong);
+  transition: background-color var(--ui-dur-base) var(--ui-ease-color);
+}
+
+.root[data-status="live"] .liveDot {
+  background: var(--ui-success);
+}
+
+.root[data-status="error"] .liveDot {
+  background: var(--ui-danger);
+}
+
+/* The one loop in the head: amber, breathing, while the line is down. */
+.root[data-status="reconnecting"] .liveDot {
+  background: var(--ui-warning);
+  animation: vs-breathe var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;
+}
+
+@keyframes vs-breathe {
+  to {
+    opacity: 0.35;
+  }
+}
+
+/* Mono with tabular figures, over the widest value of its shape, so the seconds never nudge anything. */
+.counter {
+  display: inline-grid;
+  justify-items: end;
+  font-family: var(--ui-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--ui-weight-medium);
+  white-space: nowrap;
+}
+
+.counter > * {
+  grid-area: 1 / 1;
+}
+
+/* ---------- Body: stage and transcript ---------- */
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--vs-side);
+  min-height: 0;
+  transition: grid-template-columns var(--ui-dur-panel) var(--ui-ease-expand);
+}
+
+.root[data-layout="solo"] .body {
+  grid-template-columns: minmax(0, 1fr) 0px;
+  transition-duration: var(--ui-dur-base);
+  transition-timing-function: var(--ui-ease-collapse);
+}
+
+.root[data-layout="full"] .body {
+  grid-template-columns: minmax(0, 1fr);
+  transition: none;
+}
+
+.panel {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  border-radius: var(--ui-radius-md);
+  background: var(--vs-panel);
+  box-shadow: var(--ui-edge);
+}
+
+.full {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+
+/* The transcript's column folds to nothing; the panel keeps its width so lines don't rewrap as it goes.
+   The clip reaches one hairline past the column, so the panel's edge ring stays whole. */
+.side {
+  min-width: 0;
+  min-height: 0;
+  clip-path: inset(calc(var(--ui-hairline) * -1));
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.root[data-layout="solo"] .side {
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.sidePanel {
+  width: calc(var(--vs-side) - var(--vs-gap));
+  height: 100%;
+  margin-inline-start: var(--vs-gap);
+}
+
+/* ---------- Stage ---------- */
+
+.stage {
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.stageInner {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  max-width: 440px;
+  padding: var(--ui-space-6) var(--ui-space-4);
+  text-align: center;
+}
+
+/* The disc: an opaque tint of whoever has the floor, a hairline in their
+   color, and the bars inside. It breathes with the voice by at most 3%. */
+.disc {
+  display: grid;
+  place-items: center;
+  width: var(--vs-disc);
+  height: var(--vs-disc);
+  margin-bottom: var(--ui-space-4);
+  border-radius: var(--ui-radius-full);
+  background: color-mix(in oklch, var(--vs-now) 9%, var(--vs-panel));
+  box-shadow: inset 0 0 0 var(--ui-hairline) color-mix(in oklch, var(--vs-now) var(--ui-border-tint), transparent);
+  color: var(--vs-now);
+  scale: calc(1 + var(--vs-level, 0) * 0.03);
+  transition:
+    background-color var(--ui-dur-base) var(--ui-ease-color),
+    box-shadow var(--ui-dur-base) var(--ui-ease-color),
+    color var(--ui-dur-base) var(--ui-ease-color);
+}
+
+.root[data-tone="neutral"] .disc,
+.root[data-tone="muted"] .disc {
+  background: var(--vs-panel);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+}
+
+.bars {
+  width: 64px;
+  height: 48px;
+}
+
+/* Who the disc is showing. Both names hold the line; the one speaking shows. */
+.speaker {
+  display: grid;
+  justify-items: center;
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+}
+
+.speakerName {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.speakerName[data-who="user"] {
+  color: var(--vs-user-text);
+}
+
+.speakerName[data-who="agent"] {
+  color: var(--vs-agent-text);
+}
+
+.speakerName[data-on] {
+  opacity: 1;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+/* Every label sits in one cell, so the box holds the widest and the morph moves nothing. */
+.label {
+  display: grid;
+  justify-items: center;
+  margin: 0;
+  color: var(--vs-now-text);
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-title);
+  white-space: nowrap;
+  transition: color var(--ui-dur-base) var(--ui-ease-color);
+}
+
+.label > * {
+  grid-area: 1 / 1;
+}
+
+.hint {
+  display: grid;
+  width: 100%;
+  max-width: 36ch;
+  min-height: calc(2 * var(--ui-leading-md));
+  margin: var(--ui-space-1) 0 0;
+  color: var(--ui-muted);
+  text-wrap: balance;
+}
+
+.swapLayer {
+  composes: wrap from "../text/text.module.css";
+  grid-area: 1 / 1;
+  align-self: start;
+  transition: color var(--ui-dur-base) var(--ui-ease-color);
+}
+
+.swapLayer[data-tone="success"] {
+  color: var(--ui-success-text);
+}
+
+.swapLayer[data-tone="warning"] {
+  color: var(--ui-warning-text);
+}
+
+.swapLayer[data-tone="danger"] {
+  color: var(--ui-danger-text);
+}
+
+.swapLayer[data-enter] {
+  animation: vs-fade-in var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) both;
+}
+
+.swapLayer[data-leaving] {
+  animation: vs-fade-out var(--ui-dur-instant) var(--ui-ease-color) both;
+}
+
+@keyframes vs-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes vs-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* One action at a time, in a slot that's always there. */
+.slot {
+  display: grid;
+  place-items: center;
+  height: var(--ui-control-md);
+  margin-top: var(--ui-space-3);
+}
+
+.slotButton {
+  animation: vs-fade-in var(--ui-dur-fast) var(--ui-ease-enter) both;
+}
+
+/* ---------- Transcript ---------- */
+
+.transcript {
+  position: relative;
+  display: grid;
+  height: 100%;
+  min-height: 0;
+}
+
+.scroller {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: var(--ui-space-4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+  border-radius: var(--ui-radius-md);
+}
+
+.scroller:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: -2px;
+}
+
+.transcript[data-still] .scroller {
+  padding: 0;
+  overflow: visible;
+}
+
+.emptyLog {
+  composes: wrap from "../text/text.module.css";
+  display: grid;
+  flex: 1;
+  place-items: center;
+  margin: 0;
+  padding: var(--ui-space-4);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-align: center;
+  text-wrap: balance;
+}
+
+.lines {
+  display: grid;
+  gap: var(--ui-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.line[data-first]:not(:first-child) {
+  margin-top: var(--ui-space-3);
+}
+
+.line[data-enter],
+.tool[data-enter] {
+  animation: vs-rise var(--ui-dur-base) var(--ui-ease-enter) both;
+}
+
+@keyframes vs-rise {
+  from {
+    opacity: 0;
+    translate: 0 3px;
+  }
+}
+
+.who {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-2);
+  margin: 0 0 2px;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.whoName {
+  font-weight: var(--ui-weight-medium);
+}
+
+.line[data-from="user"] .whoName {
+  color: var(--vs-user-text);
+}
+
+.line[data-from="agent"] .whoName {
+  color: var(--vs-agent-text);
+}
+
+.whoTime {
+  color: var(--ui-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.said {
+  composes: wrap from "../text/text.module.css";
+  margin: 0;
+  color: var(--ui-foreground);
+  transition: color var(--ui-dur-base) var(--ui-ease-color);
+}
+
+/* Words the recognizer may still change: quiet until they settle. */
+.said[data-interim] {
+  color: var(--ui-subtle);
+}
+
+.word[data-enter] {
+  animation: vs-fade-in var(--ui-dur-base) var(--ui-ease-enter) both;
+}
+
+.cut {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  margin-inline-start: var(--ui-space-1);
+  padding-inline: var(--ui-space-2);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill-strong);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+  vertical-align: 1px;
+  white-space: nowrap;
+  animation: vs-fade-in var(--ui-dur-fast) var(--ui-ease-enter) both;
+}
+
+/* A lookup, inline in the agent's turn: a glyph in its slot, what it did, what it found. */
+.tool {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+  margin-block: 2px;
+  padding: 7px 10px;
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-fill);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.toolGlyph {
+  display: grid;
+  flex-shrink: 0;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  margin-top: 1px;
+  color: var(--vs-agent);
+}
+
+.tool[data-status="done"] .toolGlyph {
+  color: var(--ui-success);
+}
+
+.tool[data-status="failed"] .toolGlyph {
+  color: var(--ui-danger);
+}
+
+.toolGlyph > svg {
+  grid-area: 1 / 1;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  opacity: 0;
+  scale: 0.97;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    scale var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.toolGlyph[data-status="running"] > [data-icon="running"],
+.toolGlyph[data-status="done"] > [data-icon="done"],
+.toolGlyph[data-status="failed"] > [data-icon="failed"] {
+  opacity: 1;
+  scale: 1;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.spinTrack {
+  stroke: color-mix(in oklch, currentColor var(--ui-border-tint), transparent);
+  stroke-width: var(--ui-icon-stroke-medium);
+}
+
+.spinArc {
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke-medium);
+}
+
+.toolGlyph[data-status="running"] > [data-icon="running"] {
+  animation: vs-spin calc(var(--ui-dur-sweep) / 3) linear infinite;
+}
+
+@keyframes vs-spin {
+  to {
+    rotate: 1turn;
+  }
+}
+
+.tick {
+  stroke: var(--vs-panel);
+  stroke-width: var(--ui-icon-stroke-medium);
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset var(--ui-dur-base) var(--ui-ease-draw) var(--ui-dur-instant);
+}
+
+.toolGlyph[data-status="done"] .tick {
+  stroke-dashoffset: 0;
+}
+
+.toolText {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.toolTitle {
+  color: var(--ui-foreground);
+  font-weight: var(--ui-weight-medium);
+}
+
+.toolDetail {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-muted);
+}
+
+/* "Latest", once the reader has scrolled up and more has been said. */
+.jump {
+  position: absolute;
+  inset-inline: 0;
+  bottom: var(--ui-space-3);
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  translate: 0 4px;
+  filter: blur(2px);
+  pointer-events: none;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    translate var(--ui-dur-instant) var(--ui-ease-exit),
+    filter var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.jump[data-visible] {
+  opacity: 1;
+  translate: 0 0;
+  filter: none;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    translate var(--ui-dur-base) var(--ui-ease-enter),
+    filter var(--ui-dur-base) var(--ui-ease-enter);
+}
+
+.jump > * {
+  pointer-events: auto;
+  box-shadow: var(--ui-shadow-raised);
+}
+
+/* ---------- Controls ---------- */
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--vs-gap);
+  min-width: 0;
+}
+
+.device {
+  flex: 0 1 280px;
+  min-width: 0;
+}
+
+.toggles {
+  display: flex;
+  gap: var(--vs-gap);
+  margin-inline-start: auto;
+}
+
+.toggleLabel {
+  display: inline-grid;
+}
+
+.toggleLabel > * {
+  grid-area: 1 / 1;
+}
+
+.toggleValue {
+  display: grid;
+  justify-items: center;
+}
+
+/* On: muted reads red, captions read pressed. */
+.toggle.toggle[data-on] {
+  --button-bg: var(--ui-fill-strong-solid);
+  --button-bg-hover: color-mix(in oklch, var(--ui-foreground) 10%, var(--ui-surface));
+  --button-depth: 0 0 transparent;
+}
+
+.toggle.toggle[data-on][aria-label="Unmute"] {
+  --button-bg: color-mix(in oklch, var(--ui-danger) 10%, var(--ui-surface));
+  --button-bg-hover: color-mix(in oklch, var(--ui-danger) 15%, var(--ui-surface));
+  --button-edge: var(--ui-border-danger);
+  --button-fg: var(--ui-danger-text);
+}
+
+@media (hover: hover) {
+  .toggle.toggle[data-on]:hover:not(:disabled)::before {
+    background: var(--button-bg-hover);
+  }
+}
+
+/* ---------- Mic blocked or missing ---------- */
+
+.help {
+  display: grid;
+  justify-items: center;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: var(--ui-space-7) var(--ui-space-5);
+  text-align: center;
+}
+
+.helpTile {
+  display: grid;
+  place-items: center;
+  width: var(--ui-control-lg);
+  height: var(--ui-control-lg);
+  margin-bottom: var(--ui-space-4);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill-strong);
+  color: var(--ui-muted);
+}
+
+.helpTile[data-tone="danger"] {
+  background: color-mix(in oklch, var(--ui-danger) 12%, var(--vs-panel));
+  color: var(--ui-danger-text);
+}
+
+.helpTile .glyph {
+  width: var(--ui-icon-lg);
+  height: var(--ui-icon-lg);
+}
+
+.helpTitle {
+  margin: 0;
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-title);
+}
+
+.helpText {
+  composes: wrap from "../text/text.module.css";
+  margin: var(--ui-space-2) 0 0;
+  color: var(--ui-muted);
+  text-wrap: balance;
+}
+
+.fix {
+  display: grid;
+  justify-items: center;
+  gap: var(--ui-space-4);
+  width: 100%;
+  margin-top: var(--ui-space-5);
+}
+
+.fixSteps {
+  display: grid;
+  gap: var(--ui-space-2);
+  width: 100%;
+  margin: 0;
+  padding: var(--ui-space-4);
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-fill);
+  counter-reset: step;
+  list-style: none;
+  text-align: start;
+}
+
+.fixStep {
+  composes: wrap from "../text/text.module.css";
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: var(--ui-space-2);
+  counter-increment: step;
+}
+
+.fixStep::before {
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border-radius: var(--ui-radius-full);
+  background: var(--vs-panel);
+  box-shadow: var(--ui-edge);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: 1;
+}
+
+.fixNote {
+  composes: wrap from "../text/text.module.css";
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.helpActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--vs-gap);
+  margin-top: var(--ui-space-5);
+}
+
+/* ---------- Summary ---------- */
+
+.summary {
+  display: grid;
+  gap: var(--ui-space-5);
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--ui-space-6) var(--ui-space-5);
+  animation: vs-rise var(--ui-dur-base) var(--ui-ease-enter) both;
+}
+
+.summaryHead {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+}
+
+.endTile {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--ui-control-md);
+  height: var(--ui-control-md);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill-strong);
+  color: var(--ui-muted);
+}
+
+.summaryHeading {
+  min-width: 0;
+}
+
+.summaryTitle {
+  margin: 0;
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-title);
+}
+
+.summaryTitle:focus-visible {
+  outline: none;
+}
+
+.summaryMeta {
+  composes: wrap from "../text/text.module.css";
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.summaryMeta time {
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Holds the room of a short summary while it's written, so it lands without pushing. */
+.summaryBody {
+  display: grid;
+  gap: var(--ui-space-5);
+  min-height: 144px;
+}
+
+.summaryGroup {
+  display: grid;
+  gap: var(--ui-space-2);
+}
+
+.groupTitle {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+}
+
+.decisions,
+.followUps {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.decisions {
+  gap: var(--ui-space-2);
+}
+
+.decision {
+  composes: wrap from "../text/text.module.css";
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: var(--ui-space-2);
+  animation: vs-rise var(--ui-dur-base) var(--ui-ease-enter) both;
+}
+
+.decisionIcon {
+  margin-top: 3px;
+  color: var(--ui-success);
+}
+
+.followUps {
+  border-radius: var(--ui-radius-sm);
+  box-shadow: var(--ui-edge);
+}
+
+.followUp {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-1) var(--ui-space-3);
+  min-height: var(--ui-control-lg);
+  padding: var(--ui-space-2) var(--ui-space-3);
+  animation: vs-rise var(--ui-dur-base) var(--ui-ease-enter) both;
+}
+
+.followUp + .followUp {
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+.followText {
+  composes: wrap from "../text/text.module.css";
+  flex: 1 1 220px;
+}
+
+.followMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  flex-shrink: 0;
+}
+
+.followDue {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+}
+
+.summaryEmpty {
+  margin: 0;
+  color: var(--ui-muted);
+}
+
+.writing {
+  align-self: start;
+  margin: 0;
+  color: var(--ui-foreground);
+  mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.45) 35%, black 50%, rgb(0 0 0 / 0.45) 65%);
+  mask-size: 300% 100%;
+  mask-repeat: no-repeat;
+  animation:
+    vs-fade-in var(--ui-dur-fast) var(--ui-ease-enter) 300ms both,
+    vs-sweep var(--ui-dur-sweep) linear infinite;
+}
+
+@keyframes vs-sweep {
+  from {
+    mask-position: 100% 0;
+  }
+  to {
+    mask-position: 0 0;
+  }
+}
+
+.summaryFailed {
+  display: grid;
+  justify-items: start;
+  gap: var(--ui-space-3);
+  align-self: start;
+}
+
+.summaryFailedText {
+  composes: wrap from "../text/text.module.css";
+  margin: 0;
+  color: var(--ui-danger-text);
+}
+
+.summaryTranscript {
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+  padding-top: var(--ui-space-3);
+}
+
+.disclosure {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  height: var(--ui-control-sm);
+  margin-inline-start: -10px;
+  padding-inline: 10px 12px;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: none;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
+  cursor: pointer;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .disclosure:hover {
+    background: var(--ui-fill);
+  }
+}
+
+.disclosure:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.disclosureIcon {
+  color: var(--ui-muted);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .disclosure:hover .disclosureIcon {
+    color: var(--ui-foreground);
+  }
+}
+
+.disclosureCount {
+  color: var(--ui-muted);
+  font-weight: var(--ui-weight-regular);
+}
+
+.fold {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse);
+}
+
+.fold[data-open] {
+  grid-template-rows: 1fr;
+  transition: grid-template-rows var(--ui-dur-panel) var(--ui-ease-expand);
+}
+
+.foldInner {
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.fold[data-open] .foldInner {
+  padding-top: var(--ui-space-3);
+  opacity: 1;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+.summaryActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vs-gap);
+}
+
+.reserveLabel {
+  display: inline-grid;
+  justify-items: start;
+}
+
+.reserveLabel > * {
+  grid-area: 1 / 1;
+}
+
+/* ---------- Narrow: stage over transcript ---------- */
+
+@container (max-width: 760px) {
+  .stage {
+    --vs-disc: 112px;
+  }
+
+  .body,
+  .root[data-layout="solo"] .body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    transition: none;
+  }
+
+  .root[data-layout="solo"] .body,
+  .root[data-layout="full"] .body {
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .root[data-layout="solo"] .body {
+    grid-template-rows: minmax(0, 1fr) 0px;
+  }
+
+  .sidePanel {
+    width: auto;
+    height: calc(100% - var(--vs-gap));
+    margin-inline-start: 0;
+    margin-top: var(--vs-gap);
+  }
+
+  .root[data-layout="split"] .stageInner {
+    padding-block: var(--ui-space-5) var(--ui-space-4);
+  }
+}
+
+@container (max-width: 560px) {
+  .controls {
+    flex-wrap: wrap;
+  }
+
+  .device {
+    flex: 1 1 100%;
+  }
+
+  .toggles {
+    margin-inline-start: 0;
+  }
+
+  .end {
+    margin-inline-start: auto;
+  }
+
+  /* Mute and Captions fold to icon capsules; their names stay for screen readers. End call keeps its words. */
+  .toggle .toggleLabel {
+    display: none;
+  }
+
+  .toggle {
+    width: calc(var(--ui-control-md) * var(--ui-capsule));
+    padding-inline: 0;
+  }
+
+  .help {
+    padding: var(--ui-space-6) var(--ui-space-4);
+  }
+
+  .summary {
+    padding: var(--ui-space-5) var(--ui-space-4);
+  }
+}
+
+@container (max-width: 400px) {
+  .root[data-layout="split"] .stage {
+    --vs-disc: 88px;
+  }
+
+  .root[data-layout="split"] .stageInner {
+    padding-block: var(--ui-space-4) var(--ui-space-3);
+  }
+
+  .root[data-layout="split"] .disc {
+    margin-bottom: var(--ui-space-3);
+  }
+}
+
+@media (pointer: coarse) {
+  .disclosure::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .disc {
+    scale: none;
+  }
+
+  .body,
+  .root[data-layout="solo"] .body {
+    transition: none;
+  }
+
+  .line[data-enter],
+  .tool[data-enter],
+  .decision,
+  .followUp,
+  .summary {
+    animation-name: vs-fade-in;
+  }
+
+  .toolGlyph[data-status="running"] > [data-icon="running"] {
+    animation: vs-breathe var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;
+  }
+
+  .writing {
+    color: var(--ui-muted);
+    mask-image: none;
+    animation: vs-fade-in var(--ui-dur-fast) var(--ui-ease-enter) 300ms both;
+  }
+
+  .jump,
+  .jump[data-visible] {
+    translate: none;
+    filter: none;
+  }
+}

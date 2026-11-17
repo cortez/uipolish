@@ -1,0 +1,131 @@
+/* The frame: the sidebar on the canvas, the page on the surface one step up.
+   No line between them; the change of surface is the edge. */
+
+.shell {
+  display: flex;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--ui-canvas);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+.main {
+  display: grid;
+  flex: 1;
+  grid-template-rows: minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  background: var(--ui-surface);
+}
+
+/* Page header: one row of 32px controls. */
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-height: var(--ui-control-lg);
+  padding: var(--ui-space-2) var(--ui-space-3);
+  padding-top: max(var(--ui-space-2), env(safe-area-inset-top));
+}
+
+/* A pane narrower than a phone: the 32px capsules already carry air around
+   their icons, so the bar closes up to 4px between them and gives it to the
+   title. */
+@container (max-width: 359.98px) {
+  .bar {
+    gap: var(--ui-space-1);
+  }
+}
+
+/* One line, so the bar stays one row on a phone: a title too long for it
+   fades out at the end (only while it's cut); the sidebar has it in full. */
+.title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding-inline: var(--ui-space-1);
+  overflow: hidden;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+  white-space: nowrap;
+}
+
+@property --title-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@supports (animation-timeline: scroll()) {
+  .title {
+    mask-image: linear-gradient(to right, #000 calc(100% - var(--title-fade)), transparent);
+    animation: title-cut linear both;
+    animation-timeline: scroll(self inline);
+  }
+
+  :is([dir="rtl"]) .title {
+    mask-image: linear-gradient(to left, #000 calc(100% - var(--title-fade)), transparent);
+  }
+}
+
+@supports not (animation-timeline: scroll()) {
+  .title {
+    text-overflow: ellipsis;
+  }
+}
+
+@keyframes title-cut {
+  from,
+  to {
+    --title-fade: 24px;
+  }
+}
+
+.glyph {
+  flex-shrink: 0;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke, 1.5);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mark {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+/* A page that scrolls under its header (settings). */
+.page {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+}
+
+.scroll {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* An empty state or a message, centered in the page under its header. */
+.center {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: var(--ui-space-5) var(--ui-space-4);
+}

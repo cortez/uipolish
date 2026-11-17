@@ -1,0 +1,9 @@
+{
+  "name": "button",
+  "title": "Button",
+  "summary": "Pill button that presses instantly and springs back. The busy state keeps its width, and the label morphs when its text changes.",
+  "version": "0.3.7",
+  "dependencies": [
+    "text-morph"
+  ]
+}

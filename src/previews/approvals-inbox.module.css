@@ -1,0 +1,12 @@
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3) var(--ui-space-5);
+}
+
+/* Holds the demo's space until it renders in the browser. */
+.placeholder {
+  min-height: 860px;
+}

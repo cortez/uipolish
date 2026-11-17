@@ -1,0 +1,485 @@
+/* ---------- Inline marker ---------- */
+
+.citation {
+  white-space: nowrap;
+}
+
+.marker {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.6em;
+  height: 1.6em;
+  margin-inline: 0.2em 0.05em;
+  padding: 0 0.45em;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill);
+  color: var(--ui-muted);
+  font: var(--ui-weight-medium) 0.72em / 1 var(--ui-font-sans);
+  vertical-align: 0.15em;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.marker[data-active] {
+  background: var(--ui-fill-strong);
+  color: var(--ui-foreground);
+}
+
+.marker:active {
+  background: var(--ui-fill-strong);
+  color: var(--ui-foreground);
+  transition-duration: var(--ui-dur-press);
+}
+
+.marker:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.marker::after {
+  --hit: 24px;
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: var(--hit);
+  height: var(--hit);
+  translate: -50% -50%;
+}
+
+@media (pointer: coarse) {
+  .marker::after {
+    --hit: 40px;
+  }
+}
+
+/* ---------- Preview card ---------- */
+
+/* Base UI's Positioner places this element; the card inside it animates. */
+.positioner {
+  z-index: 50;
+  outline: none;
+}
+
+.card {
+  position: relative;
+  box-sizing: border-box;
+  display: grid;
+  gap: var(--ui-space-1);
+  width: min(320px, 100vw - var(--ui-space-5));
+  margin: 0;
+  padding: var(--ui-space-3) var(--ui-space-4);
+  border: 0;
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-floating);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-md) var(--ui-font-sans);
+  white-space: normal;
+  text-align: start;
+  outline: none;
+  transform-origin: var(--transform-origin);
+  opacity: 1;
+  scale: 1;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.card[data-starting-style],
+.card[data-ending-style] {
+  opacity: 0;
+  scale: 0.97;
+}
+
+.card[data-ending-style] {
+  transition-duration: var(--ui-dur-instant);
+  transition-timing-function: var(--ui-ease-exit);
+}
+
+.cardSite {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-width: 0;
+  color: var(--ui-muted);
+}
+
+.cardDomain {
+  composes: wrap from "../text/text.module.css";
+}
+
+.cardNumber {
+  margin-inline-start: auto;
+  color: var(--ui-subtle);
+}
+
+.cardTitle {
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+  text-decoration: none;
+  text-wrap: balance;
+}
+
+.cardTitle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--ui-radius-md);
+}
+
+@media (hover: hover) {
+  .cardTitle:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--ui-border-strong);
+  }
+}
+
+.cardTitle:focus-visible {
+  outline: none;
+}
+
+.cardTitle:focus-visible::after {
+  outline: var(--ui-ring-focus);
+  outline-offset: -4px;
+}
+
+.cardExcerpt {
+  composes: truncateLines from "../text/text.module.css";
+  color: var(--ui-muted);
+  text-wrap: pretty;
+}
+
+/* ---------- Favicon ---------- */
+
+.favicon {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  border-radius: var(--ui-radius-full);
+  object-fit: cover;
+}
+
+/* A brand mark sits on the same round tile as a letter, in its own color,
+   as in Research progress. */
+.favicon[data-brand] {
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+}
+
+.favicon[data-letter] {
+  background: var(--ui-fill-strong);
+  color: var(--ui-muted);
+}
+
+.favicon[data-letter] text {
+  fill: currentColor;
+  font-family: var(--ui-font-sans);
+  font-weight: var(--ui-weight-medium);
+}
+
+/* ---------- Disclosure list ---------- */
+
+.list {
+  font-family: var(--ui-font-sans);
+}
+
+.toggle {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-height: var(--ui-control-sm);
+  margin-inline: calc(-1 * var(--ui-space-2));
+  padding: 0 var(--ui-space-2);
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-muted);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .toggle:hover {
+    background: var(--ui-fill);
+    color: var(--ui-foreground);
+  }
+  .toggle:hover .chevron {
+    color: var(--ui-foreground);
+  }
+}
+
+.toggle:active {
+  background: var(--ui-fill-strong);
+  color: var(--ui-foreground);
+  transition-duration: var(--ui-dur-press);
+}
+
+.toggle:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+@media (pointer: coarse) {
+  .toggle {
+    min-height: var(--ui-control-md);
+  }
+}
+
+.stack {
+  display: inline-flex;
+}
+
+.stack > * {
+  box-shadow: 0 0 0 var(--ui-knockout) var(--ui-surface);
+}
+
+.stack > * + * {
+  margin-inline-start: -4px;
+}
+
+/* Scoped so it outranks the icon's own 16px default. */
+.toggle .chevron {
+  width: var(--ui-icon-chevron);
+  height: var(--ui-icon-chevron);
+  margin-inline-start: -4px;
+  color: var(--ui-muted);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-inline: -10px;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse),
+    opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.list[data-open="true"] .panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows var(--ui-dur-panel) var(--ui-ease-expand),
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+.clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.rows {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+  margin: 0;
+  padding: var(--ui-space-2) 2px 2px;
+  list-style: none;
+}
+
+.row {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  min-height: var(--ui-control-md);
+  padding: 6px var(--ui-space-2);
+  border-radius: var(--ui-radius-sm);
+  color: var(--ui-foreground);
+  text-decoration: none;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.row[data-active] {
+  background: var(--ui-fill);
+}
+
+@media (hover: hover) {
+  .row:hover {
+    background: var(--ui-fill);
+  }
+}
+
+.row:active {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+.row:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.number {
+  flex-shrink: 0;
+  min-width: 1ch;
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  text-align: end;
+}
+
+.rowText {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--ui-space-2);
+  min-width: 0;
+  flex: 1;
+}
+
+.rowTitle {
+  composes: wrap from "../text/text.module.css";
+  max-width: 100%;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.rowDomain {
+  composes: wrap from "../text/text.module.css";
+  max-width: 100%;
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.row .external {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  color: var(--ui-subtle);
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: none) {
+  .row .external {
+    opacity: 1;
+  }
+}
+
+.row:focus-visible .external,
+.row[data-active] .external {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .row:hover .external {
+    opacity: 1;
+  }
+}
+
+/* ---------- Chip row ---------- */
+
+/* Room for the chips' focus ring, given back so the row aligns with the text. */
+.scroller {
+  margin-inline: calc(var(--ui-space-1) * -1);
+  font-family: var(--ui-font-sans);
+}
+
+.chips {
+  display: flex;
+  gap: var(--ui-space-2);
+  width: max-content;
+  margin: 0;
+  padding: var(--ui-space-1);
+  list-style: none;
+}
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  max-width: 260px;
+  height: var(--ui-control-sm);
+  padding: 0 14px 0 var(--ui-space-3);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-sm);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* A chip is one control height, so its title is the one-line case: the end
+   fades, the full title is in `title`. Wrapping spilled out of the pill. */
+.chipTitle {
+  composes: truncate from "../text/text.module.css";
+  min-width: 0;
+}
+
+.chip .chipTitle {
+  max-width: 200px;
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+}
+
+.chip[data-active] {
+  background: var(--ui-fill-solid);
+}
+
+@media (hover: hover) {
+  .chip:hover {
+    background: var(--ui-fill-solid);
+  }
+}
+
+.chip:active {
+  background: var(--ui-fill-strong-solid);
+  transition-duration: var(--ui-dur-press);
+}
+
+.chip:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+@media (pointer: coarse) {
+  .chip {
+    height: var(--ui-control-md);
+  }
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card[data-starting-style],
+  .card[data-ending-style] {
+    transition-property: opacity;
+    scale: none;
+  }
+  .panel,
+  .list[data-open="true"] .panel {
+    transition-property: opacity, color, background-color;
+  }
+}

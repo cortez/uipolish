@@ -1,0 +1,516 @@
+.root {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  /* The marks column: a 20px slot every row lines up on. */
+  --research-mark: var(--ui-icon-lg);
+  --research-inset: var(--ui-space-4);
+  /* What a mark in the stack is cut out of: the surface, or the head's hover fill. */
+  --research-knockout: var(--ui-surface);
+  position: relative;
+  container-type: inline-size;
+  box-shadow: var(--ui-edge);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+/* ---------- The line ---------- */
+
+/* The disclosure's hit area covers the whole line; Stop sits above it. */
+.head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-inline);
+  min-height: var(--ui-control-lg);
+  padding: var(--ui-space-2) var(--research-inset);
+  border-radius: var(--ui-radius-lg);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .head:hover {
+    --research-knockout: var(--ui-fill-solid);
+    background: var(--ui-fill);
+  }
+  .head:hover .chevron {
+    color: var(--ui-foreground);
+  }
+}
+
+.head:has(.disclosure:active) {
+  --research-knockout: var(--ui-fill-strong-solid);
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+.disclosure {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-medium) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  font-variant-numeric: tabular-nums;
+  text-align: start;
+  text-wrap: balance;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Live, the count ticks on one line; settled, the summary may wrap with the chevron after its last word. */
+.root:is([data-status="searching"], [data-status="reading"]) .disclosure {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+}
+
+.root:is([data-status="searching"], [data-status="reading"]) .disclosure > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.root:not([data-status="searching"], [data-status="reading"]) .disclosure .chevron {
+  display: inline-block;
+  margin-inline-start: var(--ui-space-1);
+  vertical-align: -2px;
+}
+
+.disclosure::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--ui-radius-lg);
+}
+
+.disclosure:focus {
+  outline: none;
+}
+
+.disclosure:focus-visible::after {
+  outline: var(--ui-ring-focus);
+  outline-offset: calc(var(--ui-ring-offset) * -1);
+}
+
+.summary {
+  font-variant-numeric: tabular-nums;
+}
+
+.summary[data-enter] {
+  animation: research-fade var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.disclosure .chevron {
+  flex-shrink: 0;
+  width: var(--ui-icon-chevron);
+  height: var(--ui-icon-chevron);
+  color: var(--ui-muted);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* Marks, time and Stop, on the right. Clicks pass through to the line, except on Stop. */
+.aside {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--ui-gap-inline);
+  pointer-events: none;
+}
+
+.time {
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+  white-space: nowrap;
+}
+
+/* A ghost button's label sits flush with the card's inset. */
+.stop {
+  margin-inline-end: -14px;
+  pointer-events: auto;
+}
+
+/* ---------- Marks ---------- */
+
+.mark {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--research-mark);
+  height: var(--research-mark);
+  border-radius: var(--ui-radius-full);
+}
+
+.glyph {
+  display: grid;
+  place-items: center;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  border-radius: 2px;
+  object-fit: cover;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    filter var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.glyph > :is(svg, img) {
+  width: 100%;
+  height: 100%;
+}
+
+.letter {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ui-fill);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: 1;
+  user-select: none;
+}
+
+/* The stack: a few sites, overlapping, each cut out of what's behind. */
+.stack {
+  display: flex;
+}
+
+.stack > .mark {
+  background: var(--ui-surface);
+  box-shadow:
+    0 0 0 var(--ui-knockout) var(--research-knockout),
+    inset 0 0 0 var(--ui-hairline) var(--ui-border);
+  transition: box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.stack > .mark + .mark {
+  margin-inline-start: calc(var(--ui-space-1) * -1);
+}
+
+.stack .glyph {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+}
+
+.stack .letter {
+  background: none;
+}
+
+.mark[data-enter] {
+  animation: research-fade var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+/* ---------- What went wrong, and Try again ---------- */
+
+.note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-gap-stack);
+  padding: 0 var(--research-inset) var(--ui-space-3);
+}
+
+.note[data-enter] {
+  animation: research-fade var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.noteText {
+  composes: wrap from "../text/text.module.css";
+  flex: 1 1 100%;
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+/* ---------- Details ---------- */
+
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse),
+    opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.panel[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows var(--ui-dur-panel) var(--ui-ease-expand),
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+.clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Inline padding leaves room for a row's hover fill and focus ring inside the clip. */
+.body {
+  padding: 0 var(--research-inset) var(--ui-space-2);
+}
+
+/* Searches: a short line each, quieter than the sources. */
+.queries {
+  display: grid;
+  margin: 0;
+  padding: var(--ui-space-2) 0;
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+  list-style: none;
+}
+
+.query {
+  display: grid;
+  grid-template-columns: var(--research-mark) minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: var(--ui-gap-stack);
+  padding-block: var(--ui-space-1);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.query[data-running] {
+  color: var(--ui-foreground);
+}
+
+.query[data-enter] {
+  animation: research-fade var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+/* Scoped so it outranks the icon's own 16px default. */
+.query .queryIcon {
+  justify-self: center;
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  margin-top: calc((var(--ui-leading-sm) - var(--ui-icon-sm)) / 2);
+  color: var(--ui-subtle);
+}
+
+.queryText {
+  composes: wrap from "../text/text.module.css";
+}
+
+.queryCount {
+  min-width: var(--research-mark);
+  color: var(--ui-subtle);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+/* Sources: clean rows on hairlines. */
+.pages {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+.item[data-enter] {
+  animation: research-fade var(--ui-dur-base) var(--ui-ease-enter);
+}
+
+.page {
+  display: grid;
+  grid-template-columns: var(--research-mark) minmax(0, 1fr) var(--research-mark);
+  align-items: center;
+  column-gap: var(--ui-gap-stack);
+  min-height: var(--ui-control-lg);
+  margin-inline: calc(var(--ui-space-2) * -1);
+  padding: var(--ui-space-2);
+  border-radius: var(--ui-radius-sm);
+  color: var(--ui-foreground);
+  text-decoration: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .page:hover {
+    background: var(--ui-fill);
+  }
+}
+
+.page:active {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+.page:focus {
+  outline: none;
+}
+
+.page:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: calc(var(--ui-ring-offset) * -1);
+}
+
+.pageText {
+  composes: wrap from "../text/text.module.css";
+}
+
+.pageTitle {
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* The site follows the title, and drops to the next line whole rather than breaking. */
+.pageDomain {
+  display: inline-block;
+  max-width: 100%;
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.pageReason {
+  display: block;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.page[data-status="failed"] .pageReason {
+  color: var(--ui-danger-text);
+}
+
+/* Not read (yet, or at all): the title steps back and the mark greys. */
+.page:is([data-status="queued"], [data-status="skipped"], [data-status="failed"]) .pageTitle {
+  color: var(--ui-muted);
+}
+
+.page:is([data-status="queued"], [data-status="skipped"], [data-status="failed"]) .glyph {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.pageStatus {
+  display: grid;
+  place-items: center;
+  color: var(--ui-subtle);
+}
+
+.page .pageCheck {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+}
+
+/* In progress: the one accent. */
+.spinner {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  overflow: visible;
+  color: var(--ui-accent);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke);
+  stroke-linecap: round;
+}
+
+.track {
+  opacity: 0.2;
+}
+
+.arc {
+  stroke-dasharray: 0.28 1;
+  transform-origin: center;
+  animation: research-turn calc(var(--ui-dur-panel) * 3) linear infinite;
+}
+
+@keyframes research-turn {
+  to {
+    rotate: 1turn;
+  }
+}
+
+.none {
+  margin: 0;
+  padding-block: var(--ui-space-3) var(--ui-space-2);
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+/* A light band crosses what's in progress. */
+.sweep {
+  composes: sweep from "../text/text.module.css";
+}
+
+/* Wide, Stop is a word. */
+.stop .stopIcon {
+  display: none;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  color: var(--ui-muted);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .stop:hover .stopIcon {
+    color: var(--ui-foreground);
+  }
+}
+
+/* Narrow, while it works: the words, the time and Stop as its square; the marks wait for the end. */
+@container (max-width: 400px) {
+  .root:is([data-status="searching"], [data-status="reading"]) .stack {
+    display: none;
+  }
+  .head .stop {
+    padding-inline: var(--ui-space-2);
+  }
+  .stop .stopIcon {
+    display: block;
+  }
+  .stopLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@keyframes research-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes research-breathe {
+  to {
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .panel[data-open="true"] {
+    transition-property: opacity;
+  }
+  /* The arc holds still and breathes slowly, so it still says which one. */
+  .arc {
+    animation: research-breathe calc(var(--ui-dur-pulse) * 3) var(--ui-ease-pulse) infinite alternate;
+  }
+}

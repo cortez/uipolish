@@ -1,0 +1,799 @@
+/* A multi-stage run as a row of nodes joined by connectors, over the output
+   of the stage being looked at. Color tracks the phase: accent while a stage
+   runs, success once it's done, danger where it failed. The connector out of
+   a finished stage fills toward the next one, so progress reads as travel.
+   In a narrow container the row stacks into a list, same nodes, same lines.
+
+   Nothing is drawn outside a node but its corner mark, so every connector
+   stops the same --node-gap short of the node at either end, whichever stage
+   is selected. The selected stage tints its text, never the node, so no tint
+   ever meets a line. */
+.root {
+  --node: var(--ui-control-md);
+  --node-gap: var(--ui-space-2);
+  --tab-pad: var(--ui-space-2);
+  --line: 2px;
+  --fill: color-mix(in oklch, var(--ui-success) 72%, var(--ui-surface));
+  --mark: 16px;
+
+  container: pipeline / inline-size;
+  display: grid;
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-4);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+}
+
+/* ---------- Header ---------- */
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2) var(--ui-space-4);
+  padding-inline: var(--ui-space-1);
+}
+
+.heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.title {
+  composes: wrap from "../text/text.module.css";
+  margin: 0;
+  font: var(--ui-weight-medium) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+}
+
+.root .code {
+  font-family: var(--ui-font-mono);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  margin: 0;
+  color: var(--ui-muted);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
+  white-space: nowrap;
+}
+
+/* Every status it can show sits underneath, so the box keeps the widest
+   and the text never clips or nudges the title. Right-aligned while it
+   shares the title's row; start-aligned once a narrow card stacks it. */
+.statusText {
+  display: inline-grid;
+  justify-items: end;
+}
+
+.statusText > * {
+  grid-area: 1 / 1;
+}
+
+.reserve {
+  visibility: hidden;
+  /* Room for the dot that leads the shown one. */
+  padding-inline-start: calc(6px + var(--ui-space-2));
+}
+
+.statusNow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-subtle);
+}
+
+.status[data-phase="running"] {
+  color: var(--ui-accent-text);
+}
+.status[data-phase="running"] .statusDot {
+  background: var(--ui-accent);
+  animation: breathe var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;
+}
+.status[data-phase="done"] {
+  color: var(--ui-success-text);
+}
+.status[data-phase="done"] .statusDot {
+  background: var(--ui-success);
+}
+.status[data-phase="failed"] {
+  color: var(--ui-danger-text);
+}
+.status[data-phase="failed"] .statusDot {
+  background: var(--ui-danger);
+}
+
+@keyframes breathe {
+  to {
+    opacity: 0.35;
+  }
+}
+
+/* ---------- The row of stages ---------- */
+
+.body {
+  display: grid;
+  gap: var(--ui-space-3);
+}
+
+.track {
+  display: grid;
+  grid-template-columns: repeat(var(--count), minmax(0, 1fr));
+}
+
+.step {
+  position: relative;
+  /* A grid, so the stage centers in its column in every browser: the
+     connectors are measured from the column's center. */
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  min-width: 0;
+}
+
+/* The whole stage is the hit area, but it draws nothing of its own: the
+   connectors pass beside it untouched. */
+.tab {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  /* Keeps the tint clear of the corner mark hanging off the node. */
+  gap: var(--ui-space-3);
+  justify-self: center;
+  max-width: 100%;
+  margin: 0;
+  padding: var(--tab-pad) 0 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Label and time: the part that tints when the stage is shown or hovered. */
+.text {
+  display: grid;
+  justify-items: center;
+  max-width: 100%;
+  min-width: calc(var(--node) + var(--ui-space-6));
+  padding: var(--ui-space-1) var(--ui-space-2);
+  border-radius: var(--ui-radius-sm);
+}
+
+/* Hover fades in; selection moves in one frame, so two stages never both
+   look selected while one hands over to the next. */
+@media (hover: hover) {
+  .tab:hover:not([data-active]) .text {
+    background: var(--ui-fill);
+    transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+  }
+}
+
+/* The stage whose output shows. */
+.tab[data-active] .text {
+  background: var(--ui-fill-strong);
+}
+
+.tab:focus-visible .text {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+/* ---------- Nodes ---------- */
+
+.node {
+  --tone: var(--ui-foreground);
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--node);
+  height: var(--node);
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-fill);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border);
+  color: var(--ui-subtle);
+}
+
+.glyph {
+  display: grid;
+  place-items: center;
+}
+
+.glyph svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+}
+
+.number {
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+}
+
+.node:is([data-status="running"], [data-status="done"], [data-status="failed"]) {
+  background: color-mix(in oklch, var(--tone) 10%, var(--ui-surface));
+  box-shadow: inset 0 0 0 var(--ui-hairline) color-mix(in oklch, var(--tone) var(--ui-border-tint), transparent);
+}
+
+.node[data-status="running"] {
+  --tone: var(--ui-accent);
+  color: var(--ui-accent-text);
+}
+
+.node[data-status="done"] {
+  --tone: var(--ui-success);
+  color: var(--ui-success-text);
+}
+
+.node[data-status="failed"] {
+  --tone: var(--ui-danger);
+  color: var(--ui-danger-text);
+}
+
+.node[data-status="skipped"] {
+  background: transparent;
+  box-shadow: none;
+  outline: var(--ui-hairline) dashed var(--ui-border-strong);
+  outline-offset: calc(var(--ui-hairline) * -1);
+}
+
+/* Working: the node's own edge turns accent and breathes. It is the edge,
+   not a second ring outside it, so there is one stroke, and nothing grows
+   past the node toward the connectors. A stage's node, mark, duration and
+   label all switch in the same frame as the header, footer and log: no
+   color fades between states, so a node is never part running, part done. */
+.node[data-status="running"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-accent);
+  pointer-events: none;
+  animation:
+    ring-in var(--ui-dur-base) var(--ui-ease-enter) backwards,
+    ring var(--ui-dur-pulse) var(--ui-ease-pulse) var(--ui-dur-base) infinite alternate;
+}
+
+@keyframes ring-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes ring {
+  to {
+    opacity: 0.35;
+  }
+}
+
+/* Done or failed: a small badge on the corner, its stroke drawn on. */
+.mark {
+  /* Centered on the node's rounded corner, so it sits the same at any size. */
+  position: absolute;
+  right: calc(3px - var(--mark) / 2);
+  bottom: calc(3px - var(--mark) / 2);
+  display: grid;
+  place-items: center;
+  width: var(--mark);
+  height: var(--mark);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-success);
+  /* Cut out of the node by the card's surface; the tab never tints behind it. */
+  box-shadow: 0 0 0 var(--ui-knockout) var(--ui-surface);
+  color: var(--ui-on-accent);
+  animation: mark-in var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.mark[data-status="failed"] {
+  background: var(--ui-danger);
+  color: var(--ui-on-danger);
+}
+
+.mark svg {
+  width: calc(var(--mark) * 0.75);
+  height: calc(var(--mark) * 0.75);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke-medium);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mark path {
+  stroke-dasharray: 1 2;
+  animation: draw var(--ui-dur-base) var(--ui-ease-draw) var(--ui-dur-instant) backwards;
+}
+
+.mark[data-status="failed"] path {
+  /* Two strokes in one path: each draws its own length. */
+  stroke-dasharray: 0.5 2;
+}
+
+@keyframes mark-in {
+  from {
+    opacity: 0;
+    scale: 0.97;
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+.label {
+  composes: wrap from "../text/text.module.css";
+  max-width: 100%;
+  color: var(--ui-muted);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
+  text-wrap: balance;
+}
+
+.tab:is([data-active], [data-status="running"], [data-status="done"], [data-status="failed"]) .label,
+.tab[data-active][data-status="skipped"] .label {
+  color: var(--ui-foreground);
+}
+
+.tab[data-status="skipped"] .label {
+  color: var(--ui-subtle);
+}
+
+/* Durations are mono, so every digit is the same width and a running count
+   never jitters; the slot holds "00.0s" so the label above stays put. */
+.time {
+  min-width: 6ch;
+  color: var(--ui-subtle);
+  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-mono);
+  white-space: nowrap;
+}
+
+.time[data-status="running"] {
+  color: var(--ui-accent-text);
+}
+.time[data-status="done"] {
+  color: var(--ui-muted);
+}
+.time[data-status="failed"] {
+  color: var(--ui-danger-text);
+}
+
+/* ---------- Connectors ----------
+   Each runs from --node-gap past one node's edge to --node-gap short of the
+   next: the same gap at both ends of every line, in every state. */
+
+.connector {
+  position: absolute;
+  top: calc(var(--tab-pad) + var(--node) / 2 - var(--line) / 2);
+  inset-inline-start: calc(50% + var(--node) / 2 + var(--node-gap));
+  inset-inline-end: calc(-50% + var(--node) / 2 + var(--node-gap));
+  height: var(--line);
+  overflow: hidden;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-border-strong);
+  pointer-events: none;
+}
+
+/* The fill: lands on the glide spring, so it never runs past the next node. */
+.connector::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--fill);
+  transform-origin: left;
+  scale: 0 1;
+  transition: scale var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+:is([dir="rtl"]) .connector::before {
+  transform-origin: right;
+}
+
+.connector[data-filled]::before {
+  scale: 1 1;
+}
+
+/* Out of the running stage the whole line turns a faint accent, and a
+   brighter stretch of that same line travels toward what's next. It is the
+   line lighting up, not a second stroke laid over a grey one. */
+.connector[data-active] {
+  background: color-mix(in oklch, var(--ui-accent) 24%, var(--ui-surface));
+}
+
+.connector[data-active]::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, var(--ui-accent) 60%, transparent);
+  animation: travel calc(var(--ui-dur-sweep) / 2) linear infinite;
+}
+
+:is([dir="rtl"]) .connector[data-active]::after {
+  inset: 0 0 0 auto;
+  background: linear-gradient(270deg, transparent, var(--ui-accent) 60%, transparent);
+  animation-name: travel-rtl;
+}
+
+@keyframes travel {
+  from {
+    translate: -100% 0;
+  }
+  to {
+    translate: 250% 0;
+  }
+}
+
+@keyframes travel-rtl {
+  from {
+    translate: 100% 0;
+  }
+  to {
+    translate: -250% 0;
+  }
+}
+
+/* ---------- Output ---------- */
+
+.well {
+  display: grid;
+  border-radius: var(--ui-radius-md);
+  /* A flat fill, no edge: it already sits inside the card's. */
+  background: var(--ui-fill-solid);
+}
+
+.caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  min-height: var(--ui-control-md);
+  padding: var(--ui-space-1) var(--ui-space-2) 0 var(--ui-space-3);
+}
+
+.captionLabel {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-muted);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
+}
+
+.follow {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--ui-space-1);
+  min-height: 24px;
+  margin: 0;
+  padding: 0 var(--ui-space-2);
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-accent-text);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  cursor: pointer;
+  animation: arrive var(--ui-dur-fast) var(--ui-ease-enter);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.follow svg {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+}
+
+@media (hover: hover) {
+  .follow:hover {
+    background: var(--ui-accent-tint);
+  }
+}
+
+.follow:focus-visible,
+.panel:focus-visible,
+.latest:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+/* Six lines tall to begin with, so the first lines land without a jump;
+   then as tall as the longest log this run, up to --log-height. */
+.panel {
+  --log-pad: calc(var(--ui-space-2) + var(--ui-space-3));
+  height: min(
+    var(--log-height),
+    max(calc(6 * var(--ui-leading-md) + var(--log-pad)), calc(var(--log-lines) * var(--ui-leading-md) + var(--log-pad)))
+  );
+  border-radius: 0 0 var(--ui-radius-md) var(--ui-radius-md);
+}
+
+.logFrame {
+  position: relative;
+  height: 100%;
+}
+
+.log {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--ui-space-2) var(--ui-space-3) var(--ui-space-3);
+  scrollbar-width: thin;
+  /* Lines scrolling up fade under the caption instead of meeting a hard edge. */
+  mask-image: linear-gradient(to bottom, transparent, #000 var(--ui-space-3) calc(100% - var(--ui-space-3)), transparent);
+}
+
+.lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-md) var(--ui-font-mono);
+}
+
+.line {
+  /* A wrapped line hangs, so where one line ends and the next begins stays clear. */
+  padding-inline-start: 2ch;
+  text-indent: -2ch;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.line[data-new] {
+  animation: rise var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 4px;
+  }
+}
+
+.line[data-tone="command"],
+.line[data-tone="muted"] {
+  color: var(--ui-muted);
+}
+.line[data-tone="success"] {
+  color: var(--ui-success-text);
+}
+.line[data-tone="warning"] {
+  color: var(--ui-warning-text);
+}
+.line[data-tone="danger"] {
+  color: var(--ui-danger-text);
+}
+
+.empty {
+  /* One line where the output will start, in the log's own type. */
+  margin: 0;
+  color: var(--ui-subtle);
+  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-md) var(--ui-font-mono);
+  overflow-wrap: anywhere;
+}
+
+.working {
+  composes: sweep from "../text/text.module.css";
+  color: var(--ui-muted);
+}
+
+.empty[data-status="failed"] {
+  color: var(--ui-danger-text);
+}
+
+/* Scrolled up while output kept coming: a way back to the end. */
+.latest {
+  position: absolute;
+  bottom: var(--ui-space-2);
+  left: 50%;
+  translate: -50% 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  min-height: 28px;
+  margin: 0;
+  padding: 0 var(--ui-space-3) 0 var(--ui-space-2);
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-floating);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  animation: float-in var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.latest svg {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+}
+
+@keyframes float-in {
+  from {
+    opacity: 0;
+    translate: -50% 4px;
+    filter: blur(2px);
+  }
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- Footer ---------- */
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2) var(--ui-space-3);
+  min-height: var(--ui-control-md);
+  padding-inline: var(--ui-space-1);
+}
+
+/* Inline text, so a long error wraps after the total instead of dropping
+   below it and leaving the total on a line of its own. */
+.summary {
+  min-width: 0;
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.total {
+  display: inline-block;
+  min-width: 5ch;
+  margin-inline-end: var(--ui-space-2);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-mono);
+}
+
+.error {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-danger-text);
+}
+
+.actions {
+  display: flex;
+  gap: var(--ui-space-2);
+  margin-inline-start: auto;
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+/* ---------- Narrow: the row stacks into a list ---------- */
+
+@container pipeline (max-width: 519px) {
+  .statusText {
+    justify-items: start;
+  }
+
+  /* A timeline: nodes down the start edge, one short line between each, the
+     text beside its node. */
+  .track {
+    --node: var(--ui-control-sm);
+    --tab-pad: 0px;
+    --node-gap: var(--ui-space-1);
+    --row-gap: var(--ui-space-6);
+    --mark: 14px;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--row-gap);
+  }
+
+  .tab {
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-self: stretch;
+    justify-items: stretch;
+    align-items: center;
+    gap: var(--ui-space-2);
+    padding: 0;
+    padding-inline-start: var(--ui-space-1);
+    text-align: start;
+  }
+
+  /* As tall as the node, so the tint lines up with it. */
+  .text {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    justify-items: start;
+    column-gap: var(--ui-space-3);
+    min-width: 0;
+    min-height: var(--node);
+    padding: var(--ui-space-1) var(--ui-space-2);
+  }
+
+  .label {
+    font-size: var(--ui-text-md);
+    line-height: var(--ui-leading-md);
+    text-wrap: pretty;
+  }
+
+  .time {
+    text-align: end;
+  }
+
+  .connector {
+    top: calc(var(--tab-pad) + var(--node) + var(--node-gap));
+    bottom: calc(var(--node-gap) - var(--tab-pad) - var(--row-gap));
+    inset-inline-start: calc(var(--ui-space-1) + var(--node) / 2 - var(--line) / 2);
+    inset-inline-end: auto;
+    width: var(--line);
+    height: auto;
+  }
+
+  .connector::before {
+    transform-origin: top;
+    scale: 1 0;
+  }
+
+  .connector[data-filled]::before {
+    scale: 1 1;
+  }
+
+  .connector[data-active]::after,
+  :is([dir="rtl"]) .connector[data-active]::after {
+    inset: 0 0 auto;
+    width: auto;
+    height: 60%;
+    background: linear-gradient(180deg, transparent, var(--ui-accent) 60%, transparent);
+    animation-name: travel-down;
+  }
+}
+
+@keyframes travel-down {
+  from {
+    translate: 0 -100%;
+  }
+  to {
+    translate: 0 170%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status[data-phase="running"] .statusDot,
+  .mark,
+  .mark path,
+  .line[data-new],
+  .follow,
+  .latest {
+    animation: none;
+  }
+  /* The accent edge stays, still: it still says which stage is working. */
+  .node[data-status="running"]::after {
+    animation: none;
+  }
+  .connector::before {
+    transition: none;
+  }
+  /* No travelling stretch; the faint accent line says the same still. */
+  .connector[data-active]::after {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .node {
+    border: 1px solid CanvasText;
+  }
+  .connector::before {
+    background: Highlight;
+  }
+}

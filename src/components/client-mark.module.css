@@ -1,0 +1,20 @@
+/* Marks sit in muted gray: a label for the row, not a logo wall. */
+.mark {
+  display: inline-grid;
+  place-items: center;
+  color: var(--ui-muted);
+}
+
+/* A letter in a 16px tile, for an agent without a published mark. */
+.letter {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  background: var(--ui-fill-strong);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: 1;
+}

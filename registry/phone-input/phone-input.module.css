@@ -1,0 +1,125 @@
+.field {
+  composes: field from "../field/field.module.css";
+}
+
+.label {
+  composes: label from "../field/field.module.css";
+}
+
+.control {
+  composes: shell from "../field/field.module.css";
+  display: flex;
+  align-items: center;
+  padding-inline-start: var(--shell-inset);
+}
+
+.trigger {
+  composes: inset from "../field/field.module.css";
+}
+
+/* Scoped to .control so it outranks the composed 32px-square inset rule in any
+   stylesheet order; otherwise flag, code and chevron spill out of the field. */
+.control .trigger {
+  display: flex;
+  gap: var(--ui-space-1);
+  width: auto;
+  padding-inline: var(--ui-space-2);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / 1 var(--ui-font-sans);
+  white-space: nowrap;
+}
+
+.trigger::before {
+  background: var(--ui-fill);
+}
+
+.trigger[data-popup-open]::before {
+  background: var(--ui-fill-strong);
+}
+
+.flag {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: var(--ui-leading-md);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.chevron {
+  color: var(--ui-muted);
+}
+
+.input {
+  composes: bare from "../field/field.module.css";
+  flex: 1;
+}
+
+/* Scoped to the control so it outranks bare's padding: 0 in any stylesheet
+   order. If bare won, the number would sit flush against the country. */
+.control .input {
+  padding-inline: var(--ui-space-3) calc(var(--shell-inset) + var(--ui-space-2));
+}
+
+/* ---------- Picker ---------- */
+
+.popup {
+  composes: popup from "../listbox/listbox.module.css";
+  --listbox-width: min(320px, calc(100vw - 16px));
+}
+
+.panel {
+  composes: panel from "../listbox/listbox.module.css";
+}
+
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  height: var(--ui-control-md);
+  /* The search icon lines up with the options' text below. */
+  padding-inline: calc(var(--ui-space-1) + var(--ui-pad-row));
+  box-shadow: inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+  cursor: text;
+}
+
+.searchIcon {
+  color: var(--ui-muted);
+  pointer-events: none;
+}
+
+.search {
+  composes: bare from "../field/field.module.css";
+  flex: 1;
+}
+
+.list {
+  composes: list from "../listbox/listbox.module.css";
+  max-height: min(280px, calc(100dvh - 200px));
+}
+
+.highlight {
+  composes: highlight from "../listbox/listbox.module.css";
+}
+
+.option {
+  composes: option from "../listbox/listbox.module.css";
+}
+
+.name {
+  composes: label from "../listbox/listbox.module.css";
+  flex: 1;
+}
+
+.option[data-selected] .name {
+  font-weight: var(--ui-weight-medium);
+}
+
+.code {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+}
+
+.status {
+  composes: status from "../listbox/listbox.module.css";
+}

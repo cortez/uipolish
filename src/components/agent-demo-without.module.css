@@ -1,0 +1,278 @@
+/* What a coding agent writes when nothing tells it otherwise: a gradient
+   hero, emoji, bold everywhere, big shadows, loud badges, a card for
+   everything. It's here to show what not to do, so this one file uses the
+   literal gradient colors those apps ship with. Surfaces and text still come
+   from the tokens, so it follows the theme like the rest of the page. */
+
+.screen {
+  --slop-violet: #8b5cf6;
+  --slop-indigo: #6366f1;
+  --slop-gradient: linear-gradient(135deg, var(--slop-violet), var(--slop-indigo));
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+  padding-bottom: var(--ui-space-7);
+  background: var(--ui-canvas);
+  color: var(--ui-foreground);
+  font-family: Inter, var(--ui-font-sans);
+  container-type: inline-size;
+}
+
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--slop-gradient);
+  color: #fff;
+}
+
+.heroTitle {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.heroSub {
+  margin: 4px 0 0;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.heroButton {
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.15);
+  color: var(--slop-violet);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  vertical-align: 2px;
+}
+
+.badge[data-tone="red"] {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.badge[data-tone="amber"] {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.badge[data-tone="blue"] {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.badge[data-tone="green"] {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+/* A solid red toast that says nothing, over the header, and never leaves. */
+.toast {
+  position: absolute;
+  z-index: 1;
+  top: 12px;
+  left: 50%;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 12px 18px;
+  border-radius: 12px;
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.25),
+    0 8px 10px -6px rgb(0 0 0 / 0.2);
+  background: #ef4444;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  translate: -50% 0;
+}
+
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 0 20px;
+}
+
+.stat {
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--ui-surface);
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.08),
+    0 4px 6px -4px rgb(0 0 0 / 0.08);
+}
+
+.statLabel {
+  margin: 0;
+  color: color-mix(in oklch, var(--ui-subtle) 70%, var(--ui-canvas));
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.statValue {
+  margin: 2px 0 0;
+  background: var(--slop-gradient);
+  background-clip: text;
+  color: transparent;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 20px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 10px 16px;
+  border-radius: 16px;
+  background: var(--ui-surface);
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.08),
+    0 4px 6px -4px rgb(0 0 0 / 0.08);
+}
+
+.cardMain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+
+.avatar {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--slop-gradient);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.who {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+/* Cut to fit with an ellipsis, whoever it is. */
+.name {
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* gray-400: easy to miss on white. */
+.reason {
+  margin: 2px 0 0;
+  color: color-mix(in oklch, var(--ui-subtle) 70%, var(--ui-canvas));
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.amount {
+  margin: 0;
+  color: var(--slop-violet);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.approve,
+.reject {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.approve {
+  background: var(--slop-gradient);
+  box-shadow: 0 4px 14px color-mix(in oklch, var(--slop-violet) 40%, transparent);
+  color: #fff;
+}
+
+/* Busy: the label is gone and a spinner stands in; the button narrows.
+   (A still: the spinner is drawn, not spinning.) */
+.approve[data-busy] {
+  opacity: 0.7;
+}
+
+.reject {
+  border: 2px solid #f87171;
+  color: #dc2626;
+}
+
+/* On a phone the amount and buttons wrap under whatever fits. */
+@container (max-width: 519px) {
+  .who {
+    flex-basis: calc(100% - 54px);
+  }
+}
+
+/* The raw response body, straight from the catch block, for everyone. */
+.raw {
+  margin: 0;
+  overflow: hidden;
+  color: #dc2626;
+  font-family: var(--ui-font-mono);
+  font-size: 11px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgb(255 255 255 / 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+}

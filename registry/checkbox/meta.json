@@ -1,0 +1,10 @@
+{
+  "name": "checkbox",
+  "title": "Checkbox",
+  "summary": "Base UI checkbox whose tick draws on and off. The mixed-state dash morphs into the tick, and the box aligns to the first line of its label.",
+  "version": "0.2.4",
+  "dependencies": [],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "theme-toggle",
+  "title": "Theme toggle",
+  "summary": "Icon capsule that switches light and dark: one drawing where the sun's disc grows into a crescent as a second circle slides over it. Stores the choice, follows the system until there is one, and paints the right theme before the first frame.",
+  "version": "0.1.1",
+  "dependencies": [
+    "button",
+    "tooltip",
+    "segmented-control"
+  ]
+}

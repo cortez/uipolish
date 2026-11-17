@@ -1,0 +1,11 @@
+{
+  "name": "search-field",
+  "title": "Search field",
+  "summary": "Search input whose clear button fades in over room it already holds, so the text never moves. Escape clears, then leaves, and the magnifier breathes while results load.",
+  "version": "0.2.0",
+  "dependencies": [
+    "field",
+    "icons",
+    "text"
+  ]
+}

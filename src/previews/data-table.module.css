@@ -1,0 +1,22 @@
+/* Title and its count on one side, the state switch on the other; they
+   stack on a phone. */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+.title {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.table {
+  height: 440px;
+}
+
+.unpaid {
+  color: var(--ui-muted);
+}

@@ -1,0 +1,11 @@
+{
+  "name": "data-table",
+  "title": "Data table",
+  "summary": "Keyboard-first grid for real data: one tab stop, arrow keys between cells, a stable sort whose arrow flips its head, columns resized by pointer or keys, range selection, and thousands of rows virtualized without a dependency.",
+  "version": "0.2.6",
+  "dependencies": [
+    "checkbox",
+    "icons",
+    "text"
+  ]
+}

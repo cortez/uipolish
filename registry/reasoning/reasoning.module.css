@@ -1,0 +1,310 @@
+.root {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  font-family: var(--ui-font-sans);
+  color: var(--ui-foreground);
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  max-width: calc(100% + 20px);
+  min-height: 28px;
+  margin-inline: -10px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-muted);
+  font: var(--ui-weight-medium) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  text-align: start;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .trigger:hover {
+    color: var(--ui-foreground);
+  }
+}
+
+.trigger:active {
+  background: var(--ui-fill);
+  color: var(--ui-foreground);
+  transition-duration: var(--ui-dur-press);
+}
+
+.trigger:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+@media (pointer: coarse) {
+  .trigger {
+    min-height: var(--ui-control-md);
+  }
+}
+
+/* A mask, not a text-clipped gradient: Safari leaves the morphing letters' layers out of a text clip. */
+.root[data-state="thinking"] .label {
+  color: var(--ui-foreground);
+  mask-image: linear-gradient(
+    90deg,
+    rgb(0 0 0 / 0.65) 35%,
+    #000 50%,
+    rgb(0 0 0 / 0.65) 65%
+  );
+  mask-size: 300% 100%;
+  animation: shimmer var(--ui-dur-sweep) linear infinite;
+}
+
+@keyframes shimmer {
+  from {
+    mask-position: 100% 0;
+  }
+  to {
+    mask-position: 0 0;
+  }
+}
+
+.timer {
+  display: inline-grid;
+  grid-template-columns: 1fr;
+  color: var(--ui-subtle);
+  font-weight: var(--ui-weight-regular);
+  font-variant-numeric: tabular-nums;
+  transition:
+    grid-template-columns var(--ui-dur-move) var(--ui-ease-move),
+    opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.timer > span {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.time {
+  display: inline-block;
+  padding-inline-start: 6px;
+}
+
+.root[data-state="done"] .timer,
+.root:not([data-ticking]) .timer {
+  grid-template-columns: 0fr;
+  opacity: 0;
+}
+
+/* The label swaps lines by rising: the old line goes up and out, the new
+   one comes up from below, and the box's width glides between the two so
+   the timer and chevron beside it shift instead of jumping. The mask only
+   applies mid-swap, so a resting label is never faded at its edges. */
+.label {
+  display: inline-flex;
+  min-width: 0;
+}
+
+.swap {
+  display: inline-grid;
+  max-width: 100%;
+  padding-block: 0.25em;
+  margin-block: -0.25em;
+  overflow: clip;
+  vertical-align: top;
+  transition: width var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+.swap[data-swapping] {
+  mask-image: linear-gradient(transparent, #000 30%, #000 70%, transparent);
+}
+
+.line {
+  grid-area: 1 / 1;
+  justify-self: start;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Mid-swap nothing is cut with an ellipsis: the growing box reveals the
+   new line instead. The new line starts a beat after the old one starts
+   leaving, so the two never sit on top of each other. */
+.swap[data-swapping] .line,
+.swap[data-gliding] .line {
+  max-width: none;
+  text-overflow: clip;
+}
+
+.line[data-entering] {
+  animation: line-in var(--ui-dur-move) var(--ui-ease-enter) 60ms both;
+}
+
+.line[data-leaving] {
+  animation: line-out var(--ui-dur-base) var(--ui-ease-exit) forwards;
+}
+
+@keyframes line-in {
+  from {
+    translate: 0 90%;
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+
+@keyframes line-out {
+  to {
+    translate: 0 -110%;
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+
+/* A new paragraph of reasoning rises in as the window glides to it. */
+.arrive {
+  animation: arrive var(--ui-dur-base) var(--ui-ease-enter) both;
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+    filter: blur(2px);
+  }
+}
+
+/* Beside the trigger's 15px label: the md icon, like every disclosure. */
+.trigger .chevron {
+  width: var(--ui-icon-chevron);
+  height: var(--ui-icon-chevron);
+  flex-shrink: 0;
+  margin-inline-start: var(--ui-space-1);
+  color: var(--ui-muted);
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .trigger:hover .chevron {
+    color: var(--ui-foreground);
+  }
+}
+
+.root[data-empty] .chevron {
+  opacity: 0;
+}
+
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-inline: -4px;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse),
+    opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.root[data-open="true"] .panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows var(--ui-dur-panel) var(--ui-ease-expand),
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+.clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Room for the body's focus ring inside the clipping box. */
+.inner {
+  padding: var(--ui-space-2) var(--ui-space-1) var(--ui-space-1);
+}
+
+.body {
+  padding-inline-start: var(--ui-space-3);
+  /* The rule on the start side: an inset hairline, the same weight as
+     every edge (a 0.5px border rounds up to a full pixel). */
+  box-shadow: inset var(--ui-hairline) 0 0 var(--ui-border-strong);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-prose);
+  overflow-wrap: break-word;
+}
+
+:is([dir="rtl"]) .body {
+  box-shadow: inset calc(var(--ui-hairline) * -1) 0 0 var(--ui-border-strong);
+}
+
+.body p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.body p + p {
+  margin-top: 0.6em;
+}
+
+.body[data-capped="true"] {
+  max-height: calc(var(--ui-text-sm) * 1.6 * 6);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+
+/* While it thinks, the window is its full height from the first line, so
+   it opens once and nothing below it moves as the text streams in. */
+.body[data-capped="true"][data-live] {
+  height: calc(var(--ui-text-sm) * 1.6 * 6);
+}
+
+.body[data-capped="true"][data-scrolled="true"] {
+  mask-image: linear-gradient(to bottom, transparent, black var(--ui-space-5));
+}
+
+.body:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+  border-radius: 2px;
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line[data-entering] {
+    animation: line-fade var(--ui-dur-fast) var(--ui-ease-color) both;
+  }
+  .line[data-leaving] {
+    animation: line-fade var(--ui-dur-instant) var(--ui-ease-color) reverse forwards;
+  }
+  .arrive {
+    animation: none;
+  }
+
+  .root[data-state="thinking"] .label,
+  .root[data-state="thinking"] .label * {
+    animation: none;
+    background: none;
+    color: var(--ui-muted);
+  }
+  .swap,
+  .timer,
+  .panel,
+  .root[data-open="true"] .panel {
+    transition-property: opacity, color;
+  }
+}
+
+@keyframes line-fade {
+  from {
+    opacity: 0;
+  }
+}

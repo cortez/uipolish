@@ -1,0 +1,13 @@
+{
+  "name": "tool-steps",
+  "title": "Tool steps",
+  "summary": "An agent’s actions as a quiet timeline. Each step opens to its raw input and output, and the list folds to “Ran 5 steps in 12s” when the run ends.",
+  "kit": "agent",
+  "version": "0.3.1",
+  "dependencies": [
+    "button",
+    "icons",
+    "text-morph",
+    "text"
+  ]
+}

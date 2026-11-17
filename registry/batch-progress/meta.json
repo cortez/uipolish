@@ -1,0 +1,15 @@
+{
+  "name": "batch-progress",
+  "title": "Batch progress",
+  "summary": "An agent working through many items at once: a header with done of total, the clock and time left over a segmented track, then every item as a row with its status, result and time. Filter to what's running, failed or done; pause, resume or stop; retry one failure or all of them. Windowed, so 1,000 items scroll like 10.",
+  "kit": "agent",
+  "version": "0.4.1",
+  "dependencies": [
+    "button",
+    "icons",
+    "scroll-area",
+    "segmented-control",
+    "text",
+    "text-morph"
+  ]
+}

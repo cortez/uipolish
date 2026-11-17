@@ -1,0 +1,165 @@
+.field {
+  composes: field from "../field/field.module.css";
+  --number-width: 136px;
+  justify-items: start;
+}
+
+.label {
+  composes: label from "../field/field.module.css";
+}
+
+.control {
+  composes: shell from "../field/field.module.css";
+  display: grid;
+  grid-template-columns: var(--ui-control-sm) minmax(0, 1fr) var(--ui-control-sm);
+  align-items: center;
+  gap: 2px;
+  width: var(--number-width);
+  max-width: 100%;
+  padding-inline: var(--shell-inset);
+  cursor: text;
+}
+
+.control:not([data-steppers]) {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0;
+  padding-inline: calc(var(--shell-inset) + var(--ui-space-2));
+}
+
+.control:not([data-steppers]) :is(.input, .morph) {
+  text-align: start;
+  justify-items: start;
+}
+
+.affix {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--ui-leading-md);
+  white-space: pre;
+  user-select: none;
+}
+
+/* ---------- Buttons ---------- */
+
+.step {
+  composes: inset from "../field/field.module.css";
+}
+
+.step:is([aria-disabled], [data-disabled]) {
+  opacity: 0.4;
+}
+
+@media (pointer: coarse) {
+  .step.step::after {
+    inset: calc(var(--shell-inset) * -1);
+  }
+}
+
+/* ---------- Number ---------- */
+
+/* Input and morph layer must share one cell and alignment so the caret lands on the digits. */
+.value {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  height: 100%;
+}
+
+.input,
+.morph {
+  grid-area: 1 / 1;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-regular);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--ui-leading-md);
+  text-align: center;
+}
+
+.input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: transparent;
+  font-family: inherit;
+  outline: none;
+}
+
+.input[data-editing] {
+  color: var(--ui-foreground);
+}
+
+.input::selection {
+  background: var(--ui-selection);
+}
+
+.input:disabled {
+  cursor: default;
+}
+
+.morph {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: var(--ui-foreground);
+  white-space: pre;
+  pointer-events: none;
+}
+
+.digits {
+  display: inline-flex;
+}
+
+/* Transform and opacity only, so a change moves no box. Digits that stay
+   aren't remounted and don't animate. */
+.digit {
+  display: inline-block;
+}
+
+.digit[data-changed] {
+  animation: number-digit-in var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.digits[data-dir="up"] {
+  --digit-from: 0.25em;
+}
+
+.digits[data-dir="down"] {
+  --digit-from: -0.25em;
+}
+
+@keyframes number-digit-in {
+  from {
+    opacity: 0;
+    translate: 0 var(--digit-from);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .digit[data-changed] {
+    animation-name: number-digit-fade;
+  }
+}
+
+@keyframes number-digit-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* iOS zooms the page into any field under 16px. */
+@media (pointer: coarse) {
+  .input,
+  .morph,
+  .affix {
+    font-size: var(--ui-text-touch);
+  }
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}

@@ -1,0 +1,16 @@
+{
+  "name": "agent-task",
+  "title": "Agent task",
+  "summary": "The live view of an agent doing a multi-step task: a phase whose color runs through the card, a checklist, a panel that shows what it's reading, searching, weighing, writing or revising, the tool in use, the model, and tokens, cost and time that never shift. Pause, stop, and run again.",
+  "type": "block",
+  "version": "0.2.6",
+  "dependencies": [
+    "brand-marks",
+    "button",
+    "icons",
+    "model-picker",
+    "text",
+    "text-morph"
+  ],
+  "packages": []
+}

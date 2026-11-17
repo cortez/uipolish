@@ -1,0 +1,343 @@
+.root {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  /* Text inset; children can use it to align idle content with the other states. */
+  --voice-inset: 10px;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  height: var(--ui-control-sm);
+  min-width: 0;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
+}
+
+/* ---------- Recording bar ---------- */
+
+.capsule {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill);
+  opacity: 0;
+  clip-path: inset(0 0 0 calc(100% - var(--ui-control-sm)) round var(--ui-radius-full));
+  pointer-events: none;
+  transition:
+    clip-path var(--ui-dur-base) var(--ui-ease-collapse),
+    opacity var(--ui-dur-instant) var(--ui-ease-color) calc(var(--ui-dur-base) - var(--ui-dur-instant));
+}
+
+:is([dir="rtl"]) .capsule {
+  clip-path: inset(0 calc(100% - var(--ui-control-sm)) 0 0 round var(--ui-radius-full));
+}
+
+.root:is([data-status="recording"], [data-status="done"]) .capsule {
+  opacity: 1;
+  clip-path: inset(0 0 0 0 round var(--ui-radius-full));
+  transition:
+    clip-path var(--ui-dur-panel) var(--ui-ease-expand),
+    opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.stage {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+}
+
+.layer {
+  grid-area: 1 / 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    visibility 0s linear var(--ui-dur-instant);
+}
+
+.layer[data-active] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    visibility 0s;
+}
+
+.root[data-status="requesting"] .layer {
+  transition-delay: 300ms, calc(300ms + var(--ui-dur-instant));
+}
+
+.root[data-status="requesting"] .layer[data-active] {
+  transition-delay: 300ms;
+}
+
+/* ---------- Waiting for permission ---------- */
+
+.waiting {
+  overflow: hidden;
+  padding-inline-start: var(--voice-inset);
+  color: var(--ui-foreground);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.45) 35%, black 50%, rgb(0 0 0 / 0.45) 65%);
+  mask-size: 300% 100%;
+  mask-repeat: no-repeat;
+  animation: voice-sweep var(--ui-dur-sweep) linear infinite;
+}
+
+@keyframes voice-sweep {
+  from {
+    mask-position: 100% 0;
+  }
+  to {
+    mask-position: 0 0;
+  }
+}
+
+/* ---------- Blocked or failed ---------- */
+
+.message {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin: 0;
+  padding-inline-start: var(--voice-inset);
+  color: var(--ui-muted);
+  text-wrap: balance;
+}
+
+/* ---------- Recording and done ---------- */
+
+.session {
+  gap: var(--ui-space-1);
+  padding-inline-end: var(--ui-space-2);
+}
+
+/* Must match .capsule's clip side, curve and duration, or content shows outside the growing bar. */
+.session {
+  clip-path: inset(0 0 0 100%);
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    visibility 0s linear var(--ui-dur-instant),
+    clip-path 0s linear var(--ui-dur-instant);
+}
+
+:is([dir="rtl"]) .session {
+  clip-path: inset(0 100% 0 0);
+}
+
+.session[data-active] {
+  clip-path: inset(0);
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    visibility 0s,
+    clip-path var(--ui-dur-panel) var(--ui-ease-expand);
+}
+
+.meter {
+  flex: 1;
+  min-width: 0;
+  height: 20px;
+  color: var(--ui-foreground);
+  mask-image: linear-gradient(to right, transparent, black var(--ui-space-6));
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+:is([dir="rtl"]) .meter {
+  mask-image: linear-gradient(to left, transparent, black var(--ui-space-6));
+}
+
+.root[data-status="done"] .meter {
+  opacity: 0.4;
+}
+
+.time {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-inline-start: var(--ui-space-1);
+  color: var(--ui-foreground);
+  font-weight: var(--ui-weight-medium);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.root[data-status="done"] .time {
+  color: var(--ui-muted);
+}
+
+.live {
+  width: 6px;
+  height: 6px;
+  margin-inline-end: 6px;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-danger);
+  animation: voice-live calc(var(--ui-dur-pulse) * 2) var(--ui-ease-pulse) infinite alternate;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    scale var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.root[data-status="done"] .live {
+  opacity: 0;
+  scale: 0.5;
+  animation: none;
+}
+
+@keyframes voice-live {
+  to {
+    opacity: 0.35;
+  }
+}
+
+/* --time-chars is set from maxDuration. */
+.clock {
+  display: inline-flex;
+  justify-content: flex-end;
+  min-width: calc(var(--time-chars, 4) * 1ch - 0.5ch);
+}
+
+.clock > * {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+
+/* ---------- Buttons ---------- */
+
+.action,
+.main {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: calc(var(--ui-control-sm) * var(--ui-capsule));
+  height: var(--ui-control-sm);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: none;
+  color: var(--ui-muted);
+  isolation: isolate;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.action::before,
+.main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+@media (hover: hover) {
+  .action:hover,
+  .main:hover:not([aria-busy]) {
+    color: var(--ui-foreground);
+  }
+  .action:hover::before,
+  .main:hover:not([aria-busy])::before {
+    background: var(--ui-fill);
+  }
+}
+
+.action:active::before,
+.main:active:not([aria-busy])::before {
+  background: var(--ui-fill-strong);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.root[data-status="recording"] .main {
+  color: var(--ui-on-ink);
+}
+
+.root[data-status="recording"] .main::before {
+  background: var(--ui-ink);
+}
+
+@media (hover: hover) {
+  .root[data-status="recording"] .main:hover::before {
+    background: color-mix(in oklch, var(--ui-ink) 86%, var(--ui-on-ink));
+  }
+}
+
+.root[data-status="recording"] .main:active::before {
+  background: color-mix(in oklch, var(--ui-ink) 78%, var(--ui-on-ink));
+}
+
+.main[aria-busy] {
+  color: var(--ui-foreground);
+  cursor: default;
+}
+
+.main[aria-busy]::before {
+  background: var(--ui-fill);
+}
+
+.action:focus-visible,
+.main:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.action svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  pointer-events: none;
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (pointer: coarse) {
+  .action::after,
+  .main::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action::before,
+  .main::before {
+    transition-property: background-color;
+  }
+  .action:active::before,
+  .main:active:not([aria-busy])::before {
+    scale: none;
+  }
+  .live {
+    animation: none;
+  }
+  .waiting {
+    color: var(--ui-muted);
+    mask-image: none;
+    animation: none;
+  }
+  .capsule,
+  .root:is([data-status="recording"], [data-status="done"]) .capsule {
+    transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+  }
+  .session,
+  .session[data-active] {
+    clip-path: none;
+  }
+}

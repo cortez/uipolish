@@ -1,0 +1,752 @@
+/* A shell one step off the surface, holding a surface card of steps:
+   header and footer sit on the shell, the steps on the card. */
+.root {
+  --pa-inset: 6px;
+  --pa-row-x: 10px;
+  --pa-glyph: 16px;
+  --pa-gap: var(--ui-space-3);
+  /* Text in the header and footer lines up with the step glyphs. */
+  --pa-edge: calc(var(--pa-inset) + var(--pa-row-x));
+  --pa-shell: light-dark(
+    var(--ui-fill-solid),
+    color-mix(in oklch, var(--ui-foreground) 3%, var(--ui-canvas))
+  );
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  container: plan-approval / inline-size;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  border-radius: var(--ui-radius-lg);
+  background: var(--pa-shell);
+  box-shadow: var(--ui-edge);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+/* Header */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2) var(--ui-space-3);
+  flex-wrap: wrap;
+  min-height: var(--ui-control-lg);
+  padding: var(--ui-space-1) var(--pa-edge);
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.title {
+  composes: wrap from "../text/text.module.css";
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+  letter-spacing: normal;
+}
+
+.count {
+  flex-shrink: 0;
+}
+
+/* Every phase's label sits in one cell, so the widest holds the space. */
+.status,
+.tally {
+  display: inline-grid;
+  align-items: center;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+}
+
+.status {
+  justify-items: end;
+  margin-inline-start: auto;
+  color: var(--ui-muted);
+}
+
+.tally {
+  justify-items: start;
+  min-height: var(--ui-control-md);
+  color: var(--ui-muted);
+}
+
+.statusLayer,
+.tallyLayer {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    visibility 0s var(--ui-dur-instant);
+}
+
+.statusLayer[data-on],
+.tallyLayer[data-on] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    visibility 0s;
+}
+
+.statusLayer svg {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+}
+
+.status[data-status="running"] {
+  color: var(--ui-accent-text);
+}
+
+.status[data-status="done"] {
+  color: var(--ui-success-text);
+}
+
+.status[data-status="stopped"] {
+  color: var(--ui-danger-text);
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-accent);
+  animation: pa-breathe var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;
+}
+
+@keyframes pa-breathe {
+  from {
+    opacity: 0.35;
+  }
+}
+
+.quiet {
+  color: var(--ui-subtle);
+}
+
+/* Numbers: the cell holds the widest digits, the value sits at its end. */
+.num {
+  display: inline-grid;
+  justify-items: end;
+  color: var(--ui-foreground);
+  font-weight: var(--ui-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+.numGhost,
+.numValue {
+  grid-area: 1 / 1;
+}
+
+.numGhost {
+  visibility: hidden;
+}
+
+.numValue[data-rolled] {
+  animation: pa-roll var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+@keyframes pa-roll {
+  from {
+    opacity: 0;
+    translate: 0 0.4em;
+  }
+}
+
+/* The card of steps */
+
+.card {
+  margin-inline: var(--pa-inset);
+  overflow: clip;
+  border-radius: calc(var(--ui-radius-lg) - var(--pa-inset));
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+}
+
+.empty {
+  margin: 0;
+  padding: var(--ui-space-5) var(--ui-space-4);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-align: center;
+  text-wrap: balance;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  position: relative;
+  transition: background-color var(--ui-dur-base) var(--ui-ease-color);
+}
+
+.step + .step {
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+/* The step that's running carries a trace of the accent, so the eye finds it. */
+.step[data-status="running"] {
+  background: color-mix(in oklch, var(--ui-accent) 4%, var(--ui-surface));
+}
+
+.head {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--pa-glyph) minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: var(--pa-gap);
+  width: 100%;
+  min-height: var(--ui-control-md);
+  margin: 0;
+  padding: var(--ui-space-2) var(--pa-row-x);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .head:hover {
+    background: var(--ui-fill);
+  }
+}
+
+.head:active {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+.head:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.stepTitle {
+  composes: wrap from "../text/text.module.css";
+  padding-block: 1px;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+  transition: color var(--ui-dur-base) var(--ui-ease-color);
+}
+
+/* Skipped steps step back but stay readable. */
+.step[data-status="skipped"] .stepTitle {
+  color: var(--ui-muted);
+  font-weight: var(--ui-weight-regular);
+}
+
+/* Glyph: the step's icon, a spinner, a check or a mark, in one 16px cell. */
+.glyph {
+  display: grid;
+  place-items: center;
+  width: var(--pa-glyph);
+  height: var(--ui-icon-lg);
+  color: var(--ui-muted);
+  transition: color var(--ui-dur-base) var(--ui-ease-color);
+}
+
+.glyph > * {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  opacity: 0;
+  scale: 0.97;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.glyph svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+}
+
+.glyph[data-status="planned"] > [data-layer="icon"],
+.glyph[data-status="approved"] > [data-layer="icon"],
+.glyph[data-status="skipped"] > [data-layer="icon"],
+.glyph[data-status="running"] > [data-layer="running"],
+.glyph[data-status="done"] > [data-layer="done"],
+.glyph[data-status="failed"] > [data-layer="failed"] {
+  opacity: 1;
+  scale: 1;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    scale var(--ui-dur-snap) var(--ui-ease-snap) calc(var(--ui-dur-instant) / 2);
+}
+
+.glyph[data-status="approved"] {
+  color: var(--ui-accent);
+}
+
+.glyph[data-status="skipped"] > [data-layer="icon"] {
+  opacity: 0.55;
+}
+
+.glyph[data-status="running"] {
+  color: var(--ui-accent);
+}
+
+.glyph[data-status="done"] {
+  color: var(--ui-success);
+}
+
+.glyph[data-status="failed"] {
+  color: var(--ui-danger);
+}
+
+.number {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A small glyph turning: the one mark here that means "working right now". */
+.spinner {
+  overflow: visible;
+  stroke-width: var(--ui-icon-stroke);
+  stroke-linecap: round;
+}
+
+.arc {
+  stroke-dasharray: 0.28 1;
+  transform-origin: center;
+  animation: pa-turn calc(var(--ui-dur-panel) * 3) linear infinite;
+}
+
+@keyframes pa-turn {
+  to {
+    rotate: 1turn;
+  }
+}
+
+/* The check draws in once the step is done. */
+.tick {
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: 1.05;
+  transition: stroke-dashoffset var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.glyph[data-status="done"] .tick {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--ui-dur-base) var(--ui-ease-draw) var(--ui-dur-instant);
+}
+
+/* Chip: every label in one cell, so the pill never changes width, and the
+   color changes in place as the step moves on. */
+.chip {
+  --chip-tone: var(--ui-foreground);
+  --chip-tint: 5%;
+  --chip-edge: var(--ui-border);
+  --chip-tint-dark: var(--chip-tint);
+
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  height: 24px;
+  padding-inline: 9px;
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--chip-edge);
+  border-radius: var(--ui-radius-full);
+  background: light-dark(
+    color-mix(in oklch, var(--chip-tone) var(--chip-tint), transparent),
+    color-mix(in oklch, var(--chip-tone) var(--chip-tint-dark), transparent)
+  );
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    background-color var(--ui-dur-base) var(--ui-ease-color),
+    box-shadow var(--ui-dur-base) var(--ui-ease-color),
+    color var(--ui-dur-base) var(--ui-ease-color);
+}
+
+.chipLabel {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  translate: 0 2px;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    translate var(--ui-dur-instant) var(--ui-ease-exit),
+    visibility 0s var(--ui-dur-instant);
+}
+
+.chipLabel[data-on] {
+  opacity: 1;
+  visibility: visible;
+  translate: none;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    translate var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    visibility 0s;
+}
+
+.chip[data-status="approved"] {
+  --chip-tone: var(--ui-accent);
+  --chip-tint: 9%;
+  --chip-edge: var(--ui-border-accent);
+  --chip-tint-dark: 16%;
+  color: var(--ui-accent-text);
+}
+
+/* The running step's chip fills: the one place the accent is solid. */
+.chip[data-status="running"] {
+  --chip-tone: var(--ui-accent);
+  --chip-tint: 100%;
+  --chip-edge: var(--ui-accent);
+  --chip-tint-dark: 100%;
+  color: var(--ui-on-accent);
+}
+
+.chip[data-status="done"] {
+  --chip-tone: var(--ui-success);
+  --chip-tint: 10%;
+  --chip-edge: var(--ui-border-success);
+  --chip-tint-dark: 16%;
+  color: var(--ui-success-text);
+}
+
+.chip[data-status="failed"] {
+  --chip-tone: var(--ui-danger);
+  --chip-tint: 10%;
+  --chip-edge: var(--ui-border-danger);
+  --chip-tint-dark: 16%;
+  color: var(--ui-danger-text);
+}
+
+.chip[data-status="skipped"] {
+  --chip-tint: 0%;
+  --chip-tint-dark: 0%;
+  color: var(--ui-subtle);
+}
+
+/* The open step: height eases open, its content clears from faint and soft
+   over the whole opening, and the clip's bottom edge is a fade, never a line. */
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--ui-dur-panel) var(--ui-ease-expand);
+}
+
+.step[data-open] > .panel {
+  grid-template-rows: 1fr;
+}
+
+.clip {
+  min-height: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(#000 calc(100% - var(--ui-space-3)), transparent);
+}
+
+.body {
+  display: grid;
+  justify-items: start;
+  gap: var(--ui-space-2);
+  padding: 0 var(--pa-row-x) var(--ui-space-4) calc(var(--pa-row-x) + var(--pa-glyph) + var(--pa-gap));
+  opacity: 0;
+  filter: blur(2px);
+  scale: 0.985;
+  transform-origin: top left;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    filter var(--ui-dur-instant) var(--ui-ease-exit),
+    scale var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.step[data-open] .body {
+  opacity: 1;
+  filter: none;
+  scale: 1;
+  transition:
+    opacity var(--ui-dur-panel) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    filter var(--ui-dur-panel) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    scale var(--ui-dur-panel) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+/* While one step opens, the one closing takes the same timing, so the two
+   heights trade off and the steps below hold still. */
+.list:has(> .step[data-open]) > .step:not([data-open]) > .panel {
+  transition-duration: var(--ui-dur-panel);
+  transition-timing-function: var(--ui-ease-expand);
+}
+
+.list:not(:has(> .step[data-open])) > .step > .panel {
+  transition: grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse);
+}
+
+.detail,
+.error {
+  composes: wrap from "../text/text.module.css";
+  margin: 0;
+  max-width: var(--ui-measure);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.detail {
+  color: var(--ui-muted);
+}
+
+.error {
+  color: var(--ui-danger-text);
+}
+
+.tool {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.toolLabel {
+  color: var(--ui-subtle);
+}
+
+.toolName {
+  composes: wrap from "../text/text.module.css";
+  padding: 1px 6px;
+  border-radius: calc(var(--ui-radius-sm) / 2);
+  background: var(--ui-fill);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-code);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+  margin-top: var(--ui-space-1);
+}
+
+.key {
+  display: inline-flex;
+  margin-inline-end: -4px;
+  color: var(--ui-subtle);
+}
+
+.actions [aria-pressed="true"] .key {
+  color: inherit;
+}
+
+/* No keyboard to press them on a touch screen. */
+@media (hover: none) and (pointer: coarse) {
+  .key {
+    display: none;
+  }
+}
+
+/* Too narrow for Approve and Skip with their keys on one line: the buttons
+   keep the line, the keys stay in the hint under the plan. */
+@container plan-approval (max-width: 360px) {
+  .key {
+    display: none;
+  }
+}
+
+/* Footer */
+
+.footer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 var(--ui-space-3);
+  min-height: calc(var(--ui-control-md) + 2 * var(--ui-space-2));
+  padding: var(--ui-space-2) var(--ui-space-2) var(--ui-space-2) var(--pa-edge);
+}
+
+/* Progress travels along the top of the footer as steps finish. */
+.track {
+  position: absolute;
+  top: 0;
+  inset-inline: var(--pa-edge);
+  height: 2px;
+  overflow: hidden;
+  border-radius: var(--ui-radius-full);
+  opacity: 0;
+  transition: opacity var(--ui-dur-base) var(--ui-ease-color);
+}
+
+.root:not([data-phase="review"]) .track {
+  top: calc(var(--ui-space-1) - 1px);
+  opacity: 1;
+  background: var(--ui-fill-strong);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ui-muted);
+  transform-origin: left;
+  transition: scale var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+:is([dir="rtl"]) .fill {
+  transform-origin: right;
+}
+
+.root[data-phase="finished"]:not(:has(.step[data-status="failed"])) .fill {
+  background: var(--ui-success);
+}
+
+.root[data-phase="finished"]:has(.step[data-status="failed"]) .fill {
+  background: var(--ui-danger);
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  margin-inline-start: auto;
+}
+
+.slot {
+  display: inline-grid;
+  justify-items: end;
+}
+
+.slotLayer {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    visibility 0s var(--ui-dur-instant);
+}
+
+.slotLayer[data-on] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    visibility 0s;
+}
+
+/* Too narrow for the tally and both buttons on one line: the tally and the
+   quiet action share the top line, and Run plan spans the card under them,
+   inset evenly, rather than the tally sitting alone above the buttons. */
+@container plan-approval (max-width: 399.98px) {
+  /* The same in the header: the status reads under the title, from the
+     title's edge, rather than wrapping alone against the right. */
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    padding-block: var(--ui-space-2);
+  }
+
+  .status {
+    justify-items: start;
+    margin-inline-start: 0;
+  }
+
+  .footer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--ui-space-1) var(--ui-space-3);
+    padding-inline: var(--ui-space-2);
+  }
+
+  .tally {
+    padding-inline-start: calc(var(--pa-edge) - var(--ui-space-2));
+  }
+
+  .buttons {
+    display: contents;
+  }
+
+  /* The quiet action's label ends where the tally's starts, mirrored: its
+     20px ghost padding hangs into the footer's inset. */
+  .slot:not(.runSlot) {
+    margin-inline-end: calc(var(--pa-edge) - var(--ui-space-2) - 20px);
+  }
+
+  .runSlot {
+    grid-column: 1 / -1;
+    justify-items: stretch;
+  }
+
+  .runSlot .slotLayer > * {
+    width: 100%;
+  }
+
+  /* Once it's finished nothing is left to run: the row closes up. */
+  .root[data-phase="finished"] .runSlot {
+    display: none;
+  }
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .step[data-open] > .panel,
+  .list:has(> .step[data-open]) > .step:not([data-open]) > .panel,
+  .list:not(:has(> .step[data-open])) > .step > .panel {
+    transition: none;
+  }
+  .body,
+  .step[data-open] .body {
+    filter: none;
+    scale: none;
+    transition-property: opacity;
+  }
+  .glyph > *,
+  .chipLabel,
+  .chipLabel[data-on] {
+    scale: none;
+    translate: none;
+  }
+  .tick,
+  .glyph[data-status="done"] .tick {
+    transition: none;
+  }
+  .numValue[data-rolled] {
+    animation: none;
+  }
+  .fill {
+    transition: none;
+  }
+  /* The spinner stops turning and breathes instead. */
+  .arc {
+    animation: pa-breathe var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;
+  }
+}

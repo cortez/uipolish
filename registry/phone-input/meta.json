@@ -1,0 +1,15 @@
+{
+  "name": "phone-input",
+  "title": "Phone input",
+  "summary": "Phone field with a country picker. The number groups as you type without moving the caret, a pasted +44 number picks its country, and the form gets E.164.",
+  "version": "0.5.0",
+  "dependencies": [
+    "field",
+    "icons",
+    "listbox",
+    "text-morph"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

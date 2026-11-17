@@ -1,0 +1,62 @@
+/*
+ * UI Polish for Tailwind CSS v4. Import it after Tailwind and the tokens:
+ *
+ *   @import "tailwindcss";
+ *   @import "./ui/tokens.css";
+ *   @import "./ui/tailwind.css";
+ *
+ * Exposes the roles as theme values (bg-ui-surface, rounded-ui-md, ease-ui-enter),
+ * prefixed ui- so they never collide with a project's own names like muted or border.
+ */
+
+@theme inline {
+  --color-ui-canvas: var(--ui-canvas);
+  --color-ui-surface: var(--ui-surface);
+  --color-ui-fill: var(--ui-fill);
+  --color-ui-fill-strong: var(--ui-fill-strong);
+  --color-ui-fill-solid: var(--ui-fill-solid);
+  --color-ui-fill-strong-solid: var(--ui-fill-strong-solid);
+  --color-ui-foreground: var(--ui-foreground);
+  --color-ui-muted: var(--ui-muted);
+  --color-ui-subtle: var(--ui-subtle);
+  --color-ui-border: var(--ui-border);
+  --color-ui-border-strong: var(--ui-border-strong);
+  --color-ui-ink: var(--ui-ink);
+  --color-ui-on-ink: var(--ui-on-ink);
+  --color-ui-on-ink-muted: var(--ui-on-ink-muted);
+  --color-ui-accent: var(--ui-accent);
+  --color-ui-accent-text: var(--ui-accent-text);
+  --color-ui-on-accent: var(--ui-on-accent);
+  --color-ui-danger: var(--ui-danger);
+  --color-ui-danger-text: var(--ui-danger-text);
+  --color-ui-on-danger: var(--ui-on-danger);
+  --color-ui-success: var(--ui-success);
+  --color-ui-success-text: var(--ui-success-text);
+  --color-ui-on-success: var(--ui-on-success);
+  --color-ui-warning: var(--ui-warning);
+  --color-ui-warning-text: var(--ui-warning-text);
+  --color-ui-accent-tint: var(--ui-accent-tint);
+  --color-ui-success-tint: var(--ui-success-tint);
+  --color-ui-warning-tint: var(--ui-warning-tint);
+  --color-ui-danger-tint: var(--ui-danger-tint);
+
+  --spacing-ui-icon-xs: var(--ui-icon-xs);
+  --spacing-ui-icon-sm: var(--ui-icon-sm);
+  --spacing-ui-icon-md: var(--ui-icon-md);
+  --spacing-ui-icon-lg: var(--ui-icon-lg);
+
+  --radius-ui-sm: var(--ui-radius-sm);
+  --radius-ui-md: var(--ui-radius-md);
+  --radius-ui-lg: var(--ui-radius-lg);
+
+  --shadow-ui-resting: var(--ui-shadow-resting);
+  --shadow-ui-raised: var(--ui-shadow-raised);
+  --shadow-ui-floating: var(--ui-shadow-floating);
+
+  --ease-ui-enter: var(--ui-ease-enter);
+  --ease-ui-exit: var(--ui-ease-exit);
+  --ease-ui-move: var(--ui-ease-move);
+  --ease-ui-glide: var(--ui-ease-glide);
+  --ease-ui-snap: var(--ui-ease-snap);
+  --ease-ui-color: var(--ui-ease-color);
+}

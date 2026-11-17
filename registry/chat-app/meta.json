@@ -1,0 +1,28 @@
+{
+  "name": "chat-app",
+  "title": "Chat app",
+  "summary": "A complete assistant screen: a grouped, searchable conversation list with rename and delete, a streaming thread with reasoning, tool steps and cited sources, and a composer with attachments. Covers loading, failed replies, offline and rate limits.",
+  "primitive": true,
+  "type": "block",
+  "version": "0.1.11",
+  "dependencies": [
+    "alert",
+    "button",
+    "dialog",
+    "drawer",
+    "dropdown-menu",
+    "empty-state",
+    "icons",
+    "message-thread",
+    "model-picker",
+    "prompt-input",
+    "reasoning",
+    "response-actions",
+    "search-field",
+    "sources",
+    "text",
+    "tool-steps",
+    "tooltip"
+  ],
+  "packages": []
+}

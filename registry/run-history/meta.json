@@ -1,0 +1,22 @@
+{
+  "name": "run-history",
+  "title": "Run history",
+  "summary": "The screen where a team inspects past AI agent runs: a filterable, paged table of runs with live ones counting up in place, and a run's trace as a calm waterfall of model and tool calls, with retries and the failing step called out, collapsed long outputs, a token and cost breakdown, the final output, and Re-run, Copy ID and Share link.",
+  "type": "block",
+  "stage": "wide",
+  "version": "0.2.3",
+  "dependencies": [
+    "alert",
+    "button",
+    "code-block",
+    "date-picker",
+    "empty-state",
+    "icons",
+    "pagination",
+    "search-field",
+    "select",
+    "skeleton",
+    "text"
+  ],
+  "packages": []
+}

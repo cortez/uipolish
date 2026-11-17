@@ -1,0 +1,32 @@
+/*
+ * UI Polish on a shadcn/ui theme. Import it after tokens.css: the --ui-* roles
+ * then read shadcn's variables, so the components follow your theme, light
+ * and dark, and change when you change it.
+ *
+ * shadcn switches themes with a .dark class; the roles shadcn has no name
+ * for (accent, success, warning, shadows) use light-dark(), so the class also
+ * sets color-scheme.
+ */
+
+:root {
+  --ui-canvas: var(--background);
+  --ui-surface: var(--card);
+  --ui-foreground: var(--foreground);
+  --ui-muted: var(--muted-foreground);
+  --ui-subtle: var(--muted-foreground);
+  --ui-border: var(--border);
+  --ui-border-strong: color-mix(in oklch, var(--border), var(--foreground) 8%);
+  --ui-ink: var(--primary);
+  --ui-on-ink: var(--primary-foreground);
+  --ui-danger: var(--destructive);
+  --ui-danger-text: var(--destructive);
+  --ui-field-focus: var(--ring);
+
+  --ui-radius-sm: calc(var(--radius) - 2px);
+  --ui-radius-md: calc(var(--radius) + 2px);
+  --ui-radius-lg: calc(var(--radius) + 8px);
+}
+
+.dark {
+  color-scheme: dark;
+}

@@ -1,0 +1,12 @@
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+/* About as wide as a reply in a chat. */
+.card {
+  max-width: 520px;
+}

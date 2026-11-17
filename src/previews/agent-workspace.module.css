@@ -1,0 +1,40 @@
+.demo {
+  display: grid;
+  gap: var(--ui-space-4);
+}
+
+/* A small app window: the sidebar and the changes pane on the canvas, the
+   conversation on the surface one step up, as the template lays them out
+   at full height. */
+.frame {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  height: 780px;
+  overflow: hidden;
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-canvas);
+  box-shadow: var(--ui-edge);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+/* The template's shell fills the viewport; here it fills the window. */
+.frame > * {
+  height: 100%;
+  min-height: 0;
+}
+
+@media (max-width: 640px) {
+  .frame {
+    height: 720px;
+  }
+}
+
+.note {
+  min-height: var(--ui-leading-sm);
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}

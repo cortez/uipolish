@@ -1,0 +1,1258 @@
+/* The inbox is its own container: the list and the request sit side by side
+   when it's wide enough, and take turns when it isn't. */
+.root {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  /* The panes' height on a wide screen. Set it to fill your layout. */
+  --inbox-height: 680px;
+  --inbox-list: 320px;
+  --inbox-pad: var(--ui-pad-card);
+  container: approvals-inbox / inline-size;
+  display: grid;
+  gap: var(--ui-gap-group);
+  min-width: 0;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+.sweep {
+  composes: sweep from "../text/text.module.css";
+}
+
+/* ---------- Header ---------- */
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--ui-space-3) var(--ui-space-6);
+  margin-bottom: var(--ui-space-2);
+}
+
+.heading {
+  display: grid;
+  flex: 1 1 260px;
+  gap: var(--ui-space-1);
+  min-width: 0;
+}
+
+/* A screen's title: the display face, like every block's page title. */
+.title {
+  margin: 0;
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-display);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-display);
+  letter-spacing: var(--ui-tracking-title);
+  text-wrap: balance;
+}
+
+.lede {
+  max-width: var(--ui-measure);
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  min-width: 0;
+}
+
+.tabs {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.tools {
+  display: flex;
+  flex: 1 1 320px;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.search {
+  flex: 1 1 200px;
+  min-width: 0;
+  max-width: 280px;
+}
+
+/* The field sizes to its input's native width; let it shrink with the toolbar. */
+.search {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.search > *,
+.search input {
+  min-width: 0;
+}
+
+.grouping {
+  flex: none;
+}
+
+.hint {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-1) var(--ui-space-4);
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+}
+
+.hint > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---------- Panes ---------- */
+
+/* One resting surface; a hairline between the list and the request. */
+.panes {
+  display: grid;
+  grid-template-columns: var(--inbox-list) minmax(0, 1fr);
+  height: var(--inbox-height);
+  min-width: 0;
+  overflow: clip;
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+}
+
+.listPane {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-shadow: inset calc(var(--ui-hairline) * -1) 0 0 var(--ui-border);
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+
+.detailPane {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Error, loading and empty take the panes' whole space, so nothing jumps when rows land. */
+.whole {
+  display: grid;
+  place-items: center;
+  min-height: var(--inbox-height);
+  padding: var(--ui-space-6) var(--ui-space-4);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+}
+
+.loading {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  opacity: 0;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.loading[data-shown] {
+  opacity: 1;
+}
+
+/* ---------- List ---------- */
+
+.list {
+  /* The list measures itself, so its rows can fold on a phone or in a
+     narrow pane beside a request. */
+  container: inbox-list / inline-size;
+  --row-pad: var(--ui-space-3);
+  margin: 0;
+  padding: var(--ui-space-1);
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.row[data-arrived] {
+  animation:
+    inbox-row-open var(--ui-dur-panel) var(--ui-ease-expand),
+    inbox-row-fade var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+}
+
+@keyframes inbox-row-open {
+  from {
+    grid-template-rows: 0fr;
+  }
+}
+
+@keyframes inbox-row-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* A decided request fades first, then its space closes. */
+.row[data-leaving] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse) var(--ui-dur-instant);
+}
+
+/* The clip pads out a few pixels so a selected row's edge isn't cut. */
+.rowClip {
+  min-height: 0;
+  overflow: hidden;
+  margin: -2px;
+  padding: 2px;
+}
+
+.groupHead {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-4) var(--ui-space-3) 6px;
+}
+
+.row:first-child .groupHead {
+  padding-top: var(--ui-space-2);
+}
+
+.groupTitle {
+  composes: wrap from "../text/text.module.css";
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+}
+
+.groupRole {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.groupCount {
+  margin-inline-start: auto;
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Each row is one button, the List's rows: two lines at one height, a
+   hairline between rows beside the avatar, a fill on hover and on the open
+   one, where the lines around it step aside. */
+.rowButton {
+  --row-separator: transparent;
+  position: relative;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: var(--ui-space-3);
+  row-gap: 2px;
+  width: 100%;
+  padding: var(--ui-space-3) var(--row-pad);
+  border: 0;
+  border-radius: calc(var(--ui-radius-lg) - var(--ui-space-1));
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.rowButton::before {
+  content: "";
+  position: absolute;
+  inset: 0 var(--row-pad) auto calc(var(--row-pad) + 32px + var(--ui-space-3));
+  height: var(--ui-hairline);
+  background: var(--row-separator);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.row:not([data-group]) + .row:not([data-group]) .rowButton {
+  --row-separator: var(--ui-border);
+}
+
+@media (hover: hover) {
+  .rowButton:hover {
+    background: var(--ui-fill);
+  }
+  .row:has(.rowButton:hover) .rowButton,
+  .row:has(.rowButton:hover) + .row .rowButton {
+    --row-separator: transparent;
+  }
+}
+
+.rowButton[aria-current] {
+  background: var(--ui-fill-strong);
+}
+
+.row:has(.rowButton[aria-current]) .rowButton,
+.row:has(.rowButton[aria-current]) + .row .rowButton {
+  --row-separator: transparent;
+}
+
+.rowButton:active {
+  background: var(--ui-fill-strong);
+  transition-duration: 0s;
+}
+
+.rowButton:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.rowAvatar {
+  display: flex;
+  grid-row: 1 / 3;
+  align-self: center;
+}
+
+.rowTitle {
+  composes: truncate from "../text/text.module.css";
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.rowMeta {
+  composes: truncate from "../text/text.module.css";
+  grid-column: 2 / 4;
+  grid-row: 2;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.rowFailed {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ui-danger-text);
+  font-weight: var(--ui-weight-medium);
+}
+
+.rowFailed svg {
+  flex: none;
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+}
+
+.rowSide {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ui-space-2);
+}
+
+/* In a narrow list (a phone, a tight pane) the title takes the whole first
+   line and the time and priority move to the end of the second. */
+@container inbox-list (max-width: 400px) {
+  .rowTitle {
+    grid-column: 2 / 4;
+  }
+  .rowMeta {
+    grid-column: 2;
+  }
+  .rowSide {
+    grid-column: 3;
+    grid-row: 2;
+  }
+}
+
+.rowTime {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+}
+
+/* ---------- Countdown: digits in fixed boxes, color by how close it is ---------- */
+
+.countdown {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transition: color var(--ui-dur-base) var(--ui-ease-color);
+}
+
+.countdown[data-tone="soon"] {
+  color: var(--ui-foreground);
+}
+
+.countdown[data-tone="urgent"] {
+  color: var(--ui-warning-text);
+}
+
+.countdown[data-tone="expired"] {
+  color: var(--ui-subtle);
+}
+
+.countdownPrefix {
+  color: var(--ui-muted);
+  font-weight: var(--ui-weight-regular);
+}
+
+.digit {
+  display: inline-block;
+  width: 1ch;
+  text-align: center;
+}
+
+/* ---------- Priority ---------- */
+
+.priority {
+  flex: none;
+  white-space: nowrap;
+}
+
+/* ---------- Detail ---------- */
+
+.detail {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+.detailScroll {
+  display: grid;
+  align-content: start;
+  gap: var(--ui-gap-block);
+  min-height: 0;
+  padding: var(--inbox-pad);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+
+.back {
+  composes: disclosure;
+  justify-self: start;
+  margin-bottom: calc(var(--ui-space-3) * -1);
+}
+
+.detailHead {
+  display: grid;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.byline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px var(--ui-space-2);
+  margin: 0 0 var(--ui-space-1);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.bylineName {
+  color: var(--ui-foreground);
+  font-weight: var(--ui-weight-medium);
+}
+
+.bylineMeta {
+  composes: wrap from "../text/text.module.css";
+}
+
+.bylineMeta time {
+  white-space: nowrap;
+}
+
+.detailTitle {
+  composes: wrap from "../text/text.module.css";
+  max-width: 40ch;
+  margin: 0;
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-heading);
+  text-wrap: balance;
+  outline: none;
+}
+
+.context {
+  composes: wrap from "../text/text.module.css";
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2) var(--ui-space-4);
+  margin-top: var(--ui-space-1);
+}
+
+.section {
+  display: grid;
+  gap: var(--ui-space-3);
+  min-width: 0;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+.sectionTitle {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+}
+
+.sectionCount {
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Previews: the thing as it will be seen ---------- */
+
+.sheet {
+  display: grid;
+  gap: var(--ui-space-4);
+  min-width: 0;
+  padding: var(--ui-space-4) var(--ui-space-5) var(--ui-space-5);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+}
+
+.sheet[data-tone="danger"] {
+  background: color-mix(in oklch, var(--ui-danger) 6%, var(--ui-surface));
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-danger);
+}
+
+.headers {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 6px var(--ui-space-4);
+  margin: 0;
+  padding-bottom: var(--ui-space-4);
+  box-shadow: inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.headers:last-child {
+  padding-bottom: 0;
+  box-shadow: none;
+}
+
+.headers dt {
+  color: var(--ui-muted);
+}
+
+.headers dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+.subject {
+  font-weight: var(--ui-weight-medium);
+}
+
+.body {
+  composes: wrap from "../text/text.module.css";
+  max-width: var(--ui-measure);
+  margin: 0;
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-prose);
+  white-space: pre-line;
+}
+
+.amountRow {
+  display: grid;
+  gap: 2px;
+}
+
+.amount {
+  margin: 0;
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+.amountMeta {
+  composes: wrap from "../text/text.module.css";
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.amountMeta strong {
+  color: var(--ui-foreground);
+  font-weight: var(--ui-weight-medium);
+}
+
+.channel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px var(--ui-space-2);
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+}
+
+.channelAccount {
+  color: var(--ui-muted);
+  font-weight: var(--ui-weight-regular);
+}
+
+.limit {
+  margin: 0;
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.limit[data-over] {
+  color: var(--ui-danger-text);
+}
+
+.deleteWhat {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+  margin: 0;
+  color: var(--ui-danger-text);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.deleteWhat svg {
+  flex: none;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  margin-top: 3px;
+}
+
+.deleteItems {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-inline-start: calc(16px + var(--ui-space-2));
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+/* Labelled values, one per line; the labels share a column. */
+.details {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.detailRow {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  column-gap: var(--ui-space-5);
+  padding-block: var(--ui-space-2);
+  box-shadow: inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+}
+
+.detailRow:first-child {
+  padding-top: 0;
+}
+
+.detailRow:last-child {
+  padding-bottom: 0;
+  box-shadow: none;
+}
+
+.detailRow dt {
+  color: var(--ui-muted);
+}
+
+.detailRow dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+.detailRow dd[data-mono] {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-code);
+  font-variant-ligatures: none;
+}
+
+/* Before → after, in the diff's colors: what goes is struck, what comes is added. */
+.change {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px var(--ui-space-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.changeFrom,
+.changeTo {
+  padding: 0 4px;
+  border-radius: calc(var(--ui-radius-sm) / 2);
+  text-decoration: none;
+}
+
+.changeFrom {
+  background: var(--ui-danger-tint);
+  color: var(--ui-danger-text);
+  text-decoration: line-through;
+  text-decoration-thickness: var(--ui-hairline);
+}
+
+.changeTo {
+  background: var(--ui-success-tint);
+  color: var(--ui-success-text);
+  font-weight: var(--ui-weight-medium);
+}
+
+.changeNext {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+}
+
+.changeArrow {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--ui-subtle);
+}
+
+.custom {
+  min-width: 0;
+}
+
+/* On a phone, each label sits over its value. */
+@container approvals-inbox (max-width: 479px) {
+  .details,
+  .detailRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .detailRow {
+    row-gap: 2px;
+  }
+}
+
+/* ---------- Recipients ---------- */
+
+.recipients {
+  display: grid;
+  justify-items: start;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.recipients > :first-child {
+  width: 100%;
+}
+
+.recipientFilter {
+  padding-bottom: var(--ui-space-3);
+}
+
+.recipientList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-radius: var(--ui-radius-md);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+}
+
+/* The whole list scrolls in its own box; the page doesn't grow by hundreds of rows. */
+.recipientList[data-all] {
+  max-height: 320px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+
+.recipientList:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.recipient,
+.recipientNone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px var(--ui-space-3);
+  padding: 9px var(--ui-space-4);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.recipient + .recipient {
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+.recipientName {
+  composes: wrap from "../text/text.module.css";
+  font-weight: var(--ui-weight-medium);
+}
+
+.recipientDetail {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-muted);
+}
+
+.recipientNone {
+  color: var(--ui-muted);
+}
+
+/* ---------- Disclosures and the panels they open ---------- */
+
+.disclosure {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: var(--ui-control-sm);
+  margin-inline: -12px;
+  padding: 0 10px 0 12px;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-muted);
+  font: inherit;
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.disclosure svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  flex: none;
+}
+
+@media (hover: hover) {
+  .disclosure:hover {
+    background: var(--ui-fill);
+    color: var(--ui-foreground);
+  }
+}
+
+.disclosure:active {
+  background: var(--ui-fill-strong);
+  transition-duration: 0s;
+}
+
+.disclosure:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.chevron {
+  color: var(--ui-muted);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .disclosure:hover .chevron {
+    color: var(--ui-foreground);
+  }
+}
+
+.toolCall {
+  display: grid;
+  justify-items: start;
+  min-width: 0;
+}
+
+.toolName {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-code);
+  font-weight: var(--ui-weight-regular);
+}
+
+/* Opens with height: content fades in half a beat after the box starts. */
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  width: 100%;
+  min-width: 0;
+  transition: grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse);
+}
+
+.panel[data-open="true"] {
+  grid-template-rows: 1fr;
+  transition-duration: var(--ui-dur-panel);
+}
+
+.clip {
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.panel[data-open="true"] > .clip {
+  opacity: 1;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+.panelInner {
+  padding-top: var(--ui-space-2);
+}
+
+.note {
+  composes: wrap from "../text/text.module.css";
+  max-width: var(--ui-measure);
+  margin: 0;
+  padding-inline-start: var(--ui-space-4);
+  box-shadow: inset var(--ui-hairline) 0 0 var(--ui-border);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-prose);
+}
+
+/* ---------- Edit ---------- */
+
+.editForm {
+  display: grid;
+  gap: var(--ui-space-4);
+}
+
+.area {
+  display: grid;
+  gap: var(--ui-space-2);
+}
+
+.areaLabel {
+  justify-self: start;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.optional {
+  color: var(--ui-muted);
+  font-weight: var(--ui-weight-regular);
+}
+
+/* Matches the text field: 14px in, the strong hairline, the darker edge on focus. */
+.textarea {
+  width: 100%;
+  min-height: var(--ui-control-lg);
+  padding: 9px 14px;
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  resize: vertical;
+  outline: none;
+  transition: box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.textarea::placeholder {
+  color: var(--ui-subtle);
+}
+
+.textarea:focus {
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
+  transition-duration: 0s;
+}
+
+.textarea[aria-invalid="true"] {
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-danger);
+}
+
+@media (pointer: coarse) {
+  .textarea {
+    font-size: var(--ui-text-touch);
+  }
+}
+
+.areaMessage {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.areaMessage[data-error] {
+  color: var(--ui-danger-text);
+}
+
+.editCount {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+}
+
+/* ---------- Decide: the footer of the request ---------- */
+
+/* Buttons sit the same 12px from every edge; text lines up with the request above. */
+.decide {
+  --decide-text: calc(var(--inbox-pad) - var(--ui-space-3));
+  container: inbox-decide / inline-size;
+  padding: var(--ui-space-3);
+  background: var(--ui-surface);
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+.declineNote {
+  display: grid;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-2) var(--decide-text) var(--ui-space-4);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-height: var(--ui-control-md);
+}
+
+.actions .editCount {
+  padding-inline-start: var(--ui-space-1);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.kbd {
+  margin-inline: 2px -4px;
+  opacity: 0.7;
+}
+
+/* A request pane too narrow for three buttons and their keys keeps the
+   buttons; the keys are still listed under the inbox. */
+@container inbox-decide (max-width: 399px) {
+  .kbd {
+    display: none;
+  }
+}
+
+.outcome {
+  --outcome-pad: calc((var(--ui-control-md) - var(--ui-leading-md)) / 2);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--ui-space-2) var(--ui-space-3);
+  min-height: var(--ui-control-md);
+  padding: var(--outcome-pad) 0 var(--outcome-pad) var(--decide-text);
+}
+
+.outcome > button {
+  margin-inline-start: auto;
+  margin-block: calc(var(--outcome-pad) * -1);
+}
+
+.outcomeIcon {
+  flex: none;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  margin-top: 3px;
+  color: var(--ui-muted);
+}
+
+.outcome[data-status="approved"] .outcomeIcon {
+  color: var(--ui-success);
+}
+
+.outcomeText {
+  display: grid;
+  flex: 1 1 200px;
+  gap: 2px;
+  min-width: 0;
+}
+
+.outcomeLine {
+  composes: wrap from "../text/text.module.css";
+  flex: 1 1 200px;
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.outcome[data-status="locked"] .outcomeLine {
+  color: var(--ui-muted);
+  font-weight: var(--ui-weight-regular);
+}
+
+.outcomeNote {
+  composes: wrap from "../text/text.module.css";
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+/* ---------- Bulk approve ---------- */
+
+.bulkAll {
+  margin-bottom: var(--ui-space-4);
+  padding-bottom: var(--ui-space-4);
+  box-shadow: inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+}
+
+.bulkList {
+  display: grid;
+  gap: var(--ui-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- Narrow: the list, then the request ---------- */
+
+@container approvals-inbox (max-width: 639px) {
+  .toolbar {
+    display: grid;
+  }
+
+  .tools {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .search {
+    max-width: none;
+  }
+
+  /* Labels over values: an address gets the whole line. */
+  .headers {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 2px;
+  }
+
+  .headers dd + dt {
+    margin-top: var(--ui-space-2);
+  }
+
+  .sheet {
+    padding: var(--ui-space-4);
+  }
+
+  .whole {
+    min-height: 420px;
+  }
+
+  .panes {
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+    overflow: visible;
+  }
+
+  .panes[data-view="list"] .detailPane,
+  .panes[data-view="detail"] .listPane {
+    display: none;
+  }
+
+  .listPane {
+    overflow: visible;
+    border-radius: inherit;
+    box-shadow: none;
+  }
+
+  .detailScroll {
+    overflow: visible;
+  }
+
+  /* The decision stays in reach while the request scrolls past. */
+  .decide {
+    position: sticky;
+    bottom: 0;
+    border-radius: 0 0 var(--ui-radius-lg) var(--ui-radius-lg);
+  }
+
+  .hint,
+  .kbd {
+    display: none;
+  }
+}
+
+/* No keyboard to press them. */
+@media (pointer: coarse) {
+  .hint,
+  .kbd {
+    display: none;
+  }
+}
+
+/* ---------- Reduced motion: no height changes, opacity only ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .row[data-arrived] {
+    animation: inbox-row-fade var(--ui-dur-fast) var(--ui-ease-enter);
+  }
+
+  .row[data-leaving] {
+    transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+  }
+
+  .panel {
+    transition: none;
+  }
+}

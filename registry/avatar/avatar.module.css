@@ -1,0 +1,117 @@
+.avatar {
+  --avatar-size: 32px;
+  position: relative;
+  display: inline-grid;
+  flex-shrink: 0;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  /* Always a circle: never stretched by a flex or grid parent. */
+  aspect-ratio: 1;
+  min-width: var(--avatar-size);
+  max-width: var(--avatar-size);
+  overflow: hidden;
+  border-radius: var(--ui-radius-full);
+  /* Opaque: the strong fill mixed onto the surface, so circles that overlap
+     in a group never show through each other. */
+  background: var(--ui-fill-strong-solid);
+  /* Initials in the text color: crisp on the quiet fill, and still neutral. */
+  color: var(--ui-foreground);
+  vertical-align: middle;
+  user-select: none;
+}
+
+.avatar[data-size="20"] {
+  --avatar-size: 20px;
+}
+
+.avatar[data-size="24"] {
+  --avatar-size: 24px;
+}
+
+.avatar[data-size="40"] {
+  --avatar-size: 40px;
+}
+
+.avatar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border);
+  pointer-events: none;
+}
+
+.letters,
+.image {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+}
+
+.letters text {
+  fill: currentColor;
+  font-family: var(--ui-font-sans);
+  font-weight: var(--ui-weight-medium);
+}
+
+.avatar:is([data-status="loading"], [data-status="error"]) .letters {
+  animation: avatar-letters-late var(--ui-dur-fast) var(--ui-ease-enter) 300ms both;
+}
+
+@keyframes avatar-letters-late {
+  from {
+    opacity: 0;
+  }
+}
+
+/* In case the photo has transparent areas. */
+.avatar[data-status="loaded"] .letters {
+  visibility: hidden;
+  transition: visibility 0s linear var(--ui-dur-fast);
+}
+
+/* Invisible until loaded, so a failing photo never shows the broken-image mark. */
+.image {
+  object-fit: cover;
+  opacity: 0;
+}
+
+.avatar[data-status="loaded"] .image {
+  opacity: 1;
+}
+
+.avatar[data-fade] .image {
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.group {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.group > .avatar {
+  box-shadow: 0 0 0 var(--ui-knockout) var(--avatar-ring, var(--ui-surface));
+}
+
+.group > .avatar + .avatar {
+  margin-inline-start: calc(var(--avatar-size) / -5);
+}
+
+/* The +N is a circle like every avatar: its number scales with the circle
+   and stops at 99+, so it never has to widen into a pill. */
+.more {
+  composes: avatar;
+  place-items: center;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-medium) max(10px, calc(var(--avatar-size) * 0.4)) / 1 var(--ui-font-sans);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar[data-fade] .image {
+    transition: none;
+  }
+}

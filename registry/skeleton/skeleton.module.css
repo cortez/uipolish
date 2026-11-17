@@ -1,0 +1,177 @@
+/* Not inherited, so sizes never leak into nested skeletons. */
+@property --skeleton-width {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --skeleton-height {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --skeleton-size {
+  syntax: "*";
+  inherits: false;
+}
+
+/* One element per bone, one background layer per bone. The sheen is a soft
+   diagonal gradient fixed to the viewport (background-attachment: fixed) and
+   every bone runs on one clock (syncSweep), so a single band of light crosses
+   the whole layout and each bone lights up as it passes. The image is three
+   viewports wide, so the band leaves the screen and rests between passes. */
+.bone {
+  --skeleton-sheen: light-dark(
+    color-mix(in oklch, var(--ui-surface) 62%, transparent),
+    color-mix(in oklch, var(--ui-foreground) 9%, transparent)
+  );
+
+  display: block;
+  max-width: 100%;
+  background-color: var(--ui-fill-strong);
+  /* Eased stops, so the band has no edges: light gathers and fades. */
+  background-image: linear-gradient(
+    110deg,
+    transparent 42.5%,
+    color-mix(in oklch, var(--skeleton-sheen) 22%, transparent) 45.5%,
+    color-mix(in oklch, var(--skeleton-sheen) 62%, transparent) 48%,
+    var(--skeleton-sheen) 50%,
+    color-mix(in oklch, var(--skeleton-sheen) 62%, transparent) 52%,
+    color-mix(in oklch, var(--skeleton-sheen) 22%, transparent) 54.5%,
+    transparent 57.5%
+  );
+  background-size: 300% 100%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  animation: skeleton-sweep calc(var(--ui-dur-sweep) * 2) linear infinite;
+  pointer-events: none;
+  user-select: none;
+}
+
+:is([dir="rtl"]) .bone {
+  animation-direction: reverse;
+}
+
+@keyframes skeleton-sweep {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+.block {
+  width: var(--skeleton-width, 100%);
+  height: var(--skeleton-height, var(--ui-space-4));
+  border-radius: var(--ui-radius-sm);
+}
+
+.block[data-radius="md"] {
+  border-radius: var(--ui-radius-md);
+}
+
+.block[data-radius="lg"] {
+  border-radius: var(--ui-radius-lg);
+}
+
+.block[data-radius="full"] {
+  border-radius: var(--ui-radius-full);
+}
+
+.circle {
+  flex-shrink: 0;
+  width: var(--skeleton-size);
+  height: var(--skeleton-size);
+  border-radius: var(--ui-radius-full);
+}
+
+/* Text */
+
+.text {
+  display: block;
+  width: var(--skeleton-width, 100%);
+  max-width: 100%;
+}
+
+.text[data-size="sm"] {
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.text[data-size="md"] {
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.text[data-size="2xl"] {
+  font-size: var(--ui-text-2xl);
+  line-height: var(--ui-leading-2xl);
+}
+
+/* One inline bar per line, each the full width so the next one wraps. It's
+   shorter than the line, so the strut sets the line height, as for text. */
+.bar {
+  display: inline-block;
+  vertical-align: baseline;
+  width: 100%;
+  height: 0.7em;
+  height: 1cap;
+  border-radius: var(--ui-radius-full);
+}
+
+.bar:last-child:not(:only-child) {
+  width: var(--skeleton-last, 60%);
+}
+
+/* Group */
+
+.group {
+  display: grid;
+  min-width: 0;
+}
+
+.fallback,
+.content {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+.fallback {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.fallback[data-shown] {
+  opacity: 1;
+  transition: opacity var(--ui-dur-base) var(--ui-ease-enter);
+}
+
+.content[data-enter] {
+  animation: skeleton-content-in var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+}
+
+@keyframes skeleton-content-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bone {
+    background-image: none;
+    animation: none;
+  }
+}
+
+/* Forced colors drop background fills; an outline keeps the shapes. */
+@media (forced-colors: active) {
+  .bone {
+    outline: var(--ui-hairline) solid GrayText;
+    outline-offset: calc(var(--ui-hairline) * -1);
+  }
+}

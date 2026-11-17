@@ -1,0 +1,10 @@
+{
+  "name": "breadcrumbs",
+  "title": "Breadcrumbs",
+  "summary": "Trail of links to the current page. A long middle folds into a … that opens in place, long labels fade instead of wrapping, and any router’s link fits.",
+  "version": "0.1.3",
+  "dependencies": [
+    "icons",
+    "text"
+  ]
+}

@@ -1,0 +1,663 @@
+/* Registered so the thread's edge fades can transition. */
+@property --chat-fade-top {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --chat-fade-bottom {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+/* Layout: the list on the canvas, the conversation on the surface one step up.
+   No line between them; the change of surface is the edge. */
+
+.root {
+  --sidebar-width: 264px;
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  background: var(--ui-canvas);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+  transition: grid-template-columns var(--ui-dur-panel) var(--ui-ease-expand);
+}
+
+.root[data-sidebar="closed"] {
+  grid-template-columns: 0px minmax(0, 1fr);
+  transition-duration: var(--ui-dur-base);
+  transition-timing-function: var(--ui-ease-collapse);
+}
+
+.root[data-narrow] {
+  grid-template-columns: minmax(0, 1fr);
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    transition: none;
+  }
+}
+
+.glyph {
+  flex-shrink: 0;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke, 1.5);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Sidebar */
+
+.sidebar {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Fixed width, so the list doesn't rewrap while the column folds. */
+.sidebarInner {
+  width: var(--sidebar-width);
+  height: 100%;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.root[data-sidebar="closed"] .sidebarInner {
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.sidebarBody {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100%;
+  min-height: 0;
+}
+
+.sidebarBody[data-in-drawer] {
+  height: auto;
+}
+
+.sidebarTop {
+  display: grid;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-3) var(--ui-space-3) var(--ui-space-2);
+  /* The search sits at the button's height in a sidebar. */
+  --ui-control-md: var(--ui-control-sm);
+  --ui-radius-md: var(--ui-radius-sm);
+}
+
+.sidebarBody[data-in-drawer] .sidebarTop {
+  padding: 0 0 var(--ui-space-2);
+}
+
+.newChat {
+  justify-content: flex-start;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  min-height: 0;
+  padding: var(--ui-space-2) var(--ui-space-3) var(--ui-space-4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+
+.sidebarBody[data-in-drawer] .list {
+  padding-inline: 0;
+  overflow: visible;
+}
+
+.sidebarFooter {
+  padding: var(--ui-space-3);
+}
+
+.sidebarBody[data-in-drawer] .sidebarFooter {
+  padding-inline: 0;
+}
+
+.group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+}
+
+.groupLabel {
+  margin: 0;
+  padding: 0 10px var(--ui-space-1);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+}
+
+.rows {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  position: relative;
+  border-radius: var(--ui-radius-sm);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .row:hover:not(:has(.rename)) {
+    background: var(--ui-fill);
+  }
+}
+
+.row[data-active] {
+  background: var(--ui-fill-strong);
+}
+
+.rowButton {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: var(--ui-control-sm);
+  padding: 0 36px 0 10px;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
+  text-align: start;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.rowButton:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.row[data-active] .rowButton {
+  font-weight: var(--ui-weight-medium);
+}
+
+.rowTitle {
+  composes: wrap from "../text/text.module.css";
+  flex: 1;
+}
+
+/* The "…" shows on hover, focus, the active row and while its menu is open;
+   always on touch. */
+.more {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 4px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 26px;
+  margin-block: auto;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-muted);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* 40px to a finger without changing the row. */
+.more::after {
+  content: "";
+  position: absolute;
+  inset: -7px -6px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .more {
+    opacity: 0;
+  }
+  .row:hover .more,
+  .row:focus-within .more,
+  .row[data-active] .more,
+  .row[data-menu-open] .more {
+    opacity: 1;
+  }
+  .more:hover {
+    color: var(--ui-foreground);
+    background: var(--ui-fill-strong);
+  }
+}
+
+@media (pointer: coarse) {
+  .rowButton {
+    min-height: 44px;
+    font-size: var(--ui-text-md);
+  }
+}
+
+.row[data-menu-open] .more {
+  color: var(--ui-foreground);
+  background: var(--ui-fill-strong);
+}
+
+.more:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.rename {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.renameInput {
+  width: 100%;
+  height: var(--ui-control-sm);
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 1px var(--ui-field-focus);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
+  outline: none;
+}
+
+.renameInput[aria-invalid] {
+  box-shadow: inset 0 0 0 1px var(--ui-danger);
+}
+
+.renameBusy {
+  composes: sweep from "../text/text.module.css";
+  --sweep-dim: 0.5;
+}
+
+@media (pointer: coarse) {
+  .renameInput {
+    height: 44px;
+    font-size: var(--ui-text-touch);
+  }
+}
+
+.renameError {
+  margin: 0;
+  padding: 0 10px var(--ui-space-1);
+  color: var(--ui-danger-text);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.listNote {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.listLoading {
+  composes: listNote waits;
+  composes: sweep from "../text/text.module.css";
+  padding: var(--ui-space-2) 10px;
+}
+
+.listEmpty {
+  display: grid;
+  justify-items: start;
+  gap: var(--ui-space-1);
+  padding: var(--ui-space-2) 10px;
+}
+
+.listEmpty > button {
+  margin-inline-start: -10px;
+}
+
+.listEmptyTitle {
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+  overflow-wrap: anywhere;
+}
+
+/* A fast load never flashes its loading line: it fades in after 300ms. */
+.waits {
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) 300ms;
+}
+
+@starting-style {
+  .waits {
+    opacity: 0;
+  }
+}
+
+/* Main column */
+
+.main {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  background: var(--ui-surface);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  min-height: 52px;
+  padding: var(--ui-space-2) var(--ui-space-3);
+}
+
+.iconButton {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 36px;
+  height: var(--ui-control-sm);
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-muted);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .iconButton:hover {
+    color: var(--ui-foreground);
+    background: var(--ui-fill);
+  }
+}
+
+.iconButton:active {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+.iconButton:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+@media (pointer: coarse) {
+  .iconButton {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.title {
+  composes: wrap from "../text/text.module.css";
+  flex: 1;
+  margin: 0;
+  padding-inline: var(--ui-space-1);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.model {
+  flex-shrink: 0;
+}
+
+.thread {
+  min-height: 0;
+}
+
+/* Edge fades on the thread's scroller (its role="log"), the scroll area's
+   technique: the top and bottom fade out over --ui-space-6, but only on an
+   edge with more past it. The script in useEdgeFades sets the two numbers;
+   the second, solid mask layer keeps a classic scrollbar out of the fade. */
+.thread > [role="log"] {
+  --chat-fade: var(--ui-space-6);
+  mask-image:
+    linear-gradient(
+      to bottom,
+      rgb(0 0 0 / calc(1 - var(--chat-fade-top))),
+      black var(--chat-fade),
+      black calc(100% - var(--chat-fade)),
+      rgb(0 0 0 / calc(1 - var(--chat-fade-bottom)))
+    ),
+    linear-gradient(black, black);
+  mask-repeat: no-repeat;
+  mask-size:
+    100% 100%,
+    var(--chat-fade-bar, 0px) 100%;
+  mask-position:
+    0 0,
+    right;
+  scroll-padding-block: var(--chat-fade);
+}
+
+:is([dir="rtl"]) .thread > [role="log"] {
+  mask-position:
+    0 0,
+    left;
+}
+
+.thread > [role="log"][data-fade-ready] {
+  transition:
+    --chat-fade-top var(--ui-dur-fast) var(--ui-ease-color),
+    --chat-fade-bottom var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+/* The mask would fade the scroller's own focus ring at the edges, so the thread draws it. */
+.thread > [role="log"]:focus-visible {
+  outline: none;
+}
+
+.thread:has(> [role="log"]:focus-visible) {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.composer {
+  display: grid;
+  width: 100%;
+  max-width: calc(var(--message-thread-width, 680px) + 2 * var(--ui-space-4));
+  margin-inline: auto;
+  padding: 0 var(--ui-space-4) var(--ui-space-2);
+}
+
+/* A closed alert folds to nothing; its gap goes with it. */
+.notice[data-shown] {
+  margin-bottom: var(--ui-space-2);
+}
+
+/* New chat, loading */
+
+.welcome {
+  display: grid;
+  justify-items: center;
+  gap: var(--ui-space-5);
+  width: 100%;
+  max-width: 560px;
+}
+
+.greeting {
+  margin: 0;
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-title);
+  text-wrap: balance;
+}
+
+.starters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-2);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.starters li {
+  display: grid;
+  animation: starter-in var(--ui-dur-fast) var(--ui-ease-enter) backwards;
+}
+
+@keyframes starter-in {
+  from {
+    opacity: 0;
+    translate: 0 4px;
+  }
+}
+
+.starter {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  padding: var(--ui-space-3) 14px;
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+  text-align: start;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+@media (hover: hover) {
+  .starter:hover {
+    background: var(--ui-fill-solid);
+  }
+}
+
+.starter:active {
+  scale: var(--ui-scale-press);
+  transition-duration: 0s;
+}
+
+.starter:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.starterTitle {
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+}
+
+.starterDetail {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.root[data-narrow] .starters {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Two starters are enough on a phone; the rest is one tap away in a new chat. */
+.root[data-narrow] .starters li:nth-child(n + 3) {
+  display: none;
+}
+
+.loading {
+  composes: sweep from "../text/text.module.css";
+  composes: waits;
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .starters li {
+    animation: none;
+  }
+  .starter:active {
+    scale: none;
+  }
+}
+
+/* Assistant turn */
+
+.turn {
+  gap: var(--ui-space-3);
+}
+
+/* 16px under the answer, the same as Message thread's actions. */
+.turn > .actions {
+  margin-top: var(--ui-space-1);
+}
+
+.steps {
+  max-width: 100%;
+}
+
+.settled :global(button) {
+  animation: citation-in var(--ui-dur-fast) var(--ui-ease-enter) backwards;
+}
+
+@keyframes citation-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.sourceList {
+  justify-self: start;
+}
+
+.actions {
+  margin-inline-start: -8px;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.actions[data-hidden] {
+  visibility: hidden;
+}
+
+/* With a mouse, earlier replies show their actions on hover; the latest one always. */
+@media (hover: hover) and (pointer: fine) {
+  .actions:not([data-rated]) {
+    opacity: 0;
+  }
+  .assistant:hover .actions,
+  .actions:focus-within,
+  .assistant:last-child .actions {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settled :global(button) {
+    animation: none;
+  }
+}
+
+/* Drawer */
+
+.drawer {
+  --drawer-pad: var(--ui-space-4);
+}

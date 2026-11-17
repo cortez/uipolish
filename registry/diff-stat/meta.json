@@ -1,0 +1,10 @@
+{
+  "name": "diff-stat",
+  "title": "Diff stat",
+  "summary": "Lines added and removed, “+12 −3”, in the type around it: added in green, removed in red, figures of equal width, and one sentence for screen readers.",
+  "kit": "agent",
+  "version": "0.1.0",
+  "dependencies": [
+    "text"
+  ]
+}

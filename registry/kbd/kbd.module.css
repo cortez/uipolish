@@ -1,0 +1,73 @@
+.root {
+  --kbd-line: var(--ui-leading-md);
+  --kbd-height: calc(var(--kbd-line) - 2px);
+  --kbd-pad: 5px;
+
+  display: inline-grid;
+  justify-items: var(--kbd-align, center);
+  align-items: center;
+  font: inherit;
+  white-space: nowrap;
+}
+
+/* `top`, not `middle`: middle centers on the x-height and makes the line taller. */
+.root[data-variant="caps"] {
+  height: var(--kbd-line);
+  vertical-align: top;
+}
+
+.root[data-size="sm"] {
+  --kbd-line: var(--ui-leading-sm);
+  --kbd-pad: 4px;
+}
+
+.spelling {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  min-width: 0;
+}
+
+/* Holds its width unseen until the platform stylesheet decides (see kbd.tsx). */
+.spelling[data-kbd-spelling="apple"] {
+  visibility: hidden;
+}
+
+.keys {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.key {
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  /* A single key is a short pill, never a circle: the same shape as a
+     button, just smaller. */
+  min-width: calc(var(--kbd-height) * 1.5);
+  height: var(--kbd-height);
+  padding-inline: var(--kbd-pad);
+  border-radius: var(--ui-radius-full);
+  background: color-mix(in oklch, currentColor 7%, transparent);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  font-style: normal;
+  line-height: 1;
+}
+
+.root[data-variant="plain"] .keys {
+  gap: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (forced-colors: active) {
+  .key {
+    border: 1px solid CanvasText;
+  }
+}

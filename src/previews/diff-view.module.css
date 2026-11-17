@@ -1,0 +1,23 @@
+/* The finished diff sets the cell's size. While streaming, the live one is
+   laid over it and takes no space of its own, so nothing that follows moves;
+   once done it is the same size and takes its place in the flow, so lines a
+   reader expands push the page as they should. */
+.reserve {
+  position: relative;
+  display: grid;
+}
+
+.reserve > * {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+.ghost {
+  visibility: hidden;
+}
+
+.live[data-streaming] {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+}

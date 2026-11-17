@@ -1,0 +1,179 @@
+.root {
+  --checkbox-size: 16px;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--ui-space-2);
+  max-width: 100%;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Empty, so its baseline is its bottom edge; shifting by half its height less
+   0.5cap centers it on the first line's capitals. The margin cancels the shift. */
+.control {
+  --optical: calc(var(--checkbox-size) / 2 - 0.5cap);
+  position: relative;
+  flex-shrink: 0;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  margin-top: calc(var(--optical) * -1);
+  translate: 0 var(--optical);
+}
+
+/* Without the `cap` unit (Safari before 17.2) --optical is invalid and the
+   control drops onto the baseline, 2-6px high. The system faces' capitals
+   are about 0.7em tall, so half of that stands in. */
+@supports not (height: 1cap) {
+  .control {
+    --optical: calc(var(--checkbox-size) / 2 - 0.35em);
+  }
+}
+
+.control:only-child {
+  margin-top: 0;
+  translate: none;
+}
+
+.box {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: calc(var(--ui-radius-sm) / 2);
+  appearance: none;
+  background: var(--ui-surface);
+  /* The one edge every box and control has; hover steps it darker. */
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  color: var(--ui-foreground);
+  cursor: inherit;
+  /* Unchecking: the fill waits for the mark to un-draw. Hover must not change
+     background here or it cancels that delay. */
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color) var(--ui-dur-instant),
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.root:is([data-state="on"], [data-state="mixed"]) .box {
+  background: var(--ui-accent);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-accent);
+  color: var(--ui-on-accent);
+  transition-delay: 0s;
+}
+
+.mark {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: var(--ui-on-accent);
+  stroke-width: var(--ui-icon-stroke, 1.5);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+/* pathLength="1": 0 is drawn, 1.05 is hidden with no round-cap dot left. */
+.mark path {
+  d: path("M4.25 8.25L6.75 10.75L11.75 5.25");
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: 1.05;
+  transition: stroke-dashoffset var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.root[data-shape="dash"] .mark path {
+  d: path("M4.75 8L6.75 8L11.25 8");
+}
+
+.root:is([data-state="on"], [data-state="mixed"]) .mark path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--ui-dur-base) var(--ui-ease-draw);
+}
+
+.root[data-morph] .mark path {
+  transition:
+    stroke-dashoffset var(--ui-dur-base) var(--ui-ease-draw),
+    d var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+@media (hover: hover) {
+  .root:hover:not([data-disabled]) .box {
+    box-shadow:
+      inset 0 0 0 var(--ui-hairline) var(--ui-muted);
+  }
+  .root:is([data-state="on"], [data-state="mixed"]):hover:not([data-disabled]) .box {
+    background: color-mix(in oklch, var(--ui-accent) 86%, var(--ui-on-accent));
+  }
+}
+
+.root:active:not([data-disabled]) .box {
+  background: var(--ui-fill-strong-solid);
+  transition-duration: var(--ui-dur-press);
+  transition-delay: 0s;
+}
+
+.root:is([data-state="on"], [data-state="mixed"]):active:not([data-disabled]) .box {
+  background: color-mix(in oklch, var(--ui-accent) 78%, var(--ui-on-accent));
+}
+
+.box:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.text {
+  display: grid;
+  gap: var(--ui-space-1);
+  min-width: 0;
+}
+
+.label {
+  font-weight: var(--ui-weight-medium);
+}
+
+.description {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  letter-spacing: 0;
+  text-wrap: pretty;
+}
+
+.root[data-disabled] {
+  cursor: default;
+}
+
+.root[data-disabled] :is(.control, .label) {
+  opacity: 0.5;
+}
+
+.control::after {
+  content: "";
+  position: absolute;
+  inset: calc((var(--checkbox-size) - 24px) / 2);
+}
+
+@media (pointer: coarse) {
+  .control::after {
+    inset: calc((var(--checkbox-size) - 40px) / 2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mark path,
+  .root:is([data-state="on"], [data-state="mixed"]) .mark path,
+  .root[data-morph] .mark path {
+    transition: none;
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "background-run",
+  "title": "Background run",
+  "summary": "An agent task that keeps going while the person is elsewhere. One calm row says how it’s going in a glyph and one line, marks what finished while they were away, and opens to its progress, what changed and up to two actions.",
+  "kit": "agent",
+  "version": "0.3.1",
+  "dependencies": [
+    "animated-size",
+    "button",
+    "icons",
+    "progress",
+    "text",
+    "tool-steps"
+  ]
+}

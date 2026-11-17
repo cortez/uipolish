@@ -1,0 +1,10 @@
+{
+  "name": "chip",
+  "title": "Chip",
+  "summary": "Filter chips that stay pressed, and removable chips with their own named remove button. A plus swings into a check without changing the width, and removed chips fade before the rest slide into place.",
+  "version": "0.4.0",
+  "dependencies": [
+    "icons",
+    "text"
+  ]
+}

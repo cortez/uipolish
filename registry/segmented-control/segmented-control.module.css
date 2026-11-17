@@ -1,0 +1,128 @@
+/* The whole control, track included, is a control height: --segmented-h.
+   The options sit inside it, --segmented-pad from every edge. Track, pill
+   and inset are the Tabs' own (--ui-track-* in the tokens): the two share
+   one look and differ only in what they mean. */
+.root {
+  --segmented-h: var(--ui-control-md);
+  --segmented-pad: var(--ui-track-inset);
+  --segmented-option: calc(var(--segmented-h) - var(--segmented-pad) * 2);
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(max-content, 1fr);
+  max-width: 100%;
+  /* Labels stay whole, so in a container too narrow for them the options
+     scroll sideways inside the track instead of pushing the page. */
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  padding: var(--segmented-pad);
+  border-radius: var(--ui-radius-full);
+  box-shadow: var(--ui-track-edge);
+  font-family: var(--ui-font-sans);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+/* Tabs come in one size. At sm a 4px inset would leave a 24px pill too
+   tight around its label, so the inset drops by 1px; all else is shared. */
+.root[data-size="sm"] {
+  --segmented-h: var(--ui-control-sm);
+  --segmented-pad: calc(var(--ui-track-inset) - 1px);
+}
+
+.root[data-size="sm"] .option {
+  padding-inline: 12px;
+  font-size: var(--ui-text-sm);
+}
+
+.root[data-widths="content"] {
+  grid-auto-columns: auto;
+}
+
+.indicator {
+  position: absolute;
+  top: var(--segmented-pad);
+  left: 0;
+  z-index: -1;
+  height: var(--segmented-option);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-track-pill);
+  contain: strict;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.root[data-ready] .indicator[data-visible] {
+  visibility: visible;
+}
+
+.option {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  height: var(--segmented-option);
+  padding-inline: 14px;
+  border-radius: var(--ui-radius-full);
+  color: var(--ui-muted);
+  /* One weight in every state, so selecting never changes a width. */
+  font: var(--ui-weight-medium) var(--ui-text-md) / 1 var(--ui-font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.option[data-checked] {
+  color: var(--ui-foreground);
+}
+
+/* Until the pill has measured, the checked option carries it itself. */
+.root:not([data-ready]) .option[data-checked] {
+  background: var(--ui-track-pill);
+}
+
+@media (hover: hover) {
+  .option:hover:not([data-checked], [data-disabled]) {
+    color: var(--ui-foreground);
+  }
+}
+
+.option:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.content {
+  composes: wrap from "../text/text.module.css";
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  /* A label with a count beside it stays on one line, like any other. */
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.content svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  flex-shrink: 0;
+}
+
+.option[data-disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+@media (pointer: coarse) {
+  .option::after {
+    content: "";
+    position: absolute;
+    inset: -4px 0;
+  }
+}

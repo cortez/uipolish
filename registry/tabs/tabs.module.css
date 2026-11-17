@@ -1,0 +1,250 @@
+.tabs {
+  display: grid;
+  gap: var(--ui-space-4);
+  min-width: 0;
+  font-family: var(--ui-font-sans);
+}
+
+.list {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  justify-self: start;
+  max-width: 100%;
+  /* The track the Segmented control shares: --ui-track-* in the tokens. */
+  padding: var(--ui-track-inset);
+  border-radius: var(--ui-radius-full);
+  box-shadow: var(--ui-track-edge);
+  overflow-x: auto;
+  /* Also blocks the browser's back-swipe gesture. */
+  overscroll-behavior-inline: none;
+  /* Keeps a selected tab scrolled clear of the edge fade. */
+  scroll-padding-inline: var(--ui-space-6);
+  scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.list[data-overflow-end] {
+  mask-image: linear-gradient(to left, transparent, black var(--ui-space-6));
+}
+
+.list[data-overflow-start] {
+  mask-image: linear-gradient(to right, transparent, black var(--ui-space-6));
+}
+
+:is([dir="rtl"]) .list[data-overflow-end] {
+  mask-image: linear-gradient(to right, transparent, black var(--ui-space-6));
+}
+
+:is([dir="rtl"]) .list[data-overflow-start] {
+  mask-image: linear-gradient(to left, transparent, black var(--ui-space-6));
+}
+
+.list[data-overflow-start][data-overflow-end] {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black var(--ui-space-6),
+    black calc(100% - var(--ui-space-6)),
+    transparent
+  );
+}
+
+/* Base UI's Indicator places it on the selected tab through its CSS
+   variables; the flight between tabs is a script animation on top. */
+.indicator {
+  position: absolute;
+  top: var(--ui-track-inset);
+  left: 0;
+  z-index: -1;
+  width: var(--active-tab-width);
+  height: var(--ui-control-sm);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-track-pill);
+  transform: translateX(var(--active-tab-left));
+  contain: strict;
+  pointer-events: none;
+}
+
+.tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-shrink: 0;
+  height: var(--ui-control-sm);
+  padding-inline: 14px;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-muted);
+  /* One weight for every state: bolding the selected tab would widen it. */
+  font: var(--ui-weight-medium) var(--ui-text-md) / 1 var(--ui-font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.tab[data-active] {
+  color: var(--ui-foreground);
+}
+
+/* Until the Indicator has measured, the selected tab carries the pill itself. */
+.list:not(:has(> .indicator:not([hidden]))) .tab[data-active] {
+  background: var(--ui-track-pill);
+}
+
+@media (hover: hover) {
+  .tab:hover:not([data-active]) {
+    color: var(--ui-foreground);
+  }
+}
+
+.tab:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.tab svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  pointer-events: none;
+}
+
+/* ---------- Count ---------- */
+
+.count {
+  color: var(--ui-subtle);
+  font-weight: var(--ui-weight-regular);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.tab[data-active] .count {
+  color: var(--ui-muted);
+}
+
+@media (hover: hover) {
+  .tab:hover:not([data-active]) .count {
+    color: var(--ui-muted);
+  }
+}
+
+.pause {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (pointer: coarse) {
+  .tab::after {
+    content: "";
+    position: absolute;
+    inset: -4px 0;
+  }
+}
+
+/* ---------- Vertical ---------- */
+
+/* The 480px container breakpoint below must match the script, which reads
+   the axis from the layout. */
+.tabs[data-layout="vertical"] {
+  container-type: inline-size;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--ui-space-6);
+  align-items: start;
+}
+
+.tabs[data-layout="vertical"] > * {
+  grid-column: 1 / -1;
+}
+
+@container (width >= 480px) {
+  .tabs[data-layout="vertical"] > * {
+    grid-column: auto;
+  }
+
+  .tabs[data-layout="vertical"] > .list {
+    flex-direction: column;
+    justify-self: stretch;
+    min-width: 160px;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+    mask-image: none;
+  }
+
+  .tabs[data-layout="vertical"] > .list > .indicator {
+    top: 0;
+    width: 100%;
+    height: var(--active-tab-height);
+    transform: translateY(var(--active-tab-top));
+  }
+
+  .tabs[data-layout="vertical"] > .list > .tab {
+    justify-content: flex-start;
+  }
+
+  .tabs[data-layout="vertical"] > .list > .tab > .count {
+    margin-inline-start: auto;
+    padding-inline-start: var(--ui-space-3);
+  }
+
+  /* Rows touch, so the hit area can't extend past them; the row grows instead. */
+  @media (pointer: coarse) {
+    .tabs[data-layout="vertical"] > .list > .tab {
+      height: 40px;
+    }
+    .tabs[data-layout="vertical"] > .list > .tab::after {
+      inset: 0;
+    }
+  }
+}
+
+.panel {
+  min-width: 0;
+  border-radius: var(--ui-radius-md);
+}
+
+.panel:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.panels {
+  display: grid;
+}
+
+.panel[data-crossfade] {
+  grid-area: 1 / 1;
+  /* Base UI marks unselected panels hidden; here they still hold the cell. */
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    visibility 0s linear var(--ui-dur-instant);
+}
+
+.panel[data-crossfade][data-selected] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    visibility 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel[data-crossfade],
+  .panel[data-crossfade][data-selected] {
+    transition: none;
+  }
+}

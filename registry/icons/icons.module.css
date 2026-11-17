@@ -1,0 +1,166 @@
+.icon {
+  flex-shrink: 0;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke, 1.5);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* A chevron is one size everywhere (--ui-icon-chevron), a step under the
+   icons around it. */
+.icon[data-icon^="chevron"] {
+  width: var(--ui-icon-chevron);
+  height: var(--ui-icon-chevron);
+}
+
+/* A disclosure chevron that points right and opens downward turns a
+   quarter turn (data-turn="open"): changing axis, a morph between the two
+   shapes reads as the arrow coming apart, so this one rotates, on the glide
+   curve with no overshoot. Down/up chevrons morph instead. */
+.icon.icon[data-turn] {
+  /* Doubled class: outranks a component's own `transition` on its chevron
+     (usually its hover color), so both are listed here. */
+  transition:
+    rotate var(--ui-dur-base) var(--ui-ease-glide),
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.icon[data-turn="open"] {
+  rotate: 90deg;
+}
+
+:is([dir="rtl"]) .icon[data-turn] {
+  scale: -1 1;
+}
+
+:is([dir="rtl"]) .icon[data-turn="open"] {
+  rotate: -90deg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon.icon[data-turn] {
+    transition: color var(--ui-dur-instant) var(--ui-ease-color);
+  }
+}
+
+/* The gap (3) must exceed any path plus margins so the dash never repeats. */
+.stroke {
+  stroke-dasharray: var(--len, 1) 3;
+  stroke-dashoffset: var(--on, 0);
+  transform-box: fill-box;
+  transform-origin: center;
+  /* --icon-morph-ease: set to --ui-ease-glide where a morph should land
+     without overshoot (a result, not a toggle). */
+  transition:
+    d var(--ui-dur-move) var(--icon-morph-ease, var(--ui-ease-move)),
+    stroke-dasharray var(--ui-dur-move) var(--icon-morph-ease, var(--ui-ease-move)),
+    stroke-dashoffset var(--ui-dur-move) var(--icon-morph-ease, var(--ui-ease-move)),
+    rotate var(--ui-dur-move) var(--icon-morph-ease, var(--ui-ease-move)),
+    translate var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+/* A stroke that leaves (copy's sheets as the check arrives) gets out of
+   the way: it erases, fades and draws in slightly, all quickly, so the two
+   shapes never tangle in the same spot. */
+.stroke[data-off] {
+  stroke-dashoffset: var(--off, 1.3);
+  opacity: 0;
+  scale: 0.85;
+  transition:
+    stroke-dashoffset var(--ui-dur-fast) var(--ui-ease-exit),
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    scale var(--ui-dur-fast) var(--ui-ease-exit),
+    translate var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+/* A stroke that arrives waits a beat for the old one to clear, then draws
+   on in one clean pass. */
+.stroke[data-enter] {
+  transition:
+    stroke-dashoffset var(--ui-dur-base) var(--ui-ease-draw) calc(var(--ui-dur-instant) * 0.6),
+    translate var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+/* Two strokes that meet end to end at rest (copy's sheet and rim): the
+   moving one lands without overshoot, so the seam never opens, and the
+   other erases in place along its path instead of fading and shrinking, so
+   copy → check reads as one line opening at its corner. */
+.stroke.seam:not([data-enter]) {
+  transition:
+    d var(--ui-dur-glide) var(--ui-ease-glide),
+    stroke-dasharray var(--ui-dur-glide) var(--ui-ease-glide),
+    stroke-dashoffset var(--ui-dur-glide) var(--ui-ease-glide),
+    translate var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.stroke.seam[data-off] {
+  opacity: 1;
+  scale: none;
+  transition:
+    stroke-dashoffset var(--ui-dur-instant) var(--ui-ease-draw),
+    translate var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+@starting-style {
+  .icon[data-ready] .stroke[data-enter] {
+    stroke-dashoffset: var(--off, 1.3);
+  }
+}
+
+.block {
+  stroke-width: 4;
+}
+
+/* Mask copy of a cut stroke: gaps the other strokes on both sides of it. */
+.cut {
+  stroke: black;
+  stroke-width: calc(var(--ui-icon-stroke, 1.5) * 3);
+}
+
+/* ---------- Parent hover ---------- */
+
+@media (hover: hover) {
+  :is(button, a, [role="button"], [role="menuitem"]):hover:not(:disabled, [aria-disabled="true"]) .lid {
+    translate: 0 -1px;
+  }
+  :is(button, a, [role="button"], [role="menuitem"]):hover:not(:disabled, [aria-disabled="true"]) .out {
+    translate: 1px -1px;
+  }
+  :is(button, a, [role="button"], [role="menuitem"]):hover:not(:disabled, [aria-disabled="true"]) .drop {
+    translate: 0 1px;
+  }
+  :is(button, a, [role="button"], [role="menuitem"]):hover:not(:disabled, [aria-disabled="true"]) .forward {
+    translate: 1px 0;
+  }
+}
+
+:is(button, a, [role="button"], [role="menuitem"]):focus-visible .lid {
+  translate: 0 -1px;
+}
+
+:is(button, a, [role="button"], [role="menuitem"]):focus-visible .out {
+  translate: 1px -1px;
+}
+
+:is(button, a, [role="button"], [role="menuitem"]):focus-visible .drop {
+  translate: 0 1px;
+}
+
+:is(button, a, [role="button"], [role="menuitem"]):focus-visible .forward {
+  translate: 1px 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stroke,
+  .stroke[data-off],
+  .stroke[data-enter],
+  .stroke.seam:not([data-enter]),
+  .stroke.seam[data-off] {
+    transition: none;
+  }
+}

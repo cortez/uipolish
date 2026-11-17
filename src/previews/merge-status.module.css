@@ -1,0 +1,17 @@
+/* As it sits on top of a review pane: the pane's canvas, its padding. */
+.pane {
+  width: 100%;
+  max-width: 440px;
+  box-sizing: border-box;
+  padding: var(--ui-space-1) var(--ui-gap-stack);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-canvas);
+  box-shadow: var(--ui-edge);
+}
+
+.list {
+  display: grid;
+  gap: var(--ui-gap-tight);
+  width: 100%;
+  max-width: 440px;
+}

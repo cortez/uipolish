@@ -1,0 +1,16 @@
+{
+  "name": "pipeline",
+  "title": "Pipeline",
+  "summary": "A multi-stage run (a deploy, an import, a sync) as a row of nodes whose connectors fill as each stage finishes, over the live output of the stage you’re looking at. A failure stops where it happened, says why, and offers Retry.",
+  "kit": "agent",
+  "version": "0.2.2",
+  "dependencies": [
+    "badge",
+    "button",
+    "icons",
+    "text"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

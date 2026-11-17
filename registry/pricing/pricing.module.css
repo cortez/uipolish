@@ -1,0 +1,815 @@
+/* The section is its own container: plans sit side by side and the table
+   shows every plan once the section, not the window, is wide enough. */
+.root {
+  container: pricing / inline-size;
+  /* Between the parts of the page; the Enterprise row sits closer, at the plans' own gap. */
+  --pricing-gap: var(--ui-gap-section);
+  --pricing-plan-gap: var(--ui-gap-block);
+  /* A card's inset: the plans, the Enterprise row, the table and the questions all read it. */
+  --pricing-inset: var(--ui-pad-card);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--pricing-gap);
+  min-width: 0;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+.root[data-count="2"] {
+  --pricing-columns: 2;
+}
+
+.root[data-count="4"] {
+  --pricing-columns: 4;
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+/* ---------- Header ---------- */
+
+.header {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.title {
+  max-width: 22ch;
+  margin: 0;
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-display);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-display);
+  letter-spacing: var(--ui-tracking-title);
+  text-wrap: balance;
+}
+
+.lede {
+  max-width: 46ch;
+  margin: var(--ui-space-3) 0 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-wrap: balance;
+}
+
+.switch {
+  margin-top: var(--ui-space-5);
+}
+
+/* The saving rides along in the Yearly segment: a step smaller than its
+   label, in the success color, said once. */
+.saving {
+  margin-inline-start: var(--ui-space-2);
+  color: var(--ui-success-text);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Plans ---------- */
+
+/* Stacked, the column is the card: capped so its button never stretches across a wide page. */
+.plans {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--pricing-plan-gap);
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+@container pricing (min-width: 760px) {
+  .plans {
+    grid-template-columns: repeat(var(--pricing-columns, 3), minmax(0, 1fr));
+    max-width: none;
+  }
+
+  .root[data-count="2"] .plans {
+    max-width: 800px;
+  }
+}
+
+/* Each card's six parts share rows with its neighbors' (subgrid): name,
+   pitch, price, button, usage and features line up across the row
+   whatever the copy. The rhythm is set by each part's top margin, so the
+   rows themselves carry no gap. */
+.plan {
+  display: grid;
+  grid-row: span 6;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+  min-width: 0;
+  padding: var(--pricing-inset);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+}
+
+/* The plan to steer people to: the selected edge and the raised shadow.
+   No glow, no gradient: the badge says why. In dark, where nothing casts a
+   shadow, the card lifts a step instead, like anything raised there. */
+.plan[data-featured] {
+  background: light-dark(var(--ui-surface), var(--ui-fill-solid));
+  box-shadow: 0 0 0 var(--ui-hairline) var(--ui-field-focus), var(--ui-shadow-raised);
+}
+
+.planHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-1) var(--ui-space-2);
+  min-width: 0;
+  /* The badge never makes one card's name row taller than another's. */
+  min-height: var(--ui-leading-md);
+}
+
+.planName {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-md);
+  letter-spacing: var(--ui-tracking-heading);
+  overflow-wrap: anywhere;
+}
+
+.planDescription {
+  margin: var(--ui-space-1) 0 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.priceBlock {
+  display: grid;
+  align-content: start;
+  gap: var(--ui-space-1);
+  margin-top: var(--ui-space-5);
+}
+
+.price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--ui-space-2);
+  margin: 0;
+}
+
+/* The one big thing on the card, in the headings' face. */
+.amount {
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-display);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-display);
+  letter-spacing: var(--ui-tracking-title);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.per {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.billed {
+  margin: 0;
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Figures that roll ---------- */
+
+.roll {
+  display: inline-flex;
+}
+
+.rollSlot {
+  display: inline-grid;
+  justify-items: center;
+}
+
+.rollChar {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(var(--roll-off));
+  /* Leaving: fades on the short step. */
+  transition:
+    transform var(--ui-dur-glide) var(--ui-ease-glide),
+    opacity var(--ui-dur-instant) var(--ui-ease-exit);
+  transition-delay: calc(var(--roll-i, 0) * var(--ui-dur-press) / 2);
+}
+
+/* Monthly figures wait above, yearly ones below: a drum that rolls up to
+   yearly and back down to monthly. */
+.rollChar[data-side="month"] {
+  --roll-off: -0.5em;
+}
+
+.rollChar[data-side="year"] {
+  --roll-off: 0.5em;
+}
+
+/* Arriving: the figure leaving clears first, so two never sit on top of each other. */
+.rollChar[data-on] {
+  opacity: 1;
+  transform: none;
+  transition:
+    transform var(--ui-dur-glide) var(--ui-ease-glide),
+    opacity var(--ui-dur-fast) var(--ui-ease-enter);
+  transition-delay:
+    calc(var(--roll-i, 0) * var(--ui-dur-press) / 2),
+    calc(var(--roll-i, 0) * var(--ui-dur-press) / 2 + var(--ui-dur-instant) / 2);
+}
+
+/* A line with a monthly and a yearly wording: one cell, the wider box held. */
+.swap {
+  display: inline-grid;
+}
+
+.swapItem {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(var(--swap-off));
+  transition:
+    transform var(--ui-dur-glide) var(--ui-ease-glide),
+    opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.swapItem[data-side="month"] {
+  --swap-off: calc(var(--ui-space-1) * -1);
+}
+
+.swapItem[data-side="year"] {
+  --swap-off: var(--ui-space-1);
+}
+
+.swapItem[data-on] {
+  opacity: 1;
+  transform: none;
+  transition:
+    transform var(--ui-dur-glide) var(--ui-ease-glide),
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rollChar,
+  .swapItem {
+    transform: none;
+    transition-delay: 0s;
+  }
+}
+
+/* ---------- Action ---------- */
+
+.action {
+  display: grid;
+  align-content: start;
+  gap: var(--ui-space-2);
+  margin-top: var(--ui-space-5);
+}
+
+/* Plain text, not a pill that reads as a disabled button. Holds a
+   button's height, so the cards' rows still line up. */
+.current {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-2);
+  min-height: var(--ui-control-md);
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: 1;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+.currentIcon {
+  flex-shrink: 0;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+}
+
+.error {
+  margin: 0;
+  color: var(--ui-danger-text);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+/* ---------- Usage and features ---------- */
+
+/* What the plan meters, on a row of its own between two hairlines: a line
+   of the card, not a box inside it. */
+.usage {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  margin: var(--ui-space-5) 0 0;
+  padding-block: var(--ui-space-4);
+  box-shadow:
+    inset 0 var(--ui-hairline) 0 var(--ui-border),
+    inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.usage[data-empty] {
+  padding-block: 0 var(--ui-space-4);
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+.usageIncluded {
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.usageAmount {
+  font-weight: var(--ui-weight-semibold);
+}
+
+.usageMore {
+  color: var(--ui-muted);
+}
+
+.features {
+  display: grid;
+  align-content: start;
+  gap: var(--ui-space-3);
+  margin-top: var(--ui-space-5);
+}
+
+.featuresLead {
+  margin: 0;
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+}
+
+.featureList,
+.enterpriseList {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  display: grid;
+  align-content: start;
+  gap: var(--ui-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.featureList li,
+.enterpriseList li {
+  display: flex;
+  gap: var(--ui-space-3);
+  min-width: 0;
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+/* Centered on the first line: half of what the line has over the glyph. */
+.featureIcon {
+  flex-shrink: 0;
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  margin-top: calc((var(--ui-leading-md) - var(--ui-icon-sm)) / 2);
+  color: var(--ui-muted);
+}
+
+.plan[data-featured] .featureIcon {
+  color: var(--ui-foreground);
+}
+
+/* ---------- Enterprise ---------- */
+
+/* A card the plans' width, close under them. */
+.enterprise {
+  display: grid;
+  gap: var(--ui-space-5);
+  width: 100%;
+  max-width: 440px;
+  margin: calc(var(--pricing-plan-gap) - var(--pricing-gap)) auto 0;
+  padding: var(--pricing-inset);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+}
+
+.enterpriseText {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  min-width: 0;
+}
+
+/* Full width stacked, like the plans' buttons above it. */
+.enterpriseButton {
+  display: grid;
+  width: 100%;
+  margin-top: var(--ui-space-5);
+}
+
+/* Side by side, the row sits on the plans' grid: its columns start where
+   each card's content does (the plans' gap plus two insets between them),
+   so the text lines up under the first plan and the list under the rest. */
+@container pricing (min-width: 760px) {
+  .enterprise {
+    grid-template-columns: repeat(var(--pricing-columns, 3), minmax(0, 1fr));
+    column-gap: calc(var(--pricing-plan-gap) + var(--pricing-inset) * 2);
+    max-width: none;
+  }
+
+  .root[data-count="2"] .enterprise {
+    max-width: 800px;
+  }
+
+  .enterpriseList {
+    grid-column: 2 / -1;
+    grid-template-columns: subgrid;
+    /* The list's own gap would replace the row's and pull the columns off the plans'. */
+    column-gap: calc(var(--pricing-plan-gap) + var(--pricing-inset) * 2);
+    row-gap: var(--ui-space-2);
+    padding-top: calc(var(--ui-leading-md) + var(--ui-space-1));
+  }
+
+  .enterpriseButton {
+    display: inline-grid;
+    width: auto;
+  }
+}
+
+/* ---------- Sections ---------- */
+
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ui-space-5);
+  min-width: 0;
+}
+
+/* In the title's face, a step down: the page reads as one piece. */
+.sectionTitle {
+  margin: 0;
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-heading);
+  text-wrap: balance;
+}
+
+/* ---------- Comparison ---------- */
+
+.compare {
+  display: grid;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+/* On a phone the table shows one plan at a time, picked here. It sticks with
+   the table, so the column you're reading is always named. */
+.picker {
+  display: none;
+}
+
+/* At the plans' inset, and the outer cells drop their side padding, so text
+   and row rules start where they do on a card. */
+.tableCard {
+  min-width: 0;
+  padding: 0 var(--pricing-inset) var(--ui-space-2);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.labelCol {
+  width: 34%;
+}
+
+/* The plan header sticks under whatever the page keeps on top of it
+   (`--pricing-sticky-top`), opaque so rows pass under it cleanly. */
+.thead th,
+.thead td {
+  position: sticky;
+  top: var(--pricing-sticky-top, 0px);
+  z-index: 1;
+  background: var(--ui-surface);
+  box-shadow: inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+  vertical-align: bottom;
+}
+
+.table tr > :first-child {
+  padding-inline-start: 0;
+}
+
+.table tr > :last-child {
+  padding-inline-end: 0;
+}
+
+.planHeadCell {
+  padding: var(--ui-space-5) var(--ui-space-3) var(--ui-space-4);
+  font-weight: var(--ui-weight-regular);
+  text-align: start;
+}
+
+.planHeadCell > * + * {
+  margin-top: var(--ui-space-1);
+}
+
+.headName {
+  display: block;
+  font-weight: var(--ui-weight-semibold);
+  letter-spacing: var(--ui-tracking-heading);
+}
+
+.headPrice {
+  display: block;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.planHeadCell > .headButton,
+.planHeadCell > .headCurrent {
+  margin-top: var(--ui-space-3);
+}
+
+.headCurrent {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-height: var(--ui-control-md);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: 1;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+.headCurrent .currentIcon {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+}
+
+/* A group opens with its name over a hairline, so the rows under it read as one set. */
+.groupTitle {
+  padding: var(--ui-space-6) var(--ui-space-3) var(--ui-space-3);
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-sm);
+  text-align: start;
+}
+
+.row > * {
+  padding: var(--ui-space-3);
+  vertical-align: top;
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+.rowLabel {
+  font-weight: var(--ui-weight-regular);
+  text-align: start;
+}
+
+/* The info glyph rides on the label's last line when it wraps. */
+.rowLabelText {
+  text-wrap: pretty;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+/* An info glyph that explains a term; 24px to a mouse, 40px to a finger. */
+.hint {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  margin: calc(var(--ui-space-1) * -1) 0 calc(var(--ui-space-1) * -1) 2px;
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-subtle);
+  cursor: pointer;
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.hint > svg {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+}
+
+@media (hover: hover) {
+  .hint:hover {
+    background: var(--ui-fill);
+    color: var(--ui-foreground);
+  }
+}
+
+.hint:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+@media (pointer: coarse) {
+  .hint::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+  }
+}
+
+.cell {
+  color: var(--ui-foreground);
+  font-variant-numeric: tabular-nums;
+  text-align: start;
+}
+
+.yes,
+.no {
+  display: block;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  margin-top: 3px;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+.yes {
+  color: var(--ui-foreground);
+}
+
+.no {
+  color: var(--ui-subtle);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+}
+
+/* Breaks inside a word only when nothing else fits, so a narrow column
+   still sizes itself to its longest word. */
+.valueText {
+  overflow-wrap: break-word;
+}
+
+/* Narrow: one plan's column at a time, the picker in place of the header. */
+@container pricing (max-width: 639px) {
+  .picker {
+    position: sticky;
+    top: var(--pricing-sticky-top, 0px);
+    z-index: 2;
+    display: grid;
+    padding-block: var(--ui-space-2);
+    /* Opaque, in the color of what the section sits on. */
+    background: var(--pricing-backdrop, var(--ui-canvas));
+  }
+
+  .picker > * {
+    width: 100%;
+  }
+
+  .table {
+    table-layout: auto;
+  }
+
+  .table [data-off] {
+    display: none;
+  }
+
+  .table .cell:not([data-off]) {
+    padding-inline-end: 0;
+  }
+
+  .labelCol {
+    width: auto;
+  }
+
+  /* The header is still read, but the picker names the column on screen. */
+  .thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .tableCard {
+    padding-top: var(--ui-space-2);
+  }
+
+  .groupTitle {
+    padding-top: var(--ui-space-5);
+  }
+
+  .group:first-of-type .groupTitle {
+    padding-top: var(--ui-space-3);
+  }
+
+  .cell {
+    text-align: end;
+  }
+
+  .yes,
+  .no {
+    margin-inline-start: auto;
+  }
+}
+
+/* ---------- Questions ---------- */
+
+.faq {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ui-space-4) var(--ui-space-7);
+  min-width: 0;
+}
+
+@container pricing (min-width: 760px) {
+  .faq {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+}
+
+.faqIntro {
+  display: grid;
+  align-content: start;
+  gap: var(--ui-space-2);
+}
+
+.faqLede {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+/* The questions sit in a card like the table's, at the same inset. The
+   accordion's triggers already reach --ui-space-3 past their text. */
+.faqCard {
+  min-width: 0;
+  padding: var(--ui-space-2) var(--pricing-inset);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+}
+
+.faqList {
+  min-width: 0;
+}
+
+.faqList p {
+  max-width: var(--ui-measure);
+  margin: 0;
+  color: var(--ui-muted);
+  line-height: var(--ui-leading-prose);
+}
+
+.link {
+  border-radius: calc(var(--ui-radius-sm) / 2);
+  color: var(--ui-foreground);
+  font-weight: var(--ui-weight-medium);
+  text-decoration: underline;
+  text-decoration-color: var(--ui-border-strong);
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .link:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+.link:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: 2px;
+}

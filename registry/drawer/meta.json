@@ -1,0 +1,12 @@
+{
+  "name": "drawer",
+  "title": "Drawer",
+  "summary": "Modal panel that slides in from the end edge, and on phones rises as a sheet you drag down to dismiss, at the speed of your flick. The body scrolls between a header and footer that stay put.",
+  "version": "0.4.3",
+  "dependencies": [
+    "icons"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

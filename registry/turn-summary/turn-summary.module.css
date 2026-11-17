@@ -1,0 +1,231 @@
+/* The work behind an answer, folded to one line in Tool steps' voice: the
+   same 15px medium label in the muted color, the same chevron and turn,
+   the same fold. Inside, the agent's notes read as quiet prose between the
+   runs of tool calls, all hanging off one hairline. */
+
+.summary {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+
+  display: grid;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+.line {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 6px;
+  max-width: 100%;
+  min-height: 28px;
+  margin-inline: -10px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-muted);
+  font: var(--ui-weight-medium) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  text-align: start;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .line:hover,
+  .line:hover .chevron {
+    color: var(--ui-foreground);
+  }
+}
+
+.line:active {
+  background: var(--ui-fill);
+  color: var(--ui-foreground);
+  transition-duration: var(--ui-dur-press);
+}
+
+.line:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+@media (pointer: coarse) {
+  .line {
+    min-height: var(--ui-control-md);
+  }
+}
+
+/* The words hold their width; the glyphs give way first on a narrow line. */
+.label {
+  flex-shrink: 0;
+}
+
+/* Working: the light band Tool steps' summary carries while it runs. */
+.working {
+  composes: sweep from "../text/text.module.css";
+  --sweep-dim: 0.65;
+  color: var(--ui-foreground);
+}
+
+/* The kinds of tool it used, as quiet glyphs a step under the label. */
+.glyphs {
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+
+  display: inline-flex;
+  gap: var(--ui-gap-tight);
+  min-width: 0;
+  margin-inline-start: 2px;
+  overflow: hidden;
+  color: var(--ui-subtle);
+}
+
+.line .glyph {
+  flex-shrink: 0;
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+}
+
+.failed {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-gap-tight);
+  color: var(--ui-danger-text);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-regular);
+}
+
+.line .chevron {
+  flex-shrink: 0;
+  width: var(--ui-icon-chevron);
+  height: var(--ui-icon-chevron);
+  color: var(--ui-muted);
+}
+
+/* ---------- Fold ---------- */
+
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-inline: -6px;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse),
+    opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.summary[data-open] > .panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows var(--ui-dur-panel) var(--ui-ease-expand),
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+/* Positioned, so screen-reader-only text inside the fold is clipped with it
+   instead of stretching the scroll area around it. */
+.clip {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Notes and runs of steps hang off one hairline, so the fold reads as the
+   inside of the line above it. */
+.items {
+  display: grid;
+  gap: var(--ui-gap-stack);
+  /* The hairline runs down from the chevron's center. */
+  margin: var(--ui-space-2) 6px var(--ui-space-1) calc(6px + var(--ui-icon-chevron) / 2);
+  padding-inline-start: calc(var(--ui-gap-group) - var(--ui-icon-chevron) / 2);
+  box-shadow: inset var(--ui-hairline) 0 0 var(--ui-border-strong);
+}
+
+:is([dir="rtl"]) .items {
+  box-shadow: inset calc(var(--ui-hairline) * -1) 0 0 var(--ui-border-strong);
+}
+
+.note {
+  color: var(--ui-muted);
+}
+
+.steps {
+  min-width: 0;
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  display: grid;
+  gap: var(--ui-gap-inline);
+  font-family: var(--ui-font-sans);
+}
+
+.files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-gap-inline);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.files > li {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-tight);
+  min-height: var(--ui-control-sm);
+}
+
+.time {
+  padding-inline-end: var(--ui-gap-tight);
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.time[data-working] {
+  color: var(--ui-muted);
+}
+
+/* Ghost capsules in the muted color, coming up to the text color on hover. */
+.action {
+  color: var(--ui-muted);
+}
+
+@media (hover: hover) {
+  .action:hover {
+    color: var(--ui-foreground);
+  }
+}
+
+.action[data-popup-open] {
+  color: var(--ui-foreground);
+}
+
+.copyFailed {
+  color: var(--ui-danger-text);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .summary[data-open] > .panel {
+    transition: none;
+  }
+}

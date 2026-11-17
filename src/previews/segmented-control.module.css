@@ -1,0 +1,24 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+.stat {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.total {
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-semibold);
+  line-height: var(--ui-leading-2xl);
+}
+
+.form {
+  display: grid;
+  justify-items: start;
+  gap: var(--ui-space-3);
+}

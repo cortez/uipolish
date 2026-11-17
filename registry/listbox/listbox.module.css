@@ -1,0 +1,231 @@
+/* The Base UI positioner. It only holds the place and is never scaled;
+   .panel (the popup) animates. */
+.popup {
+  z-index: 50;
+  width: var(--listbox-width, max-content);
+  max-width: calc(100vw - 16px);
+  outline: none;
+}
+
+.panel {
+  --list-pad: var(--ui-space-1);
+  --panel-radius: var(--ui-radius-md);
+  display: flex;
+  flex-direction: column;
+  max-height: var(--available-height, none);
+  overflow: hidden;
+  border-radius: var(--panel-radius);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-floating);
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  outline: none;
+  user-select: none;
+  transform-origin: var(--transform-origin);
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-fast) var(--ui-ease-enter),
+    filter var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.panel[data-starting-style],
+.panel[data-ending-style] {
+  opacity: 0;
+  scale: 0.97;
+  filter: blur(2px);
+}
+
+.panel[data-ending-style] {
+  transition-duration: var(--ui-dur-instant);
+  transition-timing-function: var(--ui-ease-exit);
+}
+
+@property --list-start {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+@property --list-end {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+/* Scroll-driven edge fade; data-fits is set by useHighlight. Other components compose this. */
+.fade {
+  --list-fade: var(--ui-space-4);
+  scroll-padding-block: var(--list-fade);
+}
+
+@supports (animation-timeline: scroll()) {
+  .fade {
+    mask-image: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / var(--list-start)),
+      black var(--list-fade),
+      black calc(100% - var(--list-fade)),
+      rgb(0 0 0 / var(--list-end))
+    );
+    animation:
+      list-start linear both,
+      list-end linear both;
+    animation-timeline: scroll(self block), scroll(self block);
+    animation-range:
+      0 var(--list-fade),
+      calc(100% - var(--list-fade)) 100%;
+  }
+
+  .fade[data-fits] {
+    animation: none;
+  }
+}
+
+@keyframes list-start {
+  from {
+    --list-start: 1;
+  }
+  to {
+    --list-start: 0;
+  }
+}
+
+@keyframes list-end {
+  from {
+    --list-end: 0;
+  }
+  to {
+    --list-end: 1;
+  }
+}
+
+.list {
+  composes: fade;
+  position: relative;
+  flex: 0 1 auto;
+  min-height: 0;
+  max-height: min(300px, calc(100dvh - 160px));
+  padding: var(--list-pad);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+
+.list:not(:has([role="option"])) {
+  display: none;
+}
+
+.highlight {
+  position: absolute;
+  top: 0;
+  left: var(--list-pad);
+  right: var(--list-pad);
+  border-radius: calc(var(--panel-radius) - var(--list-pad));
+  background: var(--ui-fill-strong);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    translate var(--ui-dur-snap) var(--ui-ease-snap),
+    height var(--ui-dur-glide) var(--ui-ease-glide),
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.highlight[data-visible] {
+  opacity: 1;
+}
+
+.highlight[data-jump] {
+  transition-property: opacity, background-color;
+}
+
+.list:has(.option:active:not([data-disabled])) > .highlight {
+  background: color-mix(in oklch, var(--ui-foreground) 16%, transparent);
+  transition-duration: var(--ui-dur-press);
+}
+
+.option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  /* Inline: a full row pad, never less than the row's radius, so the text
+     clears the curve. */
+  padding: var(--ui-space-2) var(--ui-pad-row);
+  border-radius: calc(var(--panel-radius) - var(--list-pad));
+  outline: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.option[data-disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.lead {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 16px;
+  height: var(--ui-leading-md);
+  color: var(--ui-muted);
+}
+
+.text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.label {
+  composes: wrap from "../text/text.module.css";
+}
+
+.description {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.check {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  visibility: hidden;
+}
+
+.option[data-selected] .check {
+  visibility: visible;
+}
+
+.status {
+  margin: 0;
+  /* Its text lines up with the options' text. */
+  padding: var(--ui-space-3) calc(var(--list-pad) + var(--ui-pad-row));
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.list:has([role="option"]) + .status {
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
+  .panel {
+    scale: none;
+  }
+  .highlight {
+    transition-property: opacity, background-color;
+  }
+}

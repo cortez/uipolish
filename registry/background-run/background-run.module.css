@@ -1,0 +1,419 @@
+.root {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  --run-pad-y: var(--ui-space-3);
+  --run-pad-x: var(--ui-space-4);
+  /* The head bleeds 8px into the padding: card radius minus what's left. */
+  --run-head-radius: var(--ui-radius-sm);
+  /* Text after the status mark starts here, and so does everything under it. */
+  --run-indent: calc(16px + var(--ui-space-3));
+  position: relative;
+  container-type: inline-size;
+  padding: var(--run-pad-y) var(--run-pad-x);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+/* On its own it's a card; in a list it's a row. */
+.root:not([data-in-list]) {
+  --run-pad-y: var(--ui-space-4);
+  box-shadow: var(--ui-edge);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+}
+
+.list {
+  margin: 0;
+  padding: var(--ui-space-1) 0;
+  list-style: none;
+  box-shadow: var(--ui-edge);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+}
+
+.list > .root + .root::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  inset-inline: calc(var(--run-pad-x) + var(--run-indent)) var(--run-pad-x);
+  height: 1px;
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+/* ---------- The row ---------- */
+
+/* Mark | title | time, and the one line under the title. The title's button covers it all. */
+.head {
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr) auto;
+  column-gap: var(--ui-space-3);
+  row-gap: 2px;
+  margin: calc(var(--ui-space-2) * -1);
+  padding: var(--ui-space-2);
+  border-radius: var(--run-head-radius);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .head:hover {
+    background: var(--ui-fill);
+  }
+  .head:hover .chevron {
+    color: var(--ui-foreground);
+  }
+}
+
+.head:has(.disclosure:active) {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+.disclosure {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-medium) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  text-align: start;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.disclosure::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--run-head-radius);
+}
+
+.disclosure:focus {
+  outline: none;
+}
+
+.disclosure:focus-visible::after {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.title {
+  composes: wrap from "../text/text.module.css";
+  display: block;
+}
+
+.time {
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  grid-column: 3;
+  grid-row: 1;
+  align-self: start;
+  height: var(--ui-leading-md);
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* New since the person last looked: one small dot, nothing else changes. */
+.unread {
+  width: 6px;
+  height: 6px;
+  margin-inline-end: 2px;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-accent);
+}
+
+/* Morphs down to up as the run opens (the Icon does it); darkens on hover. */
+.time .chevron {
+  width: var(--ui-icon-chevron);
+  height: var(--ui-icon-chevron);
+  color: var(--ui-muted);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.line {
+  composes: wrap from "../text/text.module.css";
+  grid-column: 2 / -1;
+  grid-row: 2;
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+/* A new status's line fades in where the old one was. */
+.line[data-enter] {
+  animation: background-run-fade var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@keyframes background-run-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- Status mark ---------- */
+
+.mark {
+  display: grid;
+  grid-column: 1;
+  grid-row: 1;
+  place-items: center;
+  height: var(--ui-leading-md);
+  color: var(--ui-subtle);
+}
+
+.mark > svg {
+  grid-area: 1 / 1;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  stroke-width: var(--ui-icon-stroke);
+  opacity: 0;
+  scale: 0.9;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    scale var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.mark[data-status="queued"] > [data-for="queued"],
+.mark[data-status="running"] > [data-for="running"],
+.mark[data-status="needs-input"] > [data-for="needs-input"],
+.mark[data-status="done"] > [data-for="done"],
+.mark[data-status="failed"] > [data-for="failed"],
+.mark[data-status="stopped"] > [data-for="stopped"] {
+  opacity: 1;
+  scale: 1;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.mark[data-status="running"] {
+  color: var(--ui-foreground);
+}
+
+.mark[data-status="needs-input"] {
+  color: var(--ui-warning);
+}
+
+.mark[data-status="done"] {
+  color: var(--ui-success);
+}
+
+.mark[data-status="failed"] {
+  color: var(--ui-danger);
+}
+
+/* The one thing on the row that loops: the running dot breathes. */
+.pulse {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: background-run-breathe var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;
+}
+
+@keyframes background-run-breathe {
+  to {
+    opacity: 0.35;
+    scale: 0.6;
+  }
+}
+
+/* ---------- Under the row ---------- */
+
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-inline-start: var(--run-indent);
+  opacity: 0;
+  transition:
+    grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse),
+    opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.panel[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows var(--ui-dur-panel) var(--ui-ease-expand),
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+/* Negative margin + padding gives focus lines room inside the clip. */
+.clip {
+  min-height: 0;
+  margin-inline: -6px;
+  padding-inline: 6px;
+  overflow: hidden;
+}
+
+.actions {
+  display: grid;
+  gap: var(--ui-space-2);
+  padding-top: var(--ui-space-3);
+}
+
+/* After the details, the buttons sit a little further off. */
+.panel[data-open="true"] + .panel .actions {
+  padding-top: var(--ui-space-4);
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+}
+
+.details {
+  display: grid;
+  gap: var(--ui-space-4);
+  padding-top: var(--ui-space-3);
+}
+
+.section {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.sectionLabel {
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.note {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+/* Counts share one column, so the labels start on one edge. */
+.changes {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 2px var(--ui-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.change {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: start;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+}
+
+.count {
+  min-width: 2ch;
+  font-weight: var(--ui-weight-medium);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+.changeMark {
+  justify-self: end;
+  width: 14px;
+  height: 14px;
+  margin-top: 4px;
+  color: var(--ui-muted);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+}
+
+.changeLabel {
+  grid-column: 2;
+  overflow-wrap: anywhere;
+}
+
+.changeMore {
+  grid-column: 2;
+  color: var(--ui-muted);
+}
+
+.confirm {
+  display: grid;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-3);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-fill);
+}
+
+.confirm p {
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.confirm strong {
+  font-weight: var(--ui-weight-semibold);
+}
+
+.confirm .buttons {
+  justify-content: flex-end;
+}
+
+.error {
+  margin: 0;
+  color: var(--ui-danger-text);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+/* ---------- Empty list ---------- */
+
+.empty {
+  display: grid;
+  gap: var(--ui-space-1);
+  justify-items: center;
+  padding: var(--ui-space-6) var(--ui-space-4);
+  text-align: center;
+}
+
+.emptyTitle {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.emptyNote {
+  max-width: 34ch;
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: balance;
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .panel[data-open="true"] {
+    transition-property: opacity;
+  }
+  .mark > svg {
+    scale: 1;
+  }
+  /* Slower, and only fading, but still says it's working. */
+  .pulse {
+    animation-name: background-run-fade-pulse;
+    animation-duration: calc(var(--ui-dur-pulse) * 3);
+  }
+}
+
+@keyframes background-run-fade-pulse {
+  to {
+    opacity: 0.35;
+  }
+}

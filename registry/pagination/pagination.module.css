@@ -1,0 +1,226 @@
+/* Registered so `ch` resolves once, at .root's font size. */
+@property --pagination-slot {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 32px;
+}
+
+@property --pagination-arrow {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 44px;
+}
+
+.root {
+  --pagination-gap: 4px;
+  --pagination-height: var(--ui-control-sm);
+  /* Arrows are the small icon button's capsule. Numbers are squares of the
+     same height, wider only when the longest page number needs it. The pill
+     is one number slot, placed past one arrow: plain arithmetic on these
+     two widths, so it always lands exactly on its number. */
+  --pagination-arrow: calc(var(--pagination-height) * var(--ui-capsule));
+  --pagination-slot: max(var(--pagination-height), calc(var(--pagination-digits, 1) * 1ch + var(--ui-space-3)));
+  --pagination-dir: 1;
+
+  display: flex;
+  justify-content: center;
+  inline-size: 100%;
+  max-inline-size: calc(
+    2 * var(--pagination-arrow) + var(--pagination-slots, 7) * var(--pagination-slot) + (var(--pagination-slots, 7) + 1) * var(--pagination-gap)
+  );
+  contain: inline-size;
+  /* Before the first measure slots may overflow; the margin keeps touch targets. */
+  overflow: clip;
+  overflow-clip-margin: var(--ui-space-1);
+  /* Must match the small button's label, so `ch` matches the numbers. */
+  font: var(--ui-weight-medium) 14px / 1 var(--ui-font-sans);
+  font-variant-numeric: tabular-nums;
+}
+
+:is([dir="rtl"]) .root {
+  --pagination-dir: -1;
+}
+
+.root[data-variant="compact"] {
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--ui-space-3);
+  inline-size: auto;
+  max-inline-size: none;
+  contain: none;
+}
+
+.track {
+  position: relative;
+  contain: layout;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  gap: var(--pagination-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex-shrink: 0;
+  /* The same curve as the pill, so a number and the pill moving together stay together. */
+  transition:
+    translate var(--ui-dur-glide) var(--ui-ease-glide),
+    opacity var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@starting-style {
+  .root[data-ready] .item {
+    opacity: 0;
+  }
+}
+
+/* ---------- Controls ---------- */
+
+/* Raised to outrank the button's size rules, icon-only included, in any
+   load order: the pill's arithmetic needs these exact boxes. */
+.root .list .control.control {
+  width: var(--pagination-slot);
+  min-width: 0;
+  height: var(--pagination-height);
+  padding-inline: 0;
+  color: var(--ui-muted);
+  /* The button's `font` shorthand resets these; numbers sit centered in tabular cells. */
+  font-variant-numeric: tabular-nums;
+  letter-spacing: normal;
+}
+
+.root .list .control.control[data-arrow] {
+  width: var(--pagination-arrow);
+}
+
+@media (hover: hover) {
+  .control.control:hover:not([aria-current], [aria-disabled]) {
+    color: var(--ui-foreground);
+  }
+}
+
+.control.control:active:not([aria-current], [aria-disabled]) {
+  color: var(--ui-foreground);
+}
+
+.control.control:focus-visible {
+  color: var(--ui-foreground);
+}
+
+.item[data-key] .control.control {
+  --button-bg-hover: transparent;
+  --button-bg-press: transparent;
+}
+
+.control.control[aria-current] {
+  --button-bg-hover: transparent;
+  --button-bg-press: transparent;
+  color: var(--ui-foreground);
+  cursor: default;
+}
+
+.control.control[aria-disabled] {
+  --button-bg-hover: transparent;
+  --button-bg-press: transparent;
+  opacity: 0.5;
+  cursor: default;
+}
+
+:is([dir="rtl"]) .control svg {
+  scale: -1 1;
+}
+
+/* Past previous, then `index` number slots, so it's placed before script runs. */
+.indicator {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: var(--pagination-slot);
+  height: var(--pagination-height);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill-strong);
+  translate: calc(
+      var(--pagination-dir) *
+        (var(--pagination-arrow) + var(--pagination-gap) + var(--pagination-index) * (var(--pagination-slot) + var(--pagination-gap)))
+    )
+    0;
+  pointer-events: none;
+  transition: translate var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+.root[data-instant] :is(.indicator, .item) {
+  transition: none;
+}
+
+.gap {
+  display: grid;
+  place-items: center;
+  width: var(--pagination-slot);
+  height: var(--pagination-height);
+  color: var(--ui-subtle);
+  cursor: default;
+  user-select: none;
+}
+
+/* ---------- Range text ---------- */
+
+.summary {
+  display: grid;
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-regular);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+}
+
+.sizer,
+.text {
+  grid-area: 1 / 1;
+}
+
+.sizer {
+  visibility: hidden;
+}
+
+.root[data-variant="compact"] .text {
+  text-align: end;
+}
+
+.root[data-fit="text"] .summary {
+  padding-inline: var(--ui-space-2);
+  text-align: center;
+}
+
+.range {
+  color: var(--ui-foreground);
+  font-weight: var(--ui-weight-medium);
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+/* The gap and -3px hit area must agree so neighbors' hit areas meet. */
+@media (pointer: coarse) {
+  .root {
+    --pagination-gap: 6px;
+  }
+  .root .list .control.control::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .indicator,
+  .item {
+    transition: none;
+  }
+}

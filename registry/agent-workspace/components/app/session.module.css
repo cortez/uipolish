@@ -1,0 +1,465 @@
+/* The conversation pane: the thread in one reading column, the composer
+   docked under it, and Home's greeting and starters. 15px for what people
+   read, 13px for what describes it, mono for paths and hashes. */
+
+.threadFrame {
+  --thread-width: 720px;
+  --thread-gutter: var(--ui-pad-section);
+
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  min-height: 0;
+  container: thread / inline-size;
+}
+
+.scroll {
+  position: relative;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  outline: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+}
+
+.thread {
+  display: grid;
+  gap: var(--ui-gap-section);
+  width: 100%;
+  max-width: calc(var(--thread-width) + var(--thread-gutter) * 2);
+  box-sizing: border-box;
+  margin-inline: auto;
+  padding: var(--ui-gap-block) var(--thread-gutter) var(--ui-gap-block);
+}
+
+.end {
+  height: 0;
+}
+
+.reconnecting {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: var(--ui-gap-inline);
+  inset-inline: 0;
+  width: max-content;
+  margin: 0 auto;
+  padding: var(--ui-gap-tight) var(--ui-pad-tag);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-raised), var(--ui-edge);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+/* ---------- A turn ---------- */
+
+.turn {
+  display: grid;
+  gap: var(--ui-gap-group);
+  /* History and the ticks land a little below the frame's top. */
+  scroll-margin-top: var(--ui-gap-block);
+}
+
+/* The prompt: a bubble at the end for yours, at the start under the
+   author's name for a teammate's. */
+.ask {
+  display: grid;
+  justify-items: start;
+  gap: var(--ui-gap-tight);
+}
+
+.ask[data-mine] {
+  justify-items: end;
+}
+
+.author {
+  margin: 0;
+  padding-inline: var(--ui-pad-row);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+}
+
+.bubble {
+  display: grid;
+  gap: var(--ui-gap-tight);
+  max-width: min(85%, 560px);
+  box-sizing: border-box;
+  padding: var(--ui-space-3) var(--ui-space-4);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-fill);
+}
+
+.prompt {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  line-height: 24px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+/* Mentions and attached files under the prompt, in its line. */
+.context {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-gap-tight);
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  line-height: 24px;
+}
+
+.mention {
+  color: var(--ui-accent-text);
+  font-weight: var(--ui-weight-medium);
+}
+
+/* The answer: the work line, the reply, the footer, on the column's start. */
+.answer {
+  display: grid;
+  gap: var(--ui-gap-stack);
+  min-width: 0;
+}
+
+.reply {
+  min-width: 0;
+}
+
+.failed {
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-gap-inline);
+  margin: 0;
+  color: var(--ui-danger-text);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.failed .failedIcon {
+  flex-shrink: 0;
+  margin-block-start: calc((var(--ui-leading-md) - var(--ui-icon-md)) / 2);
+}
+
+.stopped {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+/* Back to the newest line, over the composer's top edge. */
+.toLatest {
+  position: absolute;
+  z-index: 2;
+  inset-inline: 0;
+  inset-block-end: var(--ui-gap-stack);
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  animation: to-latest var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.toLatest > * {
+  pointer-events: auto;
+  box-shadow: var(--ui-shadow-raised);
+}
+
+@keyframes to-latest {
+  from {
+    opacity: 0;
+    translate: 0 4px;
+  }
+}
+
+/* ---------- Ticks ---------- */
+
+/* A rail on the thread's end edge, in the scrollbar's lane: a short line
+   for each prompt where it sits in the conversation. */
+.ticks {
+  position: absolute;
+  inset-block: var(--ui-gap-block);
+  inset-inline-end: var(--ui-gap-stack);
+  width: 16px;
+  pointer-events: none;
+}
+
+.tick {
+  position: absolute;
+  inset-inline-end: 0;
+  width: 10px;
+  height: 2px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-border-strong);
+  pointer-events: auto;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* A 24px target round the 2px line. */
+.tick::after {
+  content: "";
+  position: absolute;
+  inset: -11px -4px;
+}
+
+@media (hover: hover) {
+  .tick:hover {
+    background: var(--ui-muted);
+  }
+}
+
+.tick[aria-current] {
+  background: var(--ui-foreground);
+}
+
+.tick:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: 2px;
+}
+
+/* No room for a rail beside a narrow thread. */
+@container thread (max-width: 560px) {
+  .ticks {
+    display: none;
+  }
+}
+
+/* ---------- Composer ---------- */
+
+.composerDock {
+  container: composer / inline-size;
+  width: 100%;
+  max-width: calc(720px + var(--ui-pad-section) * 2);
+  box-sizing: border-box;
+  margin-inline: auto;
+  padding: 0 var(--ui-pad-section) var(--ui-gap-stack);
+  padding-bottom: max(var(--ui-gap-stack), env(safe-area-inset-bottom));
+}
+
+.composer {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.composerTools {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--ui-gap-tight);
+  min-width: 0;
+}
+
+.tool {
+  color: var(--ui-muted);
+}
+
+@media (hover: hover) {
+  .tool:hover {
+    color: var(--ui-foreground);
+  }
+}
+
+.tool[data-popup-open] {
+  color: var(--ui-foreground);
+}
+
+.mentionChip {
+  min-width: 0;
+}
+
+/* The model and the effort, at the toolbar's end beside Send. */
+.pickers {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  margin-inline-start: auto;
+}
+
+.effort {
+  display: flex;
+}
+
+/* A narrow composer keeps the model and leaves the effort at what it was. */
+@container composer (max-width: 480px) {
+  .effort {
+    display: none;
+  }
+}
+
+/* ---------- Home ---------- */
+
+.home {
+  min-height: 0;
+  overflow-y: auto;
+  container: composer / inline-size;
+}
+
+.homeInner {
+  display: grid;
+  gap: var(--ui-gap-group);
+  width: 100%;
+  max-width: calc(720px + var(--ui-pad-section) * 2);
+  box-sizing: border-box;
+  margin-inline: auto;
+  padding: clamp(var(--ui-gap-block), 12vh, 120px) var(--ui-pad-section) var(--ui-gap-section);
+}
+
+.greeting {
+  margin: 0;
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-heading);
+}
+
+.homeLead {
+  margin: calc(var(--ui-gap-group) * -1 + var(--ui-gap-tight)) 0 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.homeLead code {
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-code);
+  color: var(--ui-foreground);
+}
+
+.starters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--ui-gap-inline);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A starter: a quiet card that fills the composer. */
+.starter {
+  display: grid;
+  align-content: start;
+  gap: var(--ui-gap-tight);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: var(--ui-space-3) var(--ui-space-4);
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  background: transparent;
+  box-shadow: var(--ui-edge);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+  text-align: start;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .starter:hover {
+    background: var(--ui-fill);
+  }
+}
+
+.starter:active {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+.starter:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.starterTitle {
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.starterPrompt {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.moving {
+  display: grid;
+  gap: var(--ui-gap-tight);
+  margin-top: var(--ui-gap-group);
+}
+
+.movingTitle {
+  margin: 0;
+  padding-inline: var(--ui-pad-row);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+}
+
+.movingList {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.movingRow {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-inline);
+  width: 100%;
+  min-height: var(--ui-control-sm);
+  padding-inline: var(--ui-pad-row);
+  border: 0;
+  border-radius: var(--ui-radius-sm);
+  background: transparent;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .movingRow:hover {
+    background: var(--ui-fill);
+  }
+}
+
+.movingRow:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.movingName {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.movingTime {
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toLatest {
+    animation: none;
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "avatar",
+  "title": "Avatar",
+  "summary": "Photo with initials on an opaque quiet fill behind it, or a head and shoulders with no name. A quick photo never flashes initials, a broken one never shows its broken mark, and groups overlap with a +N that says how many.",
+  "version": "0.3.6",
+  "dependencies": []
+}

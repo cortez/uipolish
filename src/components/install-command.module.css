@@ -1,0 +1,181 @@
+.command {
+  /* The code block's box, so the two read as one family: the same 8px
+     inset around a 32px action, the same concentric corner, the same
+     surface, edge and soft shadow as a card, and the text 20px in. */
+  --pad: var(--ui-space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  width: min(560px, 100%);
+  padding: var(--pad);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  /* A box at rest, like a card: the one edge and the one soft shadow. */
+  box-shadow: var(--ui-shadow-resting);
+  text-align: start;
+}
+
+/* Copy as the code block's own: quiet, muted until hovered. */
+.command .copy {
+  padding-inline: var(--ui-space-3);
+  color: var(--ui-muted);
+}
+
+@media (hover: hover) {
+  .command .copy:hover {
+    color: var(--ui-foreground);
+  }
+}
+
+/* The command scrolls sideways inside a ScrollArea, which fades whichever
+   edge has more past it. The scroller reaches out to the pill's own edge on
+   the left and across the 12px gap to the button on the right, so a
+   scrolled command fades right up to both instead of leaving an empty band.
+   At rest the text starts 20px in, the same inset as a code block's. */
+.code {
+  flex: 1;
+  /* Lets the line shrink below its text, so it scrolls instead of
+     widening the page. */
+  min-width: 0;
+  height: var(--ui-control-sm);
+  border-radius: var(--ui-radius-full);
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-control-sm);
+  white-space: nowrap;
+}
+
+.code > * {
+  --scroll-area-fade: var(--ui-space-5);
+  margin-inline: calc(var(--pad) * -1) calc(var(--ui-space-3) * -1);
+  padding-inline: var(--ui-space-5);
+  scrollbar-width: none;
+}
+
+/* A control at the start: the command fades into the gap after it, the
+   same way it fades into the Copy button's. */
+.leading {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.leading + .code > * {
+  margin-inline-start: calc(var(--ui-space-3) * -1);
+  padding-inline-start: var(--ui-space-3);
+}
+
+.code > *::-webkit-scrollbar {
+  display: none;
+}
+
+/* Drawn inside the pill so it stays 6px from the command's edge. */
+.code:has(:focus-visible) {
+  outline-offset: -3px;
+}
+
+/* On a phone a pill leaves the command a few words of room, so it stops
+   being one line: the whole command wraps under the controls, readable
+   without scrolling. The box keeps the pill's padding and its corners stay
+   concentric with the controls inside. Copy becomes a 32px circle, and the
+   check still says it worked. */
+@media (max-width: 479px) {
+  .command {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 0 var(--ui-space-3);
+    border-radius: calc(var(--ui-control-sm) / 2 + var(--pad));
+  }
+
+  /* With a picker: picker and Copy share the top row, the command runs
+     the full width under them. */
+  .command:has(.leading) {
+    grid-template-areas:
+      "leading copy"
+      "code code";
+  }
+
+  .command:has(.leading) .leading {
+    grid-area: leading;
+  }
+
+  /* Scoped twice so these outrank the button's and the morph's own rules
+     in any stylesheet order. */
+  .command.command .copy {
+    width: var(--ui-control-sm);
+    padding-inline: 0;
+  }
+
+  .command:has(.leading) .copy {
+    grid-area: copy;
+  }
+
+  .command .copyLabel {
+    display: none;
+  }
+
+  .code {
+    height: auto;
+    line-height: var(--ui-leading-sm);
+    white-space: normal;
+  }
+
+  .command:has(.leading) .code {
+    grid-area: code;
+  }
+
+  /* Wrapped, the command needs no fade and no scroll room. It breaks at
+     spaces and after slashes (the component adds those break points), and
+     mid-word only when a piece is still too long. Its text lines up with
+     the picker's label above it. */
+  .command.command .code > [data-orientation],
+  .command.command .leading + .code > [data-orientation] {
+    margin: 0;
+    padding: calc((var(--ui-control-sm) - var(--ui-leading-sm)) / 2) var(--ui-space-3);
+    overflow-wrap: break-word;
+    mask-image: none;
+  }
+
+  /* The scroller's row lays out at its own width; here it takes the box's.
+     One step more specific than the scroll area's own row rule, so it wins
+     whichever stylesheet loads last. */
+  .command.command .code > [data-orientation] > * {
+    width: auto;
+  }
+
+  .command.command:has(.leading) .code > [data-orientation] {
+    padding-block: var(--ui-space-2) calc(var(--ui-space-3) - var(--pad));
+  }
+}
+
+.srOnly {
+  composes: srOnly from "../../registry/text/text.module.css";
+}
+
+/* CopyPrompt: the label's widest version holds the width. */
+.hold {
+  display: inline-grid;
+  justify-items: center;
+}
+
+.hold > * {
+  grid-area: 1 / 1;
+}
+
+.swap {
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.swap[data-shown] {
+  opacity: 1;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) var(--ui-dur-press);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swap,
+  .swap[data-shown] {
+    transition: none;
+  }
+}

@@ -1,0 +1,96 @@
+.stack {
+  display: grid;
+  gap: var(--ui-space-6);
+}
+
+.group {
+  display: grid;
+  gap: var(--ui-space-3);
+}
+
+.heading {
+  font-size: var(--ui-text-md);
+}
+
+.label {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+}
+
+.items {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--ui-space-3);
+  min-height: 52px;
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+  animation: item-in var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.item:last-child {
+  box-shadow:
+    inset 0 var(--ui-hairline) 0 var(--ui-border),
+    inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+}
+
+.itemName {
+  font-size: var(--ui-text-md);
+}
+
+.amount {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The ghost pulls back by its 20px padding so "Remove" ends where the
+   rows' lines end, not 20px short of them. */
+.remove {
+  margin-inline-end: -20px;
+}
+
+.empty {
+  display: grid;
+  justify-items: start;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-4) 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+}
+
+.empty p {
+  margin: 0;
+}
+
+.note {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  text-wrap: pretty;
+}
+
+@keyframes item-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    animation: none;
+  }
+}

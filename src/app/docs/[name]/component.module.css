@@ -1,0 +1,232 @@
+/* Meta sits 12 under the lede, not the intro's 16. */
+/* Blocks 16 apart, code and tables 32, sections 64 and subsections 48
+   (margins collapse). */
+.prose {
+  max-width: 720px;
+  padding-top: var(--ui-space-8);
+  /* Guides are read end to end: a touch more air than running text in UI,
+     in whole pixels so the boxes below stay on the grid. */
+  line-height: var(--ui-leading-prose);
+  hanging-punctuation: first;
+}
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+.prose > :last-child {
+  margin-bottom: 0;
+}
+
+/* Guide sections: a step over the body, on the prose line, so a section
+   reads as a heading at a glance without competing with the page's own
+   sections above it. Deeper levels keep the body size. */
+.prose :is(h2, h3, h4) {
+  margin: var(--ui-space-7) 0 var(--ui-space-3);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  font-weight: var(--ui-weight-regular);
+}
+
+.prose h2 {
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-regular);
+  line-height: var(--ui-leading-md);
+  letter-spacing: normal;
+}
+
+.prose h2 {
+  margin-top: var(--ui-space-8);
+}
+
+/* On a phone a section is a screen or less, so it needs less air to read
+   as new: 48 above a section, 32 above a subsection. */
+@media (max-width: 640px) {
+  .prose :is(h3, h4) {
+    margin-top: var(--ui-space-6);
+  }
+  .prose h2 {
+    margin-top: var(--ui-space-7);
+  }
+}
+
+/* Each heading links to itself: it reads as a heading until hovered. */
+.prose :is(h2, h3, h4) {
+  scroll-margin-top: var(--ui-space-6);
+}
+
+.prose :is(h2, h3, h4) a {
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .prose :is(h2, h3, h4) a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--ui-border-strong);
+  }
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  max-width: var(--ui-measure);
+  margin: 0 0 var(--ui-space-4);
+  color: var(--ui-foreground);
+}
+
+.prose ul,
+.prose ol {
+  padding-inline-start: var(--ui-space-5);
+}
+
+/* A quote is an example of the words on a screen, so it reads like one:
+   set in from the divider hairline, in the text's own size. */
+.prose blockquote {
+  max-width: var(--ui-measure);
+  margin: 0 0 var(--ui-space-4);
+  padding-inline-start: var(--ui-space-4);
+  box-shadow: inset var(--ui-hairline) 0 0 var(--ui-border);
+}
+
+.prose blockquote p {
+  margin-bottom: var(--ui-space-2);
+}
+
+.prose blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.prose li + li {
+  margin-top: var(--ui-space-2);
+}
+
+.prose li::marker {
+  color: var(--ui-subtle);
+}
+
+.prose :not(pre) > code {
+  /* A path or an import with nowhere to break still fits a phone. */
+  overflow-wrap: anywhere;
+  /* Optical: sized to the mono text, not the grid. */
+  padding: 1px 6px;
+  border-radius: calc(var(--ui-radius-sm) / 2);
+  background: var(--ui-fill);
+  font-size: var(--ui-text-code);
+}
+
+.prose a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+
+/* The title with its badge beside it, on the title's middle; the badge
+   wraps under a long title rather than squeezing it. */
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-gap-tight) var(--ui-gap-stack);
+}
+
+/* A block is a whole screen: less padding around it, so the screen itself
+   gets the room. */
+.blockStage {
+  padding: var(--ui-pad-card);
+}
+
+/* A screen that fills its frame (meta "stage": "wide"): its stage reaches past the text column, up to
+   1120 wide, as far as the room beside the column allows. The 263 is the
+   sidebar plus a classic scrollbar, so it never makes the page scroll
+   sideways; whole pixels keep its edges sharp. */
+.wideStage {
+  --wide-reach: max(0px, min(160px, round(down, (100vw - 263px - 912px) / 2, 1px)));
+  margin-inline: calc(var(--wide-reach) * -1);
+}
+
+/* A template has no stage around it, so it can take more: up to 240 past
+   the column each side (1280 wide), into the column's own 48 padding less
+   a 24 gutter, never past the room beside the sidebar. */
+.wideTemplate {
+  --wide-reach: max(0px, min(240px, round(down, (100vw - 263px - 912px) / 2 + var(--ui-space-5), 1px)));
+}
+
+/* A template's files: one column per top-level folder in one box like a
+   table's, split by hairlines. Each level is set in one step from a guide
+   line; folders in the text color, files muted. */
+.tree {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+}
+
+.treeColumn {
+  min-width: 0;
+  padding: var(--ui-space-4) var(--ui-space-5) var(--ui-space-5);
+}
+
+/* The site's one divider: an inset hairline in --ui-border. */
+.treeColumn + .treeColumn {
+  box-shadow: inset var(--ui-hairline) 0 0 var(--ui-border);
+}
+
+.treeHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  margin: 0 0 var(--ui-space-2);
+  font-size: inherit;
+  font-weight: var(--ui-weight-medium);
+}
+
+.treeHead span {
+  color: var(--ui-subtle);
+  font-weight: var(--ui-weight-regular);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tree ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each nested level hangs off a guide under its folder's first letter. */
+.tree ul ul {
+  margin-inline-start: 3px;
+  padding-inline-start: calc(var(--ui-space-4) - 3px);
+  box-shadow: inset var(--ui-hairline) 0 0 var(--ui-border);
+}
+
+.tree code {
+  display: block;
+  overflow: hidden;
+  color: var(--ui-muted);
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-code);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tree code[data-folder],
+.treeHead code {
+  color: var(--ui-foreground);
+}
+
+/* On a phone the folders stack, each under a divider. */
+@media (max-width: 640px) {
+  .tree {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .treeColumn {
+    padding-inline: var(--ui-space-4);
+  }
+  .treeColumn + .treeColumn {
+    box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+  }
+}
