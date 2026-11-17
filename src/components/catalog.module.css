@@ -67,11 +67,12 @@
   transition: box-shadow var(--ui-dur-fast) var(--ui-ease-color);
 }
 
-/* Hover anywhere on it: the card rises onto the raised shadow (in dark
-   mode, where there are no shadows, the edge carries it). */
+/* Hover anywhere on it: the card rises onto the raised shadow, with the
+   lightest edge (in dark mode, where there are no shadows, the edge
+   carries it). */
 @media (hover: hover) {
   .item:hover .card {
-    box-shadow: 0 0 0 var(--ui-hairline) var(--ui-field-focus), var(--ui-shadow-raised);
+    box-shadow: 0 0 0 var(--ui-hairline) var(--ui-border-strong), var(--ui-shadow-raised);
   }
 }
 

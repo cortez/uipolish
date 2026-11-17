@@ -179,6 +179,5 @@ UI Polish is free and open source. If it saves you time, you can
 
 ## License
 
-MIT. See [LICENSE](LICENSE). The site's fonts are General Sans, under the ITF
-Free Font License (`src/app/fonts/`), and Geist Mono, under the SIL Open
-Font License.
+MIT. See [LICENSE](LICENSE). The site's fonts (DM Sans and DM Mono) are under
+the SIL Open Font License.
