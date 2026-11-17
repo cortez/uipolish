@@ -1,4 +1,3 @@
-import { MCP_URL } from "@/lib/setup";
 import { GITHUB_URL } from "@/lib/seo/site";
 
 // Contact: written once in Markdown, rendered as pages
