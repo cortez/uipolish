@@ -10,14 +10,16 @@ A type step is a size **with the line-height it is set on**, plus a weight.
 Never ship a bare `font-size`, and never pick a value between steps: if a step
 is missing, the scale is wrong, not the component.
 
-**Three styles, and only three.** One per size, each with one weight. A
+**Three styles, and only three.** Two sizes, and a title weight. Nothing
+is set larger than body: a title stands out by weight and the space
+around it. A
 fourth style is never the answer: pick the nearest of these, or change the
 layout. Hierarchy past three comes from color and space, never another
 size or weight. Bold is not a style: emphasis is color.
 
 | Style | Token | Size | Line-height | Weight | Use |
 |---|---|---|---|---|---|
-| Title | `2xl` (`display` is the same) | 22px | 28px | 500 (`--ui-weight-title`) | Page and screen titles, h1, big figures |
+| Title | `md` (`2xl` and `display` are the same) | 15px | 22px | 500 (`--ui-weight-title`) | Page and screen titles, h1, figures |
 | Body | `md` | 15px | 22px | 400 | Text, headings, labels, buttons, menus, fields, values |
 | Small | `sm` | 13px | 18px | 400 | Secondary text, captions, badges, field messages, meta |
 

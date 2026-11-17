@@ -48,7 +48,7 @@ the space the content would take.
 | | Compact | Page |
 |---|---|---|
 | Drawing | 196 × 144 | 264 × 194 |
-| Title | `--ui-text-md`, 500 | `--ui-text-2xl`, 600 |
+| Title | `--ui-text-md`, title weight | `--ui-text-md`, title weight |
 | Sentence | `--ui-text-md`, muted, at most 36ch | at most 40ch |
 | Padding | 32px top and bottom | 64px |
 

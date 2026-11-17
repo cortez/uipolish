@@ -93,13 +93,15 @@
 
   --ui-text-sm: 13px;
   --ui-text-md: 15px;
-  --ui-text-2xl: 22px;
+  /* No size above body: a title is body size at the title weight. 2xl and
+     display are kept as names so code that reads them still resolves. */
+  --ui-text-2xl: var(--ui-text-md);
   /* Three sizes and no more: display is the title size, kept as a name so
      code that reads it still resolves. */
   --ui-text-display: var(--ui-text-2xl);
   --ui-leading-sm: 18px;
   --ui-leading-md: 22px;
-  --ui-leading-2xl: 28px;
+  --ui-leading-2xl: var(--ui-leading-md);
   --ui-leading-display: var(--ui-leading-2xl);
 
   --ui-leading-prose: 1.6;
@@ -119,8 +121,9 @@
   --ui-weight-semibold: var(--ui-weight-regular);
 
   /* Tracking. None for body text: any letter-spacing turns optional ligatures off. */
-  --ui-tracking-heading: -0.01em;
-  --ui-tracking-title: -0.02em;
+  /* No tracking: nothing is large enough to need it. */
+  --ui-tracking-heading: normal;
+  --ui-tracking-title: normal;
   --ui-tracking-control: -0.01em;
   --ui-tracking-caps: 0.06em;
 

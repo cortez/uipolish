@@ -23,11 +23,12 @@
   padding-top: var(--ui-space-6);
 }
 
+/* The hero: one title and the two ways in, a section gap under the bar.
+   At body size it needs no more room than any section. */
 .hero {
   display: grid;
   justify-items: start;
-  padding-top: calc(var(--ui-gap-section) * 2);
-  padding-bottom: var(--ui-gap-section);
+  padding-top: var(--ui-gap-section);
 }
 
 /* ---- The four styles ---- */
@@ -127,6 +128,6 @@
     padding-top: var(--ui-space-5);
   }
   .hero {
-    padding-top: calc(var(--ui-gap-section) * 1.5);
+    padding-top: var(--ui-gap-section);
   }
 }
