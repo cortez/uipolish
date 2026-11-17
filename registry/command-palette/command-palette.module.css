@@ -6,6 +6,10 @@
   --palette-inner-radius: calc(var(--palette-radius) - var(--palette-pad));
 
   border-radius: var(--palette-radius);
+  /* Light glass, like the menus: the surface at 92% over a 4px blur. */
+  background: var(--ui-surface-glass);
+  backdrop-filter: blur(var(--ui-glass-blur));
+  -webkit-backdrop-filter: blur(var(--ui-glass-blur));
   /* The viewport pads by --ui-space-5 already; this sets the gap from the top of the screen. */
   align-self: start;
   margin-top: calc(min(14dvh, 120px) - var(--ui-space-5));

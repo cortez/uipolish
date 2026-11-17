@@ -68,7 +68,7 @@ attribute it didn't render.
 - Each cap is at least as wide as tall, 13px / 500 text, 5px sides (4px at
   `sm`), 2px between caps, as in the palette.
 - **Color comes from the context.** The cap's fill is the text color
-  fading from 4% at the top to 9% at the bottom, with no edge, so caps
+  at 7%, flat, with no edge, so caps
   read the same in a muted hint, body text, or an ink tooltip. Set `color` on the Kbd or its parent.
 - `plain` takes the surrounding font, size and color, with no separators
   on Apple (⌘⇧P) and `+` elsewhere (Ctrl+Shift+P): each platform's own

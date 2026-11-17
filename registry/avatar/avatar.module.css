@@ -11,14 +11,9 @@
   max-width: var(--avatar-size);
   overflow: hidden;
   border-radius: var(--ui-radius-full);
-  /* No edge: a soft inner light instead, the badge's quiet gradient as a
-     radial, lighter at the top and settling into the fill. Opaque, so
-     circles that overlap in a group never show through each other. */
-  background: radial-gradient(
-    circle at 50% 0%,
-    color-mix(in oklch, var(--ui-fill-strong-solid) 40%, var(--ui-surface)),
-    var(--ui-fill-strong-solid) 80%
-  );
+  /* No edge, a flat fill. Opaque, so circles that overlap in a group never
+     show through each other. */
+  background: var(--ui-fill-strong-solid);
   /* Initials in the text color: crisp on the quiet fill, and still neutral. */
   color: var(--ui-foreground);
   vertical-align: middle;

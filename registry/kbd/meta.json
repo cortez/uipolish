@@ -2,7 +2,7 @@
   "name": "kbd",
   "title": "Kbd",
   "summary": "A key or a shortcut as the reader’s keyboard labels it: ⌘K on Apple, Ctrl K elsewhere. Decided before the first paint, so the server and the browser agree and nothing moves.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "dependencies": [
     "text"
   ]

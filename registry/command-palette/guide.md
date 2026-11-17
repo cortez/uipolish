@@ -96,6 +96,11 @@ one inside "guests".
 Matched letters keep the text color and the rest dim to muted. The change is
 color only, so labels never change width as you type.
 
+## Look
+
+Light glass, like the menus: `--ui-surface-glass` over a
+`--ui-glass-blur` (4px) backdrop blur, on the dialog's dimmed backdrop.
+
 ## States
 
 | State | What you see | How |

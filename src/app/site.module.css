@@ -76,7 +76,7 @@
 .stage {
   container-type: inline-size;
   padding: var(--ui-pad-section);
-  border-radius: calc(var(--ui-radius-lg) + var(--ui-space-2));
+  border-radius: var(--ui-radius-lg);
   background: var(--ui-surface);
   box-shadow: var(--ui-shadow-resting);
 }

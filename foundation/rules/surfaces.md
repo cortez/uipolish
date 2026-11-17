@@ -56,8 +56,7 @@ mode for free.
     `--ui-border-accent`, `-success`, `-warning`, `-danger`, or a hue (a
     phase, a brand) mixed at `--ui-border-tint`.
   - `--ui-border-control` over `--ui-fill-control`: an empty checkbox or
-    radio. A soft edge (the text color at 28%) over a soft top-to-bottom
-    fill, so the box is found by its shape and shade together, never by a
+    radio. A soft edge (the text color at 28%) over a soft flat fill, so the box is found by its shape and shade together, never by a
     hard line. It is a clear step from the one edge, so the two never read
     as near-twins; its label is always part of the target.
 
@@ -327,8 +326,9 @@ for real-looking services read as fake.
 Heavy blur is the most overused effect in generated UI. It smears text
 behind it and dates fast. The only glass here is light, and it's one token.
 
-- Small floating surfaces (menus, popovers, select lists, toasts) are light
-  glass: `--ui-surface-glass` (the surface at 92%) over
+- Small floating surfaces (menus, popovers, select lists, toasts, the
+  command palette) are light glass: `--ui-surface-glass` (the surface at
+  92%) over
   `--ui-glass-blur` (4px), a hairline and a shadow. They still read as above
   the page by shadow; the glass only softens what's under them. Text on
   them passes contrast against the surface alone. Dialogs, drawers and

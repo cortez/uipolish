@@ -48,7 +48,7 @@ rather than one moving.
 
 | State | What you see |
 |---|---|
-| Empty | A well lit softly from the top; the upload icon sits in a raised 40px tile with the avatar's inner light |
+| Empty | A flat well; the upload icon sits in a raised 40px tile on the surface color |
 | Hover, empty | The well's edge darkens a step, as a field's does, and the tile lifts 2px on the move spring |
 | Hover, "Add more files" | The text and plus come up to the text color, like a row |
 | Press | Nothing of its own: the system picker opening is the answer, and a well this size shrinking on press reads as the page moving |

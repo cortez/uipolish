@@ -15,9 +15,7 @@
   --row-inset: calc((var(--row-height) - var(--badge-size)) / 2);
   --item-radius: calc(var(--inner-radius) - var(--row-inset));
   --inner-radius: calc(var(--ui-radius-lg) - var(--zone-pad));
-  /* Empty, a soft light from the top settling into the canvas: a well,
-     not a flat box. */
-  --zone-bg: radial-gradient(ellipse 80% 70% at 50% 0%, var(--ui-surface), var(--ui-canvas));
+  --zone-bg: var(--ui-canvas);
   --zone-edge: var(--ui-border-strong);
   position: relative;
   display: grid;
@@ -30,7 +28,9 @@
   background: var(--zone-bg);
   box-shadow: inset 0 0 0 var(--ui-hairline) var(--zone-edge);
   font-family: var(--ui-font-sans);
-  transition: box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+  transition:
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
 .zone[data-has] {
@@ -142,18 +142,14 @@
     scale var(--ui-dur-move) var(--ui-ease-move);
 }
 
-/* Empty: the icon sits in a raised tile with the avatar's soft inner
-   light, so the zone has something to look at. It lifts on hover, and
-   higher when a file is held over it. */
+/* Empty: the icon sits in a raised tile on the surface color, so the zone
+   has something to look at. It lifts on hover, and higher when a file is
+   held over it. */
 .zone:not([data-has]) .mark {
   width: var(--ui-control-md);
   height: var(--ui-control-md);
   border-radius: var(--ui-radius-md);
-  background: radial-gradient(
-    circle at 50% 0%,
-    var(--ui-surface),
-    var(--ui-fill-strong-solid) 120%
-  );
+  background: var(--ui-surface);
   box-shadow: var(--ui-shadow-resting);
   color: var(--ui-foreground);
 }

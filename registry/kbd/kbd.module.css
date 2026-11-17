@@ -42,17 +42,13 @@
   display: inline-grid;
   place-items: center;
   box-sizing: border-box;
-  /* A key cap: a small rounded square (wider for a word), no edge, the
-     badge's quiet gradient, lighter at the top. */
+  /* A key cap: a small rounded square (wider for a word), a flat fill in
+     the text color, no edge. */
   min-width: var(--kbd-height);
   height: var(--kbd-height);
   padding-inline: var(--kbd-pad);
   border-radius: var(--ui-radius-xs);
-  background: linear-gradient(
-    to bottom,
-    color-mix(in oklch, currentColor 4%, transparent),
-    color-mix(in oklch, currentColor 9%, transparent)
-  );
+  background: color-mix(in oklch, currentColor 7%, transparent);
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-regular);
