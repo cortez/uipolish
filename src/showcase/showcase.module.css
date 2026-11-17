@@ -25,7 +25,8 @@
   width: 100%;
 }
 
-/* Voice input's idle text, at the inset its other states use. */
-.voiceIdle {
-  padding-inline-start: var(--voice-inset);
+
+/* Icons at their own size, spaced like a toolbar. */
+.icons {
+  gap: var(--ui-space-6);
 }

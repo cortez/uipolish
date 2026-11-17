@@ -12,7 +12,7 @@ export const abs = (p: string) => `${siteUrl()}${p.startsWith("/") ? p : `/${p}`
 
 export const SITE_NAME = "UI Polish";
 export const GITHUB_URL = "https://github.com/cortez/uipolish";
-/** A Polar checkout for donations (pay what you want). Unset, no Donate link shows. */
+/** A Polar checkout for donations (pay what you want). Unset, no Support link shows. */
 export const DONATE_URL = process.env.NEXT_PUBLIC_DONATE_URL?.trim() || null;
 export const SITE_TITLE = "UI Polish: polished UI for AI products";
 /** The one sentence that says what UI Polish is. The home page, About, the
@@ -73,13 +73,3 @@ export const NO_INDEX = { index: false, follow: false } as const;
  *  and TechArticle dateModified. Bump when site or registry content changes
  *  materially; a date that is always "today" gets ignored. */
 export const CONTENT_UPDATED = "2026-11-05";
-
-/** A YYYY-MM-DD date for people, the one way the site writes dates (US):
- *  "November 5, 2026". UTC, so the server and the browser agree. */
-export const formatDate = (iso: string) =>
-  new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  });

@@ -64,6 +64,10 @@ tone's set edge (`--ui-border-accent`, `-success`, `-warning`, `-danger`;
 `--ui-border` for neutral, the line used inside a box). The fill is mixed with transparent, not with the surface, so a
 badge reads the same on the canvas, a card, or a selected row.
 
+A toned badge fades a little lighter toward its top: the fill at the
+bottom, the fill mixed 55% with the surface at the top. It's a quiet
+gradient, never a shine. Neutral stays flat.
+
 **Never rely on the color.** The tone backs up the words; it doesn't
 replace them. Write "Card declined", not a red badge that says "Card".
 People who can't tell red from green, and screen readers, get the label.

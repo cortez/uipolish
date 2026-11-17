@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type ComponentType } from "react";
 import { useRouter } from "next/navigation";
 import type { Command, CommandPaletteProps } from "@registry/command-palette/command-palette";
+import { Button } from "@registry/button/button";
 import { Icon } from "@registry/icons/icons";
-import styles from "./site-search.module.css";
 
 type Item = { name: string; title: string };
 
@@ -20,8 +20,8 @@ function loadPalette(set: (C: ComponentType<CommandPaletteProps>) => void) {
   });
 }
 
-/** Search, in the top bar of every page: the button, and ⌘K (Ctrl+K) from
- *  anywhere. It finds every component. The one ⌘K on the site. */
+/** Search, in the top bar of every page: an icon button, and ⌘K (Ctrl+K)
+ *  from anywhere. It finds every component. The one ⌘K on the site. */
 export function SiteSearch({ components }: { components: Item[] }) {
   const router = useRouter();
   const button = useRef<HTMLButtonElement>(null);
@@ -84,11 +84,9 @@ export function SiteSearch({ components }: { components: Item[] }) {
           triggerRef={button}
         />
       )}
-      <button ref={button} type="button" className={styles.search} onClick={openSearch} onPointerEnter={warm} onFocus={warm}>
+      <Button ref={button} variant="ghost" size="sm" aria-label="Search components" aria-keyshortcuts="Meta+K Control+K" title={`Search (${mod}K)`} onClick={openSearch} onPointerEnter={warm} onFocus={warm}>
         <Icon name="search" />
-        <span className={styles.label}>Search</span>
-        <kbd className={styles.kbd}>{mod}K</kbd>
-      </button>
+      </Button>
     </>
   );
 }

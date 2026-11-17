@@ -155,7 +155,7 @@
   display: flex;
   align-items: stretch;
   min-width: 0;
-  border-radius: calc(var(--ui-radius-sm) / 2);
+  border-radius: var(--ui-radius-xs);
   background: var(--ui-surface);
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
@@ -246,7 +246,7 @@
   inset-inline-end: -12px;
   z-index: 2;
   width: 24px;
-  border-radius: calc(var(--ui-radius-sm) / 2);
+  border-radius: var(--ui-radius-xs);
   outline: none;
   touch-action: none;
 }
@@ -325,7 +325,7 @@
   gap: var(--ui-space-2);
   min-width: 0;
   padding-inline: var(--data-table-pad);
-  border-radius: calc(var(--ui-radius-sm) / 2);
+  border-radius: var(--ui-radius-xs);
   outline: none;
 }
 

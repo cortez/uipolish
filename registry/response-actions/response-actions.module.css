@@ -19,80 +19,24 @@
 
 /* ---------- Icon buttons ---------- */
 
-.action {
-  position: relative;
-  display: inline-grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: calc(var(--ui-control-sm) * var(--ui-capsule));
-  height: var(--ui-control-sm);
-  padding: 0;
-  border: 0;
-  border-radius: var(--ui-radius-control);
-  background: none;
-  color: var(--ui-muted);
-  isolation: isolate;
-  cursor: pointer;
-  user-select: none;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  transition: color var(--ui-dur-instant) var(--ui-ease-color);
-}
-
-/* The fill is its own layer: a press shrinks the shape, never the icon. */
-.action::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background: transparent;
-  transition:
-    background-color var(--ui-dur-instant) var(--ui-ease-color),
-    scale var(--ui-dur-snap) var(--ui-ease-snap);
+/* Small ghost Buttons (icon-only capsules), muted until hovered or pressed.
+   Doubled so it outranks the button's own rules in any stylesheet order. */
+.action.action {
+  --button-fg: var(--ui-muted);
 }
 
 @media (hover: hover) {
-  .action:hover {
-    color: var(--ui-foreground);
-  }
-  .action:hover::before {
-    background: var(--ui-fill);
+  .action.action:hover {
+    --button-fg: var(--ui-foreground);
   }
 }
 
-.action:active::before {
-  background: var(--ui-fill-strong);
-  scale: var(--ui-scale-press);
-  transition-duration: var(--ui-dur-press);
+.action.action[aria-pressed="true"] {
+  --button-fg: var(--ui-foreground);
 }
 
-.action:focus-visible {
-  outline: var(--ui-ring-focus);
-  outline-offset: var(--ui-ring-offset);
-}
-
-.action[aria-pressed="true"] {
-  color: var(--ui-foreground);
-}
-
-.action svg {
-  width: var(--ui-icon-md);
-  height: var(--ui-icon-md);
-  pointer-events: none;
-}
-
-.glyph,
+/* A pressed thumb fills in. */
 .thumb {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: var(--ui-icon-stroke);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.thumb {
-  fill: transparent;
   transition: fill var(--ui-dur-instant) var(--ui-ease-color);
 }
 
@@ -275,7 +219,6 @@
 
 /* The field is 16px on touch so iOS doesn't zoom. */
 @media (pointer: coarse) {
-  .action::after,
   .send::after {
     content: "";
     position: absolute;
@@ -290,11 +233,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .action::before,
   .send::before {
     transition-property: background-color;
   }
-  .action:active::before,
   .send[data-ready]:active::before {
     scale: none;
   }

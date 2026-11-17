@@ -161,7 +161,10 @@
 
 .message {
   display: grid;
-  min-height: var(--ui-leading-md);
+  /* Full width even in a field that starts its items (select). */
+  justify-self: stretch;
+  /* Set --field-message-lines when a longer error can arrive, so it never pushes the page. */
+  min-height: calc(var(--field-message-lines, 1) * var(--ui-leading-md));
   margin: 0;
   font-size: var(--ui-text-sm);
   line-height: var(--ui-leading-md);

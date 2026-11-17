@@ -75,15 +75,14 @@ motion specs, accessibility and before/after code.
 **Components (45):** Accordion, Alert, Avatar, Badge, Breadcrumbs, Button, Checkbox,
 Chip, Code input, Combobox, Command palette, Copy field, Data table, Date
 picker, Dialog, Drawer, Dropdown menu, Empty state, File upload, Inline edit,
-Kbd, List, Nav rail, Number input, Pagination, Phone input, Popover, Progress, Prompt
+Kbd, List, Nav rail, Number input, Pagination, Popover, Progress, Prompt
 input, Radio group, Response actions, Scroll area, Search field, Segmented
-control, Select, Sidebar, Skeleton, Slider, Stat, Switch, Tabs, Text field, Theme toggle, Toast and
+control, Select, Sidebar, Skeleton, Slider, Switch, Tabs, Text field, Theme toggle, Toast and
 Tooltip.
 
 **Agent kit:** components for AI products, grouped in the docs by
-`"kit": "agent"` in `meta.json`: Code block, Diff stat, Diff view, Markdown,
-Message thread, Model picker, Reasoning, Sources, Tool steps, Usage meter
-and Voice input.
+`"kit": "agent"` in `meta.json`: Code block, Diff view, Markdown, Message
+thread, Model picker, Reasoning, Tool steps and Usage meter.
 
 The interactive components run on [Base UI](https://base-ui.com)
 (`@base-ui/react`) for focus, keyboard, ARIA, positioning and dismissal; the
@@ -92,7 +91,7 @@ packages it imports in `meta.json` (`packages`), and `get_component`, the REST
 API and the shadcn registry item all tell the project to install them.
 
 **Primitives**, the parts the other components are built from, each usable
-on its own: Animated size, Brand marks, Field, Icons, Listbox, Text, Text morph.
+on its own: Animated size, Field, Icons, Listbox, Text, Text morph.
 
 `list_components` (or `GET /api/components`) is the live list.
 
@@ -119,7 +118,7 @@ Every component is also a shadcn registry item: `npx shadcn add
 https://uipolish.com/r/dialog.json`, or add the `@uipolish` registry to
 `components.json` and run `npx shadcn add @uipolish/model-picker`. `/r/registry.json` lists every item;
 `/r/theme.json` maps the roles onto a shadcn theme (`foundation/shadcn.css`).
-Setup: `foundation/shadcn.md`, served at `/docs/shadcn`.
+Setup: `foundation/shadcn.md`, served as `get_rules("shadcn")` and `/api/rules/shadcn`.
 
 ## For agents without MCP
 
@@ -169,10 +168,10 @@ anything in `foundation/`, run `npm run skill`. Run `npm run typecheck`,
 `npm run lint` and `npm test` before opening a PR. [AGENTS.md](AGENTS.md) has
 the conventions, for people and coding agents alike.
 
-## Donate
+## Support
 
 UI Polish is free and open source. If it saves you time, you can
-[donate](https://buy.polar.sh/polar_cl_Ne3B69dlezuutkrSoXOkzyIERxDUwm34SFCyX02eXVx).
+[support it](https://buy.polar.sh/polar_cl_Ne3B69dlezuutkrSoXOkzyIERxDUwm34SFCyX02eXVx).
 
 ## License
 

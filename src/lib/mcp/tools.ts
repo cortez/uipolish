@@ -4,6 +4,7 @@ import {
   getComponentGuide,
   getComponentMeta,
   getRule,
+  getShadcn,
   getTailwind,
   getTokens,
   installLine,
@@ -39,7 +40,7 @@ export const TOOLS: Tool[] = [
       properties: {
         topic: {
           type: "string",
-          description: "One of: antipatterns, foundations, motion, spacing, states, surfaces, typography, tokens, checklist, tailwind (setup for Tailwind CSS v4 projects).",
+          description: "One of: antipatterns, foundations, motion, spacing, states, surfaces, typography, tokens, checklist, tailwind (setup for Tailwind CSS v4 projects), shadcn (using the components on a shadcn/ui theme).",
         },
       },
     },
@@ -79,6 +80,7 @@ async function getRules(topic: unknown) {
   if (topic === "tokens") return text(await getTokens());
   if (topic === "checklist") return text(await getChecklist());
   if (topic === "tailwind") return text(await getTailwind());
+  if (topic === "shadcn") return text(await getShadcn());
   const topics = await listRuleTopics();
   if (typeof topic === "string" && topic) {
     const rule = await getRule(topic);

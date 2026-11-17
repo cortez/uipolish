@@ -83,7 +83,7 @@
 
 .panel {
   composes: panel from "../listbox/listbox.module.css";
-  --panel-pad: var(--ui-space-3);
+  --panel-pad: var(--ui-space-2);
   --inner-radius: calc(var(--ui-radius-lg) - var(--panel-pad));
   --cell: 36px;
   --weekday-height: var(--ui-control-sm);
@@ -240,7 +240,7 @@
   width: 10px;
   height: 1.5px;
   margin-left: -5px;
-  border-radius: 1px;
+  border-radius: var(--ui-radius-full);
   background: currentColor;
 }
 

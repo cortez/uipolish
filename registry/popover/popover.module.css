@@ -11,7 +11,9 @@
   box-sizing: border-box;
   padding: var(--popover-pad);
   border-radius: calc(var(--popover-pad) + var(--ui-control-sm) / 2);
-  background: var(--ui-surface);
+  background: var(--ui-surface-glass);
+  backdrop-filter: blur(var(--ui-glass-blur));
+  -webkit-backdrop-filter: blur(var(--ui-glass-blur));
   box-shadow: var(--ui-shadow-floating);
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);

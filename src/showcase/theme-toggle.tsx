@@ -1,13 +1,7 @@
 "use client";
 
-import { ThemeSelect, ThemeToggle } from "@registry/theme-toggle/theme-toggle";
-import styles from "./showcase.module.css";
+import { ThemeSelect } from "@registry/theme-toggle/theme-toggle";
 
 export default function Showcase() {
-  return (
-    <div className={styles.row}>
-      <ThemeToggle />
-      <ThemeSelect aria-label="Theme" />
-    </div>
-  );
+  return <ThemeSelect aria-label="Theme" />;
 }

@@ -2,26 +2,31 @@
 
 import { useState } from "react";
 import { AnimatedSize } from "@registry/animated-size/animated-size";
-import { Button } from "@registry/button/button";
+import { List, ListItem } from "@registry/list/list";
+import { Segment, SegmentedControl } from "@registry/segmented-control/segmented-control";
 import styles from "./showcase.module.css";
 
+const MENU: Record<string, string[]> = {
+  starter: ["Charred leeks, hazelnut"],
+  main: ["Braised short rib", "Wild mushroom risotto", "Halibut, brown butter"],
+  dessert: ["Pear tarte tatin", "Dark chocolate pot"],
+};
+
 export default function Showcase() {
-  const [open, setOpen] = useState(false);
+  const [course, setCourse] = useState("main");
   return (
     <div className={styles.stack}>
-      <Button variant="secondary" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
-        {open ? "Hide the menu" : "Show the menu"}
-      </Button>
+      <SegmentedControl aria-label="Course" value={course} onValueChange={setCourse}>
+        <Segment value="starter">Starter</Segment>
+        <Segment value="main">Main</Segment>
+        <Segment value="dessert">Dessert</Segment>
+      </SegmentedControl>
       <AnimatedSize>
-        {open ? (
-          <ul>
-            <li>Charred leeks, hazelnut</li>
-            <li>Braised short rib, polenta</li>
-            <li>Pear tarte tatin</li>
-          </ul>
-        ) : (
-          <p>Three courses, Saturday at 7:30.</p>
-        )}
+        <List aria-label="Dishes">
+          {MENU[course].map((dish) => (
+            <ListItem key={dish} title={dish} />
+          ))}
+        </List>
       </AnimatedSize>
     </div>
   );

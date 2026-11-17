@@ -2,7 +2,7 @@
   "name": "toast",
   "title": "Toast",
   "summary": "Imperative toasts in a collapsed stack that fans out on hover. Timers pause while you read, and a flick swipes a toast away.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "dependencies": [
     "button",
     "icons",

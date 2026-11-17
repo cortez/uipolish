@@ -2,7 +2,7 @@
   --alert-tone: var(--ui-foreground);
   --alert-edge: var(--ui-border-strong);
   --alert-pad: var(--ui-space-3);
-  --alert-radius: var(--ui-radius-md);
+  --alert-radius: var(--ui-radius-lg);
   --alert-dismiss: var(--ui-control-sm);
   --alert-dismiss-inset: calc(var(--alert-pad) + var(--ui-leading-md) / 2 - var(--alert-dismiss) / 2);
   display: grid;

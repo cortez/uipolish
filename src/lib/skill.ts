@@ -62,4 +62,3 @@ export const SKILL_INSTALLS = [
   },
 ] as const;
 
-export type SkillInstall = (typeof SKILL_INSTALLS)[number];

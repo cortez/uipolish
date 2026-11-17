@@ -3,10 +3,11 @@
   "title": "Prompt input",
   "summary": "Chat composer that grows with its text and sends on Enter, never mid-IME. Send turns into Stop while a reply streams, and dropped files become chips.",
   "blurb": "A chat composer that grows with its text and sends on Enter.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "dependencies": [
+    "button",
     "icons",
-    "text-morph",
-    "text"
+    "text",
+    "text-morph"
   ]
 }

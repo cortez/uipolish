@@ -52,7 +52,7 @@ const models = [
 | Changed model | The name morphs (shared letters slide), and the trigger's width follows on the same spring | measured width, `TextMorph` |
 | Flipped / shifted | Opens the other way near a viewport edge and stays 8px inside it; the list scrolls if it's taller than the room | Base UI `Positioner`, `--available-height` |
 
-**Rows.** The list is a menu: inset `--ui-inset-menu` (12px) inside its
+**Rows.** The list is a menu: inset `--ui-inset-menu` (4px) inside its
 24px corner, rows with the concentric 12px radius and `--ui-pad-row` (12px)
 inside them, so the text clears each row's curve. The same as the dropdown
 menu and the command palette.

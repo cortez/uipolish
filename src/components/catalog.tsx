@@ -53,11 +53,13 @@ function Card({ item }: { item: CatalogItem }) {
   );
 }
 
-export function Catalog({ items }: { items: CatalogItem[] }) {
+/** Every item with a showcase, or only the first `limit` of them. */
+export function Catalog({ items, limit }: { items: CatalogItem[]; limit?: number }) {
   return (
     <ul className={styles.grid}>
       {items
         .filter((item) => SHOWCASES[item.name])
+        .slice(0, limit)
         .map((item) => (
           <li key={item.name}>
             <Card item={item} />

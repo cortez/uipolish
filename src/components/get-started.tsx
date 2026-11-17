@@ -15,9 +15,9 @@ type Install = Parameters<typeof SkillPicker>[0]["installs"][number];
 const HASH = "#get-started";
 
 /**
- * Get started, in the top bar of every page: one dialog with a tab for
- * each way in. MCP (your agent installs components by name), the shadcn
- * CLI, the rules as a skill, and Tailwind. A link to #get-started opens it.
+ * Get started, the one place on the site: a button in the home page's
+ * hero that opens one dialog with a tab for each way in. MCP (your agent installs components by name), the shadcn
+ * CLI, the rules as a skill, and Tailwind. A link to /#get-started opens it.
  */
 export function GetStarted({ installs }: { installs: readonly Install[] }) {
   const [open, setOpen] = useState(false);
@@ -36,7 +36,7 @@ export function GetStarted({ installs }: { installs: readonly Install[] }) {
 
   return (
     <>
-      <Button ref={trigger} variant="ghost" size="sm" onClick={() => setOpen(true)}>
+      <Button ref={trigger} variant="secondary" onClick={() => setOpen(true)}>
         Get started
       </Button>
       <Dialog

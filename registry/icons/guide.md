@@ -9,8 +9,9 @@ strokes only the new one has draw in. A state is a name:
 `<Icon name={copied ? "check" : "copy"} />`. CSS transitions only, no
 library, and nothing ever changes the 16px box.
 
-Text field, Code block, Message thread, Prompt input, Reasoning, Tool steps,
-Sources, Dropdown menu, Toast, Dialog and Command palette use it.
+Text field, Code block, Message thread, Prompt input, Response actions,
+Reasoning, Tool steps, Sidebar, Sources, Dropdown menu, Toast, Dialog and
+Command palette use it.
 
 **Sizes.** The icon draws at `--ui-icon-md` (16px). Size it to the text
 it sits with, from the scale only: `--ui-icon-md` beside 14-16px text and in
@@ -46,6 +47,7 @@ in a tile. Every chevron in the same role is the same size.
 | `play`, `pause`, `stop` | a, b | Solid, not stroked: each is two filled four-point shapes with softly rounded corners, the points in the same order. Play is its triangle split down the middle, pause its two bars, stop its square split in half, so any one morphs into any other point to point (play to pause: the triangle's halves square off into the bars), on the glide so the halves never part. Send to stop: the arrow retracts into its tip while the square fades and grows in. |
 | `info`, `alert`, `check-circle` | ring, stem, dot (tick) | One ring; the stem and dot swap ends between `info` and `alert`, and the tick draws in for `check-circle`. `warning` is its own triangle. |
 | `more`, `pencil`, `sidebar` | dots; body, edge; frame, rail | Row and card overflow menus, rename or edit, and showing or hiding a side panel. |
+| `thumbs-up`, `thumbs-down`, `pin` | hand, cuff; head, point | Rating a reply, and pinning an item. Down is up turned half round point for point, so the two share keys. A pressed rating fills: set `fill: currentColor` on the icon. |
 | `upload`, `file`, `retry`, `calendar` | | Static. |
 | `home`, `compose`, `settings`, `help`, `clock`, `share`, `folder`, `paperclip`, `at`, `list`, `terminal`, `branch`, `gauge`, `panel` | | Static: an app's frame. Places, a new item, settings and help, history, sharing, files, attaching, mentioning, a plan, a terminal, a branch, an amount of effort, and showing or hiding a panel at the end (`sidebar` is the one at the start). `share` lifts its arrow 1px while the control around it is hovered or focused. |
 | `diff-added`, `diff-modified`, `diff-removed`, `diff-renamed` | frame, bar (+ stem, dot, head) | What happened to a file: one rounded square with a plus, a dot, a minus or an arrow. They share the square and the bar, so a change of kind morphs only the mark. |

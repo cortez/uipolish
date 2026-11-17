@@ -271,7 +271,7 @@
 .body:focus-visible {
   outline: var(--ui-ring-focus);
   outline-offset: var(--ui-ring-offset);
-  border-radius: 2px;
+  border-radius: var(--ui-radius-xs);
 }
 
 .srOnly {

@@ -244,10 +244,9 @@ for real-looking services read as fake.
 
 ## 4. Radius
 
-- One scale, derived from a single knob where possible:
-  `--radius: 10px` with sm/md/lg/xl as ±2–4px `calc()` offsets. Controls
-  (buttons, chips, badges, pills) very often go fully round — `rounded-full`
-  is the most-used radius in polished products.
+- One scale from one knob: `--ui-radius: 4px`, and xs 4, sm 8, md 12,
+  lg 16 as its multiples, plus full for controls. Change the knob and every
+  corner follows. A literal radius anywhere else is a defect.
 - **Concentric rule, no exceptions: inner radius = outer radius − gap.** A
   card at 16px containing media inset by 4px gives the media 12px. A menu at
   14px with 6px padding gives its highlighted row 8px. Nested equal radii
@@ -259,6 +258,8 @@ for real-looking services read as fake.
     outer pill's height minus twice the gap.
   - If the math lands under ~4px, change the padding or the outer radius;
     don't square the inner corner off.
+  - A literal radius on a nested element is a defect even when it looks
+    right today: write the calc, so it still lines up after the knob moves.
   - On pseudo-element overlays use `border-radius: inherit`.
 - Consistency beats taste: any radius not on the scale is a defect.
 - **The radius says what a thing is.** Pick by role, never per component:
@@ -266,8 +267,10 @@ for real-looking services read as fake.
   | Role | Radius | Examples |
   |---|---|---|
   | Things you press | full | buttons, segmented controls, tabs, chips, a compact select in a toolbar |
-  | Fields you type in or choose from | md | text field, select, combobox, date, phone, number, each code box |
-  | Boxes, panels and cards | lg (24) | cards, tables, code blocks, diffs, menus, dialogs, command palette, drop zone, composer |
+  | Inline marks | xs (4) | inline code, a check box, a focus ring on text |
+| Small marks | sm (8) | tags, key caps, table cells, a day in a calendar |
+| Fields you type in or choose from | md (12) | text field, select, combobox, date, number, each code box |
+  | Boxes, panels and cards | lg (16) | cards, tables, code blocks, diffs, menus, dialogs, command palette, drop zone, composer |
   | Anything nested | outer − gap | options in a list, a button inside a field |
 
   A select in a form is a field, so it matches the text field beside it; only
@@ -321,12 +324,15 @@ for real-looking services read as fake.
 
 ## 6. Overlays, without blur
 
-Blur is the most overused effect in generated UI. It smears text behind it,
-costs a compositing layer per element, and dates fast. Default to none.
+Heavy blur is the most overused effect in generated UI. It smears text
+behind it and dates fast. The only glass here is light, and it's one token.
 
-- Floating surfaces (menus, popovers, toasts, sheets) are opaque: the
-  surface color, a hairline and a shadow. They read as above the page
-  by shadow, not by frosting what's under them.
+- Small floating surfaces (menus, popovers, select lists, toasts) are light
+  glass: `--ui-surface-glass` (the surface at 92%) over
+  `--ui-glass-blur` (4px), a hairline and a shadow. They still read as above
+  the page by shadow; the glass only softens what's under them. Text on
+  them passes contrast against the surface alone. Dialogs, drawers and
+  sheets stay opaque.
 - Modal scrims: a plain dim, roughly black at 25–30% in light mode and
   50–55% in dark. No `backdrop-filter`.
 - Motion never blurs: letters, words and icons enter and leave with opacity

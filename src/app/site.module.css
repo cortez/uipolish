@@ -1,10 +1,8 @@
 /* Shared type and rhythm. Heading to text 16, title to lede 16, block 16,
    text to action 32, intro to first block 48, subsection 48, section 64. */
 
-/* Three styles for the site's own text. A page's title is a step up;
-   every heading under it, at any level, is body size in medium; the rest
-   is body. Weight and the text color set headings apart from the muted
-   text under them, never a third size. */
+/* Three styles for the site's own text: the title style for a page's
+   title and its section headings, body, and small. */
 .title {
   font-size: var(--ui-text-2xl);
   font-weight: var(--ui-weight-title);
@@ -13,10 +11,10 @@
 }
 
 .heading {
-  font-size: var(--ui-text-md);
-  font-weight: var(--ui-weight-medium);
-  line-height: var(--ui-leading-md);
-  letter-spacing: normal;
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-title);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-heading);
 }
 
 .text {
@@ -55,6 +53,11 @@
   scroll-margin-top: var(--ui-space-6);
 }
 
+/* A section of component cards: the whole column, not the text measure. */
+.wide {
+  max-width: none;
+}
+
 /* 16 + the section's group gap around actions. */
 .actions {
   display: flex;
@@ -76,12 +79,6 @@
   border-radius: calc(var(--ui-radius-lg) + var(--ui-space-2));
   background: var(--ui-surface);
   box-shadow: var(--ui-shadow-resting);
-}
-
-/* A live component inside an article: the same stage, with the text's
-   rhythm around it. */
-.embed {
-  margin: var(--ui-space-6) 0 var(--ui-space-7);
 }
 
 @media (max-width: 640px) {
@@ -245,10 +242,8 @@
   color: var(--ui-foreground);
 }
 
-/* The site's link in running text; `.link` is the same for a link outside
-   a `.text` paragraph. */
-.text a,
-.link {
+/* The site's link in running text. */
+.text a {
   color: inherit;
   text-decoration-color: var(--ui-border-strong);
   text-underline-offset: 3px;
@@ -256,8 +251,7 @@
 }
 
 @media (hover: hover) {
-  .text a:hover,
-  .link:hover {
+  .text a:hover {
     text-decoration-color: currentColor;
   }
 }

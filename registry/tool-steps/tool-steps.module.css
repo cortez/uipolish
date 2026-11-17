@@ -267,7 +267,7 @@
   margin: 0 -6px;
   padding: 0 6px;
   border: 0;
-  border-radius: calc(var(--ui-radius-sm) / 2);
+  border-radius: var(--ui-radius-xs);
   background: transparent;
   color: var(--ui-foreground);
   font: var(--ui-weight-medium) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);

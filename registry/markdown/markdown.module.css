@@ -94,7 +94,7 @@
 
 .inlineCode {
   padding: 2px 5px;
-  border-radius: calc(var(--ui-radius-sm) / 2);
+  border-radius: var(--ui-radius-xs);
   background: var(--ui-fill);
   font-family: var(--ui-font-mono);
   font-size: var(--ui-text-code);

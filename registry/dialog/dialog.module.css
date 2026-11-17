@@ -47,26 +47,23 @@
   font-family: var(--ui-font-sans);
   overflow: clip;
   outline: none;
-  /* Arrives like a popover, a block's size: fades, scales up from 0.97 and
-     clears a 2px blur. No spring: nothing travels, it comes into focus. */
+  /* Arrives the same way every time, from its own center: fades and scales
+     up from 0.97. Nothing travels or blurs. */
   transition:
     opacity var(--ui-dur-fast) var(--ui-ease-enter),
-    scale var(--ui-dur-base) var(--ui-ease-enter),
-    filter var(--ui-dur-base) var(--ui-ease-enter);
+    scale var(--ui-dur-base) var(--ui-ease-enter);
 }
 
 .modal[data-starting-style],
 .modal[data-ending-style] {
   opacity: 0;
   scale: 0.97;
-  filter: blur(2px);
 }
 
 .modal[data-ending-style] {
   transition:
     opacity var(--ui-dur-instant) var(--ui-ease-exit),
-    scale var(--ui-dur-instant) var(--ui-ease-exit),
-    filter var(--ui-dur-instant) var(--ui-ease-exit);
+    scale var(--ui-dur-instant) var(--ui-ease-exit);
 }
 
 /* Phones: docked at the bottom, in reach of a thumb, 8px off the edges.
@@ -92,7 +89,6 @@
   .modal[data-starting-style],
   .modal[data-ending-style] {
     scale: none;
-    filter: none;
   }
 }
 
@@ -124,7 +120,6 @@
   transition:
     opacity var(--ui-dur-fast) var(--ui-ease-enter),
     scale var(--ui-dur-base) var(--ui-ease-enter),
-    filter var(--ui-dur-base) var(--ui-ease-enter),
     width var(--ui-dur-panel) var(--ui-ease-expand);
 }
 

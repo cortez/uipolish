@@ -10,20 +10,19 @@ A type step is a size **with the line-height it is set on**, plus a weight.
 Never ship a bare `font-size`, and never pick a value between steps: if a step
 is missing, the scale is wrong, not the component.
 
-**Three styles, and only three.** Two sizes, and a title weight. Nothing
-is set larger than body: a title stands out by weight and the space
-around it. A
+**Three styles, and only three.** A title, body and small text, each with
+one size and one weight. A
 fourth style is never the answer: pick the nearest of these, or change the
 layout. Hierarchy past three comes from color and space, never another
 size or weight. Bold is not a style: emphasis is color.
 
 | Style | Token | Size | Line-height | Weight | Use |
 |---|---|---|---|---|---|
-| Title | `md` (`2xl` and `display` are the same) | 15px | 22px | 500 (`--ui-weight-title`) | Page and screen titles, h1, figures |
-| Body | `md` | 15px | 22px | 450 (`--ui-weight-regular`) | Text, headings, labels, buttons, menus, fields, values |
-| Small | `sm` | 13px | 18px | 450 (`--ui-weight-regular`) | Secondary text, captions, badges, field messages, meta |
+| Title | `2xl` (`display` is the same) | 20px | 28px | 500 (`--ui-weight-title`), −0.01em | Page and section headings, a screen's title, big figures |
+| Body | `md` | 14px | 20px | 400 (`--ui-weight-regular`) | Text, headings, labels, buttons, menus, fields, values |
+| Small | `sm` | 12px | 16px | 400 (`--ui-weight-regular`) | Secondary text, captions, badges, field messages, meta |
 
-Running text of more than a couple of lines takes `--ui-leading-prose` (1.6)
+Running text of more than a couple of lines takes `--ui-leading-prose` (1.5)
 at Body size. Inline code is mono at `--ui-text-code` (0.875em) of the text
 it sits in, which is the same style in another face, not a new one.
 
@@ -37,8 +36,8 @@ and the old `xs`, `lg` and `xl` steps alias into these),
   not its own 18px.
 - Controls, pills and badges use `line-height: 1` so padding alone sets the
   box. That's a rule, not a step.
-- Weight: two in all. 450 for text, everything but the Title style, and
-  500 for titles. A face without variable weights takes 400 and 500. A
+- Weight: two in all. 400 for text, everything but the Title style, and
+  500 for titles. A
   section heading, a label or a button is Body: it's set apart by the
   text color against muted text, and by space, not by weight.
 - Mono uses the step it sits in: code blocks at `sm` / `md` leading, inline
@@ -98,7 +97,7 @@ word that has fi or fl and see what you lose.
 |---|---|
 | Headings (17–22px) | 24 / 28px |
 | UI text (12–15px) | 16 / 18 / 20 / 22px |
-| Running text, any size | 1.6 |
+| Running text, any size | 1.5 |
 | Buttons, pills, badges, labels | 1, so padding alone controls the box |
 
 The most common single miss: headings inheriting body line-height. A 22px

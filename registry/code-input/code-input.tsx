@@ -11,6 +11,7 @@ import {
   type KeyboardEvent,
   type MouseEvent,
 } from "react";
+import { Icon } from "../icons/icons";
 import { TextMorph } from "../text-morph/text-morph";
 import styles from "./code-input.module.css";
 
@@ -469,21 +470,7 @@ export function CodeInput({
               className={styles.error}
               data-shown={invalid || undefined}
             >
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <circle
-                  cx="8"
-                  cy="8"
-                  r="6.25"
-                  fill="none"
-                  stroke="currentColor"
-                />
-                <path
-                  d="M8 4.75v3.75"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                />
-                <circle cx="8" cy="11" r="0.9" fill="currentColor" />
-              </svg>
+              <Icon name="alert" />
               <span key={lastError} className={styles.errorText}>
                 {lastError}
               </span>

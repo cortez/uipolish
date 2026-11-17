@@ -155,72 +155,6 @@
   transition: none;
 }
 
-.message {
-  display: grid;
-  /* Set --field-message-lines when a longer error can arrive, so it never pushes the page. */
-  min-height: calc(var(--field-message-lines, 1) * var(--ui-leading-md));
-  margin: 0;
-  font-size: var(--ui-text-sm);
-  line-height: var(--ui-leading-md);
-  text-wrap: pretty;
-}
-
-.hint,
-.error {
-  grid-area: 1 / 1;
-  min-width: 0;
-  /* Hidden after the fade so it also leaves the accessible description. */
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity var(--ui-dur-instant) var(--ui-ease-color),
-    visibility 0s linear var(--ui-dur-instant);
-}
-
-.hint[data-shown],
-.error[data-shown] {
-  opacity: 1;
-  visibility: visible;
-  transition:
-    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
-    visibility 0s;
-}
-
-@starting-style {
-  .error[data-shown] {
-    opacity: 0;
-  }
-}
-
-.hint {
-  color: var(--ui-muted);
-}
-
-.error {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--ui-space-2);
-  color: var(--ui-danger-text);
-}
-
-.error[data-shown] .errorText {
-  animation: error-swap var(--ui-dur-fast) var(--ui-ease-enter);
-}
-
-.error svg {
-  width: var(--ui-icon-sm);
-  height: var(--ui-icon-sm);
-  stroke-width: var(--ui-icon-stroke-regular);
-  margin-top: calc((var(--ui-leading-md) - 14px) / 2);
-  flex-shrink: 0;
-}
-
-@keyframes error-swap {
-  from {
-    opacity: 0;
-  }
-}
-
 /* iOS zooms the page into any field under 16px. */
 @media (pointer: coarse) {
   .input {
@@ -229,9 +163,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .error[data-shown] .errorText {
-    animation: none;
-  }
   .reveal:active:not(:disabled) {
     scale: none;
   }

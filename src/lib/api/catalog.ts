@@ -4,6 +4,7 @@ import {
   getComponentGuide,
   getComponentMeta,
   getRule,
+  getShadcn,
   getTailwind,
   getTokens,
   installLine,
@@ -18,7 +19,7 @@ import { abs } from "@/lib/seo/site";
 // What the REST API serves, from the same registry and rules the MCP tools
 // read: the two surfaces can't disagree.
 
-export const RULE_TOPICS_EXTRA = ["tokens", "checklist", "tailwind"] as const;
+export const RULE_TOPICS_EXTRA = ["tokens", "checklist", "tailwind", "shadcn"] as const;
 
 const summary = (c: ComponentMeta) => ({
   name: c.name,
@@ -69,6 +70,7 @@ export async function rule(topic: string): Promise<{ format: "markdown" | "css";
   if (topic === "tokens") return { format: "css", content: await getTokens() };
   if (topic === "checklist") return { format: "markdown", content: await getChecklist() };
   if (topic === "tailwind") return { format: "markdown", content: await getTailwind() };
+  if (topic === "shadcn") return { format: "markdown", content: await getShadcn() };
   const content = await getRule(topic);
   return content ? { format: "markdown", content } : null;
 }

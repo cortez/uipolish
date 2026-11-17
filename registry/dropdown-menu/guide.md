@@ -174,7 +174,7 @@ and a busy label dims to 50% and holds still.
 - Focus moves into the menu on open: to the first or last item from the
   keyboard, to the menu itself when opened with the pointer, so the arrow
   keys work straight away. On close it returns to the trigger.
-- Shortcut hints are visual (`aria-hidden`); pass the real shortcut as
+- Shortcut hints are a plain `Kbd`, visual only (`aria-hidden`); pass the real shortcut as
   `keyshortcuts` (for example `"Meta+D"`) so assistive tech can announce it.
 - `description` is linked with `aria-describedby`, so a disabled item says
   why: "Publish menu, dimmed. Needs the host's approval first."

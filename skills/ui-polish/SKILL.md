@@ -27,9 +27,8 @@ them instead of adding a second palette. Read the component's guide before
 you use it: it says when not to.
 
 The full list is at https://uipolish.com/docs. Components for AI products
-(the agent kit) are message-thread, markdown, code-block, diff-view,
-diff-stat, reasoning, tool-steps, model-picker, sources, usage-meter and
-voice-input. All of it is free.
+include message-thread, markdown, code-block, diff-view, reasoning,
+tool-steps, model-picker and usage-meter. All of it is free.
 
 ## The rules
 
@@ -40,7 +39,7 @@ voice-input. All of it is free.
 - **Edges come from the text color.** Borders are the text color at 4 to 13% opacity, so they sit right on any background, in light and dark.
 - **Focus is for keyboards.** A thin ring inside the control's edge on `:focus-visible`, never a halo on click.
 - **Nothing shifts.** Labels that change hold their width, numbers use tabular figures, and content that loads in has its space reserved.
-- **One shape per job.** Controls are 32, 40 or 48px tall, whatever they are, and pill-shaped; small marks take 6px corners and boxes 12. An icon-only button is a capsule 1.375 times as wide as it is tall.
+- **One shape per job.** Controls are 32, 40 or 48px tall, whatever they are, and pill-shaped; every other corner is on one 4px scale: 4 for inline marks, 8 for tags, 12 for fields and rows, 16 for boxes. An icon-only button is a capsule 1.375 times as wide as it is tall.
 - **Native and accessible first.** Every control works from the keyboard, announces what changed, and has a 24px target for a mouse and 40px for a finger.
 - **Reduced motion keeps the meaning.** Movement becomes a fade; nothing that carries meaning disappears.
 

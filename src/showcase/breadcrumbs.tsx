@@ -7,8 +7,6 @@ export default function Showcase() {
     <Breadcrumbs
       items={[
         { label: "Maya’s suppers", href: "#suppers" },
-        { label: "2026", href: "#2026" },
-        { label: "Autumn", href: "#autumn" },
         { label: "Saturday supper", href: "#saturday-supper" },
         { label: "Menu" },
       ]}

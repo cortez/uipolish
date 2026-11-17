@@ -21,7 +21,9 @@
   /* Not `middle`: that centers on the x-height and makes the line taller. */
   vertical-align: top;
   border-radius: var(--ui-radius-control);
-  background: var(--badge-fill);
+  /* A tone fades a little lighter toward the top: a quiet gradient, not
+     a shine. The neutral badge is flat (its top and bottom are the same). */
+  background: linear-gradient(to bottom, var(--badge-fill-top, var(--badge-fill)), var(--badge-fill));
   box-shadow: inset 0 0 0 var(--ui-hairline) var(--badge-edge);
   color: var(--badge-text);
   font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
@@ -38,6 +40,10 @@
   --badge-pad: var(--ui-pad-tag-sm);
   margin-inline: 2px;
   vertical-align: baseline;
+}
+
+.badge:not([data-tone="neutral"]) {
+  --badge-fill-top: color-mix(in oklch, var(--badge-fill) 55%, var(--ui-surface));
 }
 
 .badge[data-tone="accent"] {

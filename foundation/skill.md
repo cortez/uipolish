@@ -27,9 +27,8 @@ them instead of adding a second palette. Read the component's guide before
 you use it: it says when not to.
 
 The full list is at https://uipolish.com/docs. Components for AI products
-(the agent kit) are message-thread, markdown, code-block, diff-view,
-diff-stat, reasoning, tool-steps, model-picker, sources, usage-meter and
-voice-input. All of it is free.
+include message-thread, markdown, code-block, diff-view, reasoning,
+tool-steps, model-picker and usage-meter. All of it is free.
 
 ## The rules
 

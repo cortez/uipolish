@@ -9,7 +9,7 @@ export default function Showcase() {
     <EmptyState
       art="calendar"
       title="No dinners on the calendar"
-      description="Pick a night and a host. Guests RSVP from the invite link."
+      description="Pick a night, and guests RSVP from the link."
       action={
         <Button>
           <Icon name="plus" />

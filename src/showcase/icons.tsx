@@ -1,27 +1,33 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@registry/button/button";
-import { Icon } from "@registry/icons/icons";
+import { useEffect, useState } from "react";
+import { Icon, type IconName } from "@registry/icons/icons";
 import styles from "./showcase.module.css";
 
+/** Pairs that morph into each other, stroke for stroke. */
+const PAIRS: [IconName, IconName][] = [
+  ["play", "pause"],
+  ["copy", "check"],
+  ["eye", "eye-off"],
+  ["menu", "close"],
+  ["plus", "minus"],
+];
+
+/** The icons on their own, swapping every 1.4s so the morph is the demo.
+ *  Held still under reduced motion. */
 export default function Showcase() {
-  const [playing, setPlaying] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [flip, setFlip] = useState(false);
+  useEffect(() => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const t = setInterval(() => setFlip((f) => !f), 1400);
+    return () => clearInterval(t);
+  }, []);
 
   return (
-    <div className={styles.row}>
-      <Button variant="ghost" aria-label={playing ? "Pause playlist" : "Play playlist"} onClick={() => setPlaying(!playing)}>
-        <Icon name={playing ? "pause" : "play"} />
-      </Button>
-      <Button variant="ghost" aria-label={copied ? "Copied" : "Copy invite link"} onClick={() => setCopied(!copied)}>
-        <Icon name={copied ? "check" : "copy"} />
-      </Button>
-      <Icon name="calendar" aria-hidden="true" />
-      <Icon name="clock" aria-hidden="true" />
-      <Icon name="share" aria-hidden="true" />
-      <Icon name="pencil" aria-hidden="true" />
-      <Icon name="settings" aria-hidden="true" />
+    <div className={`${styles.row} ${styles.icons}`} aria-hidden="true">
+      {PAIRS.map(([a, b], i) => (
+        <Icon key={a} name={flip !== (i % 2 === 1) ? b : a} />
+      ))}
     </div>
   );
 }

@@ -41,7 +41,7 @@ always `search`.
 |---|---|
 | `label` | The field's name for screen readers. Hidden unless `showLabel` is set |
 | `showLabel` | Show the label above the field, as in a form |
-| `shortcut` | A single key, such as `"/"`. Pressing it anywhere but in another field focuses this one and selects what's in it; its label shows at the end while the field is empty and something else has focus. Set as `aria-keyshortcuts`. For ⌘K, use the command palette |
+| `shortcut` | A single key, such as `"/"`. Pressing it anywhere but in another field focuses this one and selects what's in it; its label (a small `Kbd`) shows at the end while the field is empty and something else has focus. Set as `aria-keyshortcuts`. For ⌘K, use the command palette |
 | `loading` | Results are on their way: after 300ms the magnifier breathes |
 | `onClear` | Called after the clear button or Escape empties the field, after `onChange` |
 

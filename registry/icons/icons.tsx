@@ -178,6 +178,22 @@ const ICONS = {
     dot: { d: "M8 8 L8.01 8" },
     b: { d: "M12.25 8 L12.26 8" },
   },
+  /* Rating a reply. Down is up turned half round, point for point, so the
+     two share keys and a flip morphs. Fill the icon (fill: currentColor on
+     the svg) to show the rating is pressed. */
+  "thumbs-up": {
+    hand: { d: "M5.25 7.25 L7.6 2.5c.95 0 1.65.85 1.5 1.8l-.35 2.2h3.05a1.4 1.4 0 0 1 1.37 1.7l-.95 4.2a1.4 1.4 0 0 1-1.37 1.1H5.25Z" },
+    cuff: { d: "M5.25 7.25h-1.5a1 1 0 0 0-1 1v4.5a1 1 0 0 0 1 1h1.5Z" },
+  },
+  "thumbs-down": {
+    hand: { d: "M10.75 8.75 L8.4 13.5c-.95 0-1.65-.85-1.5-1.8l.35-2.2h-3.05a1.4 1.4 0 0 1-1.37-1.7l.95-4.2a1.4 1.4 0 0 1 1.37-1.1H10.75Z" },
+    cuff: { d: "M10.75 8.75h1.5a1 1 0 0 0 1-1v-4.5a1 1 0 0 0-1-1h-1.5Z" },
+  },
+  /* A push pin: keep a chat or an item at the top. */
+  pin: {
+    head: { d: "M5.25 2.75h5.5M6.5 2.75v3.5l-2 3h7l-2-3v-3.5" },
+    point: { d: "M8 9.25v4" },
+  },
   pencil: {
     body: { d: "M10.25 3.25a1.5 1.5 0 0 1 2.12 0l.38.38a1.5 1.5 0 0 1 0 2.12L6.5 12 3 13l1-3.5Z" },
     edge: { d: "M9.25 4.25 L11.75 6.75" },

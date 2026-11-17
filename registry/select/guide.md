@@ -103,7 +103,8 @@ Disabled options are skipped by the keys and can't be chosen.
   only, and is at most 320px tall (less when the viewport has less room:
   `--available-height`).
 - With a hint, validation or an outside error, one message line is always
-  reserved, so an error appearing moves nothing.
+  reserved, so an error appearing moves nothing. It's Field's
+  `FieldMessage`, the same line as under a text field.
 
 The open list's edge is the one in `--ui-shadow-floating`: the same outline color as the field (`--ui-border-strong`), drawn once. Don't add a ring of your own on top; two rings read as a darker edge.
 
@@ -116,7 +117,7 @@ The open list's edge is the one in `--ui-shadow-floating`: the same outline colo
 | List closes | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |
 | Highlight moves between options | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 | Chevron flips: its tip moves, its ends stay | `Icon` | |
-| Error in | `--ui-dur-fast` (160ms), fade and 3px drop | `--ui-ease-enter` |
+| Hint and error trade places (Field's `FieldMessage`) | `--ui-dur-instant` (120ms) out, `--ui-dur-fast` (160ms) in | `--ui-ease-color`, `--ui-ease-enter` |
 
 The width change is the one place a select moves its neighbors, and only in
 answer to the user's choice. Under `prefers-reduced-motion: reduce` the

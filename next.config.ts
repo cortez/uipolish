@@ -7,6 +7,7 @@ const RETIRED = [
   "agent-console", "agent-workspace", "ai-chat-app",
   "agent-settings", "authorize", "connections", "plan-approval", "tool-approval", "merge-status",
   "file-changes", "turn-summary", "batch-progress", "background-run", "research-progress", "pipeline",
+  "brand-marks", "sources", "diff-stat", "stat", "voice-input", "phone-input",
 ];
 
 const nextConfig: NextConfig = {

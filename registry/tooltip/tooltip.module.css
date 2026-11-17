@@ -54,7 +54,9 @@
   min-width: 0;
 }
 
-.kbd {
+/* The shortcut's Kbd, plain. Doubled so it outranks the Kbd's own root
+   rule in any stylesheet order. */
+.kbd.kbd {
   flex-shrink: 0;
   color: var(--ui-on-ink-muted);
   font-family: var(--ui-font-mono);

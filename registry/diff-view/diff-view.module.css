@@ -81,7 +81,7 @@
 
 .scroller {
   overflow: auto;
-  border-radius: 0 0 var(--ui-radius-md) var(--ui-radius-md);
+  border-radius: 0 0 var(--ui-radius-lg) var(--ui-radius-lg);
   overscroll-behavior-x: contain;
   scrollbar-width: thin;
   scrollbar-color: var(--ui-border-strong) transparent;

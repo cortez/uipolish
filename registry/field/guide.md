@@ -6,7 +6,9 @@ It has no look of its own beyond what those fields share.
 
 - `FieldMessage`: the line under a field. Hint and error share one grid
   cell and crossfade, so an error appearing moves nothing. The line is
-  reserved whenever the field renders it.
+  reserved whenever the field renders it; set `--field-message-lines` on
+  the field to reserve more when a longer error can arrive. Text field and
+  select use it too.
 - `field.module.css`, composed into a component's classes:
   - `field`, `label`: the stack and its label (6px apart, label 15px / 500).
   - `shell`: the edge of a field that holds buttons or a picker. Hover

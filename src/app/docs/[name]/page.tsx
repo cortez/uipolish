@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "@/components/link";
 import { notFound } from "next/navigation";
 import { CopyPage } from "@/components/copy-page";
+import { Catalog } from "@/components/catalog";
 import { InstallCommand } from "@/components/install-command";
+import { related } from "@/lib/related";
 import {
   getComponentGuide,
   getComponentMeta,
@@ -52,6 +54,7 @@ export default async function ComponentPage({
     await Promise.all(meta.dependencies.map(getComponentMeta))
   ).filter((d) => d !== null);
   const packages = packagesOf(await collect(name));
+  const next = related(meta, await listComponents());
   const ld = docsLd({
     path: `/docs/${name}`,
     headline: `${meta.title} React component`,
@@ -59,7 +62,6 @@ export default async function ComponentPage({
     dateModified: CONTENT_UPDATED,
     trail: [
       ["UI Polish", "/"],
-      ["Docs", "/docs"],
       [meta.title, `/docs/${name}`],
     ],
   });
@@ -96,7 +98,7 @@ export default async function ComponentPage({
           Installation
         </h2>
         <p className={site.text}>
-          With UI Polish <a href="#get-started">connected</a>, ask your agent:
+          With UI Polish <Link href="/#get-started">connected</Link>, ask your agent:
         </p>
         <div className={site.actions}>
           <InstallCommand
@@ -105,7 +107,7 @@ export default async function ComponentPage({
           />
         </div>
         <p className={site.text}>
-          Or with <Link href="/docs/shadcn">the shadcn CLI</Link>:
+          Or with <Link href="/#get-started">the shadcn CLI</Link>:
         </p>
         <div className={site.actions}>
           <InstallCommand
@@ -153,10 +155,16 @@ export default async function ComponentPage({
         </div>
       </section>
 
-
       <article className={styles.prose}>
         <Markdown source={guide} skipTitle />
       </article>
+
+      <section className={`${site.section} ${site.wide}`} aria-labelledby="related">
+        <h2 id="related" className={site.heading}>
+          Continue exploring
+        </h2>
+        <Catalog items={next} limit={3} />
+      </section>
     </>
   );
 }

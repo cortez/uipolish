@@ -2,7 +2,7 @@
   "name": "radio-group",
   "title": "Radio group",
   "summary": "Base UI radios in a fieldset, as a list or as cards. The mark opens from its center, arrow keys choose, and the whole group takes one tab stop.",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "dependencies": [
     "field"
   ],

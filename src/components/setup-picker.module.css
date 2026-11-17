@@ -25,7 +25,7 @@
    that wraps keeps its padding and corners on each line. */
 .body p code {
   padding: 1px 6px;
-  border-radius: calc(var(--ui-radius-sm) / 2);
+  border-radius: var(--ui-radius-xs);
   background: var(--ui-fill);
   color: var(--ui-foreground);
   font-size: var(--ui-text-code);
