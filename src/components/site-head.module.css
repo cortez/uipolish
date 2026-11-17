@@ -1,11 +1,16 @@
-/* The header every page shares: the mark top left, the theme toggle
-   top right, on one line 24 from the top (20 on phones). Both rows
+/* The header every page shares: the mark top left, the theme toggle and
+   GitHub top right, on one line 24 from the top (20 on phones). Both rows
    are a small control tall, so their centers line up. */
 .mark,
 .actions {
   display: flex;
   align-items: center;
   min-height: var(--ui-control-sm);
+}
+
+/* The mark's box is as wide as the logo, not the column. */
+.mark {
+  width: fit-content;
 }
 
 /* Nav text's 12px inset, +1px optical: text has a 1px side bearing, the

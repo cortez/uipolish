@@ -10,7 +10,7 @@ import styles from "./info-page.module.css";
 export const infoMetadata = (page: InfoPage): Metadata =>
   pageMetadata({ title: page.title, description: page.description, path: page.path });
 
-/** About, contact and privacy: the docs frame around one Markdown body. */
+/** About and contact: the docs frame around one Markdown body. */
 export function InfoPageView({ page }: { page: InfoPage }) {
   return (
     <DocsLayout>

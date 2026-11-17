@@ -56,7 +56,7 @@ export async function llmsText(full: boolean): Promise<string> {
     `- [Theme](${abs("/docs/theme")}): every component in one brand color, contrast-checked (MCP \`get_theme\`, or ${abs("/api/theme?hue=262")})`,
     `- [shadcn/ui](${abs("/docs/shadcn")}): install with \`npx shadcn add\` (registry at ${abs("/r/registry.json")})`,
     `- [OpenAPI spec](${abs("/openapi.json")}): the REST API, for agents without MCP`,
-    `- [Contact](${abs("/contact")}), [Privacy](${abs("/privacy")})`,
+    `- [Contact](${abs("/contact")})`,
   );
 
   w("## Questions");

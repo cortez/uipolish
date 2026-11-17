@@ -12,6 +12,8 @@ export const abs = (p: string) => `${siteUrl()}${p.startsWith("/") ? p : `/${p}`
 
 export const SITE_NAME = "UI Polish";
 export const GITHUB_URL = "https://github.com/cortez/uipolish";
+/** A Polar checkout for donations (pay what you want). Unset, no Donate link shows. */
+export const DONATE_URL = process.env.NEXT_PUBLIC_DONATE_URL?.trim() || null;
 export const SITE_TITLE = "UI Polish: polished UI for AI products";
 /** The one sentence that says what UI Polish is. The home page, About, the
  *  FAQ, llms.txt and the structured data all use it word for word, so a search
