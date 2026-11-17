@@ -1,11 +1,10 @@
 # UI Polish
 
-**Polished UI for AI products.** React components and whole screens for
-chat, agents and everything around them, where every state, transition and
-edge case is worked out, and the design rules behind them, made for coding
-agents. All of it is free and MIT-licensed: the components, the AI
-components that show a model thinking, acting and asking, whole product
-screens (blocks) and whole apps built from them (templates).
+**Polished UI for AI products.** React components for chat, agents and
+everything around them, where every state, transition and edge case is
+worked out, and the design rules behind them, made for coding agents. All
+of it is free and MIT-licensed: the primitives, the components, and the AI
+components that show a model thinking, acting and asking.
 
 [Docs](https://uipolish.com/docs) · [Components](https://uipolish.com/docs/button) · [Design rules](https://uipolish.com/docs/rules) · [Theme builder](https://uipolish.com/docs/theme)
 
@@ -94,31 +93,8 @@ look, motion and states are UI Polish's own CSS modules. A component lists the
 packages it imports in `meta.json` (`packages`), and `get_component`, the REST
 API and the shadcn registry item all tell the project to install them.
 
-**Templates:** [Chat app](https://uipolish.com/docs/ai-chat-app),
-a working AI chat app for the Next.js App Router:
-emailed-code sign-in, the Sidebar with workspaces and chat history, chats
-streaming through a Route Handler from Claude, OpenAI or any
-OpenAI-compatible API (set by `AI_PROVIDER`, `AI_API_KEY` and `AI_MODEL`; a
-mock until one is set), and settings built from Agent settings, Billing
-and Team members. [Agent console](https://uipolish.com/docs/agent-console), a
-working console for operating AI agents: live runs and their traces (Run
-history), an approvals inbox that pauses a run until someone decides,
-Knowledge base, per-agent Agent settings, usage and workspace Settings, with
-a mock runner behind one `AgentRunner` interface until yours is in. [Agent
-workspace](https://uipolish.com/docs/agent-workspace), a three-pane app for
-coding with agents: sessions as tabs over a conversation whose tool calls
-fold to one line (Turn summary), file chips with diff stats, the pull
-request's Merge status, its files (File changes), checks and diff, a run
-panel, and a team sidebar with presence, with a scripted coding agent behind
-one `CodingAgent` interface until a model or yours is in. A template's
-folder in `registry/` mirrors a Next.js project: `"type": "template"` in
-`meta.json` lists each file (`files`) by the path it installs at, and its
-`dependencies` are the components and blocks it uses. `get_component` and
-`/r/<name>.json` serve those files with their project paths (shadcn
-`target`), next to the components at `components/ui/<name>/`.
-
-**Building blocks**, written alongside the components that need them:
-Animated size, Field, Icons, Listbox, Text, Text morph.
+**Primitives**, the parts the other components are built from, each usable
+on its own: Animated size, Brand marks, Field, Icons, Listbox, Text, Text morph.
 
 `list_components` (or `GET /api/components`) is the live list.
 

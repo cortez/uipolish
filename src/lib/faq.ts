@@ -27,17 +27,12 @@ export async function getFaq(): Promise<Faq[]> {
     {
       id: "what",
       question: "What is UI Polish?",
-      answer: `${DEFINITION} It lives at uipolish.com, and all of it, every component, block, template and rule, is free under the MIT license.`,
+      answer: `${DEFINITION} It lives at uipolish.com, and all of it, every component and rule, is free under the MIT license.`,
     },
     {
       id: "free",
       question: "Is it free?",
-      answer: `Yes. Every component, block and template, the design rules and the theme builder are MIT-licensed, for personal, commercial and client work, with no account or key. The source is at github.com/cortez/uipolish.`,
-    },
-    {
-      id: "what-is-a-block",
-      question: "What’s a block?",
-      answer: `A whole screen or section, built from the components the way a real product needs it: empty, loading, error and permission-denied states, realistic data, keyboard and screen reader support, light and dark. It takes your data and callbacks as props and fetches nothing, so it drops into your app as it is. Every block has a live demo and its full guide in the docs.`,
+      answer: `Yes. Every component, the design rules and the theme builder are MIT-licensed, for personal, commercial and client work, with no account or key. The source is at github.com/cortez/uipolish.`,
     },
     {
       id: "agent-kit",
@@ -61,8 +56,8 @@ export async function getFaq(): Promise<Faq[]> {
     },
     {
       id: "contribute",
-      question: "Can I ask for a component or a block?",
-      answer: `Yes. Write to support@uipolish.com with what you’re building and what’s missing. Blocks come from real products, so the ones people ask for go first.`,
+      question: "Can I ask for a component?",
+      answer: `Yes. Write to support@uipolish.com with what you’re building and what’s missing. Components come from real products, so the ones people ask for go first.`,
     },
     {
       id: "accessibility",

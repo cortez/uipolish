@@ -1,6 +1,5 @@
-/* Every demo at its real size: nothing is scaled or zoomed. Components sit
-   three to a row (two on a tablet, one on a phone); screens and templates
-   take a row each, the page column being wide enough for them as they are.
+/* Every demo at its real size: nothing is scaled or zoomed. Three to a
+   row, two on a tablet, one on a phone.
    Whole-pixel columns, so no card's edge lands between pixels. */
 .grid {
   display: grid;
@@ -13,13 +12,13 @@
 }
 
 @media (min-width: 680px) {
-  .grid:not(.screens) {
+  .grid {
     grid-template-columns: repeat(2, round(down, (100% - var(--ui-space-5)) / 2, 1px));
   }
 }
 
 @media (min-width: 1024px) {
-  .grid:not(.screens) {
+  .grid {
     grid-template-columns: repeat(3, round(down, (100% - var(--ui-space-5) * 2) / 3, 1px));
   }
 }
@@ -82,17 +81,12 @@
   container-type: inline-size;
 }
 
-/* A screen keeps the card's padding, so it never touches the edge. */
-.screens .card {
-  max-height: 600px;
-}
-
 /* A demo's own controls (Start over, Replay, state pickers) are for its
    docs page; here the demos just play. Each preview marks them. A docs
    demo stacks several scenarios; a card shows the first one only (the
    first thing that isn't a control). */
 .card [data-demo-controls],
-.grid:not(.screens) .demo > [class*="stack"] > :not([data-demo-controls]) ~ * {
+.demo > [class*="stack"] > :not([data-demo-controls]) ~ * {
   display: none;
 }
 

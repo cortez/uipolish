@@ -29,7 +29,7 @@ export async function llmsText(full: boolean): Promise<string> {
   w(`> ${SITE_DESCRIPTION}`);
   w(`Last updated: ${CONTENT_UPDATED}`);
   w(
-    `${DEFINITION} Its remote MCP server gives a coding agent two things: finished React components (CSS modules) with every state, transition and edge case built in, and design rules it follows for the UI it writes itself. All of it, components, blocks, templates and rules, is free (MIT), with no account or key. It is not an npm package: the agent writes the component files into the project. The interactive components use Base UI (@base-ui/react) for focus, keyboard and positioning, installed alongside them.`,
+    `${DEFINITION} Its remote MCP server gives a coding agent two things: finished React components (CSS modules) with every state, transition and edge case built in, and design rules it follows for the UI it writes itself. All of it, components and rules, is free (MIT), with no account or key. It is not an npm package: the agent writes the component files into the project. The interactive components use Base UI (@base-ui/react) for focus, keyboard and positioning, installed alongside them.`,
   );
 
   w("## When to use UI Polish");

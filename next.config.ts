@@ -1,5 +1,12 @@
 import type { NextConfig } from "next";
 
+/** Docs pages that no longer exist: whole screens and apps. */
+const RETIRED = [
+  "agent-task", "approvals-inbox", "billing", "chat-app", "knowledge-base", "onboarding", "pricing",
+  "run-history", "settings", "sign-in", "team-members", "voice-session",
+  "agent-console", "agent-workspace", "ai-chat-app",
+];
+
 const nextConfig: NextConfig = {
   // The MCP route and the component pages read foundation/ and registry/ from
   // disk at request time; a path in readFile() is invisible to the tracer.
@@ -21,8 +28,9 @@ const nextConfig: NextConfig = {
       { source: "/components", destination: "/docs", permanent: true },
       { source: "/components/:name", destination: "/docs/:name", permanent: true },
       { source: "/docs/installation", destination: "/docs", permanent: true },
-      // The Chat app block is part of the Chat app template now.
-      { source: "/docs/chat-app", destination: "/docs/ai-chat-app", permanent: true },
+      // UI Polish is components: the whole screens and apps that were here
+      // are retired, and their pages land on the docs.
+      ...RETIRED.map((name) => ({ source: `/docs/${name}`, destination: "/docs", permanent: true })),
       // Retired pages.
       { source: "/pricing", destination: "/docs", permanent: true },
       { source: "/thanks", destination: "/docs", permanent: true },

@@ -49,9 +49,9 @@ function Card({ item }: { item: CatalogItem }) {
   );
 }
 
-export function Catalog({ items, screens = false }: { items: CatalogItem[]; screens?: boolean }) {
+export function Catalog({ items }: { items: CatalogItem[] }) {
   return (
-    <ul className={screens ? `${styles.grid} ${styles.screens}` : styles.grid}>
+    <ul className={styles.grid}>
       {items.map((item) => (
         <li key={item.name}>
           <Card item={item} />

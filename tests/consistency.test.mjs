@@ -33,15 +33,12 @@ const ALLOW = [
   { file: "registry/button/button.module.css", selector: "*", check: "color", reason: "The danger button's hover and press darken toward black, whatever the hue." },
   { file: "registry/prompt-input/prompt-input.module.css", selector: ".remove", check: "color", reason: "A dark scrim over a photo thumbnail, under a white glyph: the same in both themes." },
   { file: "registry/icons/icons.module.css", selector: ".block", check: "stroke", reason: "A solid block drawn as one fat stroke (a stop square), not a line." },
-  { file: "registry/voice-session/voice-session.module.css", selector: ".slashCut", check: "stroke", reason: "A mask that cuts a gap around the mute slash; never drawn." },
   { file: "registry/usage-meter/usage-meter.module.css", selector: ".ringTrack", check: "stroke", reason: "A gauge's ring, read as an amount, not an icon line." },
   { file: "registry/authorize/authorize.module.css", selector: ".mark", check: "icon-size", reason: "The app's own logo in the consent header, sized as a picture, not an icon." },
-  { file: "registry/sign-in/sign-in.module.css", selector: ".brand", check: "icon-size", reason: "The product's logo above the form, sized as a picture, not an icon." },
   { file: "registry/prompt-input/prompt-input.module.css", selector: ".fileIcon", check: "icon-size", reason: "A 40px tile for an attached file; the glyph inside it reads the scale." },
   { file: "registry/popover/popover.module.css", selector: ".arrow", check: "icon-size", reason: "The popup's arrow: part of its outline, not an icon." },
   { file: "registry/tooltip/tooltip.module.css", selector: ".arrow", check: "icon-size", reason: "The popup's arrow: part of its outline, not an icon." },
   { file: "registry/usage-meter/usage-meter.module.css", selector: "*", check: "hue", reason: "A chart: each series needs its own hue." },
-  { file: "registry/run-history/run-history.module.css", selector: "*", check: "hue", reason: "A waterfall chart: model calls are their own series." },
   { file: "registry/code-block/code-block.module.css", selector: "*", check: "hue", reason: "Syntax colors: a token kind per hue." },
 ];
 

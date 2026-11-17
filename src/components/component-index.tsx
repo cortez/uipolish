@@ -18,10 +18,9 @@ export const START = [
 ];
 
 export function sortComponents(components: ComponentMeta[]) {
-  // Templates, blocks, the agent kit, everything else, then the primitives,
-  // each A to Z (the docs nav's groups).
-  const rank = (c: ComponentMeta) =>
-    c.type === "template" ? 0 : c.type === "block" ? 1 : c.kit === "agent" ? 2 : PRIMITIVES.includes(c.name) ? 4 : 3;
+  // The agent kit, everything else, then the primitives, each A to Z (the
+  // docs nav's groups).
+  const rank = (c: ComponentMeta) => (c.kit === "agent" ? 0 : PRIMITIVES.includes(c.name) ? 2 : 1);
   return components
     .filter((c) => !c.primitive)
     .sort((a, b) => rank(a) - rank(b) || a.title.localeCompare(b.title));

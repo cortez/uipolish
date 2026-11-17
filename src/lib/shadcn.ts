@@ -8,9 +8,7 @@ import { abs } from "@/lib/seo/site";
 // /r/<name>.json is one item with its files inlined. Components land where
 // get_component puts them (components/ui/<name>/...), so the relative
 // imports between them hold, and they come in Tailwind's components layer
-// because shadcn projects run Tailwind v4. A template is a registry:block
-// whose own files carry project targets (app/(app)/chat/page.tsx), with the
-// components and blocks it uses inlined at components/ui/<name>/ as usual.
+// because shadcn projects run Tailwind v4.
 
 const ITEM_SCHEMA = "https://ui.shadcn.com/schema/registry-item.json";
 const DIR = "components/ui";
@@ -56,11 +54,7 @@ async function styleItem(name: StyleName) {
   };
 }
 
-/** shadcn has no template type: a template installs as a block. */
 const itemType = (meta: ComponentMeta) => (meta.type ? "registry:block" : "registry:ui");
-
-/** A template's route files are pages to shadcn; the rest of its files are plain files with a target. */
-const fileType = (target: string) => (/^(src\/)?app\/.*\/?(page|layout)\.tsx$/.test(target) ? "registry:page" : "registry:file");
 
 async function componentItem(meta: ComponentMeta, origin: string) {
   const parts = await collect(meta.name);
@@ -76,15 +70,8 @@ async function componentItem(meta: ComponentMeta, origin: string) {
     // installs in one command and the tokens only once.
     registryDependencies: [`${origin}/r/tokens.json`],
     dependencies: packagesOf(parts),
-    files: files.map((f) =>
-      f.target
-        ? { path: f.target, type: fileType(f.target), target: f.target, content: f.content }
-        : { path: `${DIR}/${f.path}`, type: "registry:file", target: `${DIR}/${f.path}`, content: f.content },
-    ),
-    docs:
-      meta.type === "template"
-        ? `${meta.title}: ${abs(`/docs/${meta.name}`)} explains the files, how to run it and where to swap in your own model, auth and database.`
-        : `${meta.title}: ${abs(`/docs/${meta.name}`)} has every state, the motion and the accessibility notes.`,
+    files: files.map((f) => ({ path: `${DIR}/${f.path}`, type: "registry:file", target: `${DIR}/${f.path}`, content: f.content })),
+    docs: `${meta.title}: ${abs(`/docs/${meta.name}`)} has every state, the motion and the accessibility notes.`,
   };
 }
 

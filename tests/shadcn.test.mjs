@@ -22,7 +22,6 @@ test("the index lists the style items and every component", async () => {
   assert.equal(index.name, "uipolish");
   const names = index.items.map((i) => i.name);
   for (const n of ["tokens", "theme", "button", "authorize", "icons", "text-morph"]) assert.ok(names.includes(n), n);
-  assert.ok(!names.includes("chat-app"), "a template's internal block isn't listed");
 });
 
 test("a free item inlines its files and its dependencies' files at components/ui/<name>/", async () => {
@@ -53,27 +52,6 @@ test("an agent kit item installs with no key and lists Base UI", async () => {
   const item = await res.json();
   assert.ok(item.files.some((f) => f.path === "components/ui/authorize/authorize.tsx"));
   assert.ok(item.dependencies.some((d) => d.startsWith("@base-ui/react@")));
-});
-
-test("a block installs with its files", async () => {
-  const res = await get("/r/team-members.json");
-  assert.equal(res.status, 200);
-  assert.ok((await res.json()).files.length > 0);
-});
-
-test("blocks are registry:block items", async () => {
-  const index = await (await get("/r/registry.json")).json();
-  const blocks = index.items.filter((i) => i.type === "registry:block");
-  assert.ok(blocks.some((b) => b.name === "sign-in"));
-});
-
-test("templates are registry:block items with page files", async () => {
-  const index = await (await get("/r/registry.json")).json();
-  const template = index.items.find((i) => i.name === "ai-chat-app");
-  assert.equal(template?.type, "registry:block");
-  const res = await get("/r/ai-chat-app.json");
-  assert.equal(res.status, 200);
-  assert.ok((await res.json()).files.some((f) => f.type === "registry:page"));
 });
 
 test("unknown items and other extensions are 404s", async () => {

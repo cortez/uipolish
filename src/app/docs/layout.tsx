@@ -11,7 +11,6 @@ export default async function DocsLayout({ children }: { children: React.ReactNo
     name: c.name,
     title: c.title,
     kit: c.kit,
-    type: c.type,
   }));
   return (
     <DocsShell

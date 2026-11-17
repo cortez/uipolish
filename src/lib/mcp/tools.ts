@@ -18,7 +18,7 @@ export const SERVER_INSTRUCTIONS = `UI Polish is a set of components and design 
 
 Before writing UI, call get_rules for the topic you're touching (motion, states, typography, spacing, surfaces, foundations, antipatterns), or with no topic for the token file and the checklist.
 
-To add a component, call list_components, then get_component. Write every file it returns, keeping the relative paths, and add foundation/tokens.css to the project once. A template (a whole working app) also returns files with a project path: write those at that path from the project root. Map the --ui-* token roles onto the project's existing variables instead of adding a second palette.
+To add a component, call list_components, then get_component. Write every file it returns, keeping the relative paths, and add foundation/tokens.css to the project once. Map the --ui-* token roles onto the project's existing variables instead of adding a second palette.
 
 If the project uses Tailwind CSS v4 (its CSS has @import "tailwindcss"), pass tailwind: true to get_component, so the CSS modules come in Tailwind's components layer and utility classes override them, and set up the bridge once (get_rules topic "tailwind"). Keep the CSS modules; don't rewrite components into utility classes.
 
@@ -47,13 +47,13 @@ export const TOOLS: Tool[] = [
   },
   {
     name: "list_components",
-    description: "Every UI Polish template, block and component with a one-line summary and version. Templates are whole working apps (a chat app, an agent console, an agent workspace for coding); blocks are whole screens (sign-in, billing, team members, an approvals inbox, an agent task).",
+    description: "Every UI Polish component with a one-line summary and version. Those marked agent kit are for AI products.",
     inputSchema: { type: "object", properties: {} },
   },
   {
     name: "get_component",
     description:
-      "The code and guide for one component, block or template: when and when not to use it, every state, motion specs, accessibility notes, before/after. Includes the components it depends on and the npm packages to install. A template's own files come with the project path to write each one at (app/(app)/chat/page.tsx).",
+      "The code and guide for one component: when and when not to use it, every state, motion specs, accessibility notes, before/after. Includes the components it depends on and the npm packages to install.",
     inputSchema: {
       type: "object",
       properties: {
@@ -118,25 +118,15 @@ async function getRules(topic: unknown) {
   );
 }
 
-/** What list_components calls it: template, block, the agent kit, or nothing for a plain component. */
+/** What list_components calls it: the agent kit, or nothing for a plain component. */
 function kindOf(c: ComponentMeta) {
-  if (c.type) return ` (${c.type})`;
   return c.kit ? " (agent kit)" : "";
 }
 
 async function listAll() {
   const components = (await listComponents()).filter((c) => !c.primitive);
   const line = (c: ComponentMeta) => `- ${c.name}${kindOf(c)}, v${c.version}: ${c.summary}`;
-  const templates = components.filter((c) => c.type === "template");
-  const rest = components.filter((c) => c.type !== "template");
-  return text(
-    [
-      ...(templates.length
-        ? ["Templates: whole working apps. get_component returns their files with the project path for each.", ...templates.map(line), "", "Components and blocks:"]
-        : []),
-      ...rest.map(line),
-    ].join("\n"),
-  );
+  return text(components.map(line).join("\n"));
 }
 
 // Depth-first so dependencies are written before the files that import them.
@@ -162,23 +152,18 @@ async function getComponent(name: unknown, stack: unknown, tailwind: unknown, ct
 
   const parts = await collect(name);
   const install = installLine(packagesOf(parts));
-  const template = meta.type === "template";
   const sections = await Promise.all(
     parts.map(async (part) => {
       const files = await getComponentFiles(part.name, { tailwind: tailwind === true });
       return files
         .map((f) => {
           const lang = f.path.endsWith(".css") ? "css" : f.path.endsWith(".ts") ? "ts" : "tsx";
-          // A template's own files are headed by their project path; components by their folder path.
-          const heading = f.target ? `### ${f.target} (from the project root)` : template ? `### components/ui/${f.path}` : `### ${f.path}`;
-          return `${heading}\n\n\`\`\`${lang}\n${f.content}\`\`\``;
+          return `### ${f.path}\n\n\`\`\`${lang}\n${f.content}\`\`\``;
         })
         .join("\n\n");
     }),
   );
-  const where = template
-    ? `Write the components first, each at components/ui/<name>/... as headed, then the template's own files at the project path in their heading (under src/ if the project keeps its app in src/). They import the components as @/components/ui/<name>/<name>, so keep those paths or update the @/ alias. The components read --ui-* tokens only; add foundation/tokens.css once (get_rules topic "tokens") and import it from the global stylesheet, or map those roles onto existing variables.`
-    : `Write each file below at the path shown, under the project's components directory (for example components/ui/${parts[0].name}/...). The relative imports between them depend on those paths. The components read --ui-* tokens only; add foundation/tokens.css once (get_rules topic "tokens") or map those roles onto existing variables.`;
+  const where = `Write each file below at the path shown, under the project's components directory (for example components/ui/${parts[0].name}/...). The relative imports between them depend on those paths. The components read --ui-* tokens only; add foundation/tokens.css once (get_rules topic "tokens") or map those roles onto existing variables.`;
 
   return text(
     [

@@ -9,7 +9,7 @@ import { ScrollArea } from "@registry/scroll-area/scroll-area";
 import { PRIMITIVES, START } from "./component-index";
 import styles from "./docs-nav.module.css";
 
-type Item = { name: string; title: string; kit?: "agent"; type?: "block" | "template" };
+type Item = { name: string; title: string; kit?: "agent" };
 
 const noSubscribe = () => () => {};
 
@@ -88,13 +88,11 @@ export function DocsNav({ components }: { components: Item[] }) {
     if (row.top < box.top + pad) scroller.scrollTop -= box.top + pad - row.top;
     else if (row.bottom > box.bottom - pad) scroller.scrollTop += row.bottom - (box.bottom - pad);
   }, [path]);
-  // Templates and blocks first: whole apps and screens, the fastest way to
-  // something shipped. Then the components for AI products, then the rest.
+  // The components for AI products first, then the rest, then the
+  // primitives the others are built from.
   const groups = [
-    { label: "Templates", items: components.filter((c) => c.type === "template") },
-    { label: "Blocks", items: components.filter((c) => c.type === "block") },
-    { label: "Agent kit", items: components.filter((c) => !c.type && c.kit === "agent") },
-    { label: "Components", items: components.filter((c) => !c.type && c.kit !== "agent" && !PRIMITIVES.includes(c.name)) },
+    { label: "Agent kit", items: components.filter((c) => c.kit === "agent") },
+    { label: "Components", items: components.filter((c) => c.kit !== "agent" && !PRIMITIVES.includes(c.name)) },
     { label: "Primitives", items: components.filter((c) => PRIMITIVES.includes(c.name)) },
   ].filter((g) => g.items.length > 0);
   const go = (href: string) => () => router.push(href);

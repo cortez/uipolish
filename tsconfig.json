@@ -32,10 +32,7 @@
         "./registry/*"
       ],
       "@/*": [
-        "./src/*",
-        "./registry/ai-chat-app/*",
-        "./registry/agent-console/*",
-        "./registry/agent-workspace/*"
+        "./src/*"
       ],
       "@registry/*": [
         "./registry/*"

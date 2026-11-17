@@ -1,9 +1,0 @@
-/* The page under everything: the canvas, the kit's type, no margin. */
-.body {
-  margin: 0;
-  min-height: 100dvh;
-  background: var(--ui-canvas);
-  color: var(--ui-foreground);
-  font-family: var(--ui-font-sans);
-  -webkit-font-smoothing: antialiased;
-}

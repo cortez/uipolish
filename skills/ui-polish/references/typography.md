@@ -19,9 +19,9 @@ size or weight. Bold is not a style: emphasis is color.
 
 | Style | Token | Size | Line-height | Weight | Use |
 |---|---|---|---|---|---|
-| Title | `md` (`2xl` and `display` are the same) | 15px | 22px | 500 (`--ui-weight-title`) | Page and screen titles, h1, figures |
-| Body | `md` | 15px | 22px | 400 | Text, headings, labels, buttons, menus, fields, values |
-| Small | `sm` | 13px | 18px | 400 | Secondary text, captions, badges, field messages, meta |
+| Title | `md` (`2xl` and `display` are the same) | 15px | 22px | 600 (`--ui-weight-title`) | Page and screen titles, h1, figures |
+| Body | `md` | 15px | 22px | 500 (`--ui-weight-regular`) | Text, headings, labels, buttons, menus, fields, values |
+| Small | `sm` | 13px | 18px | 500 (`--ui-weight-regular`) | Secondary text, captions, badges, field messages, meta |
 
 Running text of more than a couple of lines takes `--ui-leading-prose` (1.6)
 at Body size. Inline code is mono at `--ui-text-code` (0.875em) of the text
@@ -37,7 +37,9 @@ and the old `xs`, `lg` and `xl` steps alias into these),
   not its own 18px.
 - Controls, pills and badges use `line-height: 1` so padding alone sets the
   box. That's a rule, not a step.
-- Weight: 400 for everything but the Title style, which is 500. A
+- Weight: one text weight for everything but the Title style, which is
+  one step heavier. With a light face like General Sans that's 500 and
+  600; with a regular-weight face, 400 and 500. A
   section heading, a label or a button is Body: it's set apart by the
   text color against muted text, and by space, not by weight.
 - Mono uses the step it sits in: code blocks at `sm` / `md` leading, inline

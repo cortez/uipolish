@@ -9,11 +9,7 @@ import { inTailwindLayer } from "../src/lib/tailwind-layer.ts";
 // and the layer order named in the file itself.
 
 const REGISTRY = new URL("../registry/", import.meta.url).pathname;
-// A template's files are listed in its meta.json, in folders of their own.
-const filesOf = (dir) => {
-  const meta = JSON.parse(readFileSync(join(REGISTRY, dir, "meta.json"), "utf8"));
-  return meta.type === "template" ? meta.files : readdirSync(join(REGISTRY, dir));
-};
+const filesOf = (dir) => readdirSync(join(REGISTRY, dir));
 const modules = readdirSync(REGISTRY).flatMap((dir) =>
   filesOf(dir)
     .filter((f) => f.endsWith(".module.css"))

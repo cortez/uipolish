@@ -19,7 +19,7 @@ export const SITE_TITLE = "UI Polish: polished UI for AI products";
  *  FAQ, llms.txt and the structured data all use it word for word, so a search
  *  or answer engine finds the same definition wherever it reads. */
 export const DEFINITION =
-  "UI Polish is polished UI for AI products: React components, complete screens and design rules that coding agents install over MCP, with every state, transition and edge case already designed.";
+  "UI Polish is polished UI for AI products: React components and design rules that coding agents install over MCP, with every state, transition and edge case already designed.";
 export const SITE_SLOGAN = "Polished UI for AI products";
 export const SITE_DESCRIPTION = DEFINITION;
 export const AUTHOR = { name: "Joseph Cortez", url: "https://cortez.io" };

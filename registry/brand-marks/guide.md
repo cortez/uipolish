@@ -14,8 +14,7 @@ import { BrandMark } from "../brand-marks/brand-marks";
 ```
 
 Sources, research progress, connections and authorize use them for real
-services; sign-in's `provider-marks.tsx` has Google's four-color "G" for
-"Continue with Google". Coding tools are in the set too (Claude, OpenAI, Codex,
+services. Coding tools are in the set too (Claude, OpenAI, Codex,
 Antigravity, Cursor, Visual Studio Code, Google Gemini, shadcn/ui, Model Context
 Protocol), for setup pickers and install steps.
 

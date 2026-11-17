@@ -18,15 +18,15 @@ const COMMAND = `claude mcp add --transport http uipolish ${MCP_URL}`;
 export const metadata: Metadata = pageMetadata({ title: SITE_TITLE, description: SITE_DESCRIPTION, path: "/", absoluteTitle: true });
 
 export default async function Home() {
-  const all = (await listComponents()).filter((c) => !c.primitive && !PRIMITIVES.includes(c.name));
+  const all = (await listComponents()).filter((c) => !c.primitive);
+  const primitive = (c: ComponentMeta) => PRIMITIVES.includes(c.name);
   const opinions = await getOpinions();
   const item = (c: ComponentMeta): CatalogItem => ({ name: c.name, title: c.title });
   const byTitle = (a: ComponentMeta, b: ComponentMeta) => a.title.localeCompare(b.title);
   const groups = [
-    { id: "agent-kit", title: "Agent kit", items: all.filter((c) => !c.type && c.kit === "agent") },
-    { id: "components", title: "Components", items: all.filter((c) => !c.type && c.kit !== "agent") },
-    { id: "screens", title: "Screens", items: all.filter((c) => c.type === "block"), screens: true },
-    { id: "templates", title: "Templates", items: all.filter((c) => c.type === "template"), screens: true },
+    { id: "components", title: "Components", items: all.filter((c) => c.kit !== "agent" && !primitive(c)) },
+    { id: "agent-kit", title: "Agent kit", items: all.filter((c) => c.kit === "agent") },
+    { id: "primitives", title: "Primitives", items: all.filter(primitive) },
   ].filter((g) => g.items.length > 0);
 
   return (
@@ -54,7 +54,7 @@ export default async function Home() {
             <h2 id={`${g.id}-title`} className={styles.heading}>
               {g.title}
             </h2>
-            <Catalog items={g.items.sort(byTitle).map(item)} screens={g.screens} />
+            <Catalog items={g.items.sort(byTitle).map(item)} />
           </section>
         ))}
 

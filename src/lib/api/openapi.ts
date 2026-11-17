@@ -121,7 +121,7 @@ export async function openApiDocument() {
             title: { type: "string", examples: ["Button"] },
             summary: { type: "string" },
             kit: { type: "string", enum: ["agent"], description: "Set on the agent kit: components for AI products." },
-            type: { type: "string", enum: ["component", "block", "template"], description: "A block is a whole screen composed from components; a template is a working app composed from components and blocks." },
+            type: { type: "string", enum: ["component"] },
             version: { type: "string", examples: ["0.1.0"] },
             docs_url: { type: "string", format: "uri" },
           },
@@ -132,7 +132,6 @@ export async function openApiDocument() {
           properties: {
             component: { type: "string", description: "The component this file belongs to." },
             path: { type: "string", description: "Relative path to write it at, e.g. button/button.tsx." },
-            target: { type: "string", description: "A template's own files only: the path from the project root, e.g. app/(app)/chat/page.tsx. Write it there instead of under the components directory." },
             content: { type: "string" },
           },
         },

@@ -54,9 +54,7 @@ export async function componentDetail(name: string, { tailwind = false } = {}): 
       files,
       install:
         (packages.length ? `Run ${installLine(packages)} first. ` : "") +
-        (meta.type === "template"
-          ? "Write each file with a target at that path from the project root (under src/ if the app lives there), and every other file at its path under components/ui/, dependencies first."
-          : "Write each file at its path under the project's components directory, dependencies first.") +
+        "Write each file at its path under the project's components directory, dependencies first." +
         " Add foundation tokens once (GET /api/rules/tokens) or map the --ui-* roles onto existing variables." +
         (tailwind ? " The CSS modules are in Tailwind's components layer, so utility classes override them; set up the bridge once (GET /api/rules/tailwind)." : ""),
     },

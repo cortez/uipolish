@@ -114,9 +114,11 @@
 
   /* Weights: regular for everything, and the title weight for the Title
      style only. Medium and semibold are kept as names, so code that reads
-     them still resolves, and they read as regular: three styles, no more. */
-  --ui-weight-regular: 400;
-  --ui-weight-title: 500;
+     them still resolves, and they read as regular: three styles, no more.
+     Set for a light geometric face: 500 reads as an ordinary text weight,
+     600 as a title. Fonts without a 500 or 600 round to the nearest. */
+  --ui-weight-regular: 500;
+  --ui-weight-title: 600;
   --ui-weight-medium: var(--ui-weight-regular);
   --ui-weight-semibold: var(--ui-weight-regular);
 

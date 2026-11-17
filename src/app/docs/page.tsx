@@ -25,7 +25,7 @@ export default function DocsPage() {
   return (
     <DocPage
       doc={DOC}
-      lede="UI Polish is polished UI for AI products: React components and whole screens with every state, transition and edge case worked out, plus the design rules behind them. Your coding agent gets both over MCP. It writes the components into your project as files you own, and follows the rules for the UI it writes itself."
+      lede="UI Polish is polished UI for AI products: React components with every state, transition and edge case worked out, plus the design rules behind them. Your coding agent gets both over MCP. It writes the components into your project as files you own, and follows the rules for the UI it writes itself."
     >
       <section className={site.section} aria-labelledby="installation">
         <h2 id="installation" className={site.heading}>

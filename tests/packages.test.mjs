@@ -5,9 +5,8 @@ import path from "node:path";
 
 // Every bare import in a component's code is declared in its meta.json
 // `packages`, so MCP, the REST API and the shadcn CLI tell the project to
-// install it. React is the one package every project already has; a
-// template is a Next.js app, so Next is a given there too. Node's built-ins
-// and the project's own @/ imports aren't packages.
+// install it. React is the one package every project already has. Node's
+// built-ins and the project's own @/ imports aren't packages.
 
 const REGISTRY = path.join(process.cwd(), "registry");
 const ALWAYS = new Set(["react", "react-dom"]);
@@ -18,8 +17,8 @@ for (const name of readdirSync(REGISTRY)) {
   const meta = JSON.parse(readFileSync(path.join(dir, "meta.json"), "utf8"));
   const declared = new Set((meta.packages ?? []).map((p) => p.replace(/@[^@/]*$/, "")));
   const imported = new Set();
-  const given = meta.type === "template" ? new Set([...ALWAYS, "next"]) : ALWAYS;
-  const files = meta.type === "template" ? meta.files : readdirSync(dir);
+  const given = ALWAYS;
+  const files = readdirSync(dir);
   for (const file of files.filter((f) => /\.tsx?$/.test(f))) {
     const code = readFileSync(path.join(dir, file), "utf8");
     for (const [, spec] of code.matchAll(/from\s+["']([^"'.][^"']*)["']/g)) {

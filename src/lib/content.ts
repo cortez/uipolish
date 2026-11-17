@@ -19,10 +19,8 @@ export type ComponentMeta = {
   blurb?: string;
   /** "agent": the components for AI products, grouped apart in the docs. */
   kit?: "agent";
-  /** "block": a whole screen or section composed from components.
-   *  "template": a working app (routes, server code and screens) assembled
-   *  from components and blocks; its files carry project paths in `files`. */
-  type?: "block" | "template";
+  /** "block": a whole section composed from components. */
+  type?: "block";
   /** "wide": a screen that fills its frame; its docs demo reaches past the
    *  text column. A block that caps its own width or is one card leaves it out. */
   stage?: "wide";
@@ -32,14 +30,9 @@ export type ComponentMeta = {
   packages?: string[];
   /** Building block other components use; not counted as a component. */
   primitive?: boolean;
-  /** Templates only: every file, as a path from the project root (with src/,
-   *  under src/). The template's folder mirrors that tree. */
-  files?: string[];
 };
 
-/** `target`, set on a template's files: where it goes from the project root.
- *  A component's files go under the components directory instead (`path`). */
-export type ComponentFile = { path: string; content: string; target?: string };
+export type ComponentFile = { path: string; content: string };
 
 export async function listRuleTopics() {
   const files = await readdir(RULES_DIR);
@@ -120,13 +113,6 @@ export async function getComponentFiles(name: string, { tailwind = false } = {})
   if (!/^[a-z0-9-]+$/.test(name)) return [];
   const dir = path.join(REGISTRY_DIR, name);
   const css = (f: string, content: string) => (tailwind && f.endsWith(".module.css") ? inTailwindLayer(content) : content);
-  const meta = await getComponentMeta(name);
-  if (meta?.type === "template") {
-    // Listed in meta.json, never read off the folder, so nothing unlisted ships.
-    return Promise.all(
-      (meta.files ?? []).map(async (f) => ({ path: f, target: f, content: css(f, await readFile(path.join(dir, f), "utf8")) })),
-    );
-  }
   const files = (await readdir(dir)).filter((f) => /\.(tsx?|css)$/.test(f)).sort();
   return Promise.all(
     files.map(async (f) => ({ path: `${name}/${f}`, content: css(f, await readFile(path.join(dir, f), "utf8")) })),

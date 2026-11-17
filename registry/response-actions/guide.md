@@ -66,8 +66,8 @@ the user expects.
 | Field content fades in with the box | `--ui-dur-fast` | `--ui-ease-enter` |
 | Note fades in / out | `--ui-dur-fast` / `--ui-dur-instant` | `--ui-ease-enter` / `--ui-ease-exit` |
 
-Place the row 16px under the reply (`--ui-space-4`), as Message thread and
-Chat app do. Only the field's height animates, and only what follows the reply moves.
+Place the row 16px under the reply (`--ui-space-4`), as Message thread
+does. Only the field's height animates, and only what follows the reply moves.
 The row itself never shifts. Under `prefers-reduced-motion: reduce` the
 field opens at once, presses don't scale, and the copy icon swaps.
 

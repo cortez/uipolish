@@ -23,14 +23,9 @@ const ALLOW = [
   { file: "src/components/site-head.tsx", match: 'aria-label="UI Polish on GitHub"', reason: "GitHub, an icon beside the 32px theme toggle in the page header." },
   { file: "src/components/docs-shell.tsx", match: 'aria-label="Open the docs menu"', reason: "The docs menu button in the phone top bar, beside the mark and level with the 32px theme toggle." },
   { file: "registry/sidebar/sidebar.tsx", match: "aria-label={label}", reason: "The sidebar toggle: an icon button in the sidebar's 32px header strip." },
-  { file: "registry/knowledge-base/source-list.tsx", match: "aria-label={`Actions for ${s.name}`}", reason: "A source row's overflow menu: an icon button in a dense list." },
   { file: "src/previews/popover.tsx", match: 'aria-label="About the card processing fee"', reason: "An info button inside a line of text, beside the term it explains." },
   { file: "src/previews/button.tsx", match: "<Button size=\"sm\">", reason: "The button preview shows the size scale, small included." },
   { file: "registry/turn-summary/turn-summary.tsx", match: "className={styles.action}", reason: "Copy and More in the row under an answer, beside 13px meta text, as Response actions' 32px buttons." },
-  { file: "registry/agent-workspace/components/app/session-top-bar.tsx", match: "className={styles.barButton}", reason: "History, Copy link, Share and the panel toggle in the session's tab strip, beside its 32px tabs." },
-  { file: "registry/agent-workspace/components/app/session-composer.tsx", match: 'aria-label="Mention a teammate"', reason: "Mention, in the prompt input's toolbar beside its attach and send." },
-  { file: "registry/agent-workspace/components/app/run-panel.tsx", match: "className={styles.fold}", reason: "The run panel's fold, in its header strip beside 32px tabs." },
-  { file: "registry/agent-workspace/components/app/workspace-sidebar.tsx", match: 'size="sm" aria-label="Settings"', reason: "Settings in the folded sidebar's rail, as wide as the rail's 44px capsule." },
 ];
 
 function tsxFiles(dir) {

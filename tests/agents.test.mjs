@@ -81,7 +81,7 @@ describe("REST API", () => {
     assert.match(res.headers.get("content-type"), /application\/json/);
     const { components } = await res.json();
     assert.ok(components.length > 10);
-    assert.ok(components.every((c) => c.name && c.title && c.version && ["component", "block", "template"].includes(c.type)));
+    assert.ok(components.every((c) => c.name && c.title && c.version && c.type === "component"));
     assert.ok(components.some((c) => c.kit === "agent"));
   });
 
@@ -93,13 +93,6 @@ describe("REST API", () => {
     assert.ok(body.guide.length > 100);
     assert.ok(body.files.some((f) => f.path === "button/button.tsx"));
     assert.equal(body.files.at(-1).component, "button");
-  });
-
-  test("a block is served with no key", async () => {
-    const res = await get("/api/components/team-members");
-    assert.equal(res.status, 200);
-    const body = await res.json();
-    assert.ok(body.files.some((f) => f.path.endsWith(".tsx")));
   });
 
   test("agent kit components are served with no key, with their packages", async () => {
@@ -256,32 +249,15 @@ describe("MCP", () => {
     assert.match(await call("get_rules", { topic: "tailwind" }), /^# Tailwind CSS/);
   });
 
-  test("get_component returns a block's code with no key", async () => {
+  test("list_components lists components and marks the agent kit", async () => {
     const res = await fetch(server.url + "/mcp", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "get_component", arguments: { name: "team-members" } } }),
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "list_components", arguments: {} } }),
     });
-    const text = (await res.json()).result.content[0].text;
-    assert.match(text, /```tsx/);
-  });
-
-  test("list_components puts templates under their own heading, and a template comes with its files", async () => {
-    const call = async (name, args) =>
-      (
-        await (
-          await fetch(server.url + "/mcp", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name, arguments: args } }),
-          })
-        ).json()
-      ).result.content[0].text;
-    const list = await call("list_components", {});
-    assert.match(list, /^Templates: /);
-    assert.match(list, /- ai-chat-app \(template\), v/);
-    const template = await call("get_component", { name: "ai-chat-app" });
-    assert.match(template, /\(from the project root\)/);
-    assert.match(template, /```tsx/);
+    const list = (await res.json()).result.content[0].text;
+    assert.match(list, /^- /);
+    assert.match(list, /- authorize \(agent kit\), v/);
+    assert.match(list, /- button, v/);
   });
 });
