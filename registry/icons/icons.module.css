@@ -122,7 +122,7 @@
    arrives by fading and scaling about its own center. */
 .solid {
   fill: currentColor;
-  stroke-width: 1.5;
+  stroke-width: var(--ui-icon-stroke-medium);
   stroke-dasharray: none;
   stroke-dashoffset: 0;
   transition:
