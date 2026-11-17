@@ -53,7 +53,6 @@ export async function llmsText(full: boolean): Promise<string> {
     `- [Introduction](${abs("/docs")}): connect your agent, and the tools it gets`,
     `- [Tailwind CSS](${abs("/docs/tailwind")}): use the components in a Tailwind v4 project`,
     `- [Design rules](${abs("/docs/rules")}): the rules as one file: a Claude Code skill (${abs("/skill.md")}) or for AGENTS.md (${abs("/rules.md")})`,
-    `- [Theme](${abs("/docs/theme")}): every component in one brand color, contrast-checked (MCP \`get_theme\`, or ${abs("/api/theme?hue=262")})`,
     `- [shadcn/ui](${abs("/docs/shadcn")}): install with \`npx shadcn add\` (registry at ${abs("/r/registry.json")})`,
     `- [OpenAPI spec](${abs("/openapi.json")}): the REST API, for agents without MCP`,
     `- [Contact](${abs("/contact")})`,

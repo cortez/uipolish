@@ -32,7 +32,7 @@ export async function getFaq(): Promise<Faq[]> {
     {
       id: "free",
       question: "Is it free?",
-      answer: `Yes. Every component, the design rules and the theme builder are MIT-licensed, for personal, commercial and client work, with no account or key. The source is at github.com/cortez/uipolish.`,
+      answer: `Yes. Every component and the design rules are MIT-licensed, for personal, commercial and client work, with no account or key. The source is at github.com/cortez/uipolish.`,
     },
     {
       id: "agent-kit",
@@ -42,7 +42,7 @@ export async function getFaq(): Promise<Faq[]> {
     {
       id: "disagree",
       question: "What if I disagree with one of the opinions?",
-      answer: `Change it. Every opinion is a token in tokens.css or a line in a component’s CSS module: set --ui-dur-fast to 0ms, round the corners differently, swap the accent with get_theme, and every component follows. The code is in your project, so nothing stops you from editing a component itself, and every component takes a className for your own styles.`,
+      answer: `Change it. Every opinion is a token in tokens.css or a line in a component’s CSS module: set --ui-dur-fast to 0ms, round the corners differently, swap the accent color, and every component follows. The code is in your project, so nothing stops you from editing a component itself, and every component takes a className for your own styles.`,
     },
     {
       id: "maintained",

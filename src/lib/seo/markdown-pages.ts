@@ -1,5 +1,4 @@
 import { getComponentGuide, getComponentMeta, getShadcn, getTailwind } from "@/lib/content";
-import { createTheme } from "@/lib/theme";
 import { cursorRuleMarkdown, rulesMarkdown, skillMarkdown } from "@/lib/skill";
 import { INFO_PAGES, infoMarkdown } from "@/lib/info-pages";
 import { CLIENTS, MCP_URL } from "@/lib/setup";
@@ -23,7 +22,7 @@ function docsIntro() {
     "## How it works",
     "Ask for a component by name, like “add a date picker”. Your agent calls `get_component`, gets the code, its CSS and a guide to using it, and writes them into your project. The interactive ones (menus, selects, dialogs, tabs) run on Base UI for focus, keyboard and positioning, so your agent also installs `@base-ui/react` once. Before writing any other UI, the server has your agent read the rules for what it’s touching.",
     "## Tools",
-    "- `get_rules(topic?)`: the rules for one topic, or the tokens and checklist.\n- `list_components()`: every component with a summary and version.\n- `get_component(name, tailwind?)`: one component's code and guide, with its dependencies. `tailwind: true` puts the CSS in Tailwind's components layer.\n- `get_theme(hue, tint?, brand?)`: a theme in one brand color, light and dark, contrast-checked.",
+    "- `get_rules(topic?)`: the rules for one topic, or the tokens and checklist.\n- `list_components()`: every component with a summary and version.\n- `get_component(name, tailwind?)`: one component's code and guide, with its dependencies. `tailwind: true` puts the CSS in Tailwind's components layer.",
     `Using Tailwind CSS v4: ${abs("/docs/tailwind")}.`,
     `Without MCP, the same content is a REST API: ${abs("/openapi.json")}.`,
   );
@@ -43,21 +42,6 @@ async function component(name: string) {
   ].join("\n\n") + "\n";
 }
 
-function themeMarkdown() {
-  const example = createTheme({ hue: 262, tint: 1, brand: true });
-  return [
-    "# Theme",
-    "Pick one color. The accent, the text on it and in it, the grays and the primary buttons follow, in light and dark, and every text color is solved to read at 4.5:1 (fills and icons at 3:1). Blues, reds and violets get white text on the accent; yellows and limes get near-black text so the fill keeps its color.",
-    "## Get one",
-    `- MCP: \`get_theme({ hue, tint, brand })\`.\n- REST: GET ${abs("/api/theme?hue=262&tint=1&brand=true")} (add \`&format=css\` for the stylesheet alone).\n- By hand: ${abs("/docs/theme")}.`,
-    "Hue is OKLCH, 0–360: about 25 red, 50 orange, 80 amber, 150 green, 190 teal, 262 blue, 295 violet, 350 pink. `tint` is 0 for neutral grays, 1 for a hint of the hue (default), 2 for tinted. `brand` puts the primary buttons in the accent (default true).",
-    "## Use it",
-    "Paste the CSS after tokens.css. It sets only the roles it changes, so it sits on top of the tokens or of the shadcn/ui mapping.",
-    "## Example: hue 262",
-    "```css\n" + example.css + "```",
-  ].join("\n\n") + "\n";
-}
-
 /** The Markdown for a site path, or null when there's no such page. */
 export async function markdownFor(path: string): Promise<string | null> {
   const clean = path.replace(/\/+$/, "") || "/";
@@ -65,7 +49,6 @@ export async function markdownFor(path: string): Promise<string | null> {
   if (clean === "/docs") return docsIntro();
   if (clean === "/docs/tailwind") return getTailwind();
   if (clean === "/docs/shadcn") return getShadcn();
-  if (clean === "/docs/theme") return themeMarkdown();
   if (clean === "/skill") return skillMarkdown();
   if (clean === "/cursor-rule") return cursorRuleMarkdown();
   if (clean === "/rules" || clean === "/docs/rules") return rulesMarkdown();

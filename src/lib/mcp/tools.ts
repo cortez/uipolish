@@ -12,7 +12,6 @@ import {
   packagesOf,
   type ComponentMeta,
 } from "@/lib/content";
-import { createTheme } from "@/lib/theme";
 
 export const SERVER_INSTRUCTIONS = `UI Polish is a set of components and design rules where every state, transition and edge case is worked out.
 
@@ -67,29 +66,7 @@ export const TOOLS: Tool[] = [
       required: ["name"],
     },
   },
-  {
-    name: "get_theme",
-    description:
-      "A color theme from one hue: the --ui-* accent, the text on it and in it, optionally tinted grays and accent primary buttons, light and dark, with every text color solved for 4.5:1 contrast. Returns CSS to paste after tokens.css. Use it when the project has a brand color.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        hue: { type: "number", description: "OKLCH hue, 0–360: about 25 red, 50 orange, 80 amber, 150 green, 190 teal, 262 blue, 295 violet, 350 pink." },
-        tint: { type: "number", enum: [0, 1, 2], description: "How much of the hue the grays take: 0 none, 1 a hint (default), 2 tinted." },
-        brand: { type: "boolean", description: "Primary buttons in the accent instead of near-black. Default true." },
-      },
-      required: ["hue"],
-    },
-  },
 ];
-
-function getTheme(hue: unknown, tint: unknown, brand: unknown) {
-  if (typeof hue !== "number" || !Number.isFinite(hue)) return text("Pass hue as a number from 0 to 360, e.g. 262 for blue.", true);
-  const t = tint === 0 || tint === 2 ? tint : 1;
-  const theme = createTheme({ hue, tint: t, brand: brand !== false });
-  const checks = theme.checks.map((c) => `- ${c.role}: ${c.ratio}:1 (needs ${c.needed})`).join("\n");
-  return text(`Paste this after tokens.css, in the global stylesheet.\n\n\`\`\`css\n${theme.css}\`\`\`\n\nContrast:\n${checks}`);
-}
 
 type ToolResult = { content: { type: "text"; text: string }[]; isError?: boolean };
 
@@ -193,8 +170,6 @@ export async function callTool(
       return listAll();
     case "get_component":
       return getComponent(args.name, args.stack, args.tailwind, ctx);
-    case "get_theme":
-      return getTheme(args.hue, args.tint, args.brand);
     default:
       return null;
   }

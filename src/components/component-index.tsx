@@ -14,7 +14,6 @@ export const START = [
   { href: "/docs/rules", title: "Design rules" },
   { href: "/docs/tailwind", title: "Tailwind CSS" },
   { href: "/docs/shadcn", title: "shadcn/ui" },
-  { href: "/docs/theme", title: "Theme" },
 ];
 
 export function sortComponents(components: ComponentMeta[]) {

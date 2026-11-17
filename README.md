@@ -6,7 +6,7 @@ worked out, and the design rules behind them, made for coding agents. All
 of it is free and MIT-licensed: the primitives, the components, and the AI
 components that show a model thinking, acting and asking.
 
-[Docs](https://uipolish.com/docs) · [Components](https://uipolish.com/docs/button) · [Design rules](https://uipolish.com/docs/rules) · [Theme builder](https://uipolish.com/docs/theme)
+[Docs](https://uipolish.com/docs) · [Components](https://uipolish.com/docs/button) · [Design rules](https://uipolish.com/docs/rules)
 
 ## Start
 
@@ -103,7 +103,6 @@ on its own: Animated size, Brand marks, Field, Icons, Listbox, Text, Text morph.
 | `get_rules(topic?)` | One rules file, or the tokens, checklist and topic list |
 | `list_components()` | Names, summaries, versions, and which are in the agent kit |
 | `get_component(name, stack, tailwind)` | Code and guide, including the components it depends on and the packages to install |
-| `get_theme(hue, tint, brand)` | A one-color theme: accent, text on it, tinted grays, light and dark, contrast-checked (also `GET /api/theme`, and `/docs/theme` by hand) |
 
 ## Tailwind CSS
 

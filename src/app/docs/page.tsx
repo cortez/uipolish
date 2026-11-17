@@ -18,7 +18,6 @@ const TOOLS = [
   ["get_rules(topic?)", "The rules for one topic: motion, states, typography, spacing, surfaces, foundations or antipatterns. Without a topic, the tokens and the pre-ship checklist."],
   ["list_components()", "Every component, with a one-line summary, its access and its version."],
   ["get_component(name, tailwind?)", "One component’s code and guide, with the components it depends on. With tailwind: true, its CSS comes in Tailwind’s components layer."],
-  ["get_theme(hue, tint?, brand?)", "A theme in one brand color: the accent, the text on it, tinted grays and colored primary buttons, light and dark, every text color checked for contrast."],
 ];
 
 export default function DocsPage() {

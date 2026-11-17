@@ -68,24 +68,6 @@ export async function openApiDocument() {
           },
         },
       },
-      "/api/theme": {
-        get: {
-          operationId: "getTheme",
-          tags: ["rules"],
-          summary: "A color theme from one hue",
-          description: "The --ui-* accent, the text on it and in it, optionally tinted grays and accent primary buttons, light and dark, with every text color solved for contrast. Paste the css after tokens.css.",
-          parameters: [
-            { name: "hue", in: "query", required: false, description: "OKLCH hue, 0–360 (262 blue, the default; 25 red; 150 green).", schema: { type: "number", minimum: 0, maximum: 360 } },
-            { name: "tint", in: "query", required: false, description: "Grays: 0 neutral, 1 a hint of the hue (default), 2 tinted.", schema: { type: "integer", enum: [0, 1, 2] } },
-            { name: "brand", in: "query", required: false, description: "Primary buttons in the accent (default true).", schema: { type: "boolean" } },
-            { name: "format", in: "query", required: false, description: "css for the stylesheet alone.", schema: { type: "string", enum: ["css"] } },
-          ],
-          responses: {
-            "200": jsonBody({ type: "object", required: ["css", "vars"], properties: { css: { type: "string" }, vars: { type: "object", additionalProperties: { type: "string" } } } }, "The theme."),
-            "400": error("hue or tint isn't valid (code invalid_parameter)."),
-          },
-        },
-      },
       "/api/rules": {
         get: {
           operationId: "listRuleTopics",
