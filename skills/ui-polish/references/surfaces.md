@@ -55,11 +55,16 @@ mode for free.
   - A colored edge, only for status or a component's own hue:
     `--ui-border-accent`, `-success`, `-warning`, `-danger`, or a hue (a
     phase, a brand) mixed at `--ui-border-tint`.
+  - `--ui-border-control`: an empty checkbox or radio. A small control
+    resting on the surface has nothing but its edge to be found by, so it
+    takes 3:1 against the surface (WCAG 1.4.11); the one edge is about
+    1.2:1. It is solid, from the text color, and a clear step from the one
+    edge, so the two never read as near-twins.
 
-  Nothing else, and no exceptions at rest: a checkbox, a radio, a button
-  and a card all rest on the same edge. No hand-picked alphas, no
-  `color-mix` of the text color for an edge, no second gray: two neutral
-  edges that look almost the same read as two weights. The edge is solid,
+  Nothing else at rest: a button and a card rest on the one edge. No
+  hand-picked alphas, no other `color-mix` of the text color for an edge,
+  no second gray: two neutral edges that look almost the same read as two
+  weights. The edge is solid,
   not the text color at an alpha: a see-through line comes out darker over
   the page than over a card or a field, so one token drew two lines.
 - **One ring per edge.** `--ui-shadow-resting` and `--ui-shadow-floating`

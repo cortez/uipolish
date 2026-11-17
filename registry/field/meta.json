@@ -2,6 +2,7 @@
   "name": "field",
   "title": "Field",
   "summary": "Shared parts for form fields: the label, the field shell, inset buttons, and a hint line that trades places with the error without moving anything.",
+  "blurb": "The shared parts of every form field: label, shell, hint.",
   "version": "0.1.4",
   "dependencies": [
     "icons"

@@ -94,12 +94,13 @@
   --ui-text-sm: 13px;
   --ui-text-md: 15px;
   --ui-text-2xl: 22px;
-  --ui-text-display: clamp(30px, 1.6vw + 1rem, 38px);
+  /* Three sizes and no more: display is the title size, kept as a name so
+     code that reads it still resolves. */
+  --ui-text-display: var(--ui-text-2xl);
   --ui-leading-sm: 18px;
   --ui-leading-md: 22px;
   --ui-leading-2xl: 28px;
-  /* Rounded: a fractional line height pushes everything below off the pixel grid. */
-  --ui-leading-display: round(calc(var(--ui-text-display) * 1.1), 1px);
+  --ui-leading-display: var(--ui-leading-2xl);
 
   --ui-leading-prose: 1.6;
   --ui-measure: 65ch;
@@ -217,6 +218,11 @@
      Colored ones mix a hue at --ui-border-tint: the status edges below, or
      a component's own hue (a phase, a brand) at the same strength. */
   --ui-border-strong: light-dark(oklch(0.954 0 0), oklch(0.26 0 0));
+  /* A small control that rests empty on the surface (an unchecked box, a
+     radio): the edge is all there is to find it by, so it takes 3:1
+     against the surface (WCAG 1.4.11), from the text color like every
+     edge, still a step under --ui-muted so hover reads. */
+  --ui-border-control: color-mix(in oklch, var(--ui-foreground) 45%, var(--ui-surface));
   --ui-border: var(--ui-border-strong);
   --ui-border-subtle: var(--ui-border);
   --ui-border-tint: 32%;

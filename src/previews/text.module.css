@@ -1,5 +1,8 @@
+/* One column as wide as the list, never the longest name: otherwise the
+   column grows to fit it and the name has nothing to fade inside. */
 .files {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   max-width: 320px;
   margin: 0;
   padding: 0;

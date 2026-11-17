@@ -1,7 +1,6 @@
 import { getComponentGuide, getComponentMeta, getShadcn, getTailwind } from "@/lib/content";
 import { createTheme } from "@/lib/theme";
 import { cursorRuleMarkdown, rulesMarkdown, skillMarkdown } from "@/lib/skill";
-import { articleMarkdown, getArticle, listArticles } from "@/lib/articles";
 import { INFO_PAGES, infoMarkdown } from "@/lib/info-pages";
 import { CLIENTS, MCP_URL } from "@/lib/setup";
 import { llmsText } from "./llms";
@@ -72,15 +71,6 @@ export async function markdownFor(path: string): Promise<string | null> {
   if (clean === "/rules" || clean === "/docs/rules") return rulesMarkdown();
   const doc = /^\/docs\/([a-z0-9-]+)$/.exec(clean);
   if (doc) return component(doc[1]);
-  if (clean === "/articles") {
-    const all = await listArticles();
-    return ["# Articles", "How to design the parts specific to AI products. Each article comes with a live component that implements it.", ...all.map((a) => `- [${a.title}](${abs(`/articles/${a.slug}`)}): ${a.description}`)].join("\n\n") + "\n";
-  }
-  const post = /^\/articles\/([a-z0-9-]+)$/.exec(clean);
-  if (post) {
-    const article = await getArticle(post[1]);
-    return article ? articleMarkdown(article, abs(clean)) : null;
-  }
   const info = Object.values(INFO_PAGES).find((p) => p.path === clean);
   if (info) return infoMarkdown(info);
   return null;

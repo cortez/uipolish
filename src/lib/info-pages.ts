@@ -1,7 +1,7 @@
 import { MCP_URL } from "@/lib/setup";
-import { DEFINITION, GITHUB_URL, abs } from "@/lib/seo/site";
+import { GITHUB_URL } from "@/lib/seo/site";
 
-// About, contact and privacy: written once in Markdown, rendered as pages
+// Contact and privacy: written once in Markdown, rendered as pages
 // and served as-is to agents that ask for Markdown, so the two never differ.
 
 export const SUPPORT_EMAIL = "support@uipolish.com";
@@ -14,28 +14,6 @@ export type InfoPage = {
   description: string;
   /** Body without the # heading. */
   body: string;
-};
-
-const ABOUT: InfoPage = {
-  path: "/about",
-  heading: "About UI Polish",
-  title: "About UI Polish",
-  description: "What UI Polish is, and how coding agents use it.",
-  body: `${DEFINITION} Each component has every state, transition and edge case worked out: what it does while loading, when it's disabled, how it moves, how a screen reader hears it and how it behaves under a finger instead of a mouse. The rules carry the same standard into the UI an agent writes itself: spacing, type, motion, surfaces and focus, each written as a concrete value.
-
-Every component, block, template and rule is free under the MIT license, and the source is on [GitHub](${GITHUB_URL}).
-
-## How it works
-
-A coding agent connects to the MCP server at ${MCP_URL}, asks for a component, and writes its files into the project: the React component, its CSS module and a guide. The code is then the project's own. The interactive components use [Base UI](https://base-ui.com) for focus, keyboard and positioning, installed alongside them. The same content is available over a [REST API](${abs("/openapi.json")}) and in [llms.txt](${abs("/llms.txt")}).
-
-## What it costs
-
-Nothing. All of it is free, with no account or key, for personal, commercial and client work.
-
-## Contact
-
-Questions and bugs go to [${SUPPORT_EMAIL}](mailto:${SUPPORT_EMAIL}). See [Contact](${abs("/contact")}) for what to include.`,
 };
 
 const CONTACT: InfoPage = {
@@ -92,7 +70,7 @@ Vercel (hosting) and Upstash (where the anonymous counts are kept). Nothing is s
 To see or delete what's held about you, or to ask anything about this page, email [${SUPPORT_EMAIL}](mailto:${SUPPORT_EMAIL}). If this policy changes, the date at the top changes with it.`,
 };
 
-export const INFO_PAGES = { about: ABOUT, contact: CONTACT, privacy: PRIVACY } as const;
+export const INFO_PAGES = { contact: CONTACT, privacy: PRIVACY } as const;
 
 /** The page as Markdown, title included. */
 export const infoMarkdown = (page: InfoPage) => `# ${page.heading}\n\n${page.body}\n`;

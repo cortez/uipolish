@@ -55,9 +55,8 @@ export async function llmsText(full: boolean): Promise<string> {
     `- [Design rules](${abs("/docs/rules")}): the rules as one file: a Claude Code skill (${abs("/skill.md")}) or for AGENTS.md (${abs("/rules.md")})`,
     `- [Theme](${abs("/docs/theme")}): every component in one brand color, contrast-checked (MCP \`get_theme\`, or ${abs("/api/theme?hue=262")})`,
     `- [shadcn/ui](${abs("/docs/shadcn")}): install with \`npx shadcn add\` (registry at ${abs("/r/registry.json")})`,
-    `- [Articles](${abs("/articles")}): designing MCP consent screens, tool approval and other agent UI`,
     `- [OpenAPI spec](${abs("/openapi.json")}): the REST API, for agents without MCP`,
-    `- [About](${abs("/about")}), [Contact](${abs("/contact")}), [Privacy](${abs("/privacy")})`,
+    `- [Contact](${abs("/contact")}), [Privacy](${abs("/privacy")})`,
   );
 
   w("## Questions");

@@ -1,18 +1,20 @@
 /* Shared type and rhythm. Heading to text 16, title to lede 16, block 16,
    text to action 32, intro to first block 48, subsection 48, section 64. */
 
-/* Titles and headings are body size: the text color sets them apart from
-   the muted text under them, not a bigger face. */
+/* Three styles for the site's own text. A page's title is a step up;
+   every heading under it, at any level, is body size in medium; the rest
+   is body. Weight and the text color set headings apart from the muted
+   text under them, never a third size. */
 .title {
-  font-size: var(--ui-text-md);
-  font-weight: var(--ui-weight-regular);
-  line-height: var(--ui-leading-md);
-  letter-spacing: normal;
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-heading);
 }
 
 .heading {
   font-size: var(--ui-text-md);
-  font-weight: var(--ui-weight-regular);
+  font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
   letter-spacing: normal;
 }

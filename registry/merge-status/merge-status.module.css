@@ -62,11 +62,8 @@
   transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
-/* The pill's padding hangs into the gap; the dot keeps its own room. */
-.number + .dot {
-  margin-inline-start: var(--ui-pad-tag-sm);
-}
-
+/* The pill's padding hangs into the gap and its margin takes it back, so
+   the dot sits the same gap from the number's text as from the state. */
 a.number {
   -webkit-tap-highlight-color: transparent;
 }

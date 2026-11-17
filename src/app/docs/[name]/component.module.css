@@ -18,20 +18,13 @@
   margin-bottom: 0;
 }
 
-/* Guide sections: a step over the body, on the prose line, so a section
-   reads as a heading at a glance without competing with the page's own
-   sections above it. Deeper levels keep the body size. */
+/* Guide headings at every level are the site's heading style: body size
+   in medium. The space above them, not their size, tells the levels apart. */
 .prose :is(h2, h3, h4) {
   margin: var(--ui-space-7) 0 var(--ui-space-3);
   font-size: var(--ui-text-md);
   line-height: var(--ui-leading-md);
-  font-weight: var(--ui-weight-regular);
-}
-
-.prose h2 {
-  font-size: var(--ui-text-md);
-  font-weight: var(--ui-weight-regular);
-  line-height: var(--ui-leading-md);
+  font-weight: var(--ui-weight-medium);
   letter-spacing: normal;
 }
 

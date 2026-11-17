@@ -10,13 +10,13 @@ A type step is a size **with the line-height it is set on**, plus a weight.
 Never ship a bare `font-size`, and never pick a value between steps: if a step
 is missing, the scale is wrong, not the component.
 
-**Four styles, and only four.** A fifth size is never the answer: pick the
-nearest of these, or change the layout.
+**Three sizes, and only three.** A fourth size is never the answer: pick
+the nearest of these, or change the layout. Hierarchy past three comes from
+weight, color and space, never a bigger face.
 
 | Style | Token | Size | Line-height | Weight | Use |
 |---|---|---|---|---|---|
-| Title | `display` | clamp(30px, 1.6vw + 1rem, 38px) | 1.1 | 500 | Page titles, h1 |
-| Heading | `2xl` | 22px | 28px | 500 (550 in components) | Section headings, h2, big figures |
+| Title | `2xl` (`display` is the same) | 22px | 28px | 500 (550 in components) | Page and screen titles, h1, section headings, big figures |
 | Body | `md` | 15px | 22px | 400; 500 for control labels | Text, controls, menus, fields, subheads |
 | Small | `sm` | 13px | 18px | 400; 500 for badges | Secondary text, captions, field messages, meta |
 
@@ -24,8 +24,8 @@ Running text of more than a couple of lines takes `--ui-leading-prose` (1.6)
 at Body size. Inline code is mono at `--ui-text-code` (0.875em) of the text
 it sits in, which is the same style in another face, not a new one.
 
-Tokens: `--ui-text-{sm,md,2xl,display}`, `--ui-leading-{sm,md,2xl,display}`
-(the old `xs`, `lg` and `xl` steps alias into these),
+Tokens: `--ui-text-{sm,md,2xl}`, `--ui-leading-{sm,md,2xl}` (`display`
+and the old `xs`, `lg` and `xl` steps alias into these),
 `--ui-leading-prose`, `--ui-text-code`, `--ui-weight-{regular,medium,semibold}`,
 `--ui-measure`, `--ui-text-touch`.
 
@@ -91,7 +91,6 @@ word that has fi or fl and see what you lose.
 
 | Role | Line-height |
 |---|---|
-| Display (32–44px) | 1.1 |
 | Headings (17–22px) | 24 / 28px |
 | UI text (12–15px) | 16 / 18 / 20 / 22px |
 | Running text, any size | 1.6 |

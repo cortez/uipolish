@@ -11,7 +11,6 @@ import {
   packagesOf,
 } from "@/lib/content";
 import { collect } from "@/lib/mcp/tools";
-import { listArticles } from "@/lib/articles";
 import { Markdown } from "@/lib/markdown";
 import { JsonLd, docsLd } from "@/lib/seo/json-ld";
 import { CONTENT_UPDATED, clip, pageMetadata } from "@/lib/seo/site";
@@ -119,7 +118,6 @@ export default async function ComponentPage({
   const meta = await getComponentMeta(name);
   if (!meta || meta.primitive) notFound();
   const guide = await getComponentGuide(name);
-  const article = (await listArticles()).find((a) => a.component === name);
   const template = meta.type === "template";
   const deps = (
     await Promise.all(meta.dependencies.map(getComponentMeta))
@@ -164,12 +162,6 @@ export default async function ComponentPage({
           )}
         </div>
         <p className={site.text}>{meta.summary}</p>
-        {article && (
-          <p className={site.text}>
-            Why it works this way:{" "}
-            <Link href={`/articles/${article.slug}`}>{article.title}</Link>.
-          </p>
-        )}
         <div className={site.actions}>
           <CopyPage />
         </div>

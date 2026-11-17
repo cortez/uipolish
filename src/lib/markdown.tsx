@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { CodeBlock } from "@registry/code-block/code-block";
 import site from "@/app/site.module.css";
 
-// A small renderer for the guides and articles: headings, paragraphs, lists,
+// A small renderer for the guides: headings, paragraphs, lists,
 // tables, quotes, code fences, inline code, bold and links. The sources are
 // ours, so it only needs to handle what they use.
 

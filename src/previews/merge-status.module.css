@@ -1,5 +1,8 @@
-/* As it sits on top of a review pane: the pane's canvas, its padding. */
-.pane {
+/* As it sits on top of a review pane: the pane's canvas, its padding.
+   The list of states sits in the same pane, so every row's number, state
+   and button line up with the live one above. */
+.pane,
+.list {
   width: 100%;
   max-width: 440px;
   box-sizing: border-box;
@@ -12,6 +15,4 @@
 .list {
   display: grid;
   gap: var(--ui-gap-tight);
-  width: 100%;
-  max-width: 440px;
 }

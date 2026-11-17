@@ -29,7 +29,6 @@ const ROOTS = ["registry", "src"];
 // Each exception names the file, the selector it applies to (or "*") and
 // the check, with the reason it's allowed.
 const ALLOW = [
-  { file: "src/components/agent-demo-without.module.css", selector: "*", check: "*", reason: "The home page's 'without UI Polish' demo is off-system on purpose: it shows what a page looks like before the rules." },
   { file: "registry/inline-edit/inline-edit.module.css", selector: ".root", check: "ring", reason: "The 1px edge is the focused field's: --inline-edge is transparent until it's editing." },
   { file: "registry/button/button.module.css", selector: "*", check: "color", reason: "The danger button's hover and press darken toward black, whatever the hue." },
   { file: "registry/prompt-input/prompt-input.module.css", selector: ".remove", check: "color", reason: "A dark scrim over a photo thumbnail, under a white glyph: the same in both themes." },
@@ -205,11 +204,11 @@ test("the edge token is one solid color", () => {
   }
 });
 
-test("controls you tick rest on the one edge", () => {
+test("controls you tick rest on the control edge", () => {
   const checkbox = readFileSync("registry/checkbox/checkbox.module.css", "utf8");
-  assert.match(/\.box\s*\{[^}]*\}/.exec(checkbox)?.[0] ?? "", /box-shadow: inset 0 0 0 var\(--ui-hairline\) var\(--ui-border-strong\)/);
+  assert.match(/\.box\s*\{[^}]*\}/.exec(checkbox)?.[0] ?? "", /box-shadow: inset 0 0 0 var\(--ui-hairline\) var\(--ui-border-control\)/);
   const radio = readFileSync("registry/radio-group/radio-group.module.css", "utf8");
-  assert.match(radio, /--radio-edge: var\(--ui-border-strong\);/);
+  assert.match(radio, /--radio-edge: var\(--ui-border-control\);/);
 });
 
 // Shadows are tokens (surfaces.md, "Elevation"): a box-shadow is built only

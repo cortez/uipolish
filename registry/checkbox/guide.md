@@ -66,7 +66,7 @@ under the parent's label.
 
 | State | What you see | How |
 |---|---|---|
-| Empty | Surface fill, hairline edge | |
+| Empty | Surface fill, hairline edge in `--ui-border-control`, 3:1 against the surface so an empty box is found at a glance | |
 | Checked | Accent fill, tick in the color that reads on it | `data-state="on"` |
 | Mixed | Accent fill, dash | `indeterminate` → `data-state="mixed"` |
 | Hover | Edge one step darker; a filled box one step lighter | `@media (hover: hover)`, anywhere on the row |

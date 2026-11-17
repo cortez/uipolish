@@ -14,6 +14,9 @@ export type ComponentMeta = {
   name: string;
   title: string;
   summary: string;
+  /** What the home page's card says, when the summary's opening phrase is
+   *  far from the others' length (about 40 to 65 characters). */
+  blurb?: string;
   /** "agent": the components for AI products, grouped apart in the docs. */
   kit?: "agent";
   /** "block": a whole screen or section composed from components.

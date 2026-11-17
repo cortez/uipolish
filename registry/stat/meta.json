@@ -2,6 +2,7 @@
   "name": "stat",
   "title": "Stat",
   "summary": "A figure with its label and a change stated by both an arrow and words. The hint always takes two lines, so tiles in a row stay level.",
+  "blurb": "A figure with its label and a change in arrow and words.",
   "version": "0.1.1",
   "dependencies": [
     "icons",

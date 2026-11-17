@@ -196,8 +196,8 @@ describe("Agent guidance and trust", () => {
     assert.match(text, /^Last updated: \d{4}-\d{2}-\d{2}$/m);
   });
 
-  test("about, contact and privacy pages have real content, in HTML and Markdown", async () => {
-    for (const path of ["/about", "/contact", "/privacy"]) {
+  test("contact and privacy pages have real content, in HTML and Markdown", async () => {
+    for (const path of ["/contact", "/privacy"]) {
       const page = await get(path, html);
       assert.equal(page.status, 200, path);
       const text = (await page.text()).replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, "").replace(/<[^>]+>/g, " ");

@@ -26,7 +26,7 @@ before(async () => {
   server = await startServer();
   browser = await chromium.launch();
   const { components } = await (await fetch(`${server.url}/api/components`)).json();
-  pages = ["/", "/docs", "/docs/tailwind", "/about", "/contact", "/privacy", ...components.map((c) => `/docs/${c.name}`)];
+  pages = ["/", "/docs", "/docs/tailwind", "/contact", "/privacy", ...components.map((c) => `/docs/${c.name}`)];
 });
 
 after(async () => {

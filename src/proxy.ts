@@ -13,7 +13,7 @@ const isPage = (path: string) =>
   !/^\/(_next|api|mcp|md)(\/|$)/.test(path) && !/\.[a-z0-9]+$/i.test(path.replace(/\.md$/i, ""));
 
 /** The site's pages, for per-page counts; anything else counts as other. */
-const KNOWN_PAGE = /^\/(docs(\/[a-z0-9-]+)?|articles(\/[a-z0-9-]+)?|about|contact|privacy|thanks)?$/;
+const KNOWN_PAGE = /^\/(docs(\/[a-z0-9-]+)?|contact|privacy|thanks)?$/;
 const CRAWLER = /bot|crawl|spider|slurp|preview|fetch|curl|wget|python|httpclient|headless|lighthouse/i;
 
 /** Anonymous counts for a page request: a view (or a crawl, or an agent

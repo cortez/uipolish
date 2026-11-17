@@ -10,8 +10,8 @@
   font-size: var(--ui-text-sm);
 }
 
-/* The links on the left, the date on the right; on a narrow screen the
-   date wraps under them. The same gap between links as between rows. */
+/* The links in one row that wraps on a narrow screen, the same gap
+   between links as between rows. */
 .links {
   display: flex;
   flex-wrap: wrap;
