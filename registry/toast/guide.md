@@ -49,11 +49,12 @@ place instead of adding another.
 
 ## Look
 
-One row on light glass: the icon in a 32px box, the title and description,
-the action, then dismiss. The card is `--ui-surface-glass` over a
-`--ui-glass-blur` (4px) backdrop blur with the floating shadow. The buttons
-sit 8px in, and the corner is lg (16px), the box radius. Icons are
-`info`, `check-circle` and `alert` from Icons.
+A quiet card: the icon level with the title, the title and description,
+then the action as a plain ghost button and dismiss, both hung on the
+title's line so they never make the card taller than its text. Dismiss
+shows on hover or focus (always on touch). The card is the opaque surface
+with the floating shadow, 12px in (16 at the icon's side), on the lg
+(16px) radius. Icons are `info`, `check-circle` and `alert` from Icons.
 
 ## States
 

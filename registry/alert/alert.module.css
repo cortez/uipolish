@@ -1,3 +1,17 @@
+/* Registered, so a change of tone cross-fades the tint, the edge and the
+   icon's color instead of snapping. */
+@property --alert-tone {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --alert-edge {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
 .root {
   --alert-tone: var(--ui-foreground);
   --alert-edge: var(--ui-border-strong);
@@ -9,7 +23,10 @@
   grid-template-rows: 1fr;
   min-width: 0;
   font-family: var(--ui-font-sans);
-  transition: grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse);
+  transition:
+    grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse),
+    --alert-tone var(--ui-dur-base) var(--ui-ease-color),
+    --alert-edge var(--ui-dur-base) var(--ui-ease-color);
 }
 
 .root[data-tone="success"] {
@@ -176,6 +193,24 @@
   gap: 2px;
 }
 
+.bodySize {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Text and actions that arrive with a change of content fade in a beat
+   after the title starts to morph. */
+.root[data-changed] :is(.text, .actions) {
+  animation: alert-swap var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+}
+
+@keyframes alert-swap {
+  from {
+    opacity: 0;
+    translate: 0 2px;
+  }
+}
+
 .root:has(.dismiss) .body {
   padding-inline-end: calc(var(--alert-dismiss-inset) + var(--alert-dismiss) + var(--ui-space-2) - var(--alert-pad));
 }
@@ -235,7 +270,8 @@
     scale: none;
     transition: none;
   }
-  .root[data-mode="expand"][data-shown] .clip {
+  .root[data-mode="expand"][data-shown] .clip,
+  .root[data-changed] :is(.text, .actions) {
     animation: none;
   }
 }

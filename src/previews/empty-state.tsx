@@ -1,20 +1,10 @@
 "use client";
 
-import { EMPTY_STATE_ART, EmptyState } from "@registry/empty-state/empty-state";
+import { EmptyState } from "@registry/empty-state/empty-state";
 import { Button } from "@registry/button/button";
 import { Icon } from "@registry/icons/icons";
 import styles from "./empty-state.module.css";
 import base from "./preview.module.css";
-
-const ART_TITLES = {
-  stack: "stack: a list or table",
-  box: "box: nothing added yet",
-  folder: "folder: files and imports",
-  tray: "tray: replies and messages",
-  search: "search: no results",
-  calendar: "calendar: nothing scheduled",
-  unplugged: "unplugged: it didn’t load",
-} as const;
 
 export function EmptyStatePreview() {
   return (
@@ -23,7 +13,7 @@ export function EmptyStatePreview() {
         <h2 className={base.label}>Page</h2>
         <EmptyState
           size="page"
-          art="calendar"
+          icon="calendar"
           title="No dinners on the calendar"
           description="Pick a night and a host. Guests RSVP from the invitation link."
           action={
@@ -39,8 +29,7 @@ export function EmptyStatePreview() {
         <h2 className={base.label}>Two ways to fill it</h2>
         <EmptyState
           size="page"
-          art="folder"
-          title="No guests yet"
+                    title="No guests yet"
           description="Import last year’s list, or add people one at a time."
           action={
             <Button>
@@ -50,15 +39,6 @@ export function EmptyStatePreview() {
           }
           secondaryAction={<Button variant="secondary">Add by hand</Button>}
         />
-      </section>
-
-      <section className={base.group}>
-        <h2 className={base.label}>The drawings</h2>
-        <div className={styles.drawings}>
-          {EMPTY_STATE_ART.map((art) => (
-            <EmptyState key={art} art={art} title={ART_TITLES[art]} titleAs="p" className={styles.drawing} />
-          ))}
-        </div>
       </section>
 
       <section className={base.group}>
@@ -87,7 +67,7 @@ export function EmptyStatePreview() {
         <div className={styles.panel}>
           <p className={styles.panelTitle}>Guests</p>
           <EmptyState
-            art="tray"
+            icon="link"
             title="No RSVPs yet"
             description="Replies to example.com/d/friday-supper show up here as they come in."
             action={
@@ -104,7 +84,7 @@ export function EmptyStatePreview() {
         <h2 className={base.label}>No results</h2>
         <div className={styles.panel}>
           <EmptyState
-            art="search"
+            icon="search"
             title="No books match “Piranesi”"
             description="Try the author’s name, or check the spelling."
             action={

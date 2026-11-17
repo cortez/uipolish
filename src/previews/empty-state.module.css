@@ -15,13 +15,3 @@
   font-weight: var(--ui-weight-medium);
 }
 
-.drawings {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: var(--ui-space-4);
-}
-
-.drawing {
-  padding-block: var(--ui-space-4);
-  color: var(--ui-muted);
-}

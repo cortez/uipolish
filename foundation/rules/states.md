@@ -49,20 +49,10 @@ An empty state is an onboarding surface, not an apology. Structure:
 3. The primary action to fix it (a real button: "Create project") — when an
    action exists.
 
-Keep it visually quiet: one illustration or none, centered in the space the
-content would occupy, `text-balance` on the copy. Never an icon sitting in a
-rounded square or circle; that reads as an app icon, not as empty space.
-Illustrations are clean isometric line drawings on a 2:1 grid (slopes stay
-crisp) that clearly show their subject, one stroke weight across the set
-(the icon set's medium) with round caps and mitered joins. Corners are
-crisp: at most about a pixel of easing, never rounded off; only what is
-round in life is round (a lens, a cord, a binder ring, a slot). Parts that
-touch in life touch exactly: a hinge is a shared edge, a handle starts on
-its rim, a stacked card lies on the one below. Text on a drawn card is
-filled bars, not lines. Faces are opaque, in two tones at most: the surface and
-one soft fill of the text color mixed into it, all from tokens so they read
-in light and dark. Few lines, and large enough to be the focal point: about
-200px in a panel, 260px on a page. Never leave a
+Keep it visually quiet: text first, centered in the space the content
+would occupy, `text-balance` on the copy. No illustration; at most one plain
+icon in a quiet color above the title. Never an icon sitting in a rounded
+square or circle; that reads as an app icon, not as empty space. Never leave a
 bare "No data" / "0 results" string, and never render an empty table header
 row with nothing under it.
 

@@ -7,9 +7,8 @@ import { Icon } from "@registry/icons/icons";
 export default function Showcase() {
   return (
     <EmptyState
-      art="calendar"
+      icon="calendar"
       title="No dinners on the calendar"
-      description="Pick a night, and guests RSVP from the link."
       action={
         <Button>
           <Icon name="plus" />

@@ -16,9 +16,10 @@
 }
 
 .item {
-  /* One row: icon, text, action, close, 8px in from the edge. The corner
-     is lg, the box radius, not a capsule. */
-  --toast-inset: var(--ui-space-2);
+  /* A quiet card: 12px in, 16 at the start where the icon is, on the box
+     radius. The buttons hang off the title's line so they never make the
+     card taller than its text. */
+  --toast-inset: var(--ui-space-3);
   --toast-radius: var(--ui-radius-lg);
   position: absolute;
   right: 0;
@@ -53,12 +54,11 @@
   position: relative;
   display: flex;
   align-items: flex-start;
-  gap: var(--ui-space-1);
-  padding: var(--toast-inset);
+  gap: var(--ui-space-3);
+  padding: var(--toast-inset) var(--toast-inset) var(--toast-inset) var(--ui-space-4);
   border-radius: var(--toast-radius);
-  background: var(--ui-surface-glass);
-  backdrop-filter: blur(var(--ui-glass-blur));
-  -webkit-backdrop-filter: blur(var(--ui-glass-blur));
+  /* Opaque: a toast lands over whatever is there, so nothing shows through. */
+  background: var(--ui-surface);
   box-shadow: var(--ui-shadow-floating);
   color: var(--ui-foreground);
   clip-path: var(--toast-clip, none);
@@ -108,14 +108,41 @@
 }
 
 
-/* The icon sits in a 32px box, level with the buttons. */
+/* The icon, level with the title's line. */
 .icon {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: var(--ui-control-sm);
-  height: var(--ui-control-sm);
+  width: var(--ui-icon-md);
+  height: var(--ui-leading-md);
   color: var(--ui-foreground);
+}
+
+/* Action and dismiss: 32px buttons centered on the title's line, so the
+   row stays as tall as the text. */
+.action,
+.close {
+  flex-shrink: 0;
+  margin-block: calc((var(--ui-leading-md) - var(--ui-control-sm)) / 2);
+}
+
+.close {
+  margin-inline-start: calc(var(--ui-space-2) * -1);
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* Dismiss shows when the toast is pointed at or focused; on touch it's
+   always there. */
+.item:is(:hover, :focus-within) .close,
+.close:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .close {
+    opacity: 1;
+  }
 }
 
 
@@ -134,10 +161,8 @@
 .text {
   display: grid;
   flex: 1;
-  gap: 0;
+  gap: 2px;
   min-width: 0;
-  padding-block: calc((var(--ui-control-sm) - var(--ui-leading-md)) / 2);
-  padding-inline-end: var(--ui-space-2);
 }
 
 .title {

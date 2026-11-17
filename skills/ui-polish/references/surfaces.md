@@ -326,13 +326,13 @@ for real-looking services read as fake.
 Heavy blur is the most overused effect in generated UI. It smears text
 behind it and dates fast. The only glass here is light, and it's one token.
 
-- Small floating surfaces (menus, popovers, select lists, toasts, the
+- Small floating surfaces you open (menus, popovers, select lists, the
   command palette) are light glass: `--ui-surface-glass` (the surface at
   92%) over
   `--ui-glass-blur` (4px), a hairline and a shadow. They still read as above
   the page by shadow; the glass only softens what's under them. Text on
-  them passes contrast against the surface alone. Dialogs, drawers and
-  sheets stay opaque.
+  them passes contrast against the surface alone. Toasts, which land over
+  whatever is there unasked, and dialogs, drawers and sheets stay opaque.
 - Modal scrims: a plain dim, roughly black at 25–30% in light mode and
   50–55% in dark. No `backdrop-filter`.
 - Motion never blurs: letters, words and icons enter and leave with opacity

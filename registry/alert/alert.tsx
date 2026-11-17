@@ -1,7 +1,9 @@
 "use client";
 
 import { useId, useState, type ReactNode, type TransitionEvent } from "react";
+import { AnimatedSize } from "../animated-size/animated-size";
 import { Icon, type IconName } from "../icons/icons";
+import { TextMorph } from "../text-morph/text-morph";
 import styles from "./alert.module.css";
 
 type Tone = "info" | "success" | "warning" | "error";
@@ -66,6 +68,11 @@ export function Alert({
   const [everShown, setEverShown] = useState(shown);
   if (shown && !everShown) setEverShown(true);
 
+  // Once its content has changed in place, new text and actions fade in;
+  // the first render doesn't.
+  const [firstTitle] = useState(title);
+  const changed = title !== firstTitle;
+
   const urgent = tone === "error" || tone === "warning";
   const mode = !controlled ? "static" : arrive;
 
@@ -74,13 +81,25 @@ export function Alert({
       <span className={styles.icon}>
         <Icon name={ICON[tone]} />
       </span>
-      <div className={styles.body}>
-        <p id={live ? titleId : undefined} className={styles.title}>
-          {title}
-        </p>
-        {children && <div className={styles.text}>{children}</div>}
-        {actions && <div className={styles.actions}>{actions}</div>}
-      </div>
+      {/* The body eases to its new height when its content changes; the
+          title morphs letter by letter, and new text and actions fade in. */}
+      <AnimatedSize className={styles.bodySize}>
+        <div className={styles.body}>
+          <p id={live ? titleId : undefined} className={styles.title}>
+            <TextMorph>{title}</TextMorph>
+          </p>
+          {children && (
+            <div key={`text:${title}`} className={styles.text}>
+              {children}
+            </div>
+          )}
+          {actions && (
+            <div key={`actions:${title}`} className={styles.actions}>
+              {actions}
+            </div>
+          )}
+        </div>
+      </AnimatedSize>
       {onDismiss && (
         <button
           type="button"
@@ -114,6 +133,7 @@ export function Alert({
       data-mode={mode}
       data-shown={shown || undefined}
       data-dismissed={dismissed || undefined}
+      data-changed={changed || undefined}
       onTransitionEnd={finish}
       onTransitionCancel={finish}
     >

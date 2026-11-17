@@ -225,8 +225,9 @@ function ToastItem({ toast: item, place }: { toast: Item; place?: Place }) {
         </div>
         {data?.action && (
           <Button
-            variant="secondary"
+            variant="ghost"
             size="sm"
+            className={styles.action}
             onClick={() => {
               data.action!.onClick();
               dismiss(id);
@@ -236,7 +237,7 @@ function ToastItem({ toast: item, place }: { toast: Item; place?: Place }) {
           </Button>
         )}
         <BaseToast.Close
-          render={<Button variant="ghost" size="sm" aria-label={`Dismiss: ${String(title ?? "")}`} />}
+          render={<Button variant="ghost" size="sm" className={styles.close} aria-label={`Dismiss: ${String(title ?? "")}`} />}
         >
           <Icon name="close" />
         </BaseToast.Close>
