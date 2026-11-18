@@ -351,7 +351,6 @@ export function CommandPalette({
       onDismiss={() => onOpenChange(false)}
       initialFocus={inputRef}
       triggerRef={triggerRef}
-      growFrom="center"
       className={styles.palette}
       aria-label={label}
     >

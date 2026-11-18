@@ -2,8 +2,9 @@
 
 A modal built on Base UI's `Dialog` (and `AlertDialog` for confirms), which
 traps focus, makes the page behind it inert, locks scroll and handles Escape
-and outside presses. The panel grows out
-of the button that opened it and shrinks back into it on close. Focus goes to
+and outside presses. The panel grows from
+its own center and shrinks back into it on close, whatever opened it; the
+origin is fixed, not an option. Focus goes to
 the first field, then back to the trigger. The panel eases to its content's
 size whenever it changes (a new step, a section opening, an error), and
 steps crossfade in place. If the form has unsaved edits,
@@ -46,7 +47,7 @@ The file exports three things:
 
 | State | What you see | How |
 |---|---|---|
-| Opening | Panel fades in, grows from 0.97 toward the trigger's center and clears a 2px blur; backdrop fades in | `transform-origin` set from the trigger's rect relative to the centered panel; `[data-starting-style]` |
+| Opening | Panel fades in, grows from 0.97 out of its own center and clears a 2px blur; backdrop fades in | `transform-origin: 50% 50%`; `[data-starting-style]` |
 | On a phone | Docked at the bottom, 8px off the edges and above the home indicator, in reach of a thumb; it rises from its bottom edge and grows upward when its content does | `max-width: 480px` |
 | Open | Panel on a dimmed page; page doesn't scroll | Base UI's modal `Dialog.Root`, which locks scroll |
 | Body overflow | Body scrolls on its own; header and footer stay put | `overflow-y: auto; overscroll-behavior: contain` |
@@ -57,7 +58,7 @@ The file exports three things:
 | Locked | Escape, backdrop and close do nothing | `locked`, e.g. while saving |
 | Confirm busy | Confirm button's label dims and shimmers, keeps its width; Cancel disabled | `onConfirm` returns a promise |
 | Confirm failed | Error message in danger text beside the buttons; dialog stays open | the promise rejects; its message is shown |
-| Closing | Panel fades, blurs and shrinks toward the trigger; backdrop fades; then it unmounts | `[data-ending-style]`; Base UI waits for the transition before unmounting |
+| Closing | Panel fades, blurs and shrinks into its center; backdrop fades; then it unmounts | `[data-ending-style]`; Base UI waits for the transition before unmounting |
 
 **The guard.** Pass `dirty` as a boolean or a function. It's read the moment
 the user tries to leave, not on every render. Escape on the guard means "Keep
@@ -135,8 +136,8 @@ change at once and steps swap without fading. The backdrop is a plain dim
 in `--ui-scrim`, never blurred.
 
 Panel and backdrop are CSS transitions on Base UI's `[data-starting-style]`
-and `[data-ending-style]`. The panel's `transform-origin` is set when it
-mounts, measured against its centered spot in the fixed viewport.
+and `[data-ending-style]`. The panel's `transform-origin` is fixed in CSS:
+its center, or its bottom edge when docked on a phone.
 
 ## Scroll lock
 
@@ -192,7 +193,7 @@ throws away a half-finished edit.
 )}
 ```
 
-After: a real modal, grows from the Edit button, focus in the first field,
+After: a real modal, grows from its center, focus in the first field,
 and leaving with edits asks first.
 
 ```tsx

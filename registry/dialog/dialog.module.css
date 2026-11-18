@@ -48,7 +48,10 @@
   overflow: clip;
   outline: none;
   /* Arrives like a popover, a block's size: fades, scales up from 0.97 and
-     clears a 2px blur. No spring: nothing travels, it comes into focus. */
+     clears a 2px blur. No spring: nothing travels, it comes into focus.
+     Always from its own center (from its bottom edge when docked on a
+     phone), whatever opened it: the origin is fixed, not a prop. */
+  transform-origin: 50% 50%;
   transition:
     opacity var(--ui-dur-fast) var(--ui-ease-enter),
     scale var(--ui-dur-base) var(--ui-ease-enter),
@@ -78,6 +81,7 @@
   }
   .modal {
     max-height: calc(100dvh - var(--ui-space-5) - max(var(--ui-space-2), env(safe-area-inset-bottom, 0px)));
+    transform-origin: 50% 100%;
   }
 }
 
