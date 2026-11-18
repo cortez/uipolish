@@ -11,8 +11,6 @@ import {
   type CSSProperties,
 } from "react";
 import { Button } from "../button/button";
-import { Icon } from "../icons/icons";
-import { TextMorph } from "../text-morph/text-morph";
 import { canTokenize, tokenizeLine, type LineState, type Token } from "./tokenize";
 import styles from "./code-block.module.css";
 
@@ -147,8 +145,9 @@ export function CodeBlock({
         </span>
         <div className={styles.actions}>
           <Button variant="ghost" size="sm" className={styles.action} onClick={handleCopy} aria-label={`Copy ${name} code`}>
-            <Icon name={copy === "copied" ? "check" : "copy"} />
-            <TextMorph>{copy === "copied" ? "Copied" : copy === "failed" ? "Copy failed" : "Copy"}</TextMorph>
+            {/* A plain string: Button morphs it itself, and a lone element
+                child with an aria-label would draw an icon-only capsule. */}
+            {copy === "copied" ? "Copied" : copy === "failed" ? "Copy failed" : "Copy"}
           </Button>
           <span role="status" className={styles.srOnly}>
             {copy === "copied" ? "Copied to clipboard" : copy === "failed" ? "Couldn’t copy. Select the code and copy it manually." : ""}

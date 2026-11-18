@@ -3,8 +3,8 @@
 Shows code in an AI app, including code that's still streaming in. Finished
 lines never re-render or flash as new text arrives, and the block scrolls on
 its own only when the reader is already at the bottom. The
-header has the language (or a file name) and a Copy button on a fill, so it
-reads as a button over the code, whose label morphs to "Copied". Code never
+header has the language (or a file name) and Copy, a plain text button with
+no fill, edge or icon, quiet in the corner, whose label morphs to "Copied". Code never
 wraps: a long line scrolls sideways, so indentation and columns read as
 written. Highlighting is built in, with no library:
 four quiet hues mixed from the theme's accent and status colors, the rest in the text grays, so it

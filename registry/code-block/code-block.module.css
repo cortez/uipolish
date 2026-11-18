@@ -36,12 +36,20 @@
   flex-shrink: 0;
 }
 
-/* Copy sits on a fill, so it reads as a button over the code. */
+/* Copy is plain text: no fill, no edge, no icon, quiet in the corner;
+   it turns to the text color on hover. */
 .action.action {
-  --button-bg: var(--ui-fill);
-  --button-bg-hover: var(--ui-fill-strong);
+  --button-bg: transparent;
+  --button-bg-hover: transparent;
+  --button-bg-press: transparent;
   padding-inline: var(--ui-space-3);
-  color: var(--ui-foreground);
+  color: var(--ui-muted);
+}
+
+@media (hover: hover) {
+  .action.action:hover {
+    color: var(--ui-foreground);
+  }
 }
 
 @media (pointer: coarse) {

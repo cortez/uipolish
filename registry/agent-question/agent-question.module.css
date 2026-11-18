@@ -1,0 +1,491 @@
+.root {
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  container-type: inline-size;
+  display: grid;
+  /* A card in a conversation, about a message's width. Set
+     --agent-question-width to change it. */
+  max-inline-size: var(--agent-question-width, 480px);
+  grid-template-rows: 1fr;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+}
+
+/* Arriving: the space opens, then the card fades up into it, so what's below is pushed, not jumped. */
+.root[data-enter] {
+  animation: agent-question-open var(--ui-dur-panel) var(--ui-ease-expand);
+}
+
+.root[data-enter] .card {
+  animation: agent-question-in var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+}
+
+@keyframes agent-question-open {
+  from {
+    grid-template-rows: 0fr;
+  }
+}
+
+@keyframes agent-question-in {
+  from {
+    opacity: 0;
+    translate: 0 4px;
+  }
+}
+
+@keyframes agent-question-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.grow {
+  min-height: 0;
+}
+
+.root[data-enter] > .grow {
+  animation: agent-question-clip var(--ui-dur-panel);
+}
+
+@keyframes agent-question-clip {
+  from,
+  to {
+    overflow-y: clip;
+  }
+}
+
+/* ---------- Card ---------- */
+
+.card {
+  display: grid;
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-4);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+}
+
+.heading {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.eyebrow {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-sm);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+.question {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+  text-wrap: balance;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+.question:focus {
+  outline: none;
+}
+
+/* The choices and the field under them. No gap: a closed field leaves none. */
+.body {
+  display: grid;
+}
+
+/* ---------- Choices ---------- */
+
+.choices {
+  display: grid;
+  gap: var(--ui-space-2);
+}
+
+/* Inset by the card's padding, so its corner is the card's less that padding. */
+.choice {
+  --choice-pad: var(--ui-space-3);
+  --control-size: 16px;
+  --choice-edge: var(--ui-border-strong);
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+  padding: var(--choice-pad);
+  border-radius: calc(var(--ui-radius-lg) - var(--ui-space-4));
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--choice-edge);
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* Chosen: the selected edge and a quiet fill. */
+.choice[data-checked] {
+  --choice-edge: var(--ui-field-focus);
+  background: var(--ui-fill);
+}
+
+@media (hover: hover) {
+  .choice:hover:not([data-disabled], [data-checked]) {
+    --choice-edge: var(--ui-field-focus);
+  }
+}
+
+.choice:active:not([data-disabled]) {
+  background: var(--ui-fill-strong);
+  transition-duration: var(--ui-dur-press);
+}
+
+/* The card draws focus inside its edge, where it can be seen. */
+.choice:has([data-choice]:focus-visible) {
+  outline: var(--ui-ring-focus);
+  outline-offset: -3px;
+}
+
+.choice[data-disabled] {
+  cursor: default;
+}
+
+.choice[data-disabled] :is(.control, .text) {
+  opacity: 0.5;
+}
+
+/* Centered on the title's first line. */
+.control {
+  position: relative;
+  flex-shrink: 0;
+  width: var(--control-size);
+  height: var(--control-size);
+  margin-top: calc((var(--ui-leading-md) - var(--control-size)) / 2);
+}
+
+/* ----- Radio: as in the radio group ----- */
+
+.radio {
+  --radio-edge: var(--ui-border-strong);
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: 50%;
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--radio-edge);
+  /* Drives the focus line. */
+  color: var(--ui-foreground);
+  cursor: inherit;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.choice[data-checked] .radio {
+  --radio-edge: var(--ui-accent);
+  background: var(--ui-accent);
+}
+
+.choice:not([data-multiple]) .control::before {
+  content: "";
+  position: absolute;
+  inset: calc((var(--control-size) - 6px) / 2);
+  z-index: 1;
+  border-radius: 50%;
+  background: var(--ui-on-accent);
+  clip-path: circle(0 at 50% 50%);
+  pointer-events: none;
+  transition: clip-path var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.choice:not([data-multiple])[data-checked] .control::before {
+  clip-path: circle(50% at 50% 50%);
+  transition: clip-path var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+/* ----- Checkbox: as in the checkbox ----- */
+
+.box {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: calc(var(--ui-radius-sm) / 2);
+  appearance: none;
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  color: var(--ui-foreground);
+  cursor: inherit;
+  /* Unticking: the fill waits for the mark to un-draw. */
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color) var(--ui-dur-instant),
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.choice[data-checked] .box {
+  background: var(--ui-accent);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-accent);
+  transition-delay: 0s;
+}
+
+.mark {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: var(--ui-on-accent);
+  stroke-width: var(--ui-icon-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+/* pathLength="1": 0 is drawn, 1.05 is hidden with no round-cap dot left. */
+.mark path {
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: 1.05;
+  transition: stroke-dashoffset var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.choice[data-checked] .mark path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--ui-dur-base) var(--ui-ease-draw);
+}
+
+/* The card shows focus; the control inside it doesn't again. */
+:is(.radio, .box):focus-visible {
+  outline: none;
+}
+
+/* ----- Text ----- */
+
+.text {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title {
+  font-weight: var(--ui-weight-medium);
+  overflow-wrap: anywhere;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+.description,
+.pick {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.pickLabel {
+  color: var(--ui-foreground);
+  font-weight: var(--ui-weight-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+/* ---------- Something else ---------- */
+
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse),
+    opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.panel[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows var(--ui-dur-panel) var(--ui-ease-expand),
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+.clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.other {
+  padding-top: var(--ui-space-3);
+}
+
+/* ---------- Footer ---------- */
+
+/* The message line and Send share a row: a nudge or an error never moves the button. */
+.footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--ui-space-3);
+}
+
+.message {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.message[data-failed] {
+  color: var(--ui-danger-text);
+}
+
+.messageText {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--ui-space-2);
+  align-items: start;
+  text-wrap: pretty;
+  animation: agent-question-in var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.message:not([data-failed]) .messageText {
+  display: block;
+}
+
+.messageText > svg {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  margin-top: 2px;
+  color: var(--ui-danger);
+}
+
+/* ---------- Settled ---------- */
+
+/* minmax(0, …): the line's unwrapped text mustn't widen the column past the thread. */
+.settled {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.settled[data-enter] {
+  animation: agent-question-in var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+}
+
+.line {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: var(--ui-space-2);
+  max-width: calc(100% + 20px);
+  min-height: 28px;
+  margin-inline: -10px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-muted);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  text-align: start;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .line:hover,
+  .line:hover .chevron {
+    color: var(--ui-foreground);
+  }
+}
+
+.line:active {
+  background: var(--ui-fill);
+  color: var(--ui-foreground);
+  transition-duration: var(--ui-dur-press);
+}
+
+.line:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+@media (pointer: coarse) {
+  .line {
+    min-height: var(--ui-control-md);
+  }
+}
+
+.lineIcon {
+  flex-shrink: 0;
+  color: var(--ui-foreground);
+}
+
+.lineText {
+  composes: wrap from "../text/text.module.css";
+}
+
+.lineLabel {
+  font-weight: var(--ui-weight-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+.lineAnswer {
+  color: var(--ui-foreground);
+}
+
+.chevron {
+  width: var(--ui-icon-chevron);
+  height: var(--ui-icon-chevron);
+  flex-shrink: 0;
+  color: var(--ui-muted);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.reopened {
+  display: grid;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-2) 0 var(--ui-space-1) var(--ui-space-5);
+}
+
+.quote {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+/* Reduced motion: what moves fades in place instead; heights change in one step. */
+@media (prefers-reduced-motion: reduce) {
+  .root[data-enter],
+  .root[data-enter] > .grow {
+    animation: none;
+  }
+  .root[data-enter] .card,
+  .settled[data-enter],
+  .messageText {
+    animation-name: agent-question-fade;
+  }
+  .panel,
+  .panel[data-open="true"] {
+    transition-property: opacity;
+  }
+  .choice:not([data-multiple]) .control::before,
+  .choice:not([data-multiple])[data-checked] .control::before,
+  .mark path,
+  .choice[data-checked] .mark path {
+    transition: none;
+  }
+}

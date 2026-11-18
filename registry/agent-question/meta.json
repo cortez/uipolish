@@ -1,0 +1,17 @@
+{
+  "name": "agent-question",
+  "title": "Agent question",
+  "summary": "The card an agent shows when it needs you to decide something mid-task. A short question, two to four choices with the agent's own pick marked, an optional typed answer, and one line once you've answered.",
+  "kit": "agent",
+  "version": "0.1.0",
+  "dependencies": [
+    "animated-size",
+    "button",
+    "icons",
+    "text-field",
+    "text"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

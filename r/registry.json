@@ -22,6 +22,12 @@
       "description": "Disclosure sections that open on a grid-row transition, one or several at a time. An item named in the URL hash is already open on first paint."
     },
     {
+      "name": "agent-question",
+      "type": "registry:ui",
+      "title": "Agent question",
+      "description": "The card an agent shows when it needs you to decide something mid-task. A short question, two to four choices with the agent's own pick marked, an optional typed answer, and one line once you've answered."
+    },
+    {
       "name": "agent-settings",
       "type": "registry:ui",
       "title": "Agent settings",
@@ -214,6 +220,12 @@
       "description": "Renders a model's markdown reply while it streams: no flash of raw asterisks, backticks or half-typed tables, code fences open as live code blocks, and HTML in the reply shows as text."
     },
     {
+      "name": "message-branches",
+      "type": "registry:ui",
+      "title": "Message branches",
+      "description": "The “‹ 2 / 3 ›” switcher under a reply that was regenerated or a prompt that was edited, with a one-line note. Stepping slides the old version out, the new one in, and the box eases to its height."
+    },
+    {
       "name": "message-thread",
       "type": "registry:ui",
       "title": "Message thread",
@@ -266,6 +278,12 @@
       "type": "registry:ui",
       "title": "Prompt input",
       "description": "Chat composer that grows with its text and sends on Enter, never mid-IME. Send turns into Stop while a reply streams, and dropped files become chips."
+    },
+    {
+      "name": "prompt-suggestions",
+      "type": "registry:ui",
+      "title": "Prompt suggestions",
+      "description": "Suggested prompts for a chat: starter cards in an empty thread, or follow-up chips under an answer. They arrive as one group and fade out, then close their space, once something is sent."
     },
     {
       "name": "radio-group",
@@ -344,6 +362,12 @@
       "type": "registry:ui",
       "title": "Tabs",
       "description": "Tabs built on Base UI, with a pill that stretches from one tab to the next. Optional URL sync supports back and forward, and panels crossfade in place."
+    },
+    {
+      "name": "terminal-output",
+      "type": "registry:ui",
+      "title": "Terminal output",
+      "description": "A command an agent ran, as a card: the command, a ticking elapsed time or its exit code, and the output streaming in line by line, with stderr in danger text, Copy, Stop and a fold for long logs."
     },
     {
       "name": "text",

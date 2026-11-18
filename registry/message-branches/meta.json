@@ -1,0 +1,15 @@
+{
+  "name": "message-branches",
+  "title": "Message branches",
+  "summary": "The “‹ 2 / 3 ›” switcher under a reply that was regenerated or a prompt that was edited, with a one-line note. Stepping slides the old version out, the new one in, and the box eases to its height.",
+  "kit": "agent",
+  "version": "0.1.0",
+  "dependencies": [
+    "animated-size",
+    "button",
+    "icons",
+    "text",
+    "text-morph",
+    "tooltip"
+  ]
+}
