@@ -35,20 +35,11 @@
   flex-shrink: 0;
 }
 
+/* Copy sits on a fill, so it reads as a button over the code. */
 .action.action {
-  padding-inline: var(--ui-space-3);
-  color: var(--ui-muted);
-}
-
-@media (hover: hover) {
-  .action.action:hover {
-    color: var(--ui-foreground);
-  }
-}
-
-.action.action[aria-pressed="true"] {
   --button-bg: var(--ui-fill);
   --button-bg-hover: var(--ui-fill-strong);
+  padding-inline: var(--ui-space-3);
   color: var(--ui-foreground);
 }
 
@@ -109,10 +100,6 @@
   counter-reset: line;
 }
 
-.scroller[data-wrap] .pre {
-  width: auto;
-}
-
 .code {
   display: block;
   color: var(--ui-foreground);
@@ -121,11 +108,6 @@
   line-height: var(--ui-leading-md);
   tab-size: 2;
   white-space: pre;
-}
-
-.scroller[data-wrap] .code {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
 }
 
 .line {
@@ -149,7 +131,7 @@
   user-select: none;
 }
 
-.scroller:not([data-wrap]) .pre[data-numbers] .line {
+.pre[data-numbers] .line {
   grid-template-columns: calc(var(--digits) * 1ch) max-content;
 }
 

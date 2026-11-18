@@ -204,27 +204,12 @@
 /* The close button is a ghost icon Button: a capsule like every other.
    Centered on the title's first line, with its X on the content's edge.
    Doubled to win over the button's own size, whatever order sheets load in. */
+/* Close is a full-size secondary icon button, the standard 40px capsule
+   with its edge and fill, so it reads as a button. Centered on the title's
+   first line; the title row makes room for it. */
 .close.close {
-  --close-size: var(--ui-control-sm);
-  --close-width: calc(var(--close-size) * var(--ui-capsule));
   flex-shrink: 0;
-  width: var(--close-width);
-  height: var(--close-size);
-  margin: calc(var(--ui-leading-2xl) / 2 - var(--close-size) / 2) calc((16px - var(--close-width)) / 2) 0 0;
-  color: var(--ui-muted);
-}
-
-@media (hover: hover) {
-  .close.close:hover {
-    color: var(--ui-foreground);
-  }
-}
-
-/* 40px on touch screens, the finger's size. */
-@media (pointer: coarse) {
-  .close.close {
-    --close-size: var(--ui-control-md);
-  }
+  margin-top: calc(var(--ui-leading-2xl) / 2 - var(--ui-control-md) / 2);
 }
 
 .body {

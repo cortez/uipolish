@@ -290,7 +290,7 @@ export function Dialog({
                 </p>
               )}
             </div>
-            <Button variant="ghost" size="sm" className={styles.close} aria-label="Close" onClick={dismiss}>
+            <Button variant="secondary" className={styles.close} aria-label="Close" onClick={dismiss}>
               <Icon name="close" />
             </Button>
           </header>

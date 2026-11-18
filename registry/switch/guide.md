@@ -99,7 +99,7 @@ on, it's `--ui-on-accent` in both themes.
 |---|---|---|
 | Thumb across the track | `--ui-dur-glide` (320ms) | `--ui-ease-glide`: held by the track, it lands without passing its end |
 | Press: leading edge reaches 3px | `--ui-dur-press` (80ms) | `--ui-ease-glide` |
-| Track color | `--ui-dur-fast` turning on, `--ui-dur-instant` turning off; press in `--ui-dur-press` | `--ui-ease-color` |
+| Track fill and edge, together (one transition list: same start, duration and curve) | `--ui-dur-fast` turning on, `--ui-dur-instant` turning off; press in `--ui-dur-press` | `--ui-ease-color` |
 | Busy dot | fades in over `--ui-dur-fast` on `--ui-ease-enter`, breathes `--ui-dur-pulse` each way | `--ui-ease-pulse`, alternate |
 
 The thumb is placed by its two logical insets rather than moved as a block,

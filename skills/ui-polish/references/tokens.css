@@ -301,12 +301,15 @@
     0 4px 12px -4px light-dark(oklch(0.21 0 0 / 0.06), transparent),
     0 16px 40px -12px light-dark(oklch(0.21 0 0 / 0.12), transparent);
   /* Glass: what floats over the page (menus, popovers, lists under a
-     field) is the surface at 82%, blurred and a little more saturated
-     behind, so what's under it shows through as color, never as shapes.
-     Set --ui-surface-floating to var(--ui-surface) and --ui-blur-floating
-     to none for solid panels. */
-  --ui-surface-floating: color-mix(in oklch, var(--ui-surface) 82%, transparent);
-  --ui-blur-floating: blur(24px) saturate(1.5);
+     field) is the surface at 64% over a heavy blur that lifts the color
+     behind it, so the page shows through as soft color, never as shapes,
+     and text stays legible over a photo. A light line inside the top edge
+     catches the light, so it reads as glass in dark mode too. For solid
+     panels: --ui-surface-floating: var(--ui-surface), --ui-blur-floating:
+     none, --ui-glass-edge: 0 0 transparent. */
+  --ui-surface-floating: color-mix(in oklch, var(--ui-surface) 64%, transparent);
+  --ui-blur-floating: blur(30px) saturate(1.8);
+  --ui-glass-edge: inset 0 1px 0 light-dark(oklch(1 0 0 / 0.7), oklch(1 0 0 / 0.09));
   --ui-shadow-floating:
     var(--ui-edge),
     0 2px 4px light-dark(oklch(0.21 0 0 / 0.05), transparent),
@@ -325,6 +328,15 @@
 [data-theme="dark"] { color-scheme: dark; }
 
 /* Code drops ligatures, so != and => stay two characters. */
+/* Base UI's portal wrapper takes no layout space. Popups portal into the
+   nearest themed element so they keep its tokens; inside a grid or flex
+   box the wrapper would otherwise be one more item and shift the layout
+   (a grid gained a row and its items jumped 8px as a menu opened). The
+   popups inside position themselves, so the wrapper needs no box. */
+:where([data-base-ui-portal]) {
+  display: contents;
+}
+
 :where(code, kbd, pre, samp) {
   font-variant-ligatures: none;
 }

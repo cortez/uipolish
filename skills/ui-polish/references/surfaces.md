@@ -69,11 +69,13 @@ mode for free.
   draws a double edge. Pick a real `border` or a ring
   `box-shadow` per box, never both.
 - **What floats is glass.** Menus, popovers, lists under a field and
-  hover cards fill with `--ui-surface-floating` and set
-  `backdrop-filter: var(--ui-blur-floating)`: the surface at 82% over a
-  heavy blur, so the page shows through as soft color and never as
-  shapes. Cards, dialogs, drawers and toasts stay solid: they hold more
-  reading than a menu does.
+  hover cards fill with `--ui-surface-floating`, set
+  `backdrop-filter: var(--ui-blur-floating)` and put `--ui-glass-edge`
+  before their shadow: the surface at 64% over a heavy blur that lifts the
+  color behind, with a light line inside the top edge, so it reads as
+  glass in light and dark and text stays legible over a photo. Cards,
+  dialogs, drawers and toasts stay solid: they hold more reading than a
+  menu does.
 - Hover states on bordered elements move one step up the set
   (strong → field-focus). Polished hover deltas are
   small — sometimes just a few percent.

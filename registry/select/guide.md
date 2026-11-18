@@ -105,7 +105,7 @@ Disabled options are skipped by the keys and can't be chosen.
 - With a hint, validation or an outside error, one message line is always
   reserved, so an error appearing moves nothing.
 
-The open list's edge is the one in `--ui-shadow-floating`: the same outline color as the field (`--ui-border-strong`), drawn once. Don't add a ring of your own on top; two rings read as a darker edge. Its fill is glass: `--ui-surface-floating` with `--ui-blur-floating` behind it, so the page shows through as soft color, never as shapes. Set those two tokens to `var(--ui-surface)` and `none` for a solid panel.
+The open list's edge is the one in `--ui-shadow-floating`: the same outline color as the field (`--ui-border-strong`), drawn once. Don't add a ring of your own on top; two rings read as a darker edge. Its fill is glass: `--ui-surface-floating` (the surface at 64%) over `--ui-blur-floating`, with `--ui-glass-edge`, a light line inside the top edge, so the page shows through as soft color, never as shapes. For a solid panel set them to `var(--ui-surface)`, `none` and `0 0 transparent`.
 
 ## Motion
 

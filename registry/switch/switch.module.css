@@ -105,7 +105,11 @@
   /* Drives the focus ring color. */
   color: var(--ui-foreground);
   cursor: inherit;
-  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+  /* The edge and the fill are one change: one transition list, so they
+     start together and run on the same duration and curve both ways. */
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color);
 }
 
 /* On: the accent fill is its own edge, like a checked checkbox, so no gray

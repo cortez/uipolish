@@ -216,7 +216,7 @@
   background: var(--ui-surface-floating);
   -webkit-backdrop-filter: var(--ui-blur-floating);
   backdrop-filter: var(--ui-blur-floating);
-  box-shadow: var(--ui-shadow-floating);
+  box-shadow: var(--ui-glass-edge), var(--ui-shadow-floating);
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
   --ui-icon-stroke: var(--ui-icon-stroke-regular);

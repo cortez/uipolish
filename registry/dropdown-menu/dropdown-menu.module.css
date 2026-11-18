@@ -22,7 +22,7 @@
   background: var(--ui-surface-floating);
   -webkit-backdrop-filter: var(--ui-blur-floating);
   backdrop-filter: var(--ui-blur-floating);
-  box-shadow: var(--ui-shadow-floating);
+  box-shadow: var(--ui-glass-edge), var(--ui-shadow-floating);
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
   --ui-icon-stroke: var(--ui-icon-stroke-regular);
@@ -94,6 +94,12 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* A radio row that's chosen: a quiet fill, a step under the highlight's,
+   under the sliding highlight when the pointer is on it. */
+.item[role="menuitemradio"][data-checked] {
+  background: var(--ui-fill);
+}
+
 .item[data-tone="danger"] {
   color: var(--ui-danger-text);
 }
@@ -132,14 +138,6 @@
   width: 16px;
   height: 16px;
   color: var(--ui-foreground);
-}
-
-.dot[data-checked]::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: var(--ui-radius-full);
-  background: currentColor;
 }
 
 .text {
@@ -232,10 +230,9 @@
   line-height: var(--ui-leading-sm);
 }
 
+/* Groups part with space, never a drawn line. */
 .separator {
-  height: var(--ui-hairline);
-  margin: var(--ui-space-2) calc(-1 * var(--menu-inset));
-  background: var(--ui-border);
+  height: var(--ui-space-2);
 }
 
 @media (pointer: coarse) {

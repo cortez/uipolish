@@ -2,7 +2,7 @@
   "name": "accordion",
   "title": "Accordion",
   "summary": "Disclosure sections that open on a grid-row transition, one or several at a time. An item named in the URL hash is already open on first paint.",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "dependencies": [
     "icons",
     "text-morph"

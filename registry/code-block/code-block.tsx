@@ -36,7 +36,6 @@ type CodeBlockProps = {
   /** Header text instead of the language name, e.g. a file name. */
   title?: string;
   lineNumbers?: boolean;
-  defaultWrap?: boolean;
   /** Text is still arriving; sets `aria-busy`. */
   streaming?: boolean;
   /** Use the built-in tokenizer when the language is supported. */
@@ -68,14 +67,12 @@ export function CodeBlock({
   language,
   title,
   lineNumbers = false,
-  defaultWrap = false,
   streaming = false,
   highlight = true,
   lineHtml,
   maxHeight,
   className,
 }: CodeBlockProps) {
-  const [wrap, setWrap] = useState(defaultWrap);
   const [copy, setCopy] = useState<CopyState>("idle");
   const [overflow, setOverflow] = useState({ start: false, end: false, y: false });
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -137,7 +134,9 @@ export function CodeBlock({
     copyTimer.current = window.setTimeout(() => setCopy("idle"), 2000);
   }
 
-  const scrollable = (!wrap && (overflow.start || overflow.end)) || overflow.y;
+  // Code never wraps: a long line scrolls sideways, so indentation and
+  // columns read as written.
+  const scrollable = overflow.start || overflow.end || overflow.y;
   const digits = String(lines.length).length;
 
   return (
@@ -147,15 +146,6 @@ export function CodeBlock({
           {name}
         </span>
         <div className={styles.actions}>
-          <Button
-            variant="ghost"
-            size="sm"
-            className={styles.action}
-            aria-pressed={wrap}
-            onClick={() => setWrap((w) => !w)}
-          >
-            Wrap
-          </Button>
           <Button variant="ghost" size="sm" className={styles.action} onClick={handleCopy} aria-label={`Copy ${name} code`}>
             <Icon name={copy === "copied" ? "check" : "copy"} />
             <TextMorph>{copy === "copied" ? "Copied" : copy === "failed" ? "Copy failed" : "Copy"}</TextMorph>
@@ -169,9 +159,8 @@ export function CodeBlock({
       <div
         ref={scrollerRef}
         className={styles.scroller}
-        data-wrap={wrap || undefined}
-        data-fade-start={(!wrap && overflow.start) || undefined}
-        data-fade-end={(!wrap && overflow.end) || undefined}
+        data-fade-start={overflow.start || undefined}
+        data-fade-end={overflow.end || undefined}
         style={{ maxHeight }}
         onScroll={measure}
         // Focusable only when scrollable, so the keyboard can scroll it.
