@@ -1,0 +1,12 @@
+{
+  "name": "reasoning",
+  "title": "Reasoning",
+  "summary": "The thinking block of an AI reply: the current step as a label that rises to each new one, a live timer and a short window of reasoning. It folds to “Thought for 8s” when the answer starts.",
+  "blurb": "The thinking block of an AI reply, folding when it's done.",
+  "kit": "agent",
+  "version": "0.5.2",
+  "dependencies": [
+    "icons",
+    "text"
+  ]
+}

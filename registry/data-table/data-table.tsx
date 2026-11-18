@@ -17,6 +17,7 @@ import {
 } from "react";
 import { Checkbox } from "../checkbox/checkbox";
 import { Icon } from "../icons/icons";
+import { TextMorph } from "../text-morph/text-morph";
 import styles from "./data-table.module.css";
 
 export type SortDirection = "ascending" | "descending";
@@ -700,7 +701,8 @@ export function DataTable<Row>({
             </span>
           ) : (
             <span key="summary" className={styles.footerText}>
-              {issues.size === 1 ? "1 cell needs a look" : `${issues.size} cells need a look`}
+              {/* The count rolls as cells are fixed or flagged. */}
+              <TextMorph>{issues.size === 1 ? "1 cell needs a look" : `${issues.size} cells need a look`}</TextMorph>
             </span>
           )}
         </p>

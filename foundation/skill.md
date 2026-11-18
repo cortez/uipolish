@@ -27,11 +27,8 @@ them instead of adding a second palette. Read the component's guide before
 you use it: it says when not to.
 
 The full list is at https://uipolish.com/docs. Components for AI products
-(the agent kit) include message-thread, markdown, model-picker, authorize
-and usage-meter, free; and reasoning, tool-steps, tool-approval,
-plan-approval, sources, research-progress, pipeline, batch-progress,
-background-run and voice-input, which are UI Polish Pro and need a license
-key (list_components marks them "pro").
+include message-thread, markdown, code-block, diff-view, reasoning,
+tool-steps, model-picker and usage-meter. All of it is free.
 
 ## The rules
 

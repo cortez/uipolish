@@ -2,10 +2,12 @@
   "name": "response-actions",
   "title": "Response actions",
   "summary": "The row under an assistant reply: copy, thumbs up and down, and retry. A thumbs down can open a “What went wrong?” field in place.",
-  "version": "0.1.7",
+  "blurb": "Copy, feedback and retry under an assistant reply.",
+  "version": "0.2.2",
   "dependencies": [
+    "button",
     "icons",
-    "tooltip",
-    "text"
+    "text",
+    "tooltip"
   ]
 }

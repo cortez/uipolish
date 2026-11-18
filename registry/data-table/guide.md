@@ -92,7 +92,7 @@ the sort and the validation pass rerun when it changes.
 | Active row | The row a step darker while the grid has focus | `data-active` |
 | Sorted column | Header label at full contrast, arrow shown | `aria-sort` on the header |
 | Sort hover | Header filled a step, an unsorted column previews its arrow at half strength | `@media (hover: hover)` |
-| Selected row | The quiet fill (`--ui-fill-solid`), opaque under the sticky column | `aria-selected` |
+| Selected row | A pale accent tint, opaque under the sticky column | `aria-selected` |
 | Some selected | Select-all shows its dash | Checkbox `indeterminate` |
 | Resize edge | A short hairline at every header edge; it lengthens under the pointer and turns full contrast while dragged or focused | `role="separator"` |
 | Needs a look | Text in the danger color and an alert mark on the side away from the alignment edge | `validate`; `aria-invalid` |
@@ -176,12 +176,13 @@ instead, and raise `rowHeight` for two-line cells.
 | Resize line growing | `--ui-dur-snap` | `--ui-ease-snap` |
 | Loading hairlines and label | `--ui-dur-fast` after 300ms | `--ui-ease-enter` |
 | A new message under the grid | `--ui-dur-fast` | `--ui-ease-enter` |
+| The count under the grid ("3 cells need a look") changes: its digits roll, down as cells are fixed | `--ui-dur-glide` | `--ui-ease-glide` (text morph) |
 
 When a sort is cleared, the arrow fades out as the direction it was and
 only then turns back to up, ready to preview the next click. Columns resize
 live, with no animation: the edge follows the pointer. Under
-`prefers-reduced-motion: reduce` the arrow and the resize line change at
-once; color and opacity feedback stays.
+`prefers-reduced-motion: reduce` the arrow, the resize line and the count
+change at once; color and opacity feedback stays.
 
 ## Accessibility
 

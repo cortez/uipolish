@@ -5,7 +5,7 @@
  *   :root {
  *     --ui-surface: var(--background);
  *     --ui-foreground: var(--foreground);
- *     --ui-radius-md: var(--radius);
+ *     --ui-radius: calc(var(--radius) / 3);
  *   }
  *
  * Colors use light-dark() and follow `color-scheme`; force a theme with
@@ -45,12 +45,12 @@
      radius, so its text clears the curve. */
   --ui-pad-row: var(--ui-space-3);
   /* A menu's inset around its rows. The rows take the concentric radius,
-     panel − inset: 24 − 12 = 12, a rounded row, never a pill. */
-  --ui-inset-menu: var(--ui-space-3);
+     panel − inset: 16 − 4 = 12, a rounded row, never a pill. */
+  --ui-inset-menu: var(--ui-space-1);
   /* A card or panel: 16 in a phone-wide container, 24 from 560px. */
-  --ui-pad-card: round(clamp(16px, 4cqi + 1.6px, 24px), 4px);
+  --ui-pad-card: round(clamp(12px, 4cqi - 2.4px, 20px), 4px);
   /* A screen or page-level block: 24 narrow, 40 from 760px. */
-  --ui-pad-section: round(clamp(24px, 4cqi + 9.6px, 40px), 4px);
+  --ui-pad-section: round(clamp(20px, 3cqi + 6px, 32px), 4px);
 
   /* Between things. Each step is wider than the one inside it, so the
      grouping reads before anything else does. */
@@ -62,21 +62,25 @@
   --ui-gap-stack: var(--ui-space-3);
   /* Groups inside a card or section, and a section's heading above its
      content: 16 narrow, 24 from 760px. */
-  --ui-gap-group: round(clamp(16px, 2cqi + 8.8px, 24px), 4px);
+  --ui-gap-group: round(clamp(12px, 2cqi + 4.8px, 20px), 4px);
   /* Cards and panels in a layout, and a screen's title above its content:
      16 narrow, 24 at 560px, 32 from 760px. */
-  --ui-gap-block: round(clamp(16px, 4cqi + 1.6px, 32px), 4px);
+  --ui-gap-block: round(clamp(16px, 2cqi + 8.8px, 24px), 4px);
   /* Sections of a screen or page: 48 narrow, 56 at 600px, 72 from 960px. */
-  --ui-gap-section: round(clamp(48px, 4cqi + 33.6px, 72px), 8px);
+  --ui-gap-section: round(clamp(40px, 2cqi + 28px, 56px), 8px);
 
-  /* Radius */
-  --ui-radius-sm: 10px;
-  --ui-radius-md: 14px;
-  /* Every box and card: 24, which is also the 8px inset around a 32px
-     button plus that button's half-height, so a code block's corner and
-     its Copy button stay concentric. */
-  --ui-radius-lg: 24px;
+  /* Radius: one knob, four steps. xs 4 for inline marks (inline code, a
+     check box, a focus ring); sm 8 for small marks (a tag, a key cap, a
+     cell); md 12 for fields and rows; lg 16 for boxes, panels, menus and
+     cards. Anything nested takes outer − gap. Controls (buttons, chips,
+     toggles, tabs) are fully round: pills. Nothing else is allowed. */
+  --ui-radius: 4px;
+  --ui-radius-xs: var(--ui-radius);
+  --ui-radius-sm: calc(var(--ui-radius) * 2);
+  --ui-radius-md: calc(var(--ui-radius) * 3);
+  --ui-radius-lg: calc(var(--ui-radius) * 4);
   --ui-radius-full: 9999px;
+  --ui-radius-control: var(--ui-radius-full);
 
   /* Control heights */
   --ui-control-sm: 32px;
@@ -91,17 +95,19 @@
   --ui-font-display: var(--ui-font-sans);
   --ui-font-mono: ui-monospace, "SF Mono", SFMono-Regular, "Cascadia Code", "Segoe UI Mono", "Roboto Mono", Menlo, Consolas, monospace;
 
-  --ui-text-sm: 13px;
-  --ui-text-md: 15px;
-  --ui-text-2xl: 22px;
-  --ui-text-display: clamp(30px, 1.6vw + 1rem, 38px);
-  --ui-leading-sm: 18px;
-  --ui-leading-md: 22px;
+  --ui-text-sm: 12px;
+  --ui-text-md: 14px;
+  /* Titles: page and section headings, a screen's title, a big figure. */
+  --ui-text-2xl: 20px;
+  /* Three sizes and no more: display is the title size, kept as a name so
+     code that reads it still resolves. */
+  --ui-text-display: var(--ui-text-2xl);
+  --ui-leading-sm: 16px;
+  --ui-leading-md: 20px;
   --ui-leading-2xl: 28px;
-  /* Rounded: a fractional line height pushes everything below off the pixel grid. */
-  --ui-leading-display: round(calc(var(--ui-text-display) * 1.1), 1px);
+  --ui-leading-display: var(--ui-leading-2xl);
 
-  --ui-leading-prose: 1.6;
+  --ui-leading-prose: 1.5;
   --ui-measure: 65ch;
 
   --ui-text-code: 0.875em;
@@ -109,14 +115,19 @@
   /* Under 16px, iOS zooms the page when a field is focused. */
   --ui-text-touch: 16px;
 
-  /* Weights. Fonts without a 550 round to 600. */
+  /* Weights: regular for everything, and the title weight for the Title
+     style only. Medium and semibold are kept as names, so code that reads
+     them still resolves, and they read as regular: three styles, no more.
+     Two weights in all: 400 for text and 500 for titles. */
   --ui-weight-regular: 400;
-  --ui-weight-medium: 500;
-  --ui-weight-semibold: 550;
+  --ui-weight-title: 500;
+  --ui-weight-medium: var(--ui-weight-regular);
+  --ui-weight-semibold: var(--ui-weight-regular);
 
   /* Tracking. None for body text: any letter-spacing turns optional ligatures off. */
+  /* Titles draw in a hair; body text is never tracked. */
   --ui-tracking-heading: -0.01em;
-  --ui-tracking-title: -0.02em;
+  --ui-tracking-title: -0.01em;
   --ui-tracking-control: -0.01em;
   --ui-tracking-caps: 0.06em;
 
@@ -125,15 +136,12 @@
      16-unit viewBox drawn at 16px. Icons beside regular text take regular;
      beside a medium label (button, tab, nav or menu item) medium. A smaller
      glyph that stands on its own keeps the line: calc(tier * 16 / size).
-     The default is regular, as most text is; a component sets medium only
-     where the label beside its icons is medium.
      --ui-icon-stroke-semibold is the medium value, kept so older code
      still resolves; don't use it in new code. */
   --ui-icon-stroke-regular: 1.25;
   --ui-icon-stroke-medium: 1.5;
   --ui-icon-stroke-semibold: var(--ui-icon-stroke-medium);
-  /* Most text is regular, so icons are too unless their label is medium. */
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 
   /* Icon sizes: an icon is sized by the text it sits with, so every chevron,
      check or glyph in the same role is the same size. md beside 14-16px text
@@ -199,6 +207,9 @@
   --ui-ease-pulse: cubic-bezier(0.37, 0, 0.63, 1);
   --ui-dur-pulse: 700ms;
   --ui-dur-sweep: 2400ms;
+  /* Busy delay: work that ends sooner shows no busy state, so quick saves
+     don't flash a spinner or a dim. Matches use-delayed-busy.ts. */
+  --ui-delay-busy: 300ms;
 
   /* Color. Text roles hold 4.5:1 on canvas and surface in both themes, and
      no more than they need: the darkest text isn't black and the lightest
@@ -220,28 +231,26 @@
      Colored ones mix a hue at --ui-border-tint: the status edges below, or
      a component's own hue (a phase, a brand) at the same strength. */
   --ui-border-strong: light-dark(oklch(0.954 0 0), oklch(0.26 0 0));
+  /* An empty checkbox or radio: a soft edge over a soft flat fill, so the
+     box is found by its shape and shade together rather than by a hard
+     line. */
+  --ui-border-control: color-mix(in oklch, var(--ui-foreground) 28%, var(--ui-surface));
+  --ui-fill-control: var(--ui-fill-solid);
   --ui-border: var(--ui-border-strong);
   --ui-border-subtle: var(--ui-border);
-  --ui-border-tint: 32%;
+  /* Soft: a colored edge is a quiet line in its hue, never an outline
+     that competes with the fill or the text inside it. */
+  --ui-border-tint: 14%;
   --ui-fill: color-mix(in oklch, var(--ui-foreground) 4.5%, transparent);
   --ui-fill-strong: color-mix(in oklch, var(--ui-foreground) 8%, transparent);
   /* The same two fills, opaque, for what must hide what's under it (a
      sticky cell, an avatar, a shell around panels): never a third gray. */
   --ui-fill-solid: color-mix(in oklch, var(--ui-foreground) 4.5%, var(--ui-surface));
   --ui-fill-strong-solid: color-mix(in oklch, var(--ui-foreground) 8%, var(--ui-surface));
-  /* A field takes this fill while it has focus or its list is open; its
-     edge stays as it rests. */
-  --ui-field-focus-fill: var(--ui-fill-solid);
   --ui-ink: var(--ui-foreground);
   --ui-on-ink: light-dark(oklch(0.99 0 0), oklch(0.17 0 0));
   /* Secondary text on ink (a shortcut in a tooltip): the muted step. */
   --ui-on-ink-muted: color-mix(in oklch, var(--ui-on-ink) 60%, var(--ui-ink));
-  /* A control that's on (a ticked checkbox, a chosen radio, a switch, a
-     slider's range) fills with the primary button's ink, so the controls
-     read as one set with buttons and fields. Point it at --ui-accent for a
-     colored "on". */
-  --ui-control-on: var(--ui-ink);
-  --ui-on-control-on: var(--ui-on-ink);
   /* Each theme has its own tuned hues; fills and icons hold 3:1, text 4.5:1. */
   --ui-accent: light-dark(oklch(0.55 0.22 262), oklch(0.6 0.19 258));
   --ui-on-accent: oklch(0.99 0 0);
@@ -312,15 +321,10 @@
     0 1px 2px light-dark(oklch(0.21 0 0 / 0.05), transparent),
     0 4px 12px -4px light-dark(oklch(0.21 0 0 / 0.06), transparent),
     0 16px 40px -12px light-dark(oklch(0.21 0 0 / 0.12), transparent);
-  /* Glass, lightly: what floats over the page (menus, popovers, lists under
-     a field) is the surface at 93% over a soft blur, so it reads as a solid
-     panel with only a hint of what's behind, over light pages and dark. A
-     faint light line inside the top edge catches the light. For solid
-     panels: --ui-surface-floating: var(--ui-surface), --ui-blur-floating:
-     none, --ui-glass-edge: 0 0 transparent. */
-  --ui-surface-floating: color-mix(in oklch, var(--ui-surface) 93%, transparent);
-  --ui-blur-floating: blur(14px) saturate(1.2);
-  --ui-glass-edge: inset 0 1px 0 light-dark(oklch(1 0 0 / 0.5), oklch(1 0 0 / 0.06));
+  /* Floating surfaces (toasts, menus, popovers, tooltips, the palette) are
+     light glass: the surface at 92% over a 4px blur of what's behind. */
+  --ui-surface-glass: color-mix(in oklch, var(--ui-surface) 92%, transparent);
+  --ui-glass-blur: 4px;
   --ui-shadow-floating:
     var(--ui-edge),
     0 2px 4px light-dark(oklch(0.21 0 0 / 0.05), transparent),
@@ -335,30 +339,10 @@
   --ui-knockout: 2px;
 }
 
-/* Asked for less transparency (a system setting, also used on low-power
-   setups): floating panels go solid, with no blur behind them. */
-@media (prefers-reduced-transparency: reduce) {
-  :root,
-  [data-theme] {
-    --ui-surface-floating: var(--ui-surface);
-    --ui-blur-floating: none;
-    --ui-glass-edge: 0 0 transparent;
-  }
-}
-
 [data-theme="light"] { color-scheme: light; }
 [data-theme="dark"] { color-scheme: dark; }
 
 /* Code drops ligatures, so != and => stay two characters. */
-/* Base UI's portal wrapper takes no layout space. Popups portal into the
-   nearest themed element so they keep its tokens; inside a grid or flex
-   box the wrapper would otherwise be one more item and shift the layout
-   (a grid gained a row and its items jumped 8px as a menu opened). The
-   popups inside position themselves, so the wrapper needs no box. */
-:where([data-base-ui-portal]) {
-  display: contents;
-}
-
 :where(code, kbd, pre, samp) {
   font-variant-ligatures: none;
 }

@@ -49,11 +49,12 @@
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: calc(var(--ui-radius-sm) / 2);
+  border-radius: var(--ui-radius-xs);
   appearance: none;
-  background: var(--ui-surface);
-  /* The one edge every box and control has; hover steps it darker. */
-  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  background: var(--ui-fill-control);
+  /* An empty box: a soft edge over a soft fill; hover steps the edge to the
+     muted color. */
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-control);
   color: var(--ui-foreground);
   cursor: inherit;
   /* Unchecking: the fill waits for the mark to un-draw. Hover must not change
@@ -64,9 +65,9 @@
 }
 
 .root:is([data-state="on"], [data-state="mixed"]) .box {
-  background: var(--ui-control-on);
-  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-control-on);
-  color: var(--ui-on-control-on);
+  background: var(--ui-accent);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-accent);
+  color: var(--ui-on-accent);
   transition-delay: 0s;
 }
 
@@ -77,7 +78,7 @@
   height: 100%;
   overflow: visible;
   fill: none;
-  stroke: var(--ui-on-control-on);
+  stroke: var(--ui-on-accent);
   stroke-width: var(--ui-icon-stroke, 1.5);
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -108,13 +109,12 @@
 }
 
 @media (hover: hover) {
-  /* One step up the edge set on hover, as every field does: never the
-     text gray, which read as a dark outline. */
   .root:hover:not([data-disabled]) .box {
-    box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
+    box-shadow:
+      inset 0 0 0 var(--ui-hairline) var(--ui-muted);
   }
   .root:is([data-state="on"], [data-state="mixed"]):hover:not([data-disabled]) .box {
-    background: color-mix(in oklch, var(--ui-control-on) 86%, var(--ui-on-control-on));
+    background: color-mix(in oklch, var(--ui-accent) 86%, var(--ui-on-accent));
   }
 }
 
@@ -125,7 +125,7 @@
 }
 
 .root:is([data-state="on"], [data-state="mixed"]):active:not([data-disabled]) .box {
-  background: color-mix(in oklch, var(--ui-control-on) 78%, var(--ui-on-control-on));
+  background: color-mix(in oklch, var(--ui-accent) 78%, var(--ui-on-accent));
 }
 
 .box:focus-visible {
@@ -141,7 +141,6 @@
 
 .label {
   font-weight: var(--ui-weight-medium);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .description {

@@ -3,7 +3,7 @@
 A one-time code as a row of boxes, one per character: digits by default,
 or letters and digits with `characters="alphanumeric"`. Typing moves along,
 Backspace steps back, a paste or the platform's autofill fills every box at
-once, and the value never has holes in it. Digits are 24px semibold with
+once, and the value never has holes in it. Digits are the Title style (body size at the title weight) with
 tabular figures, so every box holds the same weight of ink; each fades in
 and settles 2px as it lands.
 
@@ -86,7 +86,8 @@ box and why deleting from the middle closes the gap.
 | State | What you see | How |
 |---|---|---|
 | Empty or filled box | Hairline edge in `--ui-border-strong`, the same edge as a text field | |
-| Active box | Fills with `--ui-field-focus-fill`, instant; the edge stays. Empty: a drawn 2px caret blinks in the middle (steady under reduced motion). Filled: the digit is selected | `:focus` |
+| Hover | Edge darkens to `--ui-field-focus` | `@media (hover: hover)` |
+| Active box | Edge in `--ui-field-focus`, instant. Empty: a drawn 2px caret blinks in the middle (steady under reduced motion). Filled: the digit is selected | `:focus` |
 | Invalid | Every edge eases to danger; the hint fades out and the error fades in, in the same reserved line | `error` → `aria-invalid` |
 | Disabled | 50% opacity, default cursor | `disabled` |
 
@@ -146,7 +147,7 @@ check still appears.
 - The boxes are a `role="group"` labelled by the visible label and described
   by the hint or error. Each box is named "Digit 1 of 6" and so on.
 - `inputmode="numeric"` and `pattern="[0-9]*"` bring up the number pad.
-- Digits are 24px, over the 16px below which iOS zooms into a field.
+- Digits are body size, and 16px on touch screens, below which iOS zooms into a field.
 - The message line is `aria-live="polite"`, so an error is read out without
   moving focus. Clear `error` as soon as the user edits.
 - Clicking the label focuses the first empty box.

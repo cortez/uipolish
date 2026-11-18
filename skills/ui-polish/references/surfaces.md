@@ -35,9 +35,9 @@ mode for free.
   it, so one box's line drifts from the next. Never a literal `1px` for
   an edge; always the token. No
   glints, lighter top edges or glassy double rings: a plain line fits any
-  product the component lands in. The one exception is deliberate:
-  forced-colors outlines stay 1px so they never vanish. A focused field
-  keeps its edge and changes its fill (`--ui-field-focus-fill`) instead.
+  product the component lands in. The exceptions are deliberate: a
+  focused field's edge is 1px (the weight change is part of the focus
+  cue), and forced-colors outlines stay 1px so they never vanish.
 - **Page layout gets no borders.** Headers, sections, hero bands and
   gallery tiles separate with space and a change of surface, not lines.
 - **One neutral edge for every line.** A card's frame, a field, a button,
@@ -50,17 +50,20 @@ mode for free.
   from a darker outline.
 
   Beyond that one:
-  - `--ui-field-focus`: a hovered or selected control (or the one
-    selected box in a set, like the current plan). Never a focused text
-    field: that keeps its edge and fills with `--ui-field-focus-fill`.
+  - `--ui-field-focus`: a hovered, selected or focused control (or the one
+    selected box in a set, like the current plan).
   - A colored edge, only for status or a component's own hue:
     `--ui-border-accent`, `-success`, `-warning`, `-danger`, or a hue (a
     phase, a brand) mixed at `--ui-border-tint`.
+  - `--ui-border-control` over `--ui-fill-control`: an empty checkbox or
+    radio. A soft edge (the text color at 28%) over a soft flat fill, so the box is found by its shape and shade together, never by a
+    hard line. It is a clear step from the one edge, so the two never read
+    as near-twins; its label is always part of the target.
 
-  Nothing else, and no exceptions at rest: a checkbox, a radio, a button
-  and a card all rest on the same edge. No hand-picked alphas, no
-  `color-mix` of the text color for an edge, no second gray: two neutral
-  edges that look almost the same read as two weights. The edge is solid,
+  Nothing else at rest: a button and a card rest on the one edge. No
+  hand-picked alphas, no other `color-mix` of the text color for an edge,
+  no second gray: two neutral edges that look almost the same read as two
+  weights. The edge is solid,
   not the text color at an alpha: a see-through line comes out darker over
   the page than over a card or a field, so one token drew two lines.
 - **One ring per edge.** `--ui-shadow-resting` and `--ui-shadow-floating`
@@ -69,23 +72,6 @@ mode for free.
   Two rings stack into a heavier line, and an inset ring plus an outer one
   draws a double edge. Pick a real `border` or a ring
   `box-shadow` per box, never both.
-- **"On" is ink, like the primary button.** A ticked checkbox, a chosen
-  radio, a switch that's on and a slider's range fill with
-  `--ui-control-on` (the ink), with marks in `--ui-on-control-on`; a
-  pressed chip or a selected row takes the neutral selected fill. The
-  accent is for links, focus and status, not for "on".
-- **What floats is glass.** Menus, popovers, lists under a field and
-  hover cards fill with `--ui-surface-floating`, set
-  `backdrop-filter: var(--ui-blur-floating)` and put `--ui-glass-edge`
-  before their shadow: the surface at 93% over a soft blur, with a faint
-  light line inside the top edge, so it reads as a solid panel with only a
-  hint of what's behind, in light and dark. Cards,
-  dialogs, drawers and toasts stay solid: they hold more reading than a
-  menu does.
-  Keep the blur small and the glass on small, short-lived panels only:
-  never a full-screen or long-lived surface, where the browser would
-  redraw the blur on every frame of scrolling. Under
-  `prefers-reduced-transparency: reduce` the tokens turn solid.
 - Hover states on bordered elements move one step up the set
   (strong → field-focus). Polished hover deltas are
   small — sometimes just a few percent.
@@ -107,7 +93,7 @@ One weight for every line on the page, so nothing reads heavier by accident:
   `--ui-hairline`, never `border` (it renders at twice the weight). Where a
   child's background would cover an inset line (opaque sticky cells, a
   tinted row), draw the line on a `::after` over the children instead.
-  Exceptions: forced-colors outlines, a 2px
+  Exceptions: a focused field's 1px edge, forced-colors outlines, a 2px
   quote bar, and cut-out rings in the surface color around an overlapping
   mark (an avatar stack, a corner badge).
 - **Icon strokes match the text they sit with**, in two tiers:
@@ -257,10 +243,9 @@ for real-looking services read as fake.
 
 ## 4. Radius
 
-- One scale, derived from a single knob where possible:
-  `--radius: 10px` with sm/md/lg/xl as ±2–4px `calc()` offsets. Controls
-  (buttons, chips, badges, pills) very often go fully round — `rounded-full`
-  is the most-used radius in polished products.
+- One scale from one knob: `--ui-radius: 4px`, and xs 4, sm 8, md 12,
+  lg 16 as its multiples, plus full for controls. Change the knob and every
+  corner follows. A literal radius anywhere else is a defect.
 - **Concentric rule, no exceptions: inner radius = outer radius − gap.** A
   card at 16px containing media inset by 4px gives the media 12px. A menu at
   14px with 6px padding gives its highlighted row 8px. Nested equal radii
@@ -272,6 +257,8 @@ for real-looking services read as fake.
     outer pill's height minus twice the gap.
   - If the math lands under ~4px, change the padding or the outer radius;
     don't square the inner corner off.
+  - A literal radius on a nested element is a defect even when it looks
+    right today: write the calc, so it still lines up after the knob moves.
   - On pseudo-element overlays use `border-radius: inherit`.
 - Consistency beats taste: any radius not on the scale is a defect.
 - **The radius says what a thing is.** Pick by role, never per component:
@@ -279,8 +266,10 @@ for real-looking services read as fake.
   | Role | Radius | Examples |
   |---|---|---|
   | Things you press | full | buttons, segmented controls, tabs, chips, a compact select in a toolbar |
-  | Fields you type in or choose from | md | text field, select, combobox, date, phone, number, each code box |
-  | Boxes, panels and cards | lg (24) | cards, tables, code blocks, diffs, menus, dialogs, command palette, drop zone, composer |
+  | Inline marks | xs (4) | inline code, key caps, a check box, a focus ring on text |
+| Small marks | sm (8) | table cells, a day in a calendar |
+| Fields you type in or choose from | md (12) | text field, select, combobox, date, number, each code box |
+  | Boxes, panels and cards | lg (16) | cards, tables, code blocks, diffs, menus, dialogs, command palette, drop zone, composer |
   | Anything nested | outer − gap | options in a list, a button inside a field |
 
   A select in a form is a field, so it matches the text field beside it; only
@@ -334,12 +323,16 @@ for real-looking services read as fake.
 
 ## 6. Overlays, without blur
 
-Blur is the most overused effect in generated UI. It smears text behind it,
-costs a compositing layer per element, and dates fast. Default to none.
+Heavy blur is the most overused effect in generated UI. It smears text
+behind it and dates fast. The only glass here is light, and it's one token.
 
-- Floating surfaces (menus, popovers, toasts, sheets) are opaque: the
-  surface color, a hairline and a shadow. They read as above the page
-  by shadow, not by frosting what's under them.
+- Small floating surfaces you open (menus, popovers, select lists, the
+  command palette) are light glass: `--ui-surface-glass` (the surface at
+  92%) over
+  `--ui-glass-blur` (4px), a hairline and a shadow. They still read as above
+  the page by shadow; the glass only softens what's under them. Text on
+  them passes contrast against the surface alone. Toasts, which land over
+  whatever is there unasked, and dialogs, drawers and sheets stay opaque.
 - Modal scrims: a plain dim, roughly black at 25–30% in light mode and
   50–55% in dark. No `backdrop-filter`.
 - Motion never blurs: letters, words and icons enter and leave with opacity

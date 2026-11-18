@@ -1,0 +1,23 @@
+/* The tab panels: each a short stack of text and a command, a group gap
+   under the tabs. */
+.panels {
+  margin-top: var(--ui-gap-group);
+}
+
+/* Only the selected panel is laid out: the others carry `hidden`, which a
+   plain display rule would override. */
+.panel:not([hidden]) {
+  display: grid;
+  gap: var(--ui-gap-stack);
+}
+
+.text {
+  max-width: var(--ui-measure);
+  margin: 0;
+  color: var(--ui-muted);
+  line-height: var(--ui-leading-prose);
+}
+
+.text a {
+  color: var(--ui-foreground);
+}

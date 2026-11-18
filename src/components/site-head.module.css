@@ -1,0 +1,18 @@
+/* The top bar: the mark at the left, the actions at the right, centered on
+   one line a small control tall. */
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-4);
+  min-height: var(--ui-control-sm);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  /* The last ghost button's icon, not its box, on the column's edge. */
+  margin-inline-end: calc(var(--ui-space-2) * -1);
+}
+

@@ -36,7 +36,6 @@ end, shows in full on hover (`title`), and one press selects all of it.
 | Prop | What it does |
 |---|---|
 | `label` | The visible label. Also names the buttons: "Copy RSVP link", "Show Wi-Fi password" |
-| `hideLabel` | Hides the label from sight; screen readers still read it |
 | `value` | What's shown, and what Copy puts on the clipboard |
 | `mono` | Set the value in the monospace face, a step smaller: keys, tokens, URLs, hashes |
 | `size` | `sm` 32px, `md` 40px (default), `lg` 48px: the control heights. Give the `action` button the same size |

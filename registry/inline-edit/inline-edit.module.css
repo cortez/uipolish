@@ -21,10 +21,9 @@
   width: fit-content;
 }
 
-/* Editing, it's a field: the resting edge, filled as a focused field is. */
 .root[data-editing] {
-  --inline-edge: var(--ui-border-strong);
-  background: var(--ui-field-focus-fill);
+  --inline-edge: var(--ui-field-focus);
+  background: var(--ui-surface);
   transition-duration: 0s;
 }
 
@@ -148,8 +147,8 @@
   mask-repeat: no-repeat;
   mask-position: 100% 0;
   animation:
-    inline-dim var(--ui-dur-base) var(--ui-ease-color) 300ms forwards,
-    inline-sweep var(--ui-dur-sweep) linear 300ms infinite;
+    inline-dim var(--ui-dur-base) var(--ui-ease-color) var(--ui-delay-busy) forwards,
+    inline-sweep var(--ui-dur-sweep) linear var(--ui-delay-busy) infinite;
 }
 
 @keyframes inline-dim {
@@ -209,7 +208,6 @@
   transition:
     opacity var(--ui-dur-instant) var(--ui-ease-exit),
     visibility 0s linear var(--ui-dur-instant);
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .error[data-shown] {
@@ -243,7 +241,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .input[aria-busy] {
-    animation: inline-dim var(--ui-dur-base) var(--ui-ease-color) 300ms forwards;
+    animation: inline-dim var(--ui-dur-base) var(--ui-ease-color) var(--ui-delay-busy) forwards;
     mask-position: 0 0;
   }
   .error[data-shown] .errorText {

@@ -1,0 +1,21 @@
+.header {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.list {
+  display: grid;
+  max-width: 480px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  padding-block: var(--ui-space-4);
+}
+
+.row + .row {
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}

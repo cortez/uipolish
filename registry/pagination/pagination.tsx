@@ -15,6 +15,7 @@ import {
 import { Button } from "../button/button";
 import { ButtonLink } from "../button/button-link";
 import { Icon } from "../icons/icons";
+import { TextMorph } from "../text-morph/text-morph";
 import styles from "./pagination.module.css";
 
 type PaginationProps = Omit<ComponentProps<"nav">, "children"> & {
@@ -214,17 +215,19 @@ export function Pagination({
     const to = Math.min(page * size, rows);
     const widestFrom = rows === 0 ? 0 : (count - 1) * size + 1;
     const known = total !== undefined && pageSize !== undefined;
+    // The shown range rolls the digits that change as you page; the sizer under it holds still.
+    const figure = (text: string, widest: boolean) => (widest ? text : <TextMorph>{text}</TextMorph>);
     const range = (a: number, b: number, widest = false) =>
       known ? (
         <>
           <span className={styles.range}>
-            {a === b && !widest ? numbers.format(a) : `${numbers.format(a)}–${numbers.format(b)}`}
+            {figure(a === b && !widest ? numbers.format(a) : `${numbers.format(a)}–${numbers.format(b)}`, widest)}
           </span>{" "}
           of {numbers.format(rows)}
         </>
       ) : (
         <>
-          Page <span className={styles.range}>{numbers.format(a)}</span> of {numbers.format(count)}
+          Page <span className={styles.range}>{figure(numbers.format(a), widest)}</span> of {numbers.format(count)}
         </>
       );
 
@@ -288,7 +291,9 @@ export function Pagination({
             <li className={styles.item} aria-hidden="true">
               <span className={styles.summary}>
                 <span className={styles.sizer}>{`Page ${count} of ${count}`}</span>
-                <span className={styles.text}>{status}</span>
+                <span className={styles.text}>
+                  <TextMorph>{status}</TextMorph>
+                </span>
               </span>
             </li>
           )}

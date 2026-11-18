@@ -35,7 +35,6 @@
   /* Must match the small button's label, so `ch` matches the numbers. */
   font: var(--ui-weight-medium) 14px / 1 var(--ui-font-sans);
   font-variant-numeric: tabular-nums;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 :is([dir="rtl"]) .root {
@@ -143,7 +142,7 @@
   inset-inline-start: 0;
   width: var(--pagination-slot);
   height: var(--pagination-height);
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-fill-strong);
   translate: calc(
       var(--pagination-dir) *
@@ -178,7 +177,6 @@
   font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
   white-space: nowrap;
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .sizer,
@@ -202,7 +200,6 @@
 .range {
   color: var(--ui-foreground);
   font-weight: var(--ui-weight-medium);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .srOnly {

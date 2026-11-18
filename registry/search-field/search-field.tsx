@@ -11,6 +11,7 @@ import {
   type Ref,
 } from "react";
 import { Icon } from "../icons/icons";
+import { Kbd } from "../kbd/kbd";
 import styles from "./search-field.module.css";
 
 type SearchFieldProps = Omit<ComponentProps<"input">, "type" | "size"> & {
@@ -143,9 +144,7 @@ export function SearchField({
         />
         <span className={styles.end}>
           {shortcut && !disabled && (
-            <kbd className={styles.key} aria-hidden="true">
-              {shortcut}
-            </kbd>
+            <Kbd keys={[shortcut]} size="sm" className={styles.key} aria-hidden="true" />
           )}
           <button
             type="button"

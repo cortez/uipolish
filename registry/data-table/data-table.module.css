@@ -17,7 +17,10 @@
   --data-table-edge: var(--ui-space-4);
   --data-table-fade: var(--ui-space-6);
   /* Mixed into the surface, not translucent, so sticky cells stay opaque. */
-  --data-table-selected: var(--ui-fill-solid);
+  --data-table-selected: light-dark(
+    color-mix(in oklch, var(--ui-accent) 7%, var(--ui-surface)),
+    color-mix(in oklch, var(--ui-accent) 15%, var(--ui-surface))
+  );
 
   position: relative;
   isolation: isolate;
@@ -30,7 +33,6 @@
   background: var(--ui-surface);
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 /* Drawn on top so the sticky header and column backgrounds never cover the edge. */
@@ -153,15 +155,14 @@
   display: flex;
   align-items: stretch;
   min-width: 0;
-  border-radius: calc(var(--ui-radius-sm) / 2);
+  border-radius: var(--ui-radius-xs);
   background: var(--ui-surface);
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
   white-space: nowrap;
   outline: none;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .sortButton,
@@ -245,7 +246,7 @@
   inset-inline-end: -12px;
   z-index: 2;
   width: 24px;
-  border-radius: calc(var(--ui-radius-sm) / 2);
+  border-radius: var(--ui-radius-xs);
   outline: none;
   touch-action: none;
 }
@@ -256,7 +257,7 @@
   inset-block: var(--ui-space-2);
   inset-inline-start: calc(50% - var(--ui-hairline) / 2);
   width: var(--ui-hairline);
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-border-strong);
   scale: 1 0.6;
   transition:
@@ -324,7 +325,7 @@
   gap: var(--ui-space-2);
   min-width: 0;
   padding-inline: var(--data-table-pad);
-  border-radius: calc(var(--ui-radius-sm) / 2);
+  border-radius: var(--ui-radius-xs);
   outline: none;
 }
 
@@ -459,7 +460,6 @@
 
 .footerWhere {
   font-weight: var(--ui-weight-medium);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* ---------- Loading and empty ---------- */
@@ -474,7 +474,7 @@
   position: relative;
   flex: 1 1 auto;
   min-width: 0;
-  animation: data-table-arrive var(--ui-dur-fast) var(--ui-ease-enter) 300ms both;
+  animation: data-table-arrive var(--ui-dur-fast) var(--ui-ease-enter) var(--ui-delay-busy) both;
 }
 
 .placeholderRows {

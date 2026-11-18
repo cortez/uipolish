@@ -9,9 +9,9 @@ strokes only the new one has draw in. A state is a name:
 `<Icon name={copied ? "check" : "copy"} />`. CSS transitions only, no
 library, and nothing ever changes the 16px box.
 
-Text field, Code block, Message thread, Prompt input, Reasoning, Tool steps,
-Sources, Dropdown menu, Toast, Dialog and Command palette use it. It's free
-because free components depend on it.
+Text field, Code block, Message thread, Prompt input, Response actions,
+Reasoning, Tool steps, Sidebar, Sources, Dropdown menu, Toast, Dialog and
+Command palette use it.
 
 **Sizes.** The icon draws at `--ui-icon-md` (16px). Size it to the text
 it sits with, from the scale only: `--ui-icon-md` beside 14-16px text and in
@@ -44,10 +44,10 @@ in a tile. Every chevron in the same role is the same size.
 | `arrow-up`/`down`/`left`/`right`, `send` | s, h1, h2 | Left and right share the shaft, so a flip moves only the head (up and down likewise). `send` is `arrow-up`. |
 | `chevron-up`/`down`/`left`/`right` | a, b | Two rigid arms, each turned 45° about its own midpoint. A flip turns both arms through level to the other side; they keep their length and the chevron stays centered. |
 | `mic` | capsule, cradle, stand | Mic to stop: the mic retracts the way it was drawn while the block sweeps in. |
-| `stop` | block | One 4-unit stroke round a small square, which round joins fill out to a rounded block, so it sweeps in like any stroke. Send to stop: the arrow retracts into its tip, the block sweeps in. |
-| `play`, `pause` | l, t | The left edge stays the left bar; the triangle's point (one bent stroke) straightens into the right bar, on the glide so it never bows past straight. |
+| `play`, `pause`, `stop` | a, b | Solid, not stroked: each is two filled four-point shapes with softly rounded corners, the points in the same order. Play is its triangle split down the middle, pause its two bars, stop its square split in half, so any one morphs into any other point to point (play to pause: the triangle's halves square off into the bars), over `--ui-dur-move` on the draw curve, easing in and out so the change of shape is visible, with no overshoot so the halves never part. Play's halves overlap, so at rest it reads as one triangle. The morph runs in every browser: CSS `d` where supported, a tween of the path where not (Safari). Send to stop: the arrow retracts into its tip while the square fades and grows in. |
 | `info`, `alert`, `check-circle` | ring, stem, dot (tick) | One ring; the stem and dot swap ends between `info` and `alert`, and the tick draws in for `check-circle`. `warning` is its own triangle. |
 | `more`, `pencil`, `sidebar` | dots; body, edge; frame, rail | Row and card overflow menus, rename or edit, and showing or hiding a side panel. |
+| `thumbs-up`, `thumbs-down`, `pin` | hand, cuff; head, point | Rating a reply, and pinning an item. Down is up turned half round point for point, so the two share keys. A pressed rating fills: set `fill: currentColor` on the icon. |
 | `upload`, `file`, `retry`, `calendar` | | Static. |
 | `home`, `compose`, `settings`, `help`, `clock`, `share`, `folder`, `paperclip`, `at`, `list`, `terminal`, `branch`, `gauge`, `panel` | | Static: an app's frame. Places, a new item, settings and help, history, sharing, files, attaching, mentioning, a plan, a terminal, a branch, an amount of effort, and showing or hiding a panel at the end (`sidebar` is the one at the start). `share` lifts its arrow 1px while the control around it is hovered or focused. |
 | `diff-added`, `diff-modified`, `diff-removed`, `diff-renamed` | frame, bar (+ stem, dot, head) | What happened to a file: one rounded square with a plus, a dot, a minus or an arrow. They share the square and the bar, so a change of kind morphs only the mark. |

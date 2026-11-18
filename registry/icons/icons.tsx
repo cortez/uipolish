@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type ComponentProps, type CSSProperties } from "react";
+import { useId, useLayoutEffect, useRef, useState, type ComponentProps, type CSSProperties } from "react";
 import styles from "./icons.module.css";
 
 /*
@@ -19,6 +19,9 @@ type Stroke = {
   cut?: boolean;
   /** Draw as a solid rounded block. */
   block?: boolean;
+  /** A filled shape with softly rounded corners (play, pause, stop). Solid
+   *  shapes morph point to point, and fade and scale in and out. */
+  solid?: boolean;
   /** Degrees, about its own midpoint. */
   rot?: number;
   /** Meets another stroke end to end at rest: morphs without overshoot and
@@ -95,23 +98,27 @@ const ICONS = {
   "chevron-down": { a: { d: CHEVRON_V[0], rot: 45 }, b: { d: CHEVRON_V[1], rot: -45 } },
   "chevron-left": { a: { d: CHEVRON_H[0], rot: -45 }, b: { d: CHEVRON_H[1], rot: 45 } },
   "chevron-right": { a: { d: CHEVRON_H[0], rot: 45 }, b: { d: CHEVRON_H[1], rot: -45 } },
-  stop: { block: { d: "M6 6 L10 6 L10 10 L6 10 Z", block: true } },
+  // Play, pause and stop are solid, and each is two four-point shapes with
+  // the corners in the same order (top-left, top-right, bottom-right,
+  // bottom-left): play is its triangle split down the middle, pause its two
+  // bars, stop its square split in half. So any one morphs into any other
+  // point to point, with nothing drawn in or erased.
+  stop: {
+    a: { d: "M4.5 4.5 L8 4.5 L8 11.5 L4.5 11.5 Z", solid: true },
+    b: { d: "M8 4.5 L11.5 4.5 L11.5 11.5 L8 11.5 Z", solid: true },
+  },
   mic: {
     capsule: { d: "M8 2.25a2.25 2.25 0 0 0-2.25 2.25v3.25a2.25 2.25 0 0 0 4.5 0V4.5A2.25 2.25 0 0 0 8 2.25Z" },
     cradle: { d: "M3.75 7.5a4.25 4.25 0 0 0 8.5 0" },
     stand: { d: "M8 11.75v2" },
   },
-  // Pause's right bar is drawn with play's commands (a line through its own
-  // midpoint), so it bends out into the triangle's point while the left bar
-  // stays put: one motion, nothing erased or drawn in. On the glide (seam),
-  // so the bar never bows past straight on its way back.
   play: {
-    l: { d: "M5.25 12.5 L5.25 3.5", seam: true },
-    t: { d: "M5.25 3.5 L12.25 8 L5.25 12.5", seam: true },
+    a: { d: "M4.75 3 L9.25 5.81 L9.25 10.19 L4.75 13 Z", solid: true },
+    b: { d: "M8.5 5.34 L12.75 8 L12.75 8 L8.5 10.66 Z", solid: true },
   },
   pause: {
-    l: { d: "M5.75 12.25 L5.75 3.75", seam: true },
-    t: { d: "M10.25 3.75 L10.25 8 L10.25 12.25", seam: true },
+    a: { d: "M4.25 3.5 L6 3.5 L6 12.5 L4.25 12.5 Z", solid: true },
+    b: { d: "M10 3.5 L11.75 3.5 L11.75 12.5 L10 12.5 Z", solid: true },
   },
   search: {
     ring: { d: "M11.75 7.25a4.5 4.5 0 1 1-9 0a4.5 4.5 0 1 1 9 0" },
@@ -170,6 +177,22 @@ const ICONS = {
     a: { d: "M3.75 8 L3.76 8" },
     dot: { d: "M8 8 L8.01 8" },
     b: { d: "M12.25 8 L12.26 8" },
+  },
+  /* Rating a reply. Down is up turned half round, point for point, so the
+     two share keys and a flip morphs. Fill the icon (fill: currentColor on
+     the svg) to show the rating is pressed. */
+  "thumbs-up": {
+    hand: { d: "M5.25 7.25 L7.6 2.5c.95 0 1.65.85 1.5 1.8l-.35 2.2h3.05a1.4 1.4 0 0 1 1.37 1.7l-.95 4.2a1.4 1.4 0 0 1-1.37 1.1H5.25Z" },
+    cuff: { d: "M5.25 7.25h-1.5a1 1 0 0 0-1 1v4.5a1 1 0 0 0 1 1h1.5Z" },
+  },
+  "thumbs-down": {
+    hand: { d: "M10.75 8.75 L8.4 13.5c-.95 0-1.65-.85-1.5-1.8l.35-2.2h-3.05a1.4 1.4 0 0 1-1.37-1.7l.95-4.2a1.4 1.4 0 0 1 1.37-1.1H10.75Z" },
+    cuff: { d: "M10.75 8.75h1.5a1 1 0 0 0 1-1v-4.5a1 1 0 0 0-1-1h-1.5Z" },
+  },
+  /* A push pin: keep a chat or an item at the top. */
+  pin: {
+    head: { d: "M5.25 2.75h5.5M6.5 2.75v3.5l-2 3h7l-2-3v-3.5" },
+    point: { d: "M8 9.25v4" },
   },
   pencil: {
     body: { d: "M10.25 3.25a1.5 1.5 0 0 1 2.12 0l.38.38a1.5 1.5 0 0 1 0 2.12L6.5 12 3 13l1-3.5Z" },
@@ -288,8 +311,8 @@ let morphD: boolean | undefined;
 const canMorphD = () => (morphD ??= typeof CSS !== "undefined" && CSS.supports("d", 'path("M0 0")'));
 
 function morphs(from: Stroke, to: Stroke) {
-  if (Boolean(from.block) !== Boolean(to.block) || Boolean(from.cut) !== Boolean(to.cut)) return false;
-  return from.d === to.d || (canMorphD() && shape(from.d) === shape(to.d));
+  if (Boolean(from.block) !== Boolean(to.block) || Boolean(from.cut) !== Boolean(to.cut) || Boolean(from.solid) !== Boolean(to.solid)) return false;
+  return from.d === to.d || shape(from.d) === shape(to.d);
 }
 
 function initial(name: IconName): State {
@@ -324,6 +347,44 @@ function next(prev: State, name: IconName): State {
 
 const HIDE = 0.3;
 
+const nums = (d: string) => (d.match(/-?[\d.]+(?:e-?\d+)?/g) ?? []).map(Number);
+
+/** The draw curve, close enough: eases in and out, so the middle of a
+ *  morph is on screen long enough to see. */
+const inOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+/**
+ * A stroke whose `d` morphs. Where CSS can transition `d`, the stylesheet
+ * does it; elsewhere this tweens the attribute itself, number by number,
+ * over --ui-dur-move, so a morph is a morph in every browser.
+ */
+function MorphPath({ d, ...props }: ComponentProps<"path"> & { d: string }) {
+  const ref = useRef<SVGPathElement>(null);
+  const shown = useRef(d);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    const from = shown.current;
+    shown.current = d;
+    if (!el || from === d || canMorphD() || shape(from) !== shape(d)) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const a = nums(from);
+    const b = nums(d);
+    const parts = d.split(/-?[\d.]+(?:e-?\d+)?/);
+    const ms = parseFloat(getComputedStyle(el).getPropertyValue("--ui-dur-move")) || 380;
+    const start = performance.now();
+    let frame = 0;
+    const step = (now: number) => {
+      const k = inOut(Math.min(1, (now - start) / ms));
+      el.setAttribute("d", parts.map((s, i) => (i < a.length ? s + (a[i] + (b[i] - a[i]) * k).toFixed(3) : s)).join(""));
+      if (k < 1) frame = requestAnimationFrame(step);
+    };
+    el.setAttribute("d", from);
+    frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
+  }, [d]);
+  return <path ref={ref} d={d} {...props} />;
+}
+
 // CSS `d` is set only after the first change; until then the attribute draws.
 function dash(l: Live, morphing: boolean): CSSProperties | undefined {
   const f = l.s.f ?? 0;
@@ -349,11 +410,11 @@ export function Icon({ name, className, ...props }: IconProps) {
 
   const cuts = state.live.filter((l) => l.s.cut);
   const path = (l: Live, extra?: string) => (
-    <path
+    <MorphPath
       key={l.id + (extra ?? "")}
       d={l.s.d}
       pathLength={1}
-      className={[styles.stroke, l.s.block && styles.block, l.s.seam && styles.seam, l.s.fx && styles[l.s.fx], extra].filter(Boolean).join(" ")}
+      className={[styles.stroke, l.s.block && styles.block, l.s.solid && styles.solid, l.s.seam && styles.seam, l.s.fx && styles[l.s.fx], extra].filter(Boolean).join(" ")}
       data-off={l.on ? undefined : ""}
       data-enter={l.enter ? "" : undefined}
       style={dash(l, state.gen > 0)}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { Button } from "../button/button";
 import { Icon } from "../icons/icons";
 import { Tooltip } from "../tooltip/tooltip";
 import styles from "./response-actions.module.css";
@@ -117,25 +118,27 @@ export function ResponseActions({ text, rating, onRate, onComment, onRetry, clas
     <div className={className ? `${styles.root} ${className}` : styles.root}>
       <div className={styles.row} role="group" aria-label="Response actions">
         <Tooltip content={copied ? "Copied" : "Copy"} describe={false}>
-          <button type="button" className={styles.action} aria-label="Copy response" onClick={copy}>
+          <Button variant="ghost" size="sm" className={styles.action} aria-label="Copy response" onClick={copy}>
             <Icon name={copied ? "check" : "copy"} />
-          </button>
+          </Button>
         </Tooltip>
         <Tooltip content="Good response" describe={false}>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className={styles.action}
             aria-label="Good response"
             aria-pressed={current === "up"}
             onClick={() => rate("up")}
           >
-            <ThumbIcon />
-          </button>
+            <Icon name="thumbs-up" className={styles.thumb} />
+          </Button>
         </Tooltip>
         <Tooltip content="Bad response" describe={false}>
-          <button
+          <Button
             ref={downRef}
-            type="button"
+            variant="ghost"
+            size="sm"
             className={styles.action}
             aria-label="Bad response"
             aria-pressed={current === "down"}
@@ -143,14 +146,14 @@ export function ResponseActions({ text, rating, onRate, onComment, onRetry, clas
             aria-controls={onComment ? panelId : undefined}
             onClick={() => rate("down")}
           >
-            <ThumbIcon down />
-          </button>
+            <Icon name="thumbs-down" className={styles.thumb} />
+          </Button>
         </Tooltip>
         {onRetry && (
           <Tooltip content="Retry" describe={false}>
-            <button type="button" className={styles.action} aria-label="Retry" onClick={onRetry}>
-              <RetryIcon />
-            </button>
+            <Button variant="ghost" size="sm" className={styles.action} aria-label="Retry" onClick={onRetry}>
+              <Icon name="retry" />
+            </Button>
           </Tooltip>
         )}
         <span className={styles.note} data-shown={note.shown || undefined} data-tone={note.tone} aria-hidden="true">
@@ -183,14 +186,15 @@ export function ResponseActions({ text, rating, onRate, onComment, onRetry, clas
                   Send
                 </button>
               </div>
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="sm"
                 className={styles.action}
                 aria-label="Skip feedback"
                 onClick={() => closeField(true)}
               >
                 <Icon name="close" />
-              </button>
+              </Button>
             </form>
           </div>
         </div>
@@ -200,32 +204,5 @@ export function ResponseActions({ text, rating, onRate, onComment, onRetry, clas
         {announcement}
       </span>
     </div>
-  );
-}
-
-/** Thumb up; `down` turns it over. */
-function ThumbIcon({ down }: { down?: boolean }) {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      width="16"
-      height="16"
-      aria-hidden="true"
-      focusable="false"
-      className={styles.thumb}
-      style={down ? { rotate: "180deg" } : undefined}
-    >
-      <path d="M5.25 7.25 7.6 2.5c.95 0 1.65.85 1.5 1.8l-.35 2.2h3.05a1.4 1.4 0 0 1 1.37 1.7l-.95 4.2a1.4 1.4 0 0 1-1.37 1.1H5.25Z" />
-      <path d="M5.25 7.25h-1.5a1 1 0 0 0-1 1v4.5a1 1 0 0 0 1 1h1.5Z" />
-    </svg>
-  );
-}
-
-function RetryIcon() {
-  return (
-    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false" className={styles.glyph}>
-      <path d="M2.75 8a5.25 5.25 0 1 0 1.6-3.78" />
-      <path d="M2.75 2.75v3h3" />
-    </svg>
   );
 }

@@ -1,0 +1,40 @@
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+.message {
+  composes: measure from "./preview.module.css";
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--ui-space-4);
+}
+
+.reserve {
+  composes: measure from "./preview.module.css";
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.reserve > * {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+.ghost {
+  visibility: hidden;
+}
+
+.prompt {
+  justify-self: end;
+  max-width: 80%;
+  margin: 0;
+  padding: var(--ui-space-2) var(--ui-space-4);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-fill);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}

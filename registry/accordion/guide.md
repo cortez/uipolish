@@ -71,10 +71,10 @@ not a call to action: the row itself is what you press.
 
 ## Layout
 
-Items are separated by space alone, never a drawn line. The title row is 46px; its focus line
+Items are separated by hairlines. The title row is 46px; its focus line
 reaches 12px past the text on every side, so titles and content stay
 aligned with the rest of the page. Open content ends 12px above the next
-title row, the same as a title, so open and collapsed rows keep one rhythm. The chevron sits on the title's first
+hairline, the same as a title, so open and collapsed rows keep one rhythm. The chevron sits on the title's first
 line when it wraps. Content is muted 15px text, at most 65 characters wide.
 
 **Meta.** The value is 13px, muted, in tabular figures, on the title's
@@ -101,7 +101,7 @@ its container: a long title wraps rather than widening it.
 | Content fades in, a beat after the box starts opening | `--ui-dur-fast` × 1.25 (200ms), 60ms delay | `--ui-ease-enter` |
 | Content fades out while the collapse is still easing in, so the text is gone before the edge reaches it | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |
 | Chevron flips: its tip moves, its ends stay | `Icon` | |
-| A `meta` string changes ("2 on" → "3 on"): digits roll, the width follows | `--ui-dur-move` | `--ui-ease-move` (`TextMorph`) |
+| A `meta` string changes ("2 on" → "3 on"): digits roll, the width follows | `--ui-dur-glide` | `--ui-ease-glide` (`TextMorph`) |
 
 Sections hold reading, so the accordion moves half again as slow as the
 panel tokens; `--accordion-pace` (1.25) on the root changes it in one place.

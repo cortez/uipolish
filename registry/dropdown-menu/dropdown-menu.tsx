@@ -14,6 +14,7 @@ import {
 import { Menu as BaseMenu } from "@base-ui/react/menu";
 import { Icon } from "../icons/icons";
 import { TextMorph } from "../text-morph/text-morph";
+import { Kbd } from "../kbd/kbd";
 import styles from "./dropdown-menu.module.css";
 
 /* Behavior (focus, keyboard, typeahead, submenus and their safe triangle,
@@ -199,9 +200,7 @@ function ItemBody({ id, leading, icon, shortcut, description, morph = false, tra
         )}
       </span>
       {shortcut && (
-        <kbd className={styles.shortcut} aria-hidden="true">
-          {shortcut}
-        </kbd>
+        <Kbd keys={[shortcut]} variant="plain" size="sm" className={styles.shortcut} aria-hidden="true" />
       )}
       {trailing}
     </>
@@ -322,10 +321,12 @@ type MenuRadioItemProps = ItemCommon & {
 export function MenuRadioItem({ value, closeOnSelect = true, disabled = false, ...props }: MenuRadioItemProps) {
   const id = useId();
   return (
-    // The chosen row shows as a quiet fill (data-checked), not a dot, so a
-    // radio row lines up with every other row: no column kept for a mark.
     <BaseMenu.RadioItem {...itemProps(id, props)} value={value} disabled={disabled} closeOnClick={closeOnSelect}>
-      <ItemBody id={id} {...props} />
+      <ItemBody
+        id={id}
+        {...props}
+        leading={<BaseMenu.RadioItemIndicator keepMounted className={`${styles.indicator} ${styles.dot}`} />}
+      />
     </BaseMenu.RadioItem>
   );
 }

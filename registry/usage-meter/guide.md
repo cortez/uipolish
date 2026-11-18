@@ -129,7 +129,7 @@ shows the surface, so neighboring colors never touch.
   wide as "100%", so the ring and the trigger never change width. The large
   figure isn't boxed (a box as wide as "200k" leaves a gap after "38k");
   when it gains or loses a digit, "of 200k tokens" slides on the text
-  morph's width spring instead of jumping.
+  morph's width glide instead of jumping.
 
 ## Compacting
 
@@ -141,7 +141,7 @@ secondary at warning, primary at danger. You run the compaction and pass
 |---|---|
 | `{ status: "running" }` | The button stays, busy: "Compacting…" with the label shimmering |
 | `{ status: "failed", error }` | Your error under the line, in the danger color, and "Try again" |
-| `{ status: "done", before, after }` | Once usage is back under `warning`: "Compacted: 124k → 38k" with a check, in place of the line and the button. The second figure counts down from `before` to `after`. The bar's segments slide to their new sizes and the ring empties back |
+| `{ status: "done", before, after }` | Once usage is back under `warning`: "Compacted: 124k → 38k" with a check, in place of the line and the button. The second figure rolls down from `before` to `after`. The bar's segments slide to their new sizes and the ring empties back |
 
 If usage climbs past `warning` again, the button comes back. Clear
 `compaction` whenever you like; nothing depends on it after "done".
@@ -149,30 +149,31 @@ If usage climbs past `warning` again, the button comes back. Clear
 ## Live updates
 
 Pass `used` and `segments` on every chunk while a reply streams. The ring and
-bar retarget smoothly mid-move, the figures morph digit by digit and nothing
+bar retarget smoothly mid-move, the figures roll digit by digit and nothing
 around them moves. Nothing is announced while it streams.
 
 ## Motion
 
 | What | Duration | Easing |
 |---|---|---|
-| Ring arc, mini bar and bar segments move to new amounts | `--ui-dur-move` | `--ui-ease-move` |
-| Figures and percentages: only the digits that differ change | text morph | `--ui-ease-move` |
+| Ring arc (`stroke-dashoffset`), mini bar and bar segments ease to new amounts | `--ui-dur-glide` | `--ui-ease-glide` |
+| Figures and percentages: digits that change roll, up as usage grows and down as it drops | text morph | `--ui-ease-glide` |
 | Tone colors: ring, percentage, icon, line, free track | `--ui-dur-instant` | `--ui-ease-color` |
 | Line icon: info → warning → alert | icon morph | from the icon set |
 | New line at a crossing, and the result, fade in | `--ui-dur-fast` | `--ui-ease-enter` |
 | Area under the legend eases to its new height | animated size | `--ui-ease-expand` |
-| Compacted figure counts down | `--ui-dur-move` | `--ui-ease-move`, sampled from the token |
+| Compacted figure rolls down from `before` to `after` | text morph | `--ui-ease-glide` |
 | Popover opens and closes | see popover | |
 
-The countdown is the one place a number passes through the values in
-between. It happens once, because the person pressed a button, and the size
-of the drop is the result they asked for. It lands with the bar, on the same
-spring.
+The ring, the bars and the figures all land on the glide, the spring
+without overshoot: they're held by a track, so they reach the value without
+passing it, and a full ring never laps itself. While a reply streams, the
+figures show the latest value at most five times a second, and the last
+value always lands.
 
 Under `prefers-reduced-motion: reduce` the ring, bar and segments jump to
-their new amounts, the figures swap, nothing fades in and the countdown shows
-the result at once. Color changes stay.
+their new amounts, the figures swap, nothing fades in and the compacted
+figure shows the result at once. Color changes stay.
 
 ## Accessibility
 

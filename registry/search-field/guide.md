@@ -41,7 +41,7 @@ always `search`.
 |---|---|
 | `label` | The field's name for screen readers. Hidden unless `showLabel` is set |
 | `showLabel` | Show the label above the field, as in a form |
-| `shortcut` | A single key, such as `"/"`. Pressing it anywhere but in another field focuses this one and selects what's in it; its label shows at the end while the field is empty and something else has focus. Set as `aria-keyshortcuts`. For ⌘K, use the command palette |
+| `shortcut` | A single key, such as `"/"`. Pressing it anywhere but in another field focuses this one and selects what's in it; its label (a small `Kbd`) shows at the end while the field is empty and something else has focus. Set as `aria-keyshortcuts`. For ⌘K, use the command palette |
 | `loading` | Results are on their way: after 300ms the magnifier breathes |
 | `onClear` | Called after the clear button or Escape empties the field, after `onChange` |
 
@@ -53,7 +53,8 @@ an empty value whether the field is controlled or not.
 | State | What you see | How |
 |---|---|---|
 | Empty | Magnifier, placeholder, and the key label if there is one | |
-| Focus | Fills with `--ui-field-focus-fill` at once, the edge stays; the key label fades out | `:focus-within` on the shell |
+| Hover | Edge one step darker | `@media (hover: hover)` |
+| Focus | Edge darkens and thickens to 1px at once; the key label fades out | `:focus-within` on the shell |
 | Has text | The clear button fades in at the end | `data-filled` |
 | Loading | After 300ms, the magnifier breathes between full and 30% | `loading`, `aria-busy` on the input |
 | Disabled | 50% opacity; no clear button, no key label, the shortcut is off | native `disabled` |

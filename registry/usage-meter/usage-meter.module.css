@@ -16,7 +16,7 @@
   height: var(--ui-control-sm);
   padding: 0 12px 0 10px;
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: none;
   color: var(--ui-muted);
   isolation: isolate;
@@ -86,7 +86,10 @@
   }
 }
 
-/* Starts at twelve o'clock and fills clockwise. */
+/* Starts at twelve o'clock and fills clockwise. The arc, the mini bar and the
+   breakdown's segments ease to a new amount on the glide: they're held by
+   their track, so they land on the value without passing it (a full ring
+   never laps itself). */
 .ring {
   flex-shrink: 0;
   width: 16px;
@@ -114,7 +117,7 @@
   stroke-linecap: round;
   stroke-dasharray: 100 200;
   transition:
-    stroke-dashoffset var(--ui-dur-move) var(--ui-ease-move),
+    stroke-dashoffset var(--ui-dur-glide) var(--ui-ease-glide),
     stroke var(--ui-dur-instant) var(--ui-ease-color),
     opacity var(--ui-dur-instant) var(--ui-ease-color);
 }
@@ -131,7 +134,7 @@
   width: 20px;
   height: 4px;
   overflow: hidden;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-fill-strong);
 }
 
@@ -143,7 +146,7 @@
   background: var(--usage-arc);
   translate: calc((var(--usage) - 1) * 100%) 0;
   transition:
-    translate var(--ui-dur-move) var(--ui-ease-move),
+    translate var(--ui-dur-glide) var(--ui-ease-glide),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
@@ -227,9 +230,8 @@
 .title {
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .figure {
@@ -246,10 +248,9 @@
 .used {
   font-variant-numeric: tabular-nums;
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-semibold);
+  font-weight: var(--ui-weight-title);
   line-height: var(--ui-leading-2xl);
   white-space: nowrap;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .of {
@@ -267,7 +268,6 @@
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
   transition: color var(--ui-dur-instant) var(--ui-ease-color);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* Each segment is a full-width layer clipped to its span, so a change slides its edges
@@ -277,7 +277,7 @@
   position: relative;
   height: 8px;
   overflow: hidden;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
 }
 
 /* From the danger tone the bar gets an edge, a hairline off it, so it still says "nearly out" once
@@ -295,7 +295,7 @@
   /* min(used × 1000, 1) is 0 when nothing is used, so an empty bar has no gap at its start. */
   clip-path: inset(0 0 0 calc(var(--used) * 100% + min(var(--used) * 1000, 1) * 2px));
   transition:
-    clip-path var(--ui-dur-move) var(--ui-ease-move),
+    clip-path var(--ui-dur-glide) var(--ui-ease-glide),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
@@ -309,7 +309,7 @@
   background: var(--usage-other);
   clip-path: inset(0 calc((1 - var(--end)) * 100% + 2px) 0 calc(var(--start) * 100%));
   transition:
-    clip-path var(--ui-dur-move) var(--ui-ease-move),
+    clip-path var(--ui-dur-glide) var(--ui-ease-glide),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
@@ -362,7 +362,7 @@
 .swatch {
   width: 8px;
   height: 8px;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--usage-other);
   transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
@@ -444,11 +444,7 @@
 
 .countBox {
   justify-items: start;
-}
-
-.count {
   font-weight: var(--ui-weight-medium);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .message[data-enter],

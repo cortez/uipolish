@@ -1,0 +1,21 @@
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+.reserve {
+  composes: measure from "./preview.module.css";
+  display: grid;
+  align-items: start;
+}
+
+.reserve > * {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+.ghost {
+  visibility: hidden;
+}

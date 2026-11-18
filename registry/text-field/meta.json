@@ -2,9 +2,10 @@
   "name": "text-field",
   "title": "Text field",
   "summary": "Labeled input that validates when you leave it and clears the error as soon as the value is fixed. The error takes the hint’s line, so nothing shifts.",
-  "version": "0.3.0",
+  "blurb": "A labeled input that validates when you leave it.",
+  "version": "0.1.4",
   "dependencies": [
-    "icons",
-    "text"
+    "field",
+    "icons"
   ]
 }

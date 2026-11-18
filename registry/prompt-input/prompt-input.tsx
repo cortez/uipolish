@@ -15,6 +15,7 @@ import {
   type ReactNode,
   type Ref,
 } from "react";
+import { Button } from "../button/button";
 import { Icon } from "../icons/icons";
 import { TextMorph } from "../text-morph/text-morph";
 import styles from "./prompt-input.module.css";
@@ -361,9 +362,9 @@ export function PromptInput({
         <ul className={styles.suggestions} aria-label="Suggestions">
           {suggestions.map((s) => (
             <li key={s}>
-              <button type="button" className={styles.suggestion} onClick={() => fillSuggestion(s)} disabled={disabled}>
+              <Button variant="secondary" size="sm" className={styles.suggestion} onClick={() => fillSuggestion(s)} disabled={disabled}>
                 {s}
-              </button>
+              </Button>
             </li>
           ))}
         </ul>
@@ -390,7 +391,7 @@ export function PromptInput({
                   ) : (
                     <>
                       <span className={styles.fileIcon} aria-hidden="true">
-                        <FileIcon />
+                        <Icon name="file" />
                       </span>
                       <span className={styles.fileText}>
                         <span className={styles.fileName} title={file.name}>
@@ -441,15 +442,16 @@ export function PromptInput({
         <div className={styles.toolbar}>
           {allowFiles && (
             <>
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="sm"
                 className={styles.iconButton}
                 aria-label="Attach files"
                 disabled={disabled}
                 onClick={() => fileInputRef.current?.click()}
               >
                 <Icon name="plus" />
-              </button>
+              </Button>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -465,8 +467,9 @@ export function PromptInput({
             </>
           )}
           <div className={styles.footer}>{footer}</div>
-          <button
-            type="button"
+          <Button
+            variant="primary"
+            size="sm"
             className={styles.send}
             data-state={streaming ? "stop" : canSend ? "ready" : "empty"}
             aria-label={streaming ? "Stop generating" : "Send message"}
@@ -483,13 +486,11 @@ export function PromptInput({
             <span className={styles.sendLabel} aria-hidden="true">
               <TextMorph>{streaming ? " Stop" : ""}</TextMorph>
             </span>
-          </button>
+          </Button>
         </div>
 
         <div className={styles.dropzone} aria-hidden="true">
-          <svg viewBox="0 0 16 16">
-            <path d="M8 10.5V2.75M4.75 6 8 2.75 11.25 6M2.75 10.25v1.5a1.5 1.5 0 0 0 1.5 1.5h7.5a1.5 1.5 0 0 0 1.5-1.5v-1.5" />
-          </svg>
+          <Icon name="upload" />
           Drop files to attach
         </div>
       </div>
@@ -534,14 +535,5 @@ function Thumbnail({ file }: { file: File }) {
         e.currentTarget.dataset.loaded = "true";
       }}
     />
-  );
-}
-
-function FileIcon() {
-  return (
-    <svg viewBox="0 0 16 16">
-      <path d="M9.25 2H5a1.25 1.25 0 0 0-1.25 1.25v9.5A1.25 1.25 0 0 0 5 14h6a1.25 1.25 0 0 0 1.25-1.25V5L9.25 2Z" />
-      <path d="M9.25 2v3h3" />
-    </svg>
   );
 }

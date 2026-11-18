@@ -2,7 +2,8 @@
   "name": "sidebar",
   "title": "Sidebar",
   "summary": "The app sidebar for an AI product: a workspace switcher, items with counts and shortcuts, folding sections, a recent chats list with rename, pin and delete, and an account menu. Collapses to an icon rail with one gliding tooltip, and becomes a drawer on phones.",
-  "version": "0.1.8",
+  "blurb": "The app sidebar for an AI product, with chats and an account.",
+  "version": "0.2.1",
   "dependencies": [
     "button",
     "drawer",

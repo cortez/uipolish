@@ -79,9 +79,9 @@ Disabled options are skipped by the keys and can't be chosen.
 |---|---|---|
 | Rest | Value, chevron; hairline edge (`md`) or light fill (`sm`) | |
 | Placeholder | Placeholder in the subtle text color | nothing chosen |
-| Hover | Fills with `--ui-field-focus-fill` (`md`), fill one step darker (`sm`); the edge never changes | `@media (hover: hover)` |
-| Open | The same fill, held while the list is open; chevron flips | `[data-popup-open]` |
-| Focus | `md`: the field focus fill, at once; the edge stays. `sm`: a line just inside the pill | `:focus-visible`, never animated |
+| Hover | Edge one step darker (`md`), fill one step darker (`sm`) | `@media (hover: hover)` |
+| Open | The hover edge, easing in and out with the list over `--ui-dur-instant`; chevron flips. The thicker focus edge is only for keyboard focus, so a click or tap never rings it | `[data-popup-open]` |
+| Focus | `md`: edge darkens and thickens, inside the field. `sm`: a line just inside the pill | `:focus-visible`, never animated |
 | Invalid | Danger edge, error with an icon in the hint's place | `aria-invalid` |
 | Disabled | 50% opacity, default cursor | `disabled`, `[data-disabled]` |
 | Highlighted option | One rounded fill under the option, sliding between options | `[data-highlighted]`, pointer or keyboard |
@@ -103,9 +103,10 @@ Disabled options are skipped by the keys and can't be chosen.
   only, and is at most 320px tall (less when the viewport has less room:
   `--available-height`).
 - With a hint, validation or an outside error, one message line is always
-  reserved, so an error appearing moves nothing.
+  reserved, so an error appearing moves nothing. It's Field's
+  `FieldMessage`, the same line as under a text field.
 
-The open list's edge is the one in `--ui-shadow-floating`: the same outline color as the field (`--ui-border-strong`), drawn once. Don't add a ring of your own on top; two rings read as a darker edge. Its fill is glass: `--ui-surface-floating` (the surface at 93%) over `--ui-blur-floating`, with `--ui-glass-edge`, a light line inside the top edge, so it reads as a solid panel with a hint of what's behind. For a solid panel set them to `var(--ui-surface)`, `none` and `0 0 transparent`.
+The open list's edge is the one in `--ui-shadow-floating`: the same outline color as the field (`--ui-border-strong`), drawn once. Don't add a ring of your own on top; two rings read as a darker edge.
 
 ## Motion
 
@@ -116,7 +117,7 @@ The open list's edge is the one in `--ui-shadow-floating`: the same outline colo
 | List closes | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |
 | Highlight moves between options | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 | Chevron flips: its tip moves, its ends stay | `Icon` | |
-| Error in | `--ui-dur-fast` (160ms), fade and 3px drop | `--ui-ease-enter` |
+| Hint and error trade places (Field's `FieldMessage`) | `--ui-dur-instant` (120ms) out, `--ui-dur-fast` (160ms) in | `--ui-ease-color`, `--ui-ease-enter` |
 
 The width change is the one place a select moves its neighbors, and only in
 answer to the user's choice. Under `prefers-reduced-motion: reduce` the

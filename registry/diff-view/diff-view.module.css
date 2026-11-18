@@ -42,9 +42,8 @@
   color: var(--ui-muted);
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-md);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* On the inner text so its mask multiplies with the truncation fade. */
@@ -64,7 +63,6 @@
   font: var(--ui-weight-medium) var(--ui-text-sm) / var(--ui-leading-md) var(--ui-font-mono);
   font-variant-ligatures: none;
   font-variant-numeric: tabular-nums;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .added,
@@ -83,7 +81,7 @@
 
 .scroller {
   overflow: auto;
-  border-radius: 0 0 var(--ui-radius-md) var(--ui-radius-md);
+  border-radius: 0 0 var(--ui-radius-lg) var(--ui-radius-lg);
   overscroll-behavior-x: contain;
   scrollbar-width: thin;
   scrollbar-color: var(--ui-border-strong) transparent;
@@ -100,7 +98,6 @@
   padding-block: var(--ui-space-1);
   font: var(--ui-weight-regular) var(--ui-text-sm) / var(--diff-line) var(--ui-font-mono);
   font-variant-ligatures: none;
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .line {
@@ -171,7 +168,6 @@
   color: var(--ui-muted);
   font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-md) var(--ui-font-sans);
   text-align: center;
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .foldButton {
@@ -191,7 +187,6 @@
   transition:
     background-color var(--ui-dur-instant) var(--ui-ease-color),
     color var(--ui-dur-instant) var(--ui-ease-color);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 @media (hover: hover) {
@@ -243,7 +238,6 @@
   margin-inline-start: var(--ui-space-2);
   color: var(--ui-subtle);
   font-weight: var(--ui-weight-regular);
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .foldBody {
@@ -266,7 +260,7 @@
 
 .foldBody[data-open] .foldInner {
   opacity: 1;
-  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) 60ms;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
 }
 
 .srOnly {

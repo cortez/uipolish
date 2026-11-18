@@ -25,9 +25,8 @@
   composes: wrap from "../text/text.module.css";
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-md);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .actions {
@@ -36,12 +35,7 @@
   flex-shrink: 0;
 }
 
-/* Copy is plain text: no fill, no edge, no icon, quiet in the corner;
-   it turns to the text color on hover. */
 .action.action {
-  --button-bg: transparent;
-  --button-bg-hover: transparent;
-  --button-bg-press: transparent;
   padding-inline: var(--ui-space-3);
   color: var(--ui-muted);
 }
@@ -50,6 +44,12 @@
   .action.action:hover {
     color: var(--ui-foreground);
   }
+}
+
+.action.action[aria-pressed="true"] {
+  --button-bg: var(--ui-fill);
+  --button-bg-hover: var(--ui-fill-strong);
+  color: var(--ui-foreground);
 }
 
 @media (pointer: coarse) {
@@ -109,6 +109,10 @@
   counter-reset: line;
 }
 
+.scroller[data-wrap] .pre {
+  width: auto;
+}
+
 .code {
   display: block;
   color: var(--ui-foreground);
@@ -117,6 +121,11 @@
   line-height: var(--ui-leading-md);
   tab-size: 2;
   white-space: pre;
+}
+
+.scroller[data-wrap] .code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .line {
@@ -140,7 +149,7 @@
   user-select: none;
 }
 
-.pre[data-numbers] .line {
+.scroller:not([data-wrap]) .pre[data-numbers] .line {
   grid-template-columns: calc(var(--digits) * 1ch) max-content;
 }
 

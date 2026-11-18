@@ -1,0 +1,31 @@
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--ui-space-4);
+}
+
+.wide {
+  --number-width: 152px;
+}
+
+/* Full width, like the text field above it. */
+.full {
+  --number-width: 100%;
+  justify-items: stretch;
+}
+
+/* Room for the widest total, so a longer one never rewraps the row. */
+.total {
+  display: grid;
+  min-inline-size: 10ch;
+  gap: 6px;
+  margin: 0;
+  line-height: var(--ui-leading-md);
+}
+
+.amount {
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-control-md);
+  font-variant-numeric: tabular-nums;
+}

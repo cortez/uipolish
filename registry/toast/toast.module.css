@@ -2,7 +2,7 @@
   position: fixed;
   z-index: 50;
   bottom: max(var(--ui-space-4), env(safe-area-inset-bottom));
-  width: min(320px, 100vw - 2 * var(--ui-space-4));
+  width: min(356px, 100vw - 2 * var(--ui-space-4));
   outline: none;
   font-family: var(--ui-font-sans);
 }
@@ -16,11 +16,11 @@
 }
 
 .item {
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  /* A quiet card: 12px in, 16 at the start where the icon is, on the box
+     radius. The buttons hang off the title's line so they never make the
+     card taller than its text. */
   --toast-inset: var(--ui-space-3);
-  --toast-close: 24px;
-  /* A plain box: the medium corner, like a field or a menu row, not a pill. */
-  --toast-radius: var(--ui-radius-md);
+  --toast-radius: var(--ui-radius-lg);
   position: absolute;
   right: 0;
   bottom: 0;
@@ -52,7 +52,12 @@
 
 .card {
   position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+  padding: var(--toast-inset) var(--toast-inset) var(--toast-inset) var(--ui-space-4);
   border-radius: var(--toast-radius);
+  /* Opaque: a toast lands over whatever is there, so nothing shows through. */
   background: var(--ui-surface);
   box-shadow: var(--ui-shadow-floating);
   color: var(--ui-foreground);
@@ -66,6 +71,12 @@
     clip-path var(--ui-dur-move) var(--ui-ease-move),
     translate var(--ui-dur-snap) var(--ui-ease-snap);
   animation: toast-in var(--ui-dur-base) var(--ui-ease-enter);
+}
+
+/* A toast stacked behind the front one shows only its edge. */
+.card > * {
+  opacity: var(--toast-content, 1);
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-color);
 }
 
 .item[data-swiping] .card {
@@ -96,46 +107,44 @@
   outline-offset: var(--ui-ring-offset);
 }
 
-.content {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--ui-space-3);
-  /* As tall as its words: a one-line message is one 32px row and 8 above and below. */
-  padding: var(--ui-space-2) var(--toast-inset) var(--ui-space-2)
-    calc(var(--toast-inset) + (var(--toast-close) - 16px) / 2);
-  opacity: var(--toast-content, 1);
-  transition: opacity var(--ui-dur-fast) var(--ui-ease-color);
-}
 
+/* The icon, level with the title's line. */
 .icon {
   display: grid;
   place-items: center;
   flex-shrink: 0;
   width: var(--ui-icon-md);
-  height: var(--ui-control-sm);
+  height: var(--ui-leading-md);
   color: var(--ui-foreground);
 }
 
-.icon svg {
-  width: var(--ui-icon-md);
-  height: var(--ui-icon-md);
-  stroke-width: var(--ui-icon-stroke);
+/* Action and dismiss: 32px buttons centered on the title's line, so the
+   row stays as tall as the text. */
+.action,
+.close {
+  flex-shrink: 0;
+  margin-block: calc((var(--ui-leading-md) - var(--ui-control-sm)) / 2);
 }
 
-/* Relies on pathLength={1} on the path, which makes the dash math length-free. */
-.tick {
-  stroke-dasharray: 1 2;
-  animation: toast-tick var(--ui-dur-base) var(--ui-ease-draw) 120ms backwards;
+.close {
+  margin-inline-start: calc(var(--ui-space-2) * -1);
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
 }
 
-@keyframes toast-tick {
-  from {
-    stroke-dashoffset: 1.05;
-  }
-  to {
-    stroke-dashoffset: 0;
+/* Dismiss shows when the toast is pointed at or focused; on touch it's
+   always there. */
+.item:is(:hover, :focus-within) .close,
+.close:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .close {
+    opacity: 1;
   }
 }
+
 
 .item[data-type="error"] .icon {
   color: var(--ui-danger-text);
@@ -145,20 +154,22 @@
   color: var(--ui-muted);
 }
 
+.item[data-type="success"] .icon {
+  color: var(--ui-success-text);
+}
+
 .text {
   display: grid;
   flex: 1;
   gap: 2px;
   min-width: 0;
-  padding-block: calc((var(--ui-control-sm) - var(--ui-leading-md)) / 2);
 }
 
 .title {
   margin: 0;
   font-size: var(--ui-text-md);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-title);
   line-height: var(--ui-leading-md);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .description {
@@ -169,58 +180,11 @@
   text-wrap: pretty;
 }
 
-.action {
-  flex-shrink: 0;
-}
 
-.close {
-  position: relative;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: var(--toast-close);
-  height: var(--toast-close);
-  margin: calc(var(--toast-inset) - var(--ui-space-3)) 0 0 calc(var(--ui-space-1) * -1);
-  padding: 0;
-  border: 0;
-  border-radius: var(--ui-radius-full);
-  background: transparent;
-  color: var(--ui-subtle);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition:
-    background-color var(--ui-dur-instant) var(--ui-ease-color),
-    color var(--ui-dur-instant) var(--ui-ease-color);
-}
 
-.close::after {
-  content: "";
-  position: absolute;
-  inset: -8px;
-}
 
-.close svg {
-  width: var(--ui-icon-md);
-  height: var(--ui-icon-md);
-  pointer-events: none;
-}
 
-@media (hover: hover) {
-  .close:hover {
-    background: var(--ui-fill);
-    color: var(--ui-foreground);
-  }
-}
 
-.close:active {
-  background: var(--ui-fill-strong);
-  transition-duration: var(--ui-dur-press);
-}
-
-.close:focus-visible {
-  outline: var(--ui-ring-focus);
-  outline-offset: var(--ui-ring-offset);
-}
 
 /* Registered so the gradient's radius can animate. */
 @property --toast-dot {
@@ -253,15 +217,11 @@
   }
 }
 
-.srOnly {
-  composes: srOnly from "../text/text.module.css";
-}
 
 @keyframes toast-in {
   from {
     opacity: 0;
-    transform: translateY(4px);
-    filter: blur(2px);
+    transform: translateY(4px) scale(0.98);
   }
 }
 
@@ -290,9 +250,6 @@
     transition: none;
     animation-name: toast-fade;
     animation-duration: var(--ui-dur-fast);
-  }
-  .tick {
-    animation: none;
   }
   .pulse {
     --toast-dot: 2.75px;

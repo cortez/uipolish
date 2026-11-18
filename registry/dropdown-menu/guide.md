@@ -35,8 +35,8 @@ highlight, the held width and the in-place confirmations.
 | `MenuItem` | `menuitem` | `onSelect`, `icon`, `shortcut`, `description`, `variant="danger"`, `disabled`; `closeOnSelect={false}` and `busy` to confirm in place |
 | `MenuCheckboxItem` | `menuitemcheckbox` | `checked`, `onCheckedChange`; keeps the menu open unless `closeOnSelect` |
 | `MenuRadioGroup` / `MenuRadioItem` | `group` / `menuitemradio` | `value`, `onValueChange`, `label`; a radio closes the menu unless `closeOnSelect={false}` |
-| `MenuGroup` | `group` | `label` is shown above the items and names the group; when the rows keep a leading column (an icon or a check), the label starts where their text does |
-| `MenuSeparator` | `separator` | Space between groups (8px); no drawn line |
+| `MenuGroup` | `group` | `label` is shown above the items and names the group |
+| `MenuSeparator` | `separator` | |
 | `MenuSub` | `menuitem` with `aria-haspopup="menu"` + `menu` | `label`, `icon`; children are the submenu's items |
 
 ## Confirming in place
@@ -133,7 +133,7 @@ learn they exist, but can't be activated.
 | Pressed | Fill darkens to 16% in 80ms | `:active` |
 | Danger | Red text and icon; the highlight turns red-tinted | `variant="danger"` |
 | Disabled | 50% opacity, default cursor, optional reason on a second line | `disabled`, `description` → `data-disabled` |
-| Checked | Check in the leading slot for a checkbox; a quiet fill (`--ui-fill`) behind the chosen radio row, with no mark and no column kept for one | `aria-checked`, `data-checked` |
+| Checked | Check for a checkbox, dot for a radio, in the leading slot | `aria-checked`, `data-checked` |
 | Confirmed in place | Menu stays open, label morphs ("Copied"), width held | `closeOnSelect={false}` |
 | Busy | Label dims under a moving light band after 120ms; presses ignored, no press fill; focus stays | `busy` → `aria-busy` |
 | Submenu open | Its item keeps the highlight; chevron at the end | `aria-expanded`, `data-popup-open` |
@@ -142,7 +142,7 @@ learn they exist, but can't be activated.
 When any item has an icon or indicator, every label in that menu starts on
 the same line.
 
-The menu's edge is the one in `--ui-shadow-floating`: the same outline color as fields and secondary buttons (`--ui-border-strong`), drawn once. Don't add a ring of your own on top; two rings read as a darker edge. Its fill is glass: `--ui-surface-floating` (the surface at 93%) over `--ui-blur-floating`, with `--ui-glass-edge`, a light line inside the top edge, so it reads as a solid panel with a hint of what's behind. For a solid panel set them to `var(--ui-surface)`, `none` and `0 0 transparent`.
+The menu's edge is the one in `--ui-shadow-floating`: the same outline color as fields and secondary buttons (`--ui-border-strong`), drawn once. Don't add a ring of your own on top; two rings read as a darker edge.
 
 ## Motion
 
@@ -174,7 +174,7 @@ and a busy label dims to 50% and holds still.
 - Focus moves into the menu on open: to the first or last item from the
   keyboard, to the menu itself when opened with the pointer, so the arrow
   keys work straight away. On close it returns to the trigger.
-- Shortcut hints are visual (`aria-hidden`); pass the real shortcut as
+- Shortcut hints are a plain `Kbd`, visual only (`aria-hidden`); pass the real shortcut as
   `keyshortcuts` (for example `"Meta+D"`) so assistive tech can announce it.
 - `description` is linked with `aria-describedby`, so a disabled item says
   why: "Publish menu, dimmed. Needs the host's approval first."

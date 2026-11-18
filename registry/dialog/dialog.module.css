@@ -47,29 +47,23 @@
   font-family: var(--ui-font-sans);
   overflow: clip;
   outline: none;
-  /* Arrives like a popover, a block's size: fades, scales up from 0.97 and
-     clears a 2px blur. No spring: nothing travels, it comes into focus.
-     Always from its own center (from its bottom edge when docked on a
-     phone), whatever opened it: the origin is fixed, not a prop. */
-  transform-origin: 50% 50%;
+  /* Arrives the same way every time, from its own center: fades and scales
+     up from 0.97. Nothing travels or blurs. */
   transition:
     opacity var(--ui-dur-fast) var(--ui-ease-enter),
-    scale var(--ui-dur-base) var(--ui-ease-enter),
-    filter var(--ui-dur-base) var(--ui-ease-enter);
+    scale var(--ui-dur-base) var(--ui-ease-enter);
 }
 
 .modal[data-starting-style],
 .modal[data-ending-style] {
   opacity: 0;
   scale: 0.97;
-  filter: blur(2px);
 }
 
 .modal[data-ending-style] {
   transition:
     opacity var(--ui-dur-instant) var(--ui-ease-exit),
-    scale var(--ui-dur-instant) var(--ui-ease-exit),
-    filter var(--ui-dur-instant) var(--ui-ease-exit);
+    scale var(--ui-dur-instant) var(--ui-ease-exit);
 }
 
 /* Phones: docked at the bottom, in reach of a thumb, 8px off the edges.
@@ -81,7 +75,6 @@
   }
   .modal {
     max-height: calc(100dvh - var(--ui-space-5) - max(var(--ui-space-2), env(safe-area-inset-bottom, 0px)));
-    transform-origin: 50% 100%;
   }
 }
 
@@ -96,7 +89,6 @@
   .modal[data-starting-style],
   .modal[data-ending-style] {
     scale: none;
-    filter: none;
   }
 }
 
@@ -128,7 +120,6 @@
   transition:
     opacity var(--ui-dur-fast) var(--ui-ease-enter),
     scale var(--ui-dur-base) var(--ui-ease-enter),
-    filter var(--ui-dur-base) var(--ui-ease-enter),
     width var(--ui-dur-panel) var(--ui-ease-expand);
 }
 
@@ -169,14 +160,10 @@
 /* The top is a step short of the sides: the title's line height already
    puts air above its capitals, so the two edges read the same. */
 .header {
-  position: relative;
   display: flex;
   align-items: flex-start;
   gap: var(--ui-space-3);
-  /* The title keeps clear of Close, which sits in the corner. */
-  padding: calc(var(--dialog-pad) - var(--ui-space-1))
-    calc(var(--corner) + var(--ui-control-md) * var(--ui-capsule) + var(--ui-space-3)) var(--ui-space-4)
-    var(--dialog-pad);
+  padding: calc(var(--dialog-pad) - var(--ui-space-1)) var(--dialog-pad) var(--ui-space-4);
 }
 
 .heading {
@@ -191,11 +178,10 @@
   color: var(--ui-foreground);
   font-family: var(--ui-font-display);
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-semibold);
+  font-weight: var(--ui-weight-title);
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-heading);
   text-wrap: balance;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .description {
@@ -209,14 +195,27 @@
 /* The close button is a ghost icon Button: a capsule like every other.
    Centered on the title's first line, with its X on the content's edge.
    Doubled to win over the button's own size, whatever order sheets load in. */
-/* Close is a full-size secondary icon button, the standard 40px capsule
-   with its edge and fill, so it reads as a button. It sits --corner from
-   the top and from the end, the same distance both ways, concentric with
-   the panel's corner (whose radius is --corner plus half the button). */
 .close.close {
-  position: absolute;
-  top: var(--corner);
-  inset-inline-end: var(--corner);
+  --close-size: var(--ui-control-sm);
+  --close-width: calc(var(--close-size) * var(--ui-capsule));
+  flex-shrink: 0;
+  width: var(--close-width);
+  height: var(--close-size);
+  margin: calc(var(--ui-leading-2xl) / 2 - var(--close-size) / 2) calc((16px - var(--close-width)) / 2) 0 0;
+  color: var(--ui-muted);
+}
+
+@media (hover: hover) {
+  .close.close:hover {
+    color: var(--ui-foreground);
+  }
+}
+
+/* 40px on touch screens, the finger's size. */
+@media (pointer: coarse) {
+  .close.close {
+    --close-size: var(--ui-control-md);
+  }
 }
 
 .body {
@@ -328,7 +327,6 @@
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .guardDescription {

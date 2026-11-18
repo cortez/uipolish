@@ -30,12 +30,12 @@ place under the row.
 
 | State | What you see | How |
 |---|---|---|
-| Rest | Four muted 16px icons on 32px round buttons | |
+| Rest | Four muted 16px icons on small ghost `Button`s (32px icon capsules) | `variant="ghost" size="sm"`, `--button-fg` set to muted |
 | Hover | Icon darkens, a 6% fill appears | `@media (hover: hover)` |
 | Press | The fill darkens and shrinks to `--ui-scale-press` (0.985) at once; the icon never moves | `:active` on `::before` |
 | Copied | The front sheet's outline runs into a check; back to the sheets after 2s | `Icon name="check"` |
 | Copy failed | "Couldn’t copy. Select the text instead." in red at the end of the row | clipboard rejected or missing |
-| Rated | The thumb fills in. Pressing the other thumb moves the rating; pressing the same one clears it | `aria-pressed` |
+| Rated | The thumb fills in. Pressing the other thumb moves the rating; pressing the same one clears it | `aria-pressed`; `Icon name="thumbs-up"` / `"thumbs-down"` filled |
 | Thanked | "Thanks for the feedback" fades in at the end of the row for 3s | |
 | Asking | After a thumbs down, a field opens under the row with Send inside it and a close button beside it | `onComment`, `aria-expanded` |
 | Send waiting | Send is a quiet gray pill until there's text | `aria-disabled` |
@@ -61,13 +61,13 @@ the user expects.
 | Copy ↔ check | `--ui-dur-move` | `--ui-ease-move` (from the icon set) |
 | Thumb fills or empties | `--ui-dur-instant` | `--ui-ease-color` |
 | Press in / release | 0ms / `--ui-dur-snap` | `--ui-ease-snap` |
-| Field opens (rows 0fr → 1fr) | `--ui-dur-base` | `--ui-ease-enter` |
+| Field opens (rows 0fr → 1fr) | `--ui-dur-base` (a small field, so the short step) | `--ui-ease-expand` |
 | Field closes | `--ui-dur-fast` | `--ui-ease-collapse` |
 | Field content fades in with the box | `--ui-dur-fast` | `--ui-ease-enter` |
 | Note fades in / out | `--ui-dur-fast` / `--ui-dur-instant` | `--ui-ease-enter` / `--ui-ease-exit` |
 
-Place the row 16px under the reply (`--ui-space-4`), as Message thread and
-Chat app do. Only the field's height animates, and only what follows the reply moves.
+Place the row 16px under the reply (`--ui-space-4`), as Message thread
+does. Only the field's height animates, and only what follows the reply moves.
 The row itself never shifts. Under `prefers-reduced-motion: reduce` the
 field opens at once, presses don't scale, and the copy icon swaps.
 

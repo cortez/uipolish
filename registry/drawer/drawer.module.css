@@ -9,8 +9,10 @@
 /* The scrim is a sibling, not ::backdrop any more, so it gets the timings too. */
 .backdrop,
 .drawer {
-  --drawer-open: 420ms;
-  --drawer-close: 280ms;
+  /* A whole surface crossing the screen: the height-opening duration and a
+     half again on the way in (420ms), the panel duration on the way out. */
+  --drawer-open: calc(var(--ui-dur-panel) * 1.5);
+  --drawer-close: var(--ui-dur-panel);
 }
 
 .drawer {
@@ -100,9 +102,9 @@
   margin-inline: auto;
   border-start-start-radius: var(--ui-radius-lg);
   border-start-end-radius: var(--ui-radius-lg);
-  /* No drawn edge: a sheet rises over the dimmed page and its rounded top
-     and soft shadow are enough; a ring drew a line across the top. */
-  box-shadow: var(--ui-shadow-raised);
+  /* The floating shadow carries the edge: one ring, so the top line is the
+     same weight as every other box's. */
+  box-shadow: var(--ui-shadow-floating);
 }
 
 .drawer[data-mode="sheet"][data-keyboard] {
@@ -188,7 +190,7 @@
   width: var(--ui-space-6);
   height: var(--ui-space-1);
   margin-block-start: var(--ui-space-2);
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: color-mix(in oklch, var(--ui-foreground) 16%, transparent);
 }
 
@@ -222,11 +224,10 @@
   color: var(--ui-foreground);
   font-family: var(--ui-font-display);
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-semibold);
+  font-weight: var(--ui-weight-title);
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-heading);
   text-wrap: balance;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .description {
@@ -249,7 +250,7 @@
   margin-inline-end: calc((16px - var(--close-width)) / 2);
   padding: 0;
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: transparent;
   color: var(--ui-muted);
   cursor: pointer;

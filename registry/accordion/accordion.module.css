@@ -14,8 +14,9 @@
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
-/* Items part with space only: the rows' own 12px above and below, never a
-   drawn line. */
+.item + .item {
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
 
 .heading {
   /* Each row measures itself, so a narrow one can move its value under
@@ -44,7 +45,6 @@
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .title {
@@ -74,7 +74,6 @@
   line-height: var(--ui-leading-md);
   font-variant-numeric: tabular-nums;
   text-align: end;
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .title,
@@ -173,7 +172,7 @@
 .root[data-ready][data-type="single"]:has(> .item[data-open]) .item:not([data-open]) > .panel {
   transition:
     height var(--accordion-open) var(--ui-ease-expand),
-    opacity var(--ui-dur-instant) var(--ui-ease-enter);
+    opacity var(--ui-dur-instant) var(--ui-ease-exit);
 }
 
 .root[data-ready] .item[data-open] > .panel {

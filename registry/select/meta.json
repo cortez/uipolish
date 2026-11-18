@@ -2,12 +2,14 @@
   "name": "select",
   "title": "Select",
   "summary": "Select-only combobox whose trigger fits the chosen label and morphs to the next one. Touch screens get the native picker instead.",
-  "version": "0.6.0",
+  "blurb": "A select whose trigger fits and morphs to the chosen label.",
+  "version": "0.6.1",
   "dependencies": [
+    "field",
     "icons",
     "listbox",
-    "text-morph",
-    "text"
+    "text",
+    "text-morph"
   ],
   "packages": [
     "@base-ui/react@^1.9.0"

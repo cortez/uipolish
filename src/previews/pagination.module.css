@@ -1,0 +1,58 @@
+.header {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.table {
+  width: 100%;
+  margin-bottom: var(--ui-space-2);
+  border-collapse: collapse;
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.table th {
+  padding: 0 0 var(--ui-space-2);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-regular);
+  text-align: start;
+}
+
+.table td {
+  padding: var(--ui-space-3) 0;
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+  white-space: nowrap;
+}
+
+.table :is(th, td):not(:first-child) {
+  padding-inline-start: var(--ui-space-4);
+}
+
+.table td:not(:first-child) {
+  color: var(--ui-muted);
+}
+
+.table :is(th, td):last-child {
+  text-align: end;
+}
+
+/* The supper column gives way first on a phone. */
+@media (max-width: 480px) {
+  .table :is(th, td):nth-child(2) {
+    display: none;
+  }
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+/* Wrapped under the caption on a phone, the control still hugs the end. */
+.footer > nav {
+  margin-inline-start: auto;
+}

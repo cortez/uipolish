@@ -1,0 +1,121 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+/* A small Acme window: the rail on its edge, the page beside it.
+   Concentric with the rail: its radius is the rail's plus the gap. */
+.shell {
+  --shell-gap: var(--ui-space-2);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--ui-space-2);
+  min-height: 420px;
+  padding: var(--shell-gap);
+  border-radius: calc(var(--ui-control-md) / 2 + 4px + var(--shell-gap));
+  background: var(--ui-canvas);
+  box-shadow: var(--ui-shadow-resting);
+}
+
+/* The bottom bar: the same window, one column. contain: layout makes it
+   the pinned bar's box, so the bar sits on the window's bottom edge. */
+.bottom {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  height: 420px;
+  overflow: hidden;
+  contain: layout paint;
+}
+
+/* The page scrolls under the bar, and its end clears it: the bar's 48 plus
+   the 8 around it. */
+.scroller {
+  overflow: auto;
+  padding-bottom: calc(var(--ui-control-md) + 8px + var(--ui-space-2));
+  overscroll-behavior: contain;
+}
+
+
+.rail {
+  align-self: stretch;
+}
+
+.content {
+  min-width: 0;
+  padding: var(--ui-space-4) var(--ui-space-4) var(--ui-space-5);
+}
+
+.page {
+  display: grid;
+  gap: var(--ui-space-2);
+  animation: page-in var(--ui-dur-base) var(--ui-ease-enter);
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    translate: 0 4px;
+  }
+}
+
+.title {
+  margin: 0;
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-title);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-heading);
+}
+
+.rows {
+  display: grid;
+  margin: var(--ui-space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--ui-space-1) var(--ui-space-4);
+  padding-block: var(--ui-space-3);
+  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.rowName {
+  composes: wrap from "../../registry/text/text.module.css";
+  font-weight: var(--ui-weight-medium);
+}
+
+.rowMeta {
+  composes: wrap from "../../registry/text/text.module.css";
+  color: var(--ui-muted);
+}
+
+.glyph {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page {
+    animation-name: page-fade;
+  }
+  @keyframes page-fade {
+    from {
+      opacity: 0;
+    }
+  }
+}

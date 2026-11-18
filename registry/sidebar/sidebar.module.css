@@ -14,7 +14,7 @@
   --sidebar-bg: var(--ui-canvas);
   /* Opaque versions of the row fills, so the collapsed count can cut out of them. */
   --sidebar-bg-current: color-mix(in oklch, var(--ui-foreground) 8%, var(--sidebar-bg));
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* A finger gets 40px rows; collapsed, that's Nav rail's 55px capsule. */
@@ -151,7 +151,7 @@
   top: 0;
   left: 0;
   z-index: -1;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-track-pill);
   contain: layout style size;
   pointer-events: none;
@@ -176,7 +176,7 @@
   margin: 0;
   padding: 0 var(--sidebar-inset);
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: transparent;
   /* Rows rest in the muted text color; hover brings the row up to the text
      color, as Nav rail's items do: no fill. Only the current row has one. */
@@ -192,7 +192,6 @@
   transition:
     background-color var(--ui-dur-instant) var(--ui-ease-color),
     color var(--ui-dur-instant) var(--ui-ease-color);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 @media (hover: hover) {
@@ -229,7 +228,6 @@
 .row[data-nested] {
   padding-inline-start: calc(var(--sidebar-inset) + 16px + var(--ui-space-2));
   font-weight: var(--ui-weight-regular);
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .icon {
@@ -277,7 +275,6 @@
   font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
   white-space: nowrap;
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 /* The shortcut is a hint: it shows on hover and focus, and stays in the
@@ -287,7 +284,6 @@
   font-weight: var(--ui-weight-regular);
   opacity: 0;
   transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .row:focus-visible .kbd {
@@ -308,12 +304,11 @@
   min-width: 18px;
   height: 18px;
   padding-inline: 5px;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-accent);
   color: var(--ui-on-accent);
   font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
   font-variant-numeric: tabular-nums;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* Collapsed, the count sits at the icon's top right, as on Nav rail, cut
@@ -414,12 +409,11 @@
   padding: 0 var(--sidebar-inset);
   color: var(--ui-muted);
   font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .headingButton {
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: transparent;
   text-align: start;
   cursor: pointer;
@@ -496,7 +490,6 @@
 .row[data-kind="recent"] {
   font-weight: var(--ui-weight-regular);
   font-size: var(--ui-text-sm);
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 /* One line, faded at the end when cut; the whole title is in `title`. */
@@ -582,7 +575,7 @@
   margin-block: auto;
   padding: 0;
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: transparent;
   color: var(--ui-muted);
   cursor: pointer;
@@ -624,17 +617,6 @@
   outline-offset: var(--ui-ring-offset);
 }
 
-.glyph {
-  flex-shrink: 0;
-  width: var(--ui-icon-md);
-  height: var(--ui-icon-md);
-  fill: none;
-  stroke: currentColor;
-  stroke-width: var(--ui-icon-stroke, 1.5);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
 /* The title, editable where it sat: the text keeps its place in a field
    the row's shape. */
 .rename {
@@ -649,13 +631,12 @@
   margin: 0;
   padding: 0 var(--sidebar-inset);
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-surface);
   box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
   outline: none;
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .renameInput[aria-invalid] {
@@ -713,7 +694,6 @@
 .empty > p:first-child {
   color: var(--ui-foreground);
   font-weight: var(--ui-weight-medium);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* One bone per title, in a row of the real height. */
@@ -745,7 +725,7 @@
   /* The 24px mark centers on the icon column below it. */
   padding: 0 calc(var(--sidebar-inset) - 4px);
   border: 0;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: transparent;
   color: var(--ui-foreground);
   font: var(--ui-weight-medium) var(--ui-text-md) / 1 var(--ui-font-sans);
@@ -756,7 +736,6 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 @media (hover: hover) {
@@ -788,7 +767,7 @@
   place-items: center;
   width: 24px;
   height: 24px;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-ink);
   color: var(--ui-on-ink);
 }
@@ -818,7 +797,6 @@
 .menuDetail {
   color: var(--ui-muted);
   font-weight: var(--ui-weight-regular);
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 /* As wide as the button it opens from, when that's wider than a menu. */

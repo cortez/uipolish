@@ -38,17 +38,15 @@ light ghost button alike, and nothing grows outside the shape.
 }
 ```
 
-Fields fill, they don't change their edge: focused (or with their list
-open), a field takes `--ui-field-focus-fill` at once and keeps the edge it
-rests with. Hovering a text field changes nothing; the caret is the cue.
+Fields darken and thicken their edge, nothing outside:
 
 ```css
 .input:focus {
-  background: var(--ui-field-focus-fill);
+  box-shadow: inset 0 0 0 1px var(--ui-field-focus);
 }
 ```
 
-Invalid fields keep a danger edge at the hairline weight, focused or not.
+Invalid fields use the same edge in the danger color.
 
 - `:focus-visible`, not `:focus`, on buttons and links: clicks shouldn't paint
   focus. Text fields show it on `:focus`, because the caret already tells.

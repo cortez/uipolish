@@ -53,6 +53,7 @@ duration it was designed for. These are the roles in `tokens.css`:
 
   --ui-dur-pulse: 700ms;   /* half a breathing cycle */
   --ui-dur-sweep: 2400ms;  /* one pass of a light band, `linear` */
+  --ui-delay-busy: 300ms;  /* before a busy state shows, so quick work never flashes one */
 }
 ```
 
@@ -164,10 +165,6 @@ Grammar for on-scroll or on-mount entrances:
 - **Popovers/dropdowns/tooltips**: `opacity 0 → 1` + `scale(0.97 → 1)` with
   `transform-origin` at the trigger side, `--ui-dur-fast` on `--ui-ease-enter`
   in, `--ui-dur-instant` on `--ui-ease-exit` out.
-- **Dialogs and modals** grow from their own center (from the bottom edge
-  when docked at the bottom of a phone), never from the trigger, and the
-  origin isn't an option: a centered panel flying out of a button reads as
-  motion, not focus.
 - Native `<dialog>`/popover animation without JS:
 
 ```css

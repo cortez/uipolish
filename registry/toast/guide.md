@@ -47,11 +47,20 @@ toast.promise(sendInvitations(), {
 Every call returns an id. Passing the same `id` again updates that toast in
 place instead of adding another.
 
+## Look
+
+A quiet card: the icon level with the title, the title and description,
+then the action as a plain ghost button and dismiss, both hung on the
+title's line so they never make the card taller than its text. Dismiss
+shows on hover or focus (always on touch). The card is the opaque surface
+with the floating shadow, 12px in (16 at the icon's side), on the lg
+(16px) radius. Icons are `info`, `check-circle` and `alert` from Icons.
+
 ## States
 
 | State | What you see | How |
 |---|---|---|
-| Enter | Fades in and rises 4px into the front slot; the rest step back | CSS animation on mount |
+| Enter | Fades in, rises 4px and settles from 98% into the front slot; the rest step back | CSS animation on mount |
 | Collapsed stack | Front toast in full; up to two behind it, each 3% smaller and 12px higher, content hidden, clipped to the front toast's height | per-toast `translate`, `scale`, `clip-path` from measured heights |
 | Expanded | Hover or focus the region: toasts spread into a column with 8px gaps | same properties, new values |
 | Waiting | More than `max` toasts: the extra ones are invisible and inert | Base UI's `limit`, `[data-limited]` |
@@ -83,21 +92,17 @@ that start on a button or link don't swipe; mark anything else with
 | Swipe away | `--ui-dur-fast` | `linear` |
 | Spring back | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 | Title change | `--ui-dur-move` (380ms) | `--ui-ease-move` (TextMorph) |
-| Success check draws on, 120ms after the toast or its icon appears | `--ui-dur-base` (200ms) | `--ui-ease-draw` |
 | Loading dot grows and shrinks | `--ui-dur-pulse` (700ms) each way | `--ui-ease-pulse` |
 
 Under `prefers-reduced-motion: reduce` toasts fade in and out, the stack
-changes without moving, swipes don't spring back, the success check is
-already drawn, and the loading dot holds its size and fades slowly instead.
+changes without moving, swipes don't spring back, and the loading dot holds its size and fades slowly instead.
 
 ## Layout
 
 The region is `position: fixed` in the chosen bottom corner, 16px from the
 edges or further when `env(safe-area-inset-*)` is larger, so it clears the
-home indicator and rounded corners. It's 320px wide, or the screen width
-minus 32px on phones. Each toast is a plain box with the medium corner
-(`--ui-radius-md`, 14px), as tall as its words: 8px above and below a
-32px row for one line, more only when the description wraps. The page needs `viewport-fit=cover` in its viewport meta
+home indicator and rounded corners. It's 356px wide, or the screen width
+minus 32px on phones. The page needs `viewport-fit=cover` in its viewport meta
 for the safe-area insets to be non-zero on iOS.
 
 It sits at `z-index: 50`, portaled to `<body>` (or into the nearest
@@ -118,8 +123,8 @@ cancelled"), which is also when the user can see them.
   to the next.
 - Focus inside the region expands the stack and pauses every timer, so
   keyboard users get as long as they need.
-- The dismiss button is 24px with a 40px hit area and an accessible name
-  that includes the toast's title.
+- The dismiss button is the 32px ghost `Button`, and the action the 32px
+  secondary one, with an accessible name that includes the toast's title.
 - Hover only expands the stack. Every action is also reachable by keyboard
   and by touch.
 

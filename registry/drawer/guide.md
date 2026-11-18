@@ -110,8 +110,7 @@ all round; the close button is centered on the title's first line with its
 X on the content's edge, as in the dialog.
 
 The sheet is as tall as its content, at most the screen less 48px, so the
-page always shows above it. It has no drawn edge, only its rounded top and
-the raised shadow over the dimmed page. Its top corners take `--ui-radius-lg`; the
+page always shows above it. Its top corners take `--ui-radius-lg`; the
 handle is 32 × 4, 8px from the top. On a phone on its side it stays 640px
 wide, centered. The footer's bottom padding grows to the home indicator's
 safe-area inset (`max(16px, env(safe-area-inset-bottom))`); without a
@@ -122,8 +121,8 @@ the inset to be non-zero.
 
 | What | Duration | Easing |
 |---|---|---|
-| Panel and scrim in, from just past its edge | `--drawer-open` (420ms) | `--ui-ease-expand` |
-| Panel and scrim out | `--drawer-close` (280ms) | `--ui-ease-expand` |
+| Panel and scrim in, from just past its edge | `--drawer-open` (`--ui-dur-panel` × 1.5, 420ms) | `--ui-ease-expand` |
+| Panel and scrim out | `--drawer-close` (`--ui-dur-panel`, 280ms) | `--ui-ease-expand` |
 | Out after a flick | `--drawer-close` × `--drawer-swipe-strength` (0.1 to 1) | `--ui-ease-expand` |
 | Glide back after a short drag | `--ui-dur-glide` | `--ui-ease-glide` |
 | Scrim back after a short drag | `--drawer-open` | `--ui-ease-expand` |

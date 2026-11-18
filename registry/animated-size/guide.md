@@ -69,7 +69,7 @@ own.
 | What | Duration | Easing |
 |---|---|---|
 | Growing | `--ui-dur-panel` (280ms) | `--ui-ease-expand` |
-| Shrinking | `--ui-dur-base` (200ms) | `--ui-ease-expand` |
+| Shrinking | `--ui-dur-base` (200ms) | `--ui-ease-collapse`: eases in, folds, stops with no tail |
 | First size, size while hidden, size on the frame it's shown, size after a container resize | 0ms | n/a |
 
 Animating `height` and `width` is an exception to "transform and opacity
@@ -81,8 +81,8 @@ is instant.
 
 **Pacing one use.** Set `--animated-size-grow`, `--animated-size-shrink`
 and `--animated-size-ease` on an ancestor to change the timing for that box
-alone. Authorize uses 420ms on the move spring, because its card goes from
-a full consent form to two lines.
+alone: a box that changes a lot, such as a full form folding to two
+lines, can take 420ms on the move spring.
 
 ## Layout shift
 

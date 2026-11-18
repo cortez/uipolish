@@ -2,7 +2,7 @@
 
 A slider in the family's shapes: a label row with the value at its end, over
 a sunken track like the segmented control's and a raised capsule thumb like
-its pill. The range from the start to the thumb is `--ui-control-on`, the primary button's ink, the same as
+its pill. The range from the start to the thumb is the accent, the same as
 a switch that's on and a checked box. The behavior is built on Base UI's
 `<Slider>`: its control is the whole 32px row under the label, and its
 thumb holds a real `<input type="range">`, so the keyboard, pointer, touch
@@ -48,7 +48,7 @@ and screen readers all get a proper slider.
   under a coarse pointer, without moving anything.
 - **Track:** 6px, `--ui-fill` with a hairline `--ui-border-strong` inner edge (the switch track's),
   full radius: the segmented control's sunken track.
-- **Range:** `--ui-control-on`, the whole track slid back with `translate` so
+- **Range:** `--ui-accent`, the whole track slid back with `translate` so
   its end sits under the thumb's center.
 - **Thumb:** a 20px capsule (`--ui-capsule` wide), the raised surface with
   a `--ui-border-strong` hairline and `--ui-shadow-control`, like the
@@ -63,7 +63,7 @@ and screen readers all get a proper slider.
 
 | State | What you see | How |
 |---|---|---|
-| Rest | Ink range, raised thumb, value in muted text | |
+| Rest | Accent range, raised thumb, value in muted text | |
 | Hover | Thumb one step darker (lighter in dark mode) | `@media (hover: hover)`, on the control row |
 | Focus | Inset focus line on the thumb, value in the text color; instant | `:focus-visible` on the thumb's input |
 | Press | Thumb grows to 108% in 80ms; springs back on release | `:active` on the control |

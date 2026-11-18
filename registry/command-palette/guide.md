@@ -45,8 +45,8 @@ cleanly onto a stock combobox.
 - `keywords` find a command by words not in its label. Keyword matches rank
   below label matches and highlight nothing.
 - `shortcut` is display only. Bind the keys yourself. It shows at the end
-  of the row, except on the highlighted row, which shows `enter` in its
-  place: that's the key that runs it now.
+  of the row as a small `Kbd`, except on the highlighted row, which shows
+  the Enter key (↵) in its place: that's the key that runs it now.
 - `sources` are called after typing pauses for 120ms. The previous search is
   aborted through `signal` before the next one starts. Their results appear
   after the built-in commands, so a late answer never moves the item under
@@ -96,6 +96,11 @@ one inside "guests".
 Matched letters keep the text color and the rest dim to muted. The change is
 color only, so labels never change width as you type.
 
+## Look
+
+Light glass, like the menus: `--ui-surface-glass` over a
+`--ui-glass-blur` (4px) backdrop blur, on the dialog's dimmed backdrop.
+
 ## States
 
 | State | What you see | How |
@@ -106,21 +111,21 @@ color only, so labels never change width as you type.
 | Loading | "Searching guests…" under the source's heading, no icon: the text dims and a light band passes across it | only after 300ms; `mask-image` on the row text |
 | Source failed | "Couldn’t search guests. Try again" as a selectable row | the promise rejects |
 | No results | "No results for “xyz”" and a hint, centered | `emptyHint` |
-| Active row | Fill behind the row, icon at full strength, an `enter` key at its end in place of the shortcut (none on touch screens) | pointer and keyboard set the same state; the shortcut and the key share one cell, so the label never reflows |
+| Active row | Fill behind the row, icon at full strength, an Enter key (↵) at its end in place of the shortcut (none on touch screens) | pointer and keyboard set the same state; the shortcut and the key share one cell, so the label never reflows |
 | Run | Palette closes, command runs, it moves to the top of Recent | |
 
 ## Motion
 
 | What | Duration | Easing |
 |---|---|---|
-| Open, close | as Dialog: fades, scales from 0.97 and clears a 2px blur over `--ui-dur-base`; out in `--ui-dur-instant` | `--ui-ease-enter`, `--ui-ease-exit` |
+| Open, close | as Dialog: fades and scales from 0.97 around its center over `--ui-dur-base`; out in `--ui-dur-instant` | `--ui-ease-enter`, `--ui-ease-exit` |
 | Height following the results | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
-| Active row background and `enter` key | instant on, `--ui-dur-instant` off | `--ui-ease-color` |
+| Active row background and Enter key | instant on, `--ui-dur-instant` off | `--ui-ease-color` |
 | Loading row and empty state in | `--ui-dur-fast` (160ms) fade | `--ui-ease-enter` |
 | Light band across the loading row | `--ui-dur-sweep` (2.4s) per sweep | `linear` |
 
-The palette grows from its own center, like every dialog, whether a button
-or ⌘K opened it. It sits near the top of the screen rather than in the
+The palette grows from its own center, whether a button or ⌘K opened it: a
+search box opens in place rather than flying in from its trigger. It sits near the top of the screen rather than in the
 middle, so a list that grows or shrinks only moves the bottom edge.
 
 **How the height animates.** The results live in a scroller with a
@@ -156,8 +161,8 @@ changes instantly and the loading row is plain muted text with no band.
 - Moving the pointer over a row highlights it; the keyboard continues from
   there. Only keyboard moves scroll the list, so rows never slide out from
   under a still pointer.
-- The key legend in the footer (↑ ↓ to move, enter to run, esc to close) and
-  the `enter` key on the highlighted row use the same keycap. Both are
+- The key legend in the footer (↑ ↓ to move, ↵ to run, esc to close) and
+  the Enter key on the highlighted row use the same keycap, `Kbd`. Both are
   `aria-hidden`: the keys are announced by the combobox itself.
 - On touch screens rows are 48px tall, the input is 16px so iOS doesn't zoom,
   and the key legend and the `enter` key are hidden.

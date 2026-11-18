@@ -1,0 +1,10 @@
+.intro {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+/* Alone on its line under the field: the ghost pulls back by its 20px
+   padding so its label starts on the form's edge. */
+.textAligned {
+  margin-inline-start: -20px;
+}

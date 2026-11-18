@@ -6,6 +6,10 @@
   --palette-inner-radius: calc(var(--palette-radius) - var(--palette-pad));
 
   border-radius: var(--palette-radius);
+  /* Light glass, like the menus: the surface at 92% over a 4px blur. */
+  background: var(--ui-surface-glass);
+  backdrop-filter: blur(var(--ui-glass-blur));
+  -webkit-backdrop-filter: blur(var(--ui-glass-blur));
   /* The viewport pads by --ui-space-5 already; this sets the gap from the top of the screen. */
   align-self: start;
   margin-top: calc(min(14dvh, 120px) - var(--ui-space-5));
@@ -45,7 +49,6 @@
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
   outline: none;
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .input::placeholder {
@@ -97,10 +100,9 @@
   padding: var(--ui-space-2) var(--ui-pad-row) var(--ui-space-1);
   color: var(--ui-subtle);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
   user-select: none;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .option {
@@ -177,38 +179,16 @@
   line-height: var(--ui-leading-sm);
 }
 
-.shortcut {
-  display: flex;
-  flex-shrink: 0;
-  gap: 2px;
-}
-
-.key {
-  display: inline-grid;
-  place-items: center;
-  box-sizing: border-box;
-  min-width: 20px;
-  height: 20px;
-  padding-inline: 6px;
-  border-radius: min(var(--palette-inner-radius), 10px);
-  background: var(--ui-fill);
-  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border);
-  color: var(--ui-muted);
-  font-family: var(--ui-font-sans);
-  font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
-  font-style: normal;
-  line-height: 1;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
-}
-
-/* The shortcut and the Enter key share one cell, at the row's end. The
-   highlighted row shows Enter, since that's what runs it now; the others
-   show their shortcut. Hidden, not removed, so the cell keeps its width. */
+/* The shortcut and the Enter key are small Kbds, sharing one cell at the
+   row's end. The highlighted row shows Enter, since that's what runs it
+   now; the others show their shortcut. Faded, not removed, so the cell
+   keeps its width (opacity, not visibility: Kbd shows its platform's
+   spelling with visibility). */
 .keys {
   display: grid;
   flex-shrink: 0;
   justify-items: end;
+  color: var(--ui-muted);
 }
 
 .keys > * {
@@ -217,11 +197,11 @@
 
 .enter,
 .option[data-active] .shortcut {
-  visibility: hidden;
+  opacity: 0;
 }
 
 .option[data-active] .enter {
-  visibility: visible;
+  opacity: 1;
 }
 
 /* ---------- Loading, empty, footer ---------- */
@@ -268,7 +248,6 @@
   color: var(--ui-foreground);
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .emptyHint {
@@ -282,14 +261,15 @@
   display: flex;
   flex-shrink: 0;
   gap: var(--ui-space-4);
-  padding: var(--palette-pad);
+  /* Its text starts where the rows' and the search's do. */
+  padding: var(--ui-space-3) calc(var(--palette-pad) + var(--ui-pad-row));
   box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
   color: var(--ui-subtle);
   font-size: var(--ui-text-sm);
   line-height: 1;
 }
 
-.footer span {
+.footer > span {
   display: inline-flex;
   align-items: center;
   gap: var(--ui-space-1);
@@ -319,7 +299,7 @@
     display: none;
   }
   .option[data-active] .shortcut {
-    visibility: visible;
+    opacity: 1;
   }
 }
 

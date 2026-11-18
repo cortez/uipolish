@@ -13,7 +13,6 @@
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .control {
@@ -90,8 +89,9 @@
 }
 
 @media (hover: hover) {
-  .trigger:hover:not(:disabled, [data-disabled], [data-popup-open], :focus-visible) {
-    background: var(--ui-field-focus-fill);
+  .trigger:hover:not(:disabled, [data-disabled], [data-popup-open], :focus-visible, [aria-invalid]) {
+    box-shadow:
+      inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
   }
 }
 
@@ -100,17 +100,21 @@
   transition-duration: var(--ui-dur-press);
 }
 
-/* Open, or focused from the keyboard, the trigger takes the field focus
-   fill at once; its edge stays as it rests. */
+/* The dark edge is for keyboard focus only. Opened by a click or a tap,
+   the trigger takes the hover edge: the open list already says where you are. */
 .trigger:focus {
   outline: none;
 }
 
-.trigger[data-popup-open],
+.trigger[data-popup-open] {
+  box-shadow:
+    inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
+}
+
 .trigger:focus-visible,
 .field[data-native] .control:has(.native:focus-visible) .trigger {
   outline: none;
-  background: var(--ui-field-focus-fill);
+  box-shadow: inset 0 0 0 1px var(--ui-field-focus);
   transition-duration: 0s;
 }
 
@@ -134,11 +138,11 @@
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
   height: var(--ui-control-sm);
   gap: 6px;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-fill);
   box-shadow: none;
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
 }
 
 .field[data-size="sm"] .chevron {
@@ -209,10 +213,10 @@
   --list-pad: var(--ui-space-1);
   overflow: hidden;
   border-radius: var(--ui-radius-md);
-  background: var(--ui-surface-floating);
-  -webkit-backdrop-filter: var(--ui-blur-floating);
-  backdrop-filter: var(--ui-blur-floating);
-  box-shadow: var(--ui-glass-edge), var(--ui-shadow-floating);
+  background: var(--ui-surface-glass);
+  backdrop-filter: blur(var(--ui-glass-blur));
+  -webkit-backdrop-filter: blur(var(--ui-glass-blur));
+  box-shadow: var(--ui-shadow-floating);
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
   --ui-icon-stroke: var(--ui-icon-stroke-regular);
@@ -342,48 +346,8 @@
   padding: var(--ui-space-2) var(--ui-pad-row) var(--ui-space-1);
   color: var(--ui-subtle);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
-}
-
-/* ---------- Message ---------- */
-
-.message {
-  display: grid;
-  justify-self: stretch;
-  min-height: calc(var(--field-message-lines, 1) * var(--ui-leading-md));
-  margin: 0;
-  font-size: var(--ui-text-sm);
-  line-height: var(--ui-leading-md);
-  text-wrap: pretty;
-}
-
-.hint {
-  color: var(--ui-muted);
-}
-
-.error {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--ui-space-2);
-  color: var(--ui-danger-text);
-  animation: select-error-in var(--ui-dur-fast) var(--ui-ease-enter);
-}
-
-.error svg {
-  width: var(--ui-icon-sm);
-  height: var(--ui-icon-sm);
-  stroke-width: var(--ui-icon-stroke-regular);
-  margin-top: calc((var(--ui-leading-md) - 14px) / 2);
-  flex-shrink: 0;
-}
-
-@keyframes select-error-in {
-  from {
-    opacity: 0;
-    translate: 0 -3px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -395,8 +359,5 @@
   }
   .highlight {
     transition-property: opacity, background-color;
-  }
-  .error {
-    animation: none;
   }
 }

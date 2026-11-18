@@ -18,7 +18,6 @@
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* The boxes and the pill share one cell; the boxes stay in flow, so the row
@@ -50,7 +49,7 @@
   width: var(--code-dot);
   height: var(--code-dot);
   margin-inline: calc((var(--code-group-gap) - 2 * var(--code-gap) - var(--code-dot)) / 2);
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-muted);
   opacity: 0.6;
   transition: opacity var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
@@ -106,10 +105,9 @@
   box-shadow: inset 0 0 0 var(--code-edge-width) color-mix(in oklch, var(--code-edge), var(--ui-danger) var(--code-danger));
   color: var(--ui-foreground);
   caret-color: transparent;
-  /* Must stay over 16px, below which iOS zooms the page into a field. */
   font-family: var(--ui-font-sans);
-  font-size: 24px;
-  font-weight: var(--ui-weight-semibold);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-title);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0;
   line-height: 1;
@@ -122,7 +120,6 @@
     opacity var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
     translate var(--ui-dur-glide) var(--ui-ease-glide),
     filter var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .box::selection {
@@ -147,11 +144,17 @@
   }
 }
 
-/* The active box fills at once (its edge stays) and, while it's empty, a caret blinks in it. */
+@media (hover: hover) {
+  .box:hover:not(:focus, :disabled) {
+    --code-edge: var(--ui-field-focus);
+  }
+}
+
+/* The active box: its edge darkens at once and, while it's empty, a caret blinks in it. */
 .box:focus {
-  background: var(--ui-field-focus-fill);
+  --code-edge: var(--ui-field-focus);
   transition:
-    background-color 0s,
+    --code-edge 0s,
     --code-danger var(--ui-dur-fast) var(--ui-ease-color),
     opacity var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
     translate var(--ui-dur-glide) var(--ui-ease-glide),
@@ -327,7 +330,7 @@
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
-  border-radius: var(--ui-radius-full);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-fill);
   color: var(--ui-foreground);
   opacity: 0;
@@ -365,7 +368,6 @@
   transition:
     opacity var(--ui-dur-instant) var(--ui-ease-exit),
     filter var(--ui-dur-instant) var(--ui-ease-exit);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .root[data-phase="verifying"] .pillContent,
@@ -492,4 +494,11 @@
 
 .box[data-replacing]::selection {
   background: transparent;
+}
+
+/* iOS zooms the page into any field under 16px. */
+@media (pointer: coarse) {
+  .box {
+    font-size: var(--ui-text-touch);
+  }
 }

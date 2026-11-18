@@ -128,7 +128,7 @@ regular one, so selecting it would push its neighbors sideways.
 | Pill stretches a little toward the new tab and draws in behind it | `--ui-dur-glide` | both edges `--ui-ease-glide`, the leading one sooner, so it never overshoots or swings past the last tab |
 | Pill in a column: the same, along the column | `--ui-dur-glide` | as above |
 | Label and count color | `--ui-dur-instant` | `--ui-ease-color` |
-| Count gains or loses a digit: digits roll, tab width and pill follow | `--ui-dur-move` | `--ui-ease-move` |
+| Count changes: the digits that differ roll (up as it grows); if it gains or loses a digit, the tab width and pill follow | `--ui-dur-glide` | `--ui-ease-glide` (text morph); at most five changes a second, the last always lands |
 | Old panel fades out (`crossfade`) | `--ui-dur-instant` | `--ui-ease-color` |
 | New panel fades in (`crossfade`), 75ms after | `--ui-dur-fast` | `--ui-ease-enter` |
 
@@ -158,7 +158,7 @@ How the pill moves:
 - If the user picks another tab mid-move, the pill starts from where it is
   on screen, so the motion stays continuous.
 
-Under `prefers-reduced-motion: reduce` the pill and panels switch instantly.
+Under `prefers-reduced-motion: reduce` the pill, panels and counts switch instantly.
 
 ## URL sync
 

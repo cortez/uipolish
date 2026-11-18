@@ -26,7 +26,7 @@ highlight.
   `--listbox-width` on the popup to size it, such as
   `var(--anchor-width)` to match the field.
 
-The `panel`'s edge is the one in `--ui-shadow-floating`: the outline Its fill is glass: `--ui-surface-floating` (the surface at 93%) over `--ui-blur-floating`, with `--ui-glass-edge`, a light line inside the top edge, so it reads as a solid panel with a hint of what's behind. For a solid panel set them to `var(--ui-surface)`, `none` and `0 0 transparent`.
+The `panel`'s edge is the one in `--ui-shadow-floating`: the outline
 color fields use (`--ui-border-strong`), drawn once. Don't stack another
 ring on it.
 

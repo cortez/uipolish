@@ -48,11 +48,11 @@
 }
 
 /* The one state that has to read from across the screen: a file held over
-   the zone. The edge takes the focused field's color, the well tints a step,
-   and the prompt comes up to the text color. */
+   the zone. The well takes the accent's tint and edge, and the icon and
+   prompt come up to the text color. */
 .zone[data-dragging] {
-  --zone-bg: color-mix(in oklch, var(--ui-canvas), var(--ui-foreground) 5%);
-  --zone-edge: var(--ui-field-focus);
+  --zone-bg: var(--ui-accent-tint);
+  --zone-edge: var(--ui-border-accent);
 }
 
 .zone[data-has][data-dragging] {
@@ -139,6 +139,13 @@
   transition: color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
+@media (hover: hover) {
+  .zone:not([data-has], [data-disabled]) .browse:hover .mark {
+    color: var(--ui-foreground);
+  }
+}
+
+
 .zone[data-has] .mark {
   flex-shrink: 0;
   width: var(--badge-size);
@@ -176,7 +183,6 @@
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .constraints {
@@ -293,9 +299,8 @@
   background: var(--ui-fill);
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-regular);
   line-height: 1;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .row[data-status="done"] .badge {

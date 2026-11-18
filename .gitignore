@@ -1,4 +1,11 @@
 .DS_Store
 node_modules/
+.vercel
+.next/
+next-env.d.ts
 *.tsbuildinfo
 .env*
+!.env.example
+
+# Workers' temporary preview pages, never shipped.
+/src/app/zz-*/

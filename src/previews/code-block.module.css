@@ -1,0 +1,27 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+.prompt {
+  margin: 0;
+  font-size: var(--ui-text-md);
+}
+
+/* A live block and its finished copy share one cell: the cell is as tall
+   as the finished block from the first frame. */
+.reserve {
+  display: grid;
+  align-items: start;
+}
+
+.reserve > * {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+.ghost {
+  visibility: hidden;
+}

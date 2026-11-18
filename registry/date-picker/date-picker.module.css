@@ -44,8 +44,9 @@
 }
 
 @media (hover: hover) {
-  .trigger:hover:not(:disabled, [data-popup-open], :focus-visible) {
-    background: var(--ui-field-focus-fill);
+  .trigger:hover:not(:disabled, [data-popup-open], :focus-visible, [data-invalid]) {
+    box-shadow:
+      inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
   }
 }
 
@@ -54,12 +55,10 @@
   transition-duration: var(--ui-dur-press);
 }
 
-/* Open, or focused from the keyboard: the field focus fill, at once; the
-   edge stays as it rests. */
 .trigger:focus-visible,
 .trigger[data-popup-open] {
   outline: none;
-  background: var(--ui-field-focus-fill);
+  box-shadow: inset 0 0 0 1px var(--ui-field-focus);
   transition-duration: 0s;
 }
 
@@ -68,7 +67,7 @@
 }
 
 .trigger[data-invalid]:is(:focus-visible, [data-popup-open]) {
-  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-danger);
+  box-shadow: inset 0 0 0 1px var(--ui-danger);
 }
 
 .trigger:disabled {
@@ -84,7 +83,7 @@
 
 .panel {
   composes: panel from "../listbox/listbox.module.css";
-  --panel-pad: var(--ui-space-3);
+  --panel-pad: var(--ui-space-2);
   --inner-radius: calc(var(--ui-radius-lg) - var(--panel-pad));
   --cell: 36px;
   --weekday-height: var(--ui-control-sm);
@@ -123,7 +122,6 @@
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
   text-align: center;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .titleText {
@@ -187,7 +185,6 @@
   font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
   text-align: center;
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .cell {
@@ -243,14 +240,13 @@
   width: 10px;
   height: 1.5px;
   margin-left: -5px;
-  border-radius: 1px;
+  border-radius: var(--ui-radius-full);
   background: currentColor;
 }
 
 .day[data-selected] {
   color: var(--ui-on-accent);
   font-weight: var(--ui-weight-medium);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .day[data-selected]::before {

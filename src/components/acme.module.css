@@ -1,0 +1,18 @@
+/* The demo company's lockup: the star at the word's cap height, one gap
+   from it, so mark and name read as one unit at any text size. */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-semibold);
+  letter-spacing: var(--ui-tracking-heading);
+  line-height: 1;
+}
+
+.brand > svg {
+  flex-shrink: 0;
+  width: 0.85em;
+  height: 0.85em;
+}

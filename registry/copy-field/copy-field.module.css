@@ -91,7 +91,6 @@
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
   user-select: all;
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 /* Longhands, not `font`, so code keeps its ligatures off. */
@@ -107,7 +106,6 @@
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
   /* Nothing to select: dots copied by hand would only paste as dots. */
   user-select: none;
-  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .actions {

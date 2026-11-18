@@ -66,7 +66,7 @@ are reset.
 | Hover | A faint fill behind the text, 8px past it on each side, 4px above and below | `@media (hover: hover)` |
 | Press | The fill a step stronger, at once | `:active` |
 | Focus | A line just inside the fill's edge | `:focus-visible` |
-| Editing | The same text, filled with `--ui-field-focus-fill` inside the resting edge, caret where you clicked; from the keyboard, all the text selected | `data-editing` |
+| Editing | The same text on the surface color, inside a 1px focus edge, caret where you clicked; from the keyboard, all the text selected | `data-editing` |
 | Emptied | The box keeps the width of the placeholder, or of the text it started from, instead of collapsing | |
 | Invalid | The edge eases to danger; the message floats under the box with an alert icon. Typing a fix clears it at once | `aria-invalid`, `aria-describedby` |
 | Saving | After 300ms the text dims and a light band passes across it; the edge stays solid; typing is paused | `aria-busy`, `readOnly` |

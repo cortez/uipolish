@@ -1,0 +1,6 @@
+/* The intro already leaves its room under the title; the body starts there
+   instead of a section's distance further down. Doubled to outrank the
+   guide's own top padding. */
+.body.body {
+  padding-top: 0;
+}
