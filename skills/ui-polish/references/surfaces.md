@@ -71,9 +71,9 @@ mode for free.
 - **What floats is glass.** Menus, popovers, lists under a field and
   hover cards fill with `--ui-surface-floating`, set
   `backdrop-filter: var(--ui-blur-floating)` and put `--ui-glass-edge`
-  before their shadow: the surface at 64% over a heavy blur that lifts the
-  color behind, with a light line inside the top edge, so it reads as
-  glass in light and dark and text stays legible over a photo. Cards,
+  before their shadow: the surface at 93% over a soft blur, with a faint
+  light line inside the top edge, so it reads as a solid panel with only a
+  hint of what's behind, in light and dark. Cards,
   dialogs, drawers and toasts stay solid: they hold more reading than a
   menu does.
 - Hover states on bordered elements move one step up the set

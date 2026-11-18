@@ -142,7 +142,7 @@ learn they exist, but can't be activated.
 When any item has an icon or indicator, every label in that menu starts on
 the same line.
 
-The menu's edge is the one in `--ui-shadow-floating`: the same outline color as fields and secondary buttons (`--ui-border-strong`), drawn once. Don't add a ring of your own on top; two rings read as a darker edge. Its fill is glass: `--ui-surface-floating` (the surface at 64%) over `--ui-blur-floating`, with `--ui-glass-edge`, a light line inside the top edge, so the page shows through as soft color, never as shapes. For a solid panel set them to `var(--ui-surface)`, `none` and `0 0 transparent`.
+The menu's edge is the one in `--ui-shadow-floating`: the same outline color as fields and secondary buttons (`--ui-border-strong`), drawn once. Don't add a ring of your own on top; two rings read as a darker edge. Its fill is glass: `--ui-surface-floating` (the surface at 93%) over `--ui-blur-floating`, with `--ui-glass-edge`, a light line inside the top edge, so it reads as a solid panel with a hint of what's behind. For a solid panel set them to `var(--ui-surface)`, `none` and `0 0 transparent`.
 
 ## Motion
 

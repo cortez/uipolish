@@ -81,7 +81,7 @@ label's width to the new one. Nothing else in the row moves suddenly.
 - A press outside closes the list. The page doesn't lock its scroll while
   the list is open (`modal={false}`).
 
-The list's edge is the one in `--ui-shadow-floating`: the same outline color as fields (`--ui-border-strong`), drawn once. Don't add a ring of your own on top. Its fill is glass: `--ui-surface-floating` (the surface at 64%) over `--ui-blur-floating`, with `--ui-glass-edge`, a light line inside the top edge, so the page shows through as soft color, never as shapes. For a solid panel set them to `var(--ui-surface)`, `none` and `0 0 transparent`.
+The list's edge is the one in `--ui-shadow-floating`: the same outline color as fields (`--ui-border-strong`), drawn once. Don't add a ring of your own on top. Its fill is glass: `--ui-surface-floating` (the surface at 93%) over `--ui-blur-floating`, with `--ui-glass-edge`, a light line inside the top edge, so it reads as a solid panel with a hint of what's behind. For a solid panel set them to `var(--ui-surface)`, `none` and `0 0 transparent`.
 
 ## Motion
 
