@@ -138,11 +138,11 @@
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
   height: var(--ui-control-sm);
   gap: 6px;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: var(--ui-fill);
   box-shadow: none;
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-regular);
+  font-weight: var(--ui-weight-medium);
 }
 
 .field[data-size="sm"] .chevron {
@@ -213,9 +213,9 @@
   --list-pad: var(--ui-space-1);
   overflow: hidden;
   border-radius: var(--ui-radius-md);
-  background: var(--ui-surface-glass);
-  backdrop-filter: blur(var(--ui-glass-blur));
-  -webkit-backdrop-filter: blur(var(--ui-glass-blur));
+  background: var(--ui-surface-floating);
+  -webkit-backdrop-filter: var(--ui-blur-floating);
+  backdrop-filter: var(--ui-blur-floating);
   box-shadow: var(--ui-shadow-floating);
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
@@ -346,8 +346,47 @@
   padding: var(--ui-space-2) var(--ui-pad-row) var(--ui-space-1);
   color: var(--ui-subtle);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-regular);
+  font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-sm);
+}
+
+/* ---------- Message ---------- */
+
+.message {
+  display: grid;
+  justify-self: stretch;
+  min-height: calc(var(--field-message-lines, 1) * var(--ui-leading-md));
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.hint {
+  color: var(--ui-muted);
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-2);
+  color: var(--ui-danger-text);
+  animation: select-error-in var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+.error svg {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  stroke-width: var(--ui-icon-stroke-regular);
+  margin-top: calc((var(--ui-leading-md) - 14px) / 2);
+  flex-shrink: 0;
+}
+
+@keyframes select-error-in {
+  from {
+    opacity: 0;
+    translate: 0 -3px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -359,5 +398,8 @@
   }
   .highlight {
     transition-property: opacity, background-color;
+  }
+  .error {
+    animation: none;
   }
 }

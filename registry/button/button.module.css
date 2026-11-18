@@ -14,7 +14,7 @@
   min-width: var(--ui-control-md);
   padding-inline: 20px;
   border: 0;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: none;
   color: var(--button-fg);
   isolation: isolate;

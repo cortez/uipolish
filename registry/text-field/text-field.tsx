@@ -10,7 +10,6 @@ import {
   type FocusEvent,
   type Ref,
 } from "react";
-import { FieldMessage } from "../field/field";
 import { Icon } from "../icons/icons";
 import styles from "./text-field.module.css";
 
@@ -64,6 +63,10 @@ export function TextField({
   const message = error ?? hint;
   // A line is reserved only when something can show there (even a null error prop).
   const hasMessage = Boolean(hint || validate || externalError !== undefined);
+
+  // The last error stays, faded out, so the slot keeps its height.
+  const [lastError, setLastError] = useState(error);
+  if (error && error !== lastError) setLastError(error);
 
   const password = type === "password";
   const [revealed, setRevealed] = useState(false);
@@ -142,7 +145,44 @@ export function TextField({
           </button>
         )}
       </div>
-      {hasMessage && <FieldMessage id={messageId} hint={hint} error={error} />}
+      {hasMessage && (
+        <>
+          {/* The hidden one is visibility: hidden, so it's out of the description and live region. */}
+          <p id={messageId} className={styles.message} aria-live="polite">
+            {hint && (
+              <span className={styles.hint} data-shown={!error || undefined}>
+                {hint}
+              </span>
+            )}
+            {lastError && (
+              <span
+                className={styles.error}
+                data-shown={error ? true : undefined}
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <circle
+                    cx="8"
+                    cy="8"
+                    r="6.25"
+                    fill="none"
+                    stroke="currentColor"
+                  />
+                  <path
+                    d="M8 4.75v3.75"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                  />
+                  <circle cx="8" cy="11" r="0.9" fill="currentColor" />
+                </svg>
+                {/* A new message fades in over the old one's place. */}
+                <span key={lastError} className={styles.errorText}>
+                  {lastError}
+                </span>
+              </span>
+            )}
+          </p>
+        </>
+      )}
     </div>
   );
 }

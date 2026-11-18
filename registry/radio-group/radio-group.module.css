@@ -78,13 +78,13 @@
 /* Base UI's Radio.Root is the ring: it takes focus, and the group moves it with the arrow keys. */
 .radio {
   /* A small circle needs more than a field's edge to be found at a glance. */
-  --radio-edge: var(--ui-border-control);
+  --radio-edge: var(--ui-border-strong);
   --radio-edge-width: var(--ui-hairline);
   position: absolute;
   inset: 0;
   display: block;
-  border-radius: var(--ui-radius-full);
-  background: var(--ui-fill-control);
+  border-radius: 50%;
+  background: var(--ui-surface);
   box-shadow: inset 0 0 0 var(--radio-edge-width) var(--radio-edge);
   /* Drives the focus line. */
   color: var(--ui-foreground);
@@ -104,7 +104,7 @@
   position: absolute;
   inset: calc((var(--radio-size) - 6px) / 2);
   z-index: 1;
-  border-radius: var(--ui-radius-full);
+  border-radius: 50%;
   background: var(--ui-on-accent);
   clip-path: circle(0 at 50% 50%);
   pointer-events: none;

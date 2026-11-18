@@ -2,7 +2,6 @@
 
 import { useId, useRef, useState, useSyncExternalStore, type FocusEvent, type ReactNode, type Ref } from "react";
 import { Select as BaseSelect } from "@base-ui/react/select";
-import { FieldMessage } from "../field/field";
 import { Icon } from "../icons/icons";
 import { useHighlight } from "../listbox/use-highlight";
 import { TextMorph } from "../text-morph/text-morph";
@@ -238,7 +237,22 @@ export function Select({
             </select>
           )}
         </div>
-        {hasMessage && <FieldMessage id={messageId} hint={hint} error={error} />}
+        {hasMessage && (
+          <p id={messageId} className={styles.message} aria-live="polite">
+            {error ? (
+              <span key={error} className={styles.error}>
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" />
+                  <path d="M8 4.75v3.75" stroke="currentColor" strokeLinecap="round" />
+                  <circle cx="8" cy="11" r="0.9" fill="currentColor" />
+                </svg>
+                {error}
+              </span>
+            ) : (
+              hint && <span className={styles.hint}>{hint}</span>
+            )}
+          </p>
+        )}
         {!native && (
           <BaseSelect.Portal container={container ?? undefined}>
             <BaseSelect.Positioner

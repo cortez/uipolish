@@ -25,7 +25,7 @@ pieces move between screens.
 | `--ui-pad-tag` | 12 | Inside a badge, tag or count pill: half its 24px height, so the label starts where the round end stops |
 | `--ui-pad-tag-sm` | 8 | A 20px tag, and a tag inside a sentence |
 | `--ui-pad-row` | 12 | Inside a row of a menu or a list in a panel, inline. Never less than the row's radius |
-| `--ui-inset-menu` | 4 | A menu's inset around its rows (rows take panel radius − inset) |
+| `--ui-inset-menu` | 12 | A menu's inset around its rows (rows take panel radius − inset) |
 | `--ui-pad-card` | 16 → 24 | Inside a card or panel |
 | `--ui-pad-section` | 24 → 40 | Inside a screen, a page-level block, a demo stage |
 | `--ui-gap-tight` | 4 | Lines of one thing: a title and its description, a label and its value |
@@ -147,8 +147,8 @@ p:has(+ ul) { margin-block-end: 0.25em; }     /* a list belongs to its lead-in *
 - **Menus and lists in a panel** (dropdown and context menus, select and
   combobox lists, the command palette, a model picker): rows are rounded
   rectangles, never pills. The panel insets its rows evenly and each row
-  takes the concentric radius, panel radius − inset (a menu: 16 − 4 = 12;
-  a field's list: 12 − 4 = 8). Row text sits `--ui-pad-row` (12) in, at
+  takes the concentric radius, panel radius − inset (a menu: 24 − 12 = 12;
+  a field's list: 14 − 4 = 10). Row text sits `--ui-pad-row` (12) in, at
   least the row's radius, so it never runs into the curve. A group label,
   a search row or a status line starts its text where the rows' text does.
   A pill row on a short row puts the text inside the round end and reads

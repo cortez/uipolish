@@ -116,45 +116,6 @@
   stroke-width: 4;
 }
 
-/* Solid: filled, with a thin stroke in the same color rounding its
-   corners. No dash, so it's whole at rest. It morphs over --ui-dur-move on
-   the draw curve, which eases in and out, so the change of shape is on
-   screen long enough to see (and with no overshoot the halves never part);
-   it leaves and arrives by fading and scaling about its own center. */
-.solid {
-  fill: currentColor;
-  stroke-width: var(--ui-icon-stroke-medium);
-  stroke-dasharray: none;
-  stroke-dashoffset: 0;
-  transition:
-    d var(--ui-dur-move) var(--ui-ease-draw),
-    opacity var(--ui-dur-fast) var(--ui-ease-enter),
-    scale var(--ui-dur-glide) var(--ui-ease-glide);
-}
-
-.solid[data-off] {
-  stroke-dashoffset: 0;
-  opacity: 0;
-  scale: 0.6;
-  transition:
-    opacity var(--ui-dur-instant) var(--ui-ease-exit),
-    scale var(--ui-dur-fast) var(--ui-ease-exit);
-}
-
-.solid[data-enter] {
-  transition:
-    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) * 0.6),
-    scale var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) * 0.6);
-}
-
-@starting-style {
-  .icon[data-ready] .solid[data-enter] {
-    stroke-dashoffset: 0;
-    opacity: 0;
-    scale: 0.6;
-  }
-}
-
 /* Mask copy of a cut stroke: gaps the other strokes on both sides of it. */
 .cut {
   stroke: black;

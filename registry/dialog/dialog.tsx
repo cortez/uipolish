@@ -56,11 +56,11 @@ export type ModalProps = {
   onForceClose?: () => void;
   /** Where focus goes when it opens. Defaults to the first control inside. */
   initialFocus?: FocusTarget;
-  /** Focus returns to this element (and with growFrom="trigger", the panel grows out of it). Defaults to whatever had focus when it opened. */
+  /** The panel grows out of this element, and focus returns to it. Defaults to whatever had focus when it opened. */
   triggerRef?: RefObject<HTMLElement | null>;
   /** Where focus goes on close when the trigger is gone (a deleted row, say). */
   finalFocus?: RefObject<HTMLElement | null>;
-  /** Where the panel grows from. "center", the default, is the same every time; "trigger" grows it out of the trigger. */
+  /** "center" when it wasn't opened from anything on screen, like a keyboard shortcut. */
   growFrom?: "trigger" | "center";
   role?: "dialog" | "alertdialog";
   className?: string;
@@ -79,7 +79,7 @@ export function Modal({
   initialFocus,
   triggerRef,
   finalFocus,
-  growFrom = "center",
+  growFrom = "trigger",
   role = "dialog",
   className,
   children,

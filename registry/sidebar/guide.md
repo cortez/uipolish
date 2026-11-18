@@ -206,8 +206,8 @@ Nothing reflows while the sidebar folds: rows narrow with it, so the
 current pill becomes the rail's capsule, while the sections and recent list
 are held at the open width and fade before the edge reaches them. Labels
 leave in the first 120ms and come back once the width is most of the way
-open, so no word is read while it moves. The width eases like a height;
-the pill flies like Tabs', stretching
+open, so no word is read while it moves. The width eases like a height
+(Chat app's sidebar does the same); the pill flies like Tabs', stretching
 from one row to the next. It only flies between rows of the same width that
 are both on screen; otherwise it moves at once.
 

@@ -9,15 +9,15 @@
 
 .panel {
   --list-pad: var(--ui-space-1);
-  --panel-radius: var(--ui-radius-lg);
+  --panel-radius: var(--ui-radius-md);
   display: flex;
   flex-direction: column;
   max-height: var(--available-height, none);
   overflow: hidden;
   border-radius: var(--panel-radius);
-  background: var(--ui-surface-glass);
-  backdrop-filter: blur(var(--ui-glass-blur));
-  -webkit-backdrop-filter: blur(var(--ui-glass-blur));
+  background: var(--ui-surface-floating);
+  -webkit-backdrop-filter: var(--ui-blur-floating);
+  backdrop-filter: var(--ui-blur-floating);
   box-shadow: var(--ui-shadow-floating);
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);

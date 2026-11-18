@@ -19,9 +19,9 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   border-radius: var(--ui-radius-lg);
-  background: var(--ui-surface-glass);
-  backdrop-filter: blur(var(--ui-glass-blur));
-  -webkit-backdrop-filter: blur(var(--ui-glass-blur));
+  background: var(--ui-surface-floating);
+  -webkit-backdrop-filter: var(--ui-blur-floating);
+  backdrop-filter: var(--ui-blur-floating);
   box-shadow: var(--ui-shadow-floating);
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
@@ -138,7 +138,7 @@
   content: "";
   width: 6px;
   height: 6px;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: currentColor;
 }
 
@@ -174,8 +174,8 @@
   mask-size: 300% 100%;
   mask-repeat: no-repeat;
   animation:
-    menu-dim var(--ui-dur-base) var(--ui-ease-color) var(--ui-dur-instant) forwards,
-    menu-sweep var(--ui-dur-sweep) linear var(--ui-dur-instant) infinite;
+    menu-dim var(--ui-dur-base) var(--ui-ease-color) 120ms forwards,
+    menu-sweep var(--ui-dur-sweep) linear 120ms infinite;
 }
 
 @keyframes menu-dim {
@@ -200,9 +200,7 @@
   text-wrap: pretty;
 }
 
-/* The shortcut's Kbd, plain. Doubled so it outranks the Kbd's own root
-   rule in any stylesheet order. */
-.shortcut.shortcut {
+.shortcut {
   flex-shrink: 0;
   margin-inline-start: var(--ui-space-4);
   color: var(--ui-subtle);
@@ -230,7 +228,7 @@
   padding: var(--ui-space-2) var(--ui-pad-row) var(--ui-space-1);
   color: var(--ui-subtle);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-regular);
+  font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-sm);
 }
 

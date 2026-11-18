@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "text",
+  "type": "registry:ui",
+  "title": "Text",
+  "description": "CSS text utilities: truncation that fades the end instead of adding an ellipsis, text for screen readers only, and a shimmer for work in progress.",
+  "registryDependencies": [
+    "https://raw.githubusercontent.com/cortez/uipolish/main/r/tokens.json"
+  ],
+  "dependencies": [],
+  "files": [
+    {
+      "path": "components/ui/text/text.module.css",
+      "type": "registry:file",
+      "target": "components/ui/text/text.module.css",
+      "content": "@layer theme, base, components, utilities;\n\n/* Shared text utilities; other components compose these classes. */\n\n/* The fade only shows when text overflows: otherwise the scroll timeline is inactive. */\n\n@property --truncate-fade {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@layer components {\n  /* Text that's never cut: a long name, email or path breaks onto the next\n     line, inside a word only when there's nowhere else to break. Use this for\n     anything a person needs to read in full. */\n  .wrap {\n    min-width: 0;\n    overflow-wrap: anywhere;\n    text-wrap: pretty;\n  }\n\n  /* One line, fading at the end when cut. Only for rows that must keep a\n     fixed height (a virtualized table); give the full text a title too. The padding/negative margin stops\n     overflow: hidden clipping descenders and accents at tight line heights. */\n  .truncate {\n    min-width: 0;\n    overflow: hidden;\n    white-space: nowrap;\n    padding-block: 0.2em;\n    margin-block: -0.2em;\n  }\n\n  /* Several lines; set --truncate-lines (default 2). */\n  .truncateLines {\n    overflow: hidden;\n    max-height: calc(var(--truncate-lines, 2) * 1lh);\n  }\n\n  @supports (animation-timeline: scroll()) {\n    .truncate,\n    .truncateLines {\n      --truncate-to: right;\n      animation: truncate-overflow linear both;\n    }\n\n    :is([dir=\"rtl\"]) .truncate,\n    :is([dir=\"rtl\"]) .truncateLines {\n      --truncate-to: left;\n    }\n\n    .truncate {\n      mask-image: linear-gradient(to var(--truncate-to), #000 calc(100% - var(--truncate-fade)), transparent);\n      animation-timeline: scroll(self inline);\n    }\n\n    .truncateLines {\n      mask-image:\n        linear-gradient(#000 0 0),\n        linear-gradient(to var(--truncate-to), #000 calc(100% - var(--truncate-fade)), transparent);\n      mask-size: 100% calc(100% - 1lh), 100% 1lh;\n      mask-position: top, bottom;\n      mask-repeat: no-repeat;\n      animation-timeline: scroll(self block);\n    }\n  }\n\n  /* Without scroll timelines, fall back to an ellipsis. */\n  @supports not (animation-timeline: scroll()) {\n    .truncate {\n      text-overflow: ellipsis;\n    }\n\n    .truncateLines {\n      display: -webkit-box;\n      -webkit-box-orient: vertical;\n      -webkit-line-clamp: var(--truncate-lines, 2);\n    }\n  }\n\n  @keyframes truncate-overflow {\n    from,\n    to {\n      --truncate-fade: 24px;\n    }\n  }\n\n  /* Visually hidden, still read by screen readers. */\n  .srOnly {\n    position: absolute;\n    width: 1px;\n    height: 1px;\n    overflow: hidden;\n    clip-path: inset(50%);\n    white-space: nowrap;\n  }\n\n  /* Work in progress: a light band sweeps across dimmed text. --sweep-dim sets the dim. */\n  .sweep {\n    mask-image: linear-gradient(\n      90deg,\n      rgb(0 0 0 / var(--sweep-dim, 0.55)) 35%,\n      #000 50%,\n      rgb(0 0 0 / var(--sweep-dim, 0.55)) 65%\n    );\n    mask-size: 300% 100%;\n    mask-repeat: no-repeat;\n    animation: sweep var(--ui-dur-sweep) linear infinite;\n  }\n\n  @keyframes sweep {\n    from {\n      mask-position: 100% 0;\n    }\n    to {\n      mask-position: 0 0;\n    }\n  }\n\n  @media (prefers-reduced-motion: reduce) {\n    .sweep {\n      mask-image: none;\n      animation: none;\n    }\n  }\n}\n"
+    }
+  ],
+  "docs": "Text: https://uipolish.com/docs/text has every state, the motion and the accessibility notes."
+}

@@ -11,8 +11,6 @@ import styles from "./toast.module.css";
 
 export type ToastType = "default" | "success" | "error" | "loading";
 
-const ICONS = { default: "info", success: "check-circle", error: "alert" } as const;
-
 export type ToastAction = { label: string; onClick: () => void };
 
 export type ToastOptions = {
@@ -214,34 +212,59 @@ function ToastItem({ toast: item, place }: { toast: Item; place?: Place }) {
       }}
     >
       <div className={styles.card}>
-        <span className={styles.icon} aria-hidden="true">
-          {type === "loading" ? <span className={styles.pulse} /> : <Icon name={ICONS[type]} />}
-        </span>
-        <div className={styles.text}>
-          <BaseToast.Title className={styles.title} render={<p />}>
-            {data?.morph ? <TextMorph>{String(title ?? "")}</TextMorph> : title}
-          </BaseToast.Title>
-          {description && <BaseToast.Description className={styles.description}>{description}</BaseToast.Description>}
+        <div className={styles.content}>
+          <span className={styles.icon} aria-hidden="true">
+            <ToastIcon type={type} />
+          </span>
+          <div className={styles.text}>
+            <BaseToast.Title className={styles.title} render={<p />}>
+              {data?.morph ? <TextMorph>{String(title ?? "")}</TextMorph> : title}
+            </BaseToast.Title>
+            {description && <BaseToast.Description className={styles.description}>{description}</BaseToast.Description>}
+          </div>
+          {data?.action && (
+            <Button
+              variant="secondary"
+              className={styles.action}
+              onClick={() => {
+                data.action!.onClick();
+                dismiss(id);
+              }}
+            >
+              {data.action.label}
+            </Button>
+          )}
+          <BaseToast.Close className={styles.close} aria-label={`Dismiss: ${String(title ?? "")}`}>
+            <Icon name="close" />
+          </BaseToast.Close>
         </div>
-        {data?.action && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className={styles.action}
-            onClick={() => {
-              data.action!.onClick();
-              dismiss(id);
-            }}
-          >
-            {data.action.label}
-          </Button>
-        )}
-        <BaseToast.Close
-          render={<Button variant="ghost" size="sm" className={styles.close} aria-label={`Dismiss: ${String(title ?? "")}`} />}
-        >
-          <Icon name="close" />
-        </BaseToast.Close>
       </div>
     </BaseToast.Root>
+  );
+}
+
+function ToastIcon({ type }: { type: ToastType }) {
+  if (type === "loading") return <span className={styles.pulse} />;
+  if (type === "success")
+    return (
+      <svg viewBox="0 0 16 16">
+        <circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" />
+        <path className={styles.tick} d="M5.4 8.2l1.8 1.8 3.4-3.6" pathLength={1} fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  if (type === "error")
+    return (
+      <svg viewBox="0 0 16 16">
+        <circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" />
+        <path d="M8 4.75v3.75" stroke="currentColor" strokeLinecap="round" />
+        <circle cx="8" cy="11" r="0.9" fill="currentColor" />
+      </svg>
+    );
+  return (
+    <svg viewBox="0 0 16 16">
+      <circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" />
+      <path d="M8 7.5v3.5" stroke="currentColor" strokeLinecap="round" />
+      <circle cx="8" cy="5" r="0.9" fill="currentColor" />
+    </svg>
   );
 }

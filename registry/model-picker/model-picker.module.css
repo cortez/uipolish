@@ -12,7 +12,7 @@
   height: var(--ui-control-sm);
   padding: 0 var(--trigger-pad-end) 0 var(--trigger-pad-start);
   border: 0;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: none;
   color: var(--ui-muted);
   isolation: isolate;
@@ -23,7 +23,7 @@
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   transition:
-    width var(--ui-dur-glide) var(--ui-ease-glide),
+    width var(--ui-dur-move) var(--ui-ease-move),
     color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
@@ -123,9 +123,9 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   border-radius: var(--ui-radius-lg);
-  background: var(--ui-surface-glass);
-  backdrop-filter: blur(var(--ui-glass-blur));
-  -webkit-backdrop-filter: blur(var(--ui-glass-blur));
+  background: var(--ui-surface-floating);
+  -webkit-backdrop-filter: var(--ui-blur-floating);
+  backdrop-filter: var(--ui-blur-floating);
   box-shadow: var(--ui-shadow-floating);
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);

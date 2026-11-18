@@ -30,17 +30,41 @@
   }
 }
 
-/* Small secondary Buttons, in the muted text color until hovered.
-   Doubled so it outranks the button's own rules in any stylesheet order. */
-.suggestion.suggestion {
-  --button-fg: var(--ui-muted);
-  font-size: var(--ui-text-sm);
+.suggestion {
+  position: relative;
+  height: var(--ui-control-sm);
+  padding-inline: 14px;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  color: var(--ui-muted);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
 }
 
 @media (hover: hover) {
-  .suggestion.suggestion:hover:not(:disabled) {
-    --button-fg: var(--ui-foreground);
+  .suggestion:hover:not(:disabled) {
+    background: var(--ui-fill-solid);
+    color: var(--ui-foreground);
   }
+}
+
+.suggestion:active:not(:disabled) {
+  background: var(--ui-fill-strong-solid);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.suggestion:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
 }
 
 /* Composer */
@@ -146,7 +170,6 @@
 }
 
 .fileIcon {
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -155,6 +178,15 @@
   border-radius: calc(var(--attachment-radius) - var(--attachment-pad));
   background: var(--ui-fill);
   color: var(--ui-muted);
+}
+
+.fileIcon svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke-medium);
+  stroke-linejoin: round;
 }
 
 .fileText {
@@ -293,42 +325,106 @@
   min-width: 0;
 }
 
-/* Attach: a small ghost Button (an icon capsule), muted until hovered. */
-.iconButton.iconButton {
-  --button-fg: var(--ui-muted);
+.iconButton,
+.send {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: var(--ui-control-sm);
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.iconButton {
+  width: calc(var(--ui-control-sm) * var(--ui-capsule));
+  padding: 0;
+  background: transparent;
+  color: var(--ui-muted);
+}
+
+.iconButton svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke);
+  stroke-linecap: round;
 }
 
 @media (hover: hover) {
-  .iconButton.iconButton:hover:not(:disabled) {
-    --button-fg: var(--ui-foreground);
+  .iconButton:hover:not(:disabled) {
+    background: var(--ui-fill);
+    color: var(--ui-foreground);
   }
 }
 
-/* Send / Stop: a small primary Button. It carries "Stop" as a word while a
-   reply streams, so it isn't an icon-only capsule: at rest it's as wide as
-   one, and the word widens it. */
-.send.send {
-  min-width: calc(var(--ui-control-sm) * var(--ui-capsule));
-  /* No gap: the label's leading space is the gap, so the arrow alone sits
-     dead center. */
-  gap: 0;
-  padding-inline: var(--ui-space-2);
-  overflow: clip;
-  font-size: var(--ui-text-sm);
+.iconButton:active:not(:disabled) {
+  background: var(--ui-fill-strong);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
 }
 
-/* Nothing to send: a quiet gray pill that doesn't answer hover or press. */
-.send.send[data-state="empty"] {
-  --button-bg: var(--ui-fill-strong);
-  --button-bg-hover: var(--ui-fill-strong);
-  --button-bg-press: var(--ui-fill-strong);
-  --button-fg: var(--ui-subtle);
-  --button-depth: 0 0 transparent;
+@media (pointer: coarse) {
+  .iconButton::before,
+  .send::before,
+  .suggestion::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+}
+
+/* Send / Stop */
+
+.send {
+  min-width: calc(var(--ui-control-sm) * var(--ui-capsule));
+  padding-inline: var(--ui-space-2);
+  overflow: clip;
+  background: var(--ui-ink);
+  color: var(--ui-on-ink);
+  font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  white-space: nowrap;
+}
+
+.send[data-state="empty"] {
+  background: var(--ui-fill-strong);
+  color: var(--ui-subtle);
   cursor: default;
 }
 
-.send.send[data-state="empty"]:active::before {
-  scale: none;
+@media (hover: hover) {
+  .send:hover:not([data-state="empty"], :disabled) {
+    background: color-mix(in oklch, var(--ui-ink) 86%, var(--ui-on-ink));
+  }
+}
+
+.send:active:not([data-state="empty"], :disabled) {
+  background: color-mix(in oklch, var(--ui-ink) 78%, var(--ui-on-ink));
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.send:disabled {
+  cursor: default;
+}
+
+.iconButton:focus-visible,
+.send:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.send {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .sendLabel {
@@ -338,7 +434,6 @@
 /* Drop target */
 
 .dropzone {
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -356,6 +451,16 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.dropzone svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke-medium);
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .composer[data-dragging] .dropzone {
@@ -409,6 +514,9 @@
   .hintText {
     animation: none;
   }
+  .send:active,
+  .iconButton:active,
+  .suggestion:active,
   .remove:active svg {
     scale: none;
   }

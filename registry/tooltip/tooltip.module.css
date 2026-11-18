@@ -54,14 +54,12 @@
   min-width: 0;
 }
 
-/* The shortcut's Kbd, plain. Doubled so it outranks the Kbd's own root
-   rule in any stylesheet order. */
-.kbd.kbd {
+.kbd {
   flex-shrink: 0;
   color: var(--ui-on-ink-muted);
   font-family: var(--ui-font-mono);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-regular);
+  font-weight: var(--ui-weight-medium);
   /* Otherwise the mono face on the baseline makes the tooltip taller. */
   line-height: 1;
 }

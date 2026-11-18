@@ -3,7 +3,7 @@
 A one-time code as a row of boxes, one per character: digits by default,
 or letters and digits with `characters="alphanumeric"`. Typing moves along,
 Backspace steps back, a paste or the platform's autofill fills every box at
-once, and the value never has holes in it. Digits are the Title style (body size at the title weight) with
+once, and the value never has holes in it. Digits are 24px semibold with
 tabular figures, so every box holds the same weight of ink; each fades in
 and settles 2px as it lands.
 
@@ -147,7 +147,7 @@ check still appears.
 - The boxes are a `role="group"` labelled by the visible label and described
   by the hint or error. Each box is named "Digit 1 of 6" and so on.
 - `inputmode="numeric"` and `pattern="[0-9]*"` bring up the number pad.
-- Digits are body size, and 16px on touch screens, below which iOS zooms into a field.
+- Digits are 24px, over the 16px below which iOS zooms into a field.
 - The message line is `aria-live="polite"`, so an error is read out without
   moving focus. Clear `error` as soon as the user edits.
 - Clicking the label focuses the first empty box.

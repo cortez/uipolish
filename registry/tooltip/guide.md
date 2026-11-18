@@ -16,7 +16,7 @@ shared delay lives inside it.
   shortcut beside it.
 - One extra sentence about a control whose label is already clear: what
   "Send invitations" does, and to whom.
-- Showing a keyboard shortcut next to the action it triggers (`kbd="⌘C"`), drawn as a plain `Kbd`.
+- Showing a keyboard shortcut next to the action it triggers (`kbd="⌘C"`).
 
 ## When not to
 

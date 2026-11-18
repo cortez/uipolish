@@ -16,7 +16,6 @@ import {
 } from "react";
 import { Modal } from "../dialog/dialog";
 import { Icon } from "../icons/icons";
-import { Kbd } from "../kbd/kbd";
 import { fuzzyMatch } from "./fuzzy";
 import styles from "./command-palette.module.css";
 
@@ -417,8 +416,16 @@ export function CommandPalette({
                           shortcut's place: the cell holds the wider of the two, so moving
                           the highlight never reflows a label. */}
                       <span className={styles.keys} aria-hidden="true">
-                        {row.command.shortcut && <Kbd keys={row.command.shortcut} size="sm" className={styles.shortcut} />}
-                        <Kbd keys={["enter"]} size="sm" className={styles.enter} />
+                        {row.command.shortcut && (
+                          <span className={styles.shortcut}>
+                            {row.command.shortcut.map((k) => (
+                              <kbd key={k} className={styles.key}>
+                                {k}
+                              </kbd>
+                            ))}
+                          </span>
+                        )}
+                        <kbd className={`${styles.key} ${styles.enter}`}>enter</kbd>
                       </span>
                     </div>
                   );
@@ -451,14 +458,14 @@ export function CommandPalette({
 
       <footer className={styles.footer} aria-hidden="true" onPointerDown={keepFocus}>
         <span>
-          <Kbd keys={["up"]} size="sm" />
-          <Kbd keys={["down"]} size="sm" /> to move
+          <kbd className={styles.key}>↑</kbd>
+          <kbd className={styles.key}>↓</kbd> to move
         </span>
         <span>
-          <Kbd keys={["enter"]} size="sm" /> to run
+          <kbd className={styles.key}>enter</kbd> to run
         </span>
         <span>
-          <Kbd keys={["esc"]} size="sm" /> to close
+          <kbd className={styles.key}>esc</kbd> to close
         </span>
       </footer>
 

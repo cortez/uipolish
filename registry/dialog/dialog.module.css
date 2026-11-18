@@ -47,23 +47,26 @@
   font-family: var(--ui-font-sans);
   overflow: clip;
   outline: none;
-  /* Arrives the same way every time, from its own center: fades and scales
-     up from 0.97. Nothing travels or blurs. */
+  /* Arrives like a popover, a block's size: fades, scales up from 0.97 and
+     clears a 2px blur. No spring: nothing travels, it comes into focus. */
   transition:
     opacity var(--ui-dur-fast) var(--ui-ease-enter),
-    scale var(--ui-dur-base) var(--ui-ease-enter);
+    scale var(--ui-dur-base) var(--ui-ease-enter),
+    filter var(--ui-dur-base) var(--ui-ease-enter);
 }
 
 .modal[data-starting-style],
 .modal[data-ending-style] {
   opacity: 0;
   scale: 0.97;
+  filter: blur(2px);
 }
 
 .modal[data-ending-style] {
   transition:
     opacity var(--ui-dur-instant) var(--ui-ease-exit),
-    scale var(--ui-dur-instant) var(--ui-ease-exit);
+    scale var(--ui-dur-instant) var(--ui-ease-exit),
+    filter var(--ui-dur-instant) var(--ui-ease-exit);
 }
 
 /* Phones: docked at the bottom, in reach of a thumb, 8px off the edges.
@@ -89,6 +92,7 @@
   .modal[data-starting-style],
   .modal[data-ending-style] {
     scale: none;
+    filter: none;
   }
 }
 
@@ -120,6 +124,7 @@
   transition:
     opacity var(--ui-dur-fast) var(--ui-ease-enter),
     scale var(--ui-dur-base) var(--ui-ease-enter),
+    filter var(--ui-dur-base) var(--ui-ease-enter),
     width var(--ui-dur-panel) var(--ui-ease-expand);
 }
 
@@ -178,7 +183,7 @@
   color: var(--ui-foreground);
   font-family: var(--ui-font-display);
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-title);
+  font-weight: var(--ui-weight-semibold);
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-heading);
   text-wrap: balance;

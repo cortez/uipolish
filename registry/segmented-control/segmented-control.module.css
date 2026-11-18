@@ -18,7 +18,7 @@
   overscroll-behavior-x: contain;
   scrollbar-width: none;
   padding: var(--segmented-pad);
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   box-shadow: var(--ui-track-edge);
   font-family: var(--ui-font-sans);
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
@@ -46,7 +46,7 @@
   left: 0;
   z-index: -1;
   height: var(--segmented-option);
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: var(--ui-track-pill);
   contain: strict;
   pointer-events: none;
@@ -64,7 +64,7 @@
   min-width: 0;
   height: var(--segmented-option);
   padding-inline: 14px;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   color: var(--ui-muted);
   /* One weight in every state, so selecting never changes a width. */
   font: var(--ui-weight-medium) var(--ui-text-md) / 1 var(--ui-font-sans);

@@ -110,7 +110,6 @@ and "of 5,000" is muted.
 | Numbers that stay on screen slide to their new slot | `--ui-dur-glide` | `--ui-ease-glide`, the pill's own curve |
 | Numbers that arrive fade in where they land | `--ui-dur-fast` | `--ui-ease-enter` |
 | Hover, press and current colors | `--ui-dur-instant` | `--ui-ease-color` |
-| Range text ("26–50 of 240", "Page 3 of 12"): the digits that change roll, forward pages up and back pages down | `--ui-dur-glide` | `--ui-ease-glide` (text morph) |
 
 Each number is keyed by its page, so going from 4 to 5 slides 4, 5 and 6
 one slot along while the pill holds the middle slot: the row moves, not
@@ -119,10 +118,9 @@ doesn't overshoot, so a number sliding in lands in the pill without
 passing it. A jump (1 to 20) slides the pill the whole way, and
 the numbers that stay (1 and 20) don't move. Slides use FLIP on
 `translate`, and one cut short starts again from where it is on screen.
-Nothing animates on the first paint or when the row resizes. The range text sits over a hidden copy of its widest value, so it never
-moves the buttons while it rolls. Under
-`prefers-reduced-motion: reduce` everything lands at once, the range text
-swaps; colors still change.
+Nothing animates on the first paint or when the row resizes. Under
+`prefers-reduced-motion: reduce` everything lands at once; colors still
+change.
 
 ## Accessibility
 

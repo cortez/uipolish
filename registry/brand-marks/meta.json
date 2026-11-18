@@ -1,0 +1,7 @@
+{
+  "name": "brand-marks",
+  "title": "Brand marks",
+  "summary": "Marks for the services an app connects to, cites or signs in with: GitHub, Google, Notion, Stripe, Wikipedia and about 45 more, as inline SVGs in each brand's color.",
+  "version": "0.2.1",
+  "dependencies": []
+}

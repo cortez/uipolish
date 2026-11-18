@@ -1,6 +1,6 @@
 // Builds skills/ui-polish/ from foundation/: SKILL.md from the template with
 // the opinions filled in, and references/ as copies of the rules, tokens and
-// checklist. `npx skills add cortez/uipolish` installs that folder.
+// checklist. Never edit skills/ by hand; run this instead.
 //
 //   node scripts/build-skill.mjs          write it
 //   node scripts/build-skill.mjs --check  exit 1 if it's out of date

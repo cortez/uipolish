@@ -45,12 +45,12 @@ work has failed. No accent.
 
 | What | How |
 |---|---|
-| Fill moves to a new amount | A full-width bar slid back by what's left (its round end stays round), `--ui-dur-glide` on `--ui-ease-glide`: held by the track, it lands on the amount without passing it. Updates mid-way retarget smoothly |
+| Fill moves to a new amount | A full-width bar slid back by what's left (its round end stays round), `--ui-dur-move` on `--ui-ease-move`. Updates mid-way retarget smoothly |
 | Unknown amount | A short pill of the fill slides across the track at constant speed (`linear`) and starts again off the other side. The track never moves |
 | A step finishes | Its segment fills from its start edge with `clip-path`, `--ui-dur-base` on `--ui-ease-draw`; going back un-fills a step faster |
-| Percentage, step count and step name | `TextMorph`: digits that change roll (up as the work advances), on `--ui-ease-glide`; at most five changes a second, the last always lands |
+| Step name and count | `TextMorph` |
 
-Under `prefers-reduced-motion` the fill jumps, figures swap at once, and an unknown amount is a
+Under `prefers-reduced-motion` the fill jumps, and an unknown amount is a
 steady half-strength track. RTL fills from the right.
 
 ## Accessibility

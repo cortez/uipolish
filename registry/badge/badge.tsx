@@ -1,9 +1,7 @@
 import type { ComponentProps, ReactNode } from "react";
-import { TextMorph } from "../text-morph/text-morph";
 import styles from "./badge.module.css";
 
-// No "use client": stateless, so it renders on the server. A count's
-// TextMorph is the one client part, so a changing count rolls.
+// No "use client": stateless, so it renders on the server.
 
 type Tone = "neutral" | "accent" | "positive" | "warning" | "danger";
 
@@ -23,7 +21,7 @@ type BadgeProps = Omit<ComponentProps<"span">, "children"> & {
   label?: string;
 };
 
-/** A small static label for a status or a count; a count that changes rolls its digits. */
+/** A small static label for a status or a count. */
 export function Badge({
   tone = "neutral",
   dot = false,
@@ -36,7 +34,7 @@ export function Badge({
   ...props
 }: BadgeProps) {
   const isCount = count !== undefined;
-  const shown = isCount ? <TextMorph>{count > max ? `${max}+` : String(count)}</TextMorph> : children;
+  const shown = isCount ? (count > max ? `${max}+` : String(count)) : children;
 
   return (
     <span

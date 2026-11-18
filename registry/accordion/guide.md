@@ -101,7 +101,7 @@ its container: a long title wraps rather than widening it.
 | Content fades in, a beat after the box starts opening | `--ui-dur-fast` × 1.25 (200ms), 60ms delay | `--ui-ease-enter` |
 | Content fades out while the collapse is still easing in, so the text is gone before the edge reaches it | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |
 | Chevron flips: its tip moves, its ends stay | `Icon` | |
-| A `meta` string changes ("2 on" → "3 on"): digits roll, the width follows | `--ui-dur-glide` | `--ui-ease-glide` (`TextMorph`) |
+| A `meta` string changes ("2 on" → "3 on"): digits roll, the width follows | `--ui-dur-move` | `--ui-ease-move` (`TextMorph`) |
 
 Sections hold reading, so the accordion moves half again as slow as the
 panel tokens; `--accordion-pace` (1.25) on the root changes it in one place.

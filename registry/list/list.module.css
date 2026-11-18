@@ -240,7 +240,7 @@
 
 /* Doubled so it outranks the composed inset rule in any stylesheet order. */
 .action.action {
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
 }
 
 .action:disabled {

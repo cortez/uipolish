@@ -1,8 +1,6 @@
-/* Equal-width figures, so a digit that rolls never changes the width. */
 .root {
   position: relative;
   display: inline-flex;
-  font-variant-numeric: tabular-nums;
   white-space: pre;
 }
 
@@ -32,15 +30,6 @@
 
 .row[data-morphing] {
   mask-image: linear-gradient(to var(--morph-to), #000 calc(100% - var(--morph-fade)), transparent);
-}
-
-/* While digits roll, the block padding fades out too: a digit is whole on
-   the line and gone past it, like a wheel seen through a window. */
-.row[data-morphing][data-rolling] {
-  mask-image:
-    linear-gradient(to var(--morph-to), #000 calc(100% - var(--morph-fade)), transparent),
-    linear-gradient(transparent, #000 0.3em, #000 calc(100% - 0.3em), transparent);
-  mask-composite: intersect;
 }
 
 /* A filter (the blur on arriving and leaving letters) paints only inside

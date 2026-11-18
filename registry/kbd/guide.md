@@ -3,7 +3,7 @@
 A key or a shortcut, the way the reader's keyboard labels it.
 `<Kbd keys={["mod", "K"]} />` shows ⌘ K on a Mac, iPhone or iPad and
 Ctrl K everywhere else. The caps are the command palette's caps: one
-letter makes a small rounded square, a word a wider one, and their color comes from the text
+letter makes a short pill, a word a longer one, and their color comes from the text
 around them. The platform is decided before the first paint, so the
 server-rendered page and the browser agree and nothing moves.
 
@@ -67,9 +67,9 @@ attribute it didn't render.
   the command palette's caps, and 16px.
 - Each cap is at least as wide as tall, 13px / 500 text, 5px sides (4px at
   `sm`), 2px between caps, as in the palette.
-- **Color comes from the context.** The cap's fill is the text color
-  at 7%, flat, with no edge, so caps
-  read the same in a muted hint, body text, or an ink tooltip. Set `color` on the Kbd or its parent.
+- **Color comes from the context.** The cap's fill is the text color at
+  7%, so caps read the same in a muted hint, body text, or an ink
+  tooltip; its edge is the control edge, `--ui-border-strong`. Set `color` on the Kbd or its parent.
 - `plain` takes the surrounding font, size and color, with no separators
   on Apple (⌘⇧P) and `+` elsewhere (Ctrl+Shift+P): each platform's own
   convention.

@@ -2,9 +2,9 @@
 
 A modal built on Base UI's `Dialog` (and `AlertDialog` for confirms), which
 traps focus, makes the page behind it inert, locks scroll and handles Escape
-and outside presses. The panel opens the
-same way every time, a fade and a small scale from its own center, and
-focus goes to the first field, then back to the trigger. The panel eases to its content's
+and outside presses. The panel grows out
+of the button that opened it and shrinks back into it on close. Focus goes to
+the first field, then back to the trigger. The panel eases to its content's
 size whenever it changes (a new step, a section opening, an error), and
 steps crossfade in place. If the form has unsaved edits,
 Escape, the backdrop and the close button ask "Discard changes?" inside the
@@ -46,8 +46,8 @@ The file exports three things:
 
 | State | What you see | How |
 |---|---|---|
-| Opening | Panel fades in and grows from 0.97 from its own center; backdrop fades in. Pass `growFrom="trigger"` to grow it out of the trigger instead | `[data-starting-style]` |
-| On a phone | Docked at the bottom, 8px off the edges and above the home indicator, in reach of a thumb; it grows upward when its content does | `max-width: 480px` |
+| Opening | Panel fades in, grows from 0.97 toward the trigger's center and clears a 2px blur; backdrop fades in | `transform-origin` set from the trigger's rect relative to the centered panel; `[data-starting-style]` |
+| On a phone | Docked at the bottom, 8px off the edges and above the home indicator, in reach of a thumb; it rises from its bottom edge and grows upward when its content does | `max-width: 480px` |
 | Open | Panel on a dimmed page; page doesn't scroll | Base UI's modal `Dialog.Root`, which locks scroll |
 | Body overflow | Body scrolls on its own; header and footer stay put | `overflow-y: auto; overscroll-behavior: contain` |
 | Content changes size | The panel eases to the new height; it stays centered, so it grows evenly up and down | `AnimatedSize` around the panel's layout |
@@ -57,7 +57,7 @@ The file exports three things:
 | Locked | Escape, backdrop and close do nothing | `locked`, e.g. while saving |
 | Confirm busy | Confirm button's label dims and shimmers, keeps its width; Cancel disabled | `onConfirm` returns a promise |
 | Confirm failed | Error message in danger text beside the buttons; dialog stays open | the promise rejects; its message is shown |
-| Closing | Panel fades and shrinks to 0.97; backdrop fades; then it unmounts | `[data-ending-style]`; Base UI waits for the transition before unmounting |
+| Closing | Panel fades, blurs and shrinks toward the trigger; backdrop fades; then it unmounts | `[data-ending-style]`; Base UI waits for the transition before unmounting |
 
 **The guard.** Pass `dirty` as a boolean or a function. It's read the moment
 the user tries to leave, not on every render. Escape on the guard means "Keep
@@ -91,7 +91,7 @@ when it opens, so a reflexive Enter does nothing harmful.
 
 ## Layout
 
-- **Header.** The title is the Title style (15/22, title weight,
+- **Header.** The title is the Heading step (22/28, semibold, tracked
   `--ui-tracking-heading`), the description Body in muted, 4px under it.
   The top padding is a step short of the sides (28 against 32), since the
   title's line height already puts air above its capitals.
@@ -113,9 +113,9 @@ The dialog's edge is the one in `--ui-shadow-floating`: the same outline color a
 | What | Duration | Easing |
 |---|---|---|
 | Panel opacity in | `--ui-dur-fast` | `--ui-ease-enter` |
-| Panel scale in, 0.97 → 1 from its center | `--ui-dur-base` | `--ui-ease-enter` |
+| Panel scale in, 0.97 → 1 from the trigger, and blur 2px → 0 | `--ui-dur-base` | `--ui-ease-enter` |
 | Backdrop in | `--ui-dur-fast` | `--ui-ease-enter` |
-| Panel and backdrop out (scale to 0.97) | `--ui-dur-instant` | `--ui-ease-exit` |
+| Panel and backdrop out (scale to 0.97, blur to 2px) | `--ui-dur-instant` | `--ui-ease-exit` |
 | Footer out when the guard appears | `--ui-dur-instant` | `--ui-ease-color` |
 | Guard in, in the footer's place, 75ms after | `--ui-dur-fast` | `--ui-ease-enter` |
 | Body and header dim behind the guard | `--ui-dur-fast` | `--ui-ease-color` |
@@ -125,12 +125,12 @@ The dialog's edge is the one in `--ui-shadow-floating`: the same outline color a
 | Leaving step fades | `--ui-dur-instant` | `--ui-ease-color` |
 | Arriving step fades in, half a beat later | `--ui-dur-fast` | `--ui-ease-enter` |
 
-The panel arrives the same way every time: it fades and scales up from
-0.97 around its own center, on the enter curve. No blur, no direction.
+The panel arrives like a popover, at a block's size: it fades, scales up
+from 0.97 and comes into focus from a 2px blur, all on the enter curve.
 Nothing travels, so nothing springs; the only springs are the ones that
 size it to new content. Opacity finishes first, so the panel is solid
 before it's settled. Under `prefers-reduced-motion: reduce` there is no
-scale (the panel and backdrop fade in `--ui-dur-instant`), sizes
+scale or blur (the panel and backdrop fade in `--ui-dur-instant`), sizes
 change at once and steps swap without fading. The backdrop is a plain dim
 in `--ui-scrim`, never blurred.
 
@@ -192,7 +192,7 @@ throws away a half-finished edit.
 )}
 ```
 
-After: a real modal, focus in the first field,
+After: a real modal, grows from the Edit button, focus in the first field,
 and leaving with edits asks first.
 
 ```tsx

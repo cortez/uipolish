@@ -25,7 +25,7 @@
   composes: wrap from "../text/text.module.css";
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-regular);
+  font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
 }
 

@@ -101,7 +101,7 @@
 
 .status[data-searching],
 .panel[data-waiting] {
-  animation: combobox-wait var(--ui-dur-fast) var(--ui-ease-enter) var(--combobox-wait, var(--ui-delay-busy)) both;
+  animation: combobox-wait var(--ui-dur-fast) var(--ui-ease-enter) var(--combobox-wait, 300ms) both;
 }
 
 .panel[data-waiting] .status[data-searching] {

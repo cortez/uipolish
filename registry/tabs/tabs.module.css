@@ -13,7 +13,7 @@
   max-width: 100%;
   /* The track the Segmented control shares: --ui-track-* in the tokens. */
   padding: var(--ui-track-inset);
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   box-shadow: var(--ui-track-edge);
   overflow-x: auto;
   /* Also blocks the browser's back-swipe gesture. */
@@ -62,7 +62,7 @@
   z-index: -1;
   width: var(--active-tab-width);
   height: var(--ui-control-sm);
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: var(--ui-track-pill);
   transform: translateX(var(--active-tab-left));
   contain: strict;
@@ -79,7 +79,7 @@
   height: var(--ui-control-sm);
   padding-inline: 14px;
   border: 0;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: transparent;
   color: var(--ui-muted);
   /* One weight for every state: bolding the selected tab would widen it. */

@@ -2,7 +2,7 @@
 
 A number with − and + buttons: guests, quantities, hours, prices. The
 field is one fixed width, the number is set in tabular figures, and a
-step rolls only the digits that changed, so nothing moves sideways; typing
+step swaps only the digits that changed, so nothing moves sideways; typing
 edits the real input underneath. For money and other
 values nobody steps through, the buttons come off and it reads like a text
 field, with the currency symbol pinned beside the digits.
@@ -75,29 +75,21 @@ end of the range a button stays in place, quiet, and does nothing.
 
 No layout moves when the value changes. The field keeps `--number-width`
 whatever the number, and its box, the buttons and the digits that stay
-hold their place to the pixel. The shown number is a `TextMorph`, which
-pairs digits by place value, so only the digits that changed roll: the old
-digit leaves and the new one arrives a full step away (0.6em), up for a
-larger value and down for a smaller one, faded at the line's edge so it
-reads as a wheel turning. Kept digits don't animate, and nothing animates
-on first paint or when typing ends. Held steps that repeat faster than five
-a second show the latest value at most five times a second, and the last
-value always lands. When the digit count changes (9 to 10), the new place
-rolls in with the others and the number eases to its new width.
-
-| What | Duration | Easing |
-|---|---|---|
-| A changed digit rolls out and in | `--ui-dur-glide` | `--ui-ease-glide` |
-| The leaving digit fades | `--ui-dur-instant` | `--ui-ease-color` |
-| The arriving digit fades in, half a beat later | `--ui-dur-fast` | `--ui-ease-enter` |
+hold their place to the pixel. Each character is keyed by its place from
+the right, so only the digits that changed are replaced, and they rise
+0.25em into place (up for a larger value, down for a smaller one) on
+`--ui-dur-fast` and `--ui-ease-enter`: transform and opacity only, no
+width animation, no spring. Kept digits don't animate, and nothing
+animates on first paint or when typing ends. When the digit count changes
+(9 to 10), the centered number recenters at once.
 
 Tabular figures only hold if the face has them (`tnum`). In a face
 without them, digits of different widths recenter the number by a pixel
 or two as it steps.
 
 Press shrinks only the button's fill. The note and error fade into the
-reserved line. Under `prefers-reduced-motion` the new value replaces the old
-at once.
+reserved line. Under `prefers-reduced-motion` changed digits fade in
+without the rise.
 
 ## Accessibility
 

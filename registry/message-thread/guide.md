@@ -57,9 +57,9 @@ reply needs a comment field or more than the default three.
 | Complete | The last words finish fading; actions appear under the reply | `status="complete"` |
 | Stopped | The partial reply, then "You stopped this reply." in subtle text; actions stay, Retry included | `status="stopped"` |
 | Error | The partial reply, a hairline, the error in red with a Retry button | `status="error"`, `error`, `onRetry` |
-| Scrolled up | "Jump to latest" floats above the composer: a small secondary `Button` on the raised shadow | user scrolled away from the bottom |
+| Scrolled up | "Jump to latest" pill floats above the composer, with the field edge color (`--ui-border-strong`) like a button | user scrolled away from the bottom |
 | Copied | The copy icon turns into a check and "Copied" grows out of it for 2s | Copy action |
-| Rated | The thumb fills in; pressing it again clears it | `aria-pressed`; `Icon` thumbs-up / thumbs-down |
+| Rated | The thumb fills in; pressing it again clears it | `aria-pressed` |
 
 **What an error says.** What happened, in a sentence: "The connection dropped
 before this reply finished." Not "Error 502", not "Oops". The partial text
@@ -141,13 +141,12 @@ rise and "Jump to latest" scrolls instantly.
   or the error. `aria-busy` is set on the message while it streams.
 - Each message is an `<article>` labeled with its author ("You",
   "Assistant", or your `author`). Avatars are off by default and decorative.
-- Actions are small ghost `Button`s (icon capsules, muted until hovered)
-  with names ("Copy", "Retry", "Good response",
+- Actions are real buttons with names ("Copy", "Retry", "Good response",
   "Bad response"). Thumbs use `aria-pressed`. "Copied" or "Couldn't copy.
   Select the text instead." goes to a `role="status"` region.
 - "Jump to latest" is removed from the tab order (`inert`) while hidden. After
   it's used, focus moves to the log so it doesn't fall to `<body>`.
-- Action buttons look 32px but take a 40px touch on coarse pointers, and are always visible there.
+- Action buttons are 40px on coarse pointers and always visible there.
 
 ## Before / after
 

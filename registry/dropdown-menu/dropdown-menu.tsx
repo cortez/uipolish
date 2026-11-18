@@ -14,7 +14,6 @@ import {
 import { Menu as BaseMenu } from "@base-ui/react/menu";
 import { Icon } from "../icons/icons";
 import { TextMorph } from "../text-morph/text-morph";
-import { Kbd } from "../kbd/kbd";
 import styles from "./dropdown-menu.module.css";
 
 /* Behavior (focus, keyboard, typeahead, submenus and their safe triangle,
@@ -200,7 +199,9 @@ function ItemBody({ id, leading, icon, shortcut, description, morph = false, tra
         )}
       </span>
       {shortcut && (
-        <Kbd keys={[shortcut]} variant="plain" size="sm" className={styles.shortcut} aria-hidden="true" />
+        <kbd className={styles.shortcut} aria-hidden="true">
+          {shortcut}
+        </kbd>
       )}
       {trailing}
     </>

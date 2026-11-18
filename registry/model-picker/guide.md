@@ -52,7 +52,7 @@ const models = [
 | Changed model | The name morphs (shared letters slide), and the trigger's width follows on the same spring | measured width, `TextMorph` |
 | Flipped / shifted | Opens the other way near a viewport edge and stays 8px inside it; the list scrolls if it's taller than the room | Base UI `Positioner`, `--available-height` |
 
-**Rows.** The list is a menu: inset `--ui-inset-menu` (4px) inside its
+**Rows.** The list is a menu: inset `--ui-inset-menu` (12px) inside its
 24px corner, rows with the concentric 12px radius and `--ui-pad-row` (12px)
 inside them, so the text clears each row's curve. The same as the dropdown
 menu and the command palette.
@@ -81,7 +81,7 @@ label's width to the new one. Nothing else in the row moves suddenly.
 - A press outside closes the list. The page doesn't lock its scroll while
   the list is open (`modal={false}`).
 
-The list's edge is the one in `--ui-shadow-floating`: the same outline color as fields (`--ui-border-strong`), drawn once. Don't add a ring of your own on top.
+The list's edge is the one in `--ui-shadow-floating`: the same outline color as fields (`--ui-border-strong`), drawn once. Don't add a ring of your own on top. Its fill is glass: `--ui-surface-floating` with `--ui-blur-floating` behind it, so the page shows through as soft color, never as shapes. Set those two tokens to `var(--ui-surface)` and `none` for a solid panel.
 
 ## Motion
 
@@ -91,7 +91,7 @@ The list's edge is the one in `--ui-shadow-floating`: the same outline color as 
 | List closes | `--ui-dur-instant` | `--ui-ease-exit` |
 | Highlight moves between options | `--ui-dur-snap` | `--ui-ease-snap` |
 | Check draws in on the new selection | `--ui-dur-base` | `--ui-ease-draw` |
-| Name morph and trigger width | `--ui-dur-glide` | `--ui-ease-glide`: the width lands once, with no overshoot to narrow the trigger past its new size |
+| Name morph and trigger width | `--ui-dur-move` | `--ui-ease-move` |
 | Fill and text color | `--ui-dur-instant` | `--ui-ease-color` |
 
 Under `prefers-reduced-motion: reduce` the list appears at once, the

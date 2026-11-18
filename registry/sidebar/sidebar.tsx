@@ -721,6 +721,14 @@ function useRows(items: SidebarRecentItem[]) {
   return rows;
 }
 
+function PinGlyph() {
+  return (
+    <svg className={styles.glyph} viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M5.25 2.75h5.5M6.5 2.75v3.5l-2 3h7l-2-3v-3.5M8 9.25v4" />
+    </svg>
+  );
+}
+
 function Recent({
   recent,
   value,
@@ -956,7 +964,7 @@ function RecentRow({
                   </MenuItem>
                 )}
                 {onPinnedChange && (
-                  <MenuItem icon={<Icon name="pin" />} onSelect={() => onPinnedChange(item.id, !item.pinned)}>
+                  <MenuItem icon={<PinGlyph />} onSelect={() => onPinnedChange(item.id, !item.pinned)}>
                     {item.pinned ? "Unpin" : "Pin"}
                   </MenuItem>
                 )}

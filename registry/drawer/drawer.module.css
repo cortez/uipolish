@@ -9,10 +9,8 @@
 /* The scrim is a sibling, not ::backdrop any more, so it gets the timings too. */
 .backdrop,
 .drawer {
-  /* A whole surface crossing the screen: the height-opening duration and a
-     half again on the way in (420ms), the panel duration on the way out. */
-  --drawer-open: calc(var(--ui-dur-panel) * 1.5);
-  --drawer-close: var(--ui-dur-panel);
+  --drawer-open: 420ms;
+  --drawer-close: 280ms;
 }
 
 .drawer {
@@ -190,7 +188,7 @@
   width: var(--ui-space-6);
   height: var(--ui-space-1);
   margin-block-start: var(--ui-space-2);
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: color-mix(in oklch, var(--ui-foreground) 16%, transparent);
 }
 
@@ -224,7 +222,7 @@
   color: var(--ui-foreground);
   font-family: var(--ui-font-display);
   font-size: var(--ui-text-2xl);
-  font-weight: var(--ui-weight-title);
+  font-weight: var(--ui-weight-semibold);
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-heading);
   text-wrap: balance;
@@ -250,7 +248,7 @@
   margin-inline-end: calc((16px - var(--close-width)) / 2);
   padding: 0;
   border: 0;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: transparent;
   color: var(--ui-muted);
   cursor: pointer;

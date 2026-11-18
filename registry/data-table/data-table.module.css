@@ -155,11 +155,11 @@
   display: flex;
   align-items: stretch;
   min-width: 0;
-  border-radius: var(--ui-radius-xs);
+  border-radius: calc(var(--ui-radius-sm) / 2);
   background: var(--ui-surface);
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-regular);
+  font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-sm);
   white-space: nowrap;
   outline: none;
@@ -246,7 +246,7 @@
   inset-inline-end: -12px;
   z-index: 2;
   width: 24px;
-  border-radius: var(--ui-radius-xs);
+  border-radius: calc(var(--ui-radius-sm) / 2);
   outline: none;
   touch-action: none;
 }
@@ -257,7 +257,7 @@
   inset-block: var(--ui-space-2);
   inset-inline-start: calc(50% - var(--ui-hairline) / 2);
   width: var(--ui-hairline);
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: var(--ui-border-strong);
   scale: 1 0.6;
   transition:
@@ -325,7 +325,7 @@
   gap: var(--ui-space-2);
   min-width: 0;
   padding-inline: var(--data-table-pad);
-  border-radius: var(--ui-radius-xs);
+  border-radius: calc(var(--ui-radius-sm) / 2);
   outline: none;
 }
 
@@ -474,7 +474,7 @@
   position: relative;
   flex: 1 1 auto;
   min-width: 0;
-  animation: data-table-arrive var(--ui-dur-fast) var(--ui-ease-enter) var(--ui-delay-busy) both;
+  animation: data-table-arrive var(--ui-dur-fast) var(--ui-ease-enter) 300ms both;
 }
 
 .placeholderRows {

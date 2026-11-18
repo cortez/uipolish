@@ -53,7 +53,6 @@ duration it was designed for. These are the roles in `tokens.css`:
 
   --ui-dur-pulse: 700ms;   /* half a breathing cycle */
   --ui-dur-sweep: 2400ms;  /* one pass of a light band, `linear` */
-  --ui-delay-busy: 300ms;  /* before a busy state shows, so quick work never flashes one */
 }
 ```
 

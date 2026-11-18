@@ -118,7 +118,7 @@
   top: 0;
   left: 0;
   z-index: -1;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: var(--nav-rail-capsule);
   box-shadow:
     0 0 0 var(--ui-hairline) var(--ui-border-strong),
@@ -141,7 +141,7 @@
   height: var(--nav-rail-item-h);
   padding: 0;
   border: 0;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: transparent;
   color: var(--ui-muted);
   font: inherit;
@@ -206,7 +206,7 @@
   min-width: 18px;
   height: 18px;
   padding-inline: 5px;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: var(--ui-accent);
   box-shadow: 0 0 0 var(--ui-knockout) var(--nav-rail-bg);
   color: var(--ui-on-accent);
@@ -340,7 +340,7 @@
 /* The label crossfades, offset half a beat, and rolls a few px the way the tooltip travelled. */
 .viewport > [data-current] {
   transition:
-    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) 60ms,
     translate var(--ui-dur-glide) var(--ui-ease-glide);
 }
 

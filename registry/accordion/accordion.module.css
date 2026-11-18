@@ -172,7 +172,7 @@
 .root[data-ready][data-type="single"]:has(> .item[data-open]) .item:not([data-open]) > .panel {
   transition:
     height var(--accordion-open) var(--ui-ease-expand),
-    opacity var(--ui-dur-instant) var(--ui-ease-exit);
+    opacity var(--ui-dur-instant) var(--ui-ease-enter);
 }
 
 .root[data-ready] .item[data-open] > .panel {

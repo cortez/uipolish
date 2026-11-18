@@ -38,7 +38,7 @@ pasted, dropped or picked, and show as chips above the text.
 
 | State | What you see | How |
 |---|---|---|
-| Empty | Placeholder, send button as a quiet gray capsule with a gray arrow | `data-state="empty"`, `aria-disabled` |
+| Empty | Placeholder, send button as a quiet gray circle with a gray arrow | `data-state="empty"`, `aria-disabled` |
 | Ready | Send fills with the text color the moment there's non-whitespace text or a file | `data-state="ready"` |
 | Focused | The whole composer gets a darker hairline and a 4px soft halo, instantly | `:focus-within` |
 | Growing | The textarea grows a row at a time up to `maxRows` (8), then scrolls | `field-sizing: content`, JS fallback |
@@ -46,7 +46,7 @@ pasted, dropped or picked, and show as chips above the text.
 | Attachments | Image chips are fixed 56×56 thumbnails that fade in; files show name, type and size | paste, drop, or the + button |
 | Dragging files | A dashed outline and "Drop files to attach" over the composer | `data-dragging` |
 | Rejected file | The hint line turns red and says which file and why, for 5 seconds | `accept`, `maxFiles` |
-| Suggestions | Prompt chips above the composer that fill the text, never send: small secondary `Button`s | `suggestions` |
+| Suggestions | Prompt chips above the composer that fill the text, never send | `suggestions` |
 | Disabled | 50% opacity, default cursor | `disabled` |
 
 **Why the empty send button isn't faded.** A black button at 50% opacity looks
@@ -114,8 +114,6 @@ there would make typing feel late.
   generating". When there's nothing to send it's `aria-disabled`, not
   `disabled`, so it stays focusable and doesn't vanish from the tab order.
 - Every icon button has a name: "Attach files", "Remove seating-chart.png".
-  Attach, Send and the suggestions are small `Button`s (ghost, primary and
-  secondary); their icons come from the icon set.
 - Adding, removing and rejecting files is announced in a `role="status"`
   region. Removing a chip moves focus to the next chip's remove button, then
   the previous one, then the textarea.

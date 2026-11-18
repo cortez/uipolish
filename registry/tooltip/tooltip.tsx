@@ -11,7 +11,6 @@ import {
 } from "react";
 import { flushSync } from "react-dom";
 import { Tooltip as BaseTooltip } from "@base-ui/react/tooltip";
-import { Kbd } from "../kbd/kbd";
 import styles from "./tooltip.module.css";
 
 type Side = "top" | "bottom" | "left" | "right";
@@ -186,7 +185,7 @@ export function Tooltip({
             data-warm={instant || undefined}
           >
             <span className={styles.content}>{content}</span>
-            {kbd && <Kbd keys={[kbd]} variant="plain" size="sm" className={styles.kbd} />}
+            {kbd && <kbd className={styles.kbd}>{kbd}</kbd>}
             {arrow && (
               <BaseTooltip.Arrow className={styles.arrow}>
                 <svg viewBox="0 0 12 6" aria-hidden="true">

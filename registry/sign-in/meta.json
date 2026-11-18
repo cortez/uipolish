@@ -1,0 +1,19 @@
+{
+  "name": "sign-in",
+  "title": "Sign in",
+  "summary": "A passwordless sign-in and sign-up screen: work email, then a one-time code with a resend countdown, plus optional OAuth providers and SSO by work domain. Wrong, expired and rate-limited codes, blocked domains and failed providers each say what to do next.",
+  "type": "block",
+  "access": "free",
+  "stage": "wide",
+  "version": "0.2.5",
+  "dependencies": [
+    "alert",
+    "animated-size",
+    "button",
+    "code-input",
+    "icons",
+    "text",
+    "text-field"
+  ],
+  "packages": []
+}

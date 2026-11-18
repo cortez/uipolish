@@ -42,7 +42,7 @@
   color: var(--ui-muted);
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-sm);
-  font-weight: var(--ui-weight-regular);
+  font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
 }
 
@@ -81,7 +81,7 @@
 
 .scroller {
   overflow: auto;
-  border-radius: 0 0 var(--ui-radius-lg) var(--ui-radius-lg);
+  border-radius: 0 0 var(--ui-radius-md) var(--ui-radius-md);
   overscroll-behavior-x: contain;
   scrollbar-width: thin;
   scrollbar-color: var(--ui-border-strong) transparent;
@@ -260,7 +260,7 @@
 
 .foldBody[data-open] .foldInner {
   opacity: 1;
-  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) 60ms;
 }
 
 .srOnly {

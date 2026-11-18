@@ -2,12 +2,10 @@
   "name": "search-field",
   "title": "Search field",
   "summary": "Search input whose clear button fades in over room it already holds, so the text never moves. Escape clears, then leaves, and the magnifier breathes while results load.",
-  "blurb": "A search input whose clear button never moves the text.",
-  "version": "0.2.4",
+  "version": "0.2.0",
   "dependencies": [
     "field",
     "icons",
-    "kbd",
     "text"
   ]
 }

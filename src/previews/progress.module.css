@@ -1,5 +1,0 @@
-.panel {
-  display: grid;
-  gap: var(--ui-space-5);
-  max-width: 420px;
-}

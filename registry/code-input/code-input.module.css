@@ -49,7 +49,7 @@
   width: var(--code-dot);
   height: var(--code-dot);
   margin-inline: calc((var(--code-group-gap) - 2 * var(--code-gap) - var(--code-dot)) / 2);
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: var(--ui-muted);
   opacity: 0.6;
   transition: opacity var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
@@ -105,9 +105,10 @@
   box-shadow: inset 0 0 0 var(--code-edge-width) color-mix(in oklch, var(--code-edge), var(--ui-danger) var(--code-danger));
   color: var(--ui-foreground);
   caret-color: transparent;
+  /* Must stay over 16px, below which iOS zooms the page into a field. */
   font-family: var(--ui-font-sans);
-  font-size: var(--ui-text-md);
-  font-weight: var(--ui-weight-title);
+  font-size: 24px;
+  font-weight: var(--ui-weight-semibold);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0;
   line-height: 1;
@@ -330,7 +331,7 @@
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: var(--ui-fill);
   color: var(--ui-foreground);
   opacity: 0;
@@ -494,11 +495,4 @@
 
 .box[data-replacing]::selection {
   background: transparent;
-}
-
-/* iOS zooms the page into any field under 16px. */
-@media (pointer: coarse) {
-  .box {
-    font-size: var(--ui-text-touch);
-  }
 }

@@ -1,0 +1,16 @@
+{
+  "name": "connections",
+  "title": "Connections",
+  "summary": "The agent app's list of MCP servers: one quiet row each, a switch, and a status line that says what's wrong and the one thing that fixes it. Adds a server by URL and hands sign-in to the browser.",
+  "kit": "agent",
+  "version": "0.2.5",
+  "dependencies": [
+    "animated-size",
+    "button",
+    "icons",
+    "switch",
+    "text",
+    "text-field",
+    "text-morph"
+  ]
+}

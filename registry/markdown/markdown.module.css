@@ -94,7 +94,7 @@
 
 .inlineCode {
   padding: 2px 5px;
-  border-radius: var(--ui-radius-xs);
+  border-radius: calc(var(--ui-radius-sm) / 2);
   background: var(--ui-fill);
   font-family: var(--ui-font-mono);
   font-size: var(--ui-text-code);
@@ -272,7 +272,7 @@ ol.list {
   width: calc(var(--ui-hairline) * 2);
   height: 1.1em;
   margin-inline-start: 2px;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
   background: var(--ui-muted);
   vertical-align: -0.2em;
   animation: caret var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;

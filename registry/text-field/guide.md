@@ -39,8 +39,7 @@ trade places with a crossfade. The cell is as tall as the taller of the two,
 and the last error stays in it (faded out and `visibility: hidden`) after
 it's fixed, so the field's height never changes when the error comes and goes.
 Only the line showing is visible, so only it is in the description and the
-live region. The line is Field's `FieldMessage`, the same one under every
-other form field.
+live region.
 
 **When it validates.** Not while the user is typing a first attempt. On
 blur it runs `validate`. If that returns a message, the field re-checks on

@@ -41,23 +41,6 @@ Button uses it for string labels.
 4. Leaving letters are drawn once more in a layer React never renders into,
    then fade and lift out.
 5. The wrapper's width animates from its old width to the new one.
-6. **Numbers roll.** When two strings differ only in their numbers ("12
-   guests" → "13 guests", "$9.95" → "$10.00", "1–25 of 240" → "26–50 of
-   240", "62%" → "63%"), digits pair by place value (the whole part from the
-   right, the fraction from the point) and a digit that changes rolls in
-   its place: the old one leaves a full step (0.6em) up and the new one
-   comes from below, the other way when the number drops. While digits
-   roll, the row's block padding fades out with a mask, so a digit is whole
-   on the line and gone past it, like a wheel behind a window. Figures are
-   tabular, so a roll never changes the width; a new place (9 → 10) rolls
-   in beside the others and the width follows.
-7. **Paced.** A change that arrives within 200ms of the last one waits its
-   turn, so the text changes at most five times a second and the latest
-   value always lands. The accessible copy updates at once.
-
-This is the one number animator in the registry: Number input, Usage
-meter, Progress, Pagination, Badge counts, Tab counts and the Data table's
-footer count all render their changing figures through it.
 
 ## Motion
 
@@ -65,14 +48,11 @@ footer count all render their changing figures through it.
 |---|---|---|
 | Shared letters slide, width follows | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
 | Leaving letters | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |
-| Arriving letters (labels) | 75% of `--ui-dur-glide`, after 40% of the leave time, or 85% when letters are leaving, +15ms per letter | `--ui-ease-enter` |
-| Rolling digit: old and new travel together | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
-| Rolling digit: the old one fades | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
-| Rolling digit: the new one fades in, half a beat later (60ms) | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |
+| Arriving letters | `--ui-dur-glide` (320ms), after 40% of the leave time, or 85% when letters are leaving, +15ms per letter | `--ui-ease-enter` |
 
 The width animation is a sanctioned exception to "animate transform and
 opacity only": it's one inline box, and the alternative is a jump. Under
-`prefers-reduced-motion: reduce` the text swaps instantly, digits included.
+`prefers-reduced-motion: reduce` the text swaps instantly.
 
 ## Accessibility
 

@@ -1,9 +1,0 @@
-/* Breadcrumbs 8 above the title, the note 4 under it. */
-.header {
-  display: grid;
-  gap: var(--ui-space-1);
-}
-
-.header > :first-child {
-  margin-bottom: var(--ui-space-1);
-}

@@ -75,7 +75,7 @@
 }
 
 .block[data-radius="full"] {
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
 }
 
 .circle {
@@ -116,7 +116,7 @@
   width: 100%;
   height: 0.7em;
   height: 1cap;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-full);
 }
 
 .bar:last-child:not(:only-child) {

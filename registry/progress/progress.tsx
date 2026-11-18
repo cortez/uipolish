@@ -41,8 +41,7 @@ export function Progress({ value, max = 100, label, valueText, tone = "neutral",
         <BaseProgress.Label className={styles.label}>{label}</BaseProgress.Label>
         {shownValue !== false && shownValue !== null && (
           <span className={styles.value} data-live={live || undefined}>
-            {/* A percentage rolls digit by digit as the fill moves. */}
-            {typeof shownValue === "string" ? <TextMorph>{shownValue}</TextMorph> : shownValue}
+            {shownValue}
           </span>
         )}
       </div>

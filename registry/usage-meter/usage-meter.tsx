@@ -195,14 +195,57 @@ function Reserve({ widest, children, className }: { widest: string; children: Re
   );
 }
 
-/** The compacted figure rolls down from where it was, a frame after it appears. */
+function springPoints(el: Element) {
+  const raw = getComputedStyle(el).getPropertyValue("--ui-ease-glide").trim();
+  const points = raw.startsWith("linear(") ? raw.slice(7, -1).split(",").map((p) => parseFloat(p)) : [];
+  return points.length > 1 && points.every(Number.isFinite) ? points : null;
+}
+
+function ease(points: number[] | null, t: number) {
+  if (!points) return 1 - Math.pow(1 - t, 5);
+  const at = t * (points.length - 1);
+  const i = Math.min(Math.floor(at), points.length - 2);
+  return points[i] + (points[i + 1] - points[i]) * (at - i);
+}
+
+/** The compacted figure counts down from where it was, on the same spring as the bar. */
 function CountDown({ from, to, format }: { from: number; to: number; format: (v: number) => string }) {
-  const [shown, setShown] = useState(from);
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => setShown(to));
-    return () => cancelAnimationFrame(frame);
-  }, [to]);
-  return <TextMorph>{format(shown)}</TextMorph>;
+  const ref = useRef<HTMLSpanElement>(null);
+  const formatRef = useRef(format);
+  useLayoutEffect(() => {
+    formatRef.current = format;
+  });
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    const node = el?.firstChild;
+    if (!el || !node || node.nodeType !== Node.TEXT_NODE || from === to) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Writes the text node React rendered, so React's own updates still land on it.
+    const write = (v: number) => (node.nodeValue = formatRef.current(v));
+    const raw = getComputedStyle(el).getPropertyValue("--ui-dur-glide").trim();
+    const duration = (raw.endsWith("ms") ? parseFloat(raw) : parseFloat(raw) * 1000) || 320;
+    const points = springPoints(el);
+    const start = performance.now();
+    let frame = 0;
+    write(from);
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / duration, 1);
+      write(from + (to - from) * ease(points, t));
+      if (t < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(frame);
+      write(to);
+    };
+  }, [from, to]);
+
+  return (
+    <span ref={ref} className={styles.count}>
+      {format(to)}
+    </span>
+  );
 }
 
 /** The breakdown: figure, segmented bar, legend, what happens next and what to do. */

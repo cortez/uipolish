@@ -62,9 +62,8 @@ export function MessageThread({ children, label = "Conversation", empty, classNa
           <ReadyContext value={ready}>{isEmpty ? <div className={styles.empty}>{empty}</div> : children}</ReadyContext>
         </div>
       </div>
-      <Button
-        variant="secondary"
-        size="sm"
+      <button
+        type="button"
         className={styles.jump}
         data-visible={showJump || undefined}
         inert={!showJump}
@@ -75,7 +74,7 @@ export function MessageThread({ children, label = "Conversation", empty, classNa
       >
         <Icon className={styles.jumpArrow} name="arrow-right" />
         Jump to latest
-      </Button>
+      </button>
     </div>
   );
 }
@@ -154,14 +153,20 @@ export function Message({
         {body}
         {status === "stopped" && (
           <p className={styles.note}>
-            <Icon name="stop" />
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <rect x="4.5" y="4.5" width="7" height="7" rx="1.5" />
+            </svg>
             You stopped this reply.
           </p>
         )}
         {status === "error" && (
           <div className={styles.error}>
             <p>
-              <Icon name="alert" />
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" />
+                <path d="M8 4.75v3.75" stroke="currentColor" strokeLinecap="round" />
+                <circle cx="8" cy="11" r="0.9" fill="currentColor" />
+              </svg>
               {error}
             </p>
             {onRetry && (
@@ -197,7 +202,10 @@ function Attachments({ items }: { items: MessageAttachment[] }) {
           </li>
         ) : (
           <li key={i} className={styles.attachment} data-kind="file">
-            <Icon name="file" />
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M9.25 2H5a1.25 1.25 0 0 0-1.25 1.25v9.5A1.25 1.25 0 0 0 5 14h6a1.25 1.25 0 0 0 1.25-1.25V5L9.25 2Z" />
+              <path d="M9.25 2v3h3" />
+            </svg>
             <span className={styles.fileName} title={item.name}>
               {item.name}
             </span>
@@ -250,47 +258,50 @@ function MessageActions({ hidden, copyText, onRetry, feedback, onFeedback }: Mes
       data-pinned={copy !== "idle" || current ? true : undefined}
       inert={hidden}
     >
-      <Button
-        variant="ghost"
-        size="sm"
-        className={`${styles.action} ${styles.copy}`}
-        data-copy={copy}
-        aria-label="Copy"
-        onClick={handleCopy}
-      >
+      <button type="button" className={styles.action} data-copy={copy} aria-label="Copy" onClick={handleCopy}>
         <Icon name={copy === "copied" ? "check" : "copy"} />
         <span className={styles.actionLabel} aria-hidden="true">
           <TextMorph>{copy === "copied" ? " Copied" : copy === "failed" ? " Couldn’t copy" : ""}</TextMorph>
         </span>
-      </Button>
+      </button>
       {onRetry && (
-        <Button variant="ghost" size="sm" className={styles.action} aria-label="Retry" onClick={onRetry}>
-          <Icon name="retry" />
-        </Button>
+        <button type="button" className={styles.action} aria-label="Retry" onClick={onRetry}>
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M2.75 8a5.25 5.25 0 1 0 1.6-3.78" />
+            <path d="M2.75 2.75v3h3" />
+          </svg>
+        </button>
       )}
-      <Button
-        variant="ghost"
-        size="sm"
+      <button
+        type="button"
         className={styles.action}
         aria-label="Good response"
         aria-pressed={current === "up"}
         onClick={() => rate("up")}
       >
-        <Icon name="thumbs-up" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="sm"
+        <ThumbIcon />
+      </button>
+      <button
+        type="button"
         className={styles.action}
         aria-label="Bad response"
         aria-pressed={current === "down"}
         onClick={() => rate("down")}
       >
-        <Icon name="thumbs-down" />
-      </Button>
+        <ThumbIcon down />
+      </button>
       <span role="status" className={styles.srOnly}>
         {copy === "copied" ? "Copied" : copy === "failed" ? "Couldn’t copy. Select the text instead." : ""}
       </span>
     </div>
+  );
+}
+
+function ThumbIcon({ down }: { down?: boolean }) {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true" style={down ? { rotate: "180deg" } : undefined}>
+      <path d="M5.25 7.25 7.6 2.5c.95 0 1.65.85 1.5 1.8l-.35 2.2h3.05a1.4 1.4 0 0 1 1.37 1.7l-.95 4.2a1.4 1.4 0 0 1-1.37 1.1H5.25Z" />
+      <path d="M5.25 7.25h-1.5a1 1 0 0 0-1 1v4.5a1 1 0 0 0 1 1h1.5Z" />
+    </svg>
   );
 }

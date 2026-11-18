@@ -51,17 +51,8 @@ radius less its inset and `--alert-pad` to match its padding, so the
 corners stay concentric and the text lines up.
 
 Arriving: fade and a 2px drop, `--ui-dur-fast` on `--ui-ease-enter`.
-Leaving: a step faster on the color curve.
-
-Content that changes in place animates instead of swapping: change `tone`,
-`title`, the text or the actions on the same alert and the title morphs
-letter by letter (`TextMorph`), the tint, edge and mark cross-fade to the
-new tone (registered `--alert-tone` and `--alert-edge`, `--ui-dur-base` on
-`--ui-ease-color`), the mark morphs (`Icon`), new text and actions fade in
-a beat later, and the height eases to fit (`AnimatedSize`). So "Two guests
-haven't replied" with a button becomes "Reminder sent" without a jump.
-
-Under `prefers-reduced-motion` it appears, changes and collapses at once.
+Leaving: a step faster on the color curve. Under `prefers-reduced-motion`
+it appears and collapses at once.
 
 ## Accessibility
 
