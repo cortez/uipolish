@@ -2,7 +2,7 @@
   "name": "copy-field",
   "title": "Copy field",
   "summary": "Read-only value with a Copy button whose icon turns into a check and says “Copied” to screen readers. A secret masks as a fixed row of dots that gives away nothing about its length.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "dependencies": [
     "field",
     "icons",

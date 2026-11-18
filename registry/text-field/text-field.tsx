@@ -15,6 +15,9 @@ import styles from "./text-field.module.css";
 
 type TextFieldProps = Omit<ComponentProps<"input">, "size"> & {
   label: string;
+  /** Hide the label from sight; screen readers still read it. Use only where
+   *  the field's purpose is plain from what's around it. */
+  hideLabel?: boolean;
   /** Guidance shown under the field until there's an error to show instead. */
   hint?: string;
   /** Return a message that says how to fix the value, or null when it's fine. */
@@ -26,6 +29,7 @@ type TextFieldProps = Omit<ComponentProps<"input">, "size"> & {
 
 export function TextField({
   label,
+  hideLabel = false,
   hint,
   validate,
   error: externalError,
@@ -97,6 +101,28 @@ export function TextField({
     setRevealed((r) => !r);
   }
 
+  // A value wider than the field fades at the end while it isn't focused,
+  // as cut text does elsewhere, instead of stopping hard at the edge.
+  const [overflow, setOverflow] = useState(false);
+  useLayoutEffect(() => {
+    const input = inputRef.current;
+    if (!input) return;
+    const measure = () => setOverflow(input.scrollWidth > input.clientWidth + 1);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(input);
+    input.addEventListener("input", measure);
+    return () => {
+      observer.disconnect();
+      input.removeEventListener("input", measure);
+    };
+  }, []);
+  // A value set from outside (a controlled field, a reset) is measured again too.
+  useLayoutEffect(() => {
+    const input = inputRef.current;
+    if (input) setOverflow(input.scrollWidth > input.clientWidth + 1);
+  }, [props.value, props.defaultValue, revealed]);
+
   function setRefs(node: HTMLInputElement | null) {
     inputRef.current = node;
     assignRef(ref, node);
@@ -107,10 +133,10 @@ export function TextField({
       className={className ? `${styles.field} ${className}` : styles.field}
       data-size={size}
     >
-      <label className={styles.label} htmlFor={inputId}>
+      <label className={hideLabel ? styles.srOnly : styles.label} htmlFor={inputId}>
         {label}
       </label>
-      <div className={styles.control}>
+      <div className={styles.control} data-overflow={overflow || undefined}>
         <input
           ref={setRefs}
           id={inputId}

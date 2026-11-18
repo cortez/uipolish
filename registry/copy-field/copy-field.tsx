@@ -8,6 +8,8 @@ import styles from "./copy-field.module.css";
 
 type CopyFieldProps = {
   label: string;
+  /** Hide the label from sight; screen readers still read it. */
+  hideLabel?: boolean;
   value: string;
   mono?: boolean;
   /** Control height: 32, 40 (default) or 48px. Match the `action` beside it. */
@@ -37,6 +39,7 @@ const MASK = "•".repeat(16);
 /** A read-only value with a Copy button; a secret stays masked until shown. */
 export function CopyField({
   label,
+  hideLabel = false,
   value,
   mono = false,
   size = "md",
@@ -100,7 +103,7 @@ export function CopyField({
 
   return (
     <div className={className ? `${styles.field} ${className}` : styles.field} data-size={size}>
-      <span id={labelId} className={styles.label}>
+      <span id={labelId} className={hideLabel ? styles.srOnly : styles.label}>
         {label}
       </span>
       <div className={styles.row} data-action={action ? "" : undefined}>

@@ -232,6 +232,12 @@
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
+/* When the rows keep a leading column (an icon or a check), a group's label
+   starts where the rows' text does: past the 16px column and its 12px gap. */
+.surface:has(.leading[data-filled]) .groupLabel {
+  padding-inline-start: calc(var(--ui-pad-row) + 16px + var(--ui-space-3));
+}
+
 /* Groups part with space, never a drawn line. */
 .separator {
   height: var(--ui-space-2);

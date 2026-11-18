@@ -35,7 +35,7 @@ highlight, the held width and the in-place confirmations.
 | `MenuItem` | `menuitem` | `onSelect`, `icon`, `shortcut`, `description`, `variant="danger"`, `disabled`; `closeOnSelect={false}` and `busy` to confirm in place |
 | `MenuCheckboxItem` | `menuitemcheckbox` | `checked`, `onCheckedChange`; keeps the menu open unless `closeOnSelect` |
 | `MenuRadioGroup` / `MenuRadioItem` | `group` / `menuitemradio` | `value`, `onValueChange`, `label`; a radio closes the menu unless `closeOnSelect={false}` |
-| `MenuGroup` | `group` | `label` is shown above the items and names the group |
+| `MenuGroup` | `group` | `label` is shown above the items and names the group; when the rows keep a leading column (an icon or a check), the label starts where their text does |
 | `MenuSeparator` | `separator` | Space between groups (8px); no drawn line |
 | `MenuSub` | `menuitem` with `aria-haspopup="menu"` + `menu` | `label`, `icon`; children are the submenu's items |
 
