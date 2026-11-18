@@ -305,18 +305,19 @@ for real-looking services read as fake.
     theme take the most saturated value that stays in sRGB at a lightness
     holding 3:1 for fills, lines and icons and 4.5:1 for text: on light,
     fills around oklch L 0.55–0.67 and text around 0.5; on dark, fills
-    0.6–0.78 and text 0.74–0.85. Keep a hue deeper wherever white text sits
-    on it (accent, danger). Tints are the hue at 10% (16% in dark): the `--ui-*-tint` tokens.
+    0.74–0.8 and text 0.76–0.86. Keep a hue deeper wherever white text sits
+    on it (accent and danger, around 0.56 in both themes). Tints are the
+    hue at 16% (26% in dark): the `--ui-*-tint` tokens.
   - Ink (`--ui-ink`, the text color as a fill) is for the strongest action:
     primary buttons, send, tooltips.
-  - Accent (`--ui-accent`) is a real accent: used sparingly, only where the
-    eye must find an on or chosen state among neutrals. A switch that's on,
-    a checked box or radio, the selected day, a slider's range (a chosen value,
-    like a switch that's on). Progress bars, meters, borders and bands stay
-    neutral. A knob (a switch or slider thumb) is the raised surface in light
-    and a light gray in dark: a knob the color of the surface reads as a hole
-    in a dark track. If two accented things compete on one screen, one of
-    them shouldn't be.
+  - Accent (`--ui-accent`) is a real accent: used sparingly, for links,
+    focus and information that isn't a status. "On" is ink, not accent
+    (section 1): a switch that's on, a checked box or radio and a slider's
+    range fill with `--ui-control-on`. Progress bars, meters, borders and
+    bands stay neutral. A knob (a switch or slider thumb) is the raised
+    surface in light and a light gray in dark: a knob the color of the
+    surface reads as a hole in a dark track. If two accented things compete
+    on one screen, one of them shouldn't be.
   - Status tones only ever mean that: success, needs attention (warning,
     amber), failed (danger).
   - One quiet touch takes it too, since it only shows while you act:
@@ -333,11 +334,12 @@ for real-looking services read as fake.
 - Semantic tokens (`--background`, `--surface`, `--muted`, `--border`,
   `--ring`, `--destructive`) beat raw palette references in components. If
   the project has semantic tokens, never bypass them with a raw hex.
-- Dark mode adjustments that are commonly missed: destructive/error colors
-  get *lighter and less saturated* in dark mode; low-alpha error tints need
-  roughly double the alpha to stay visible.
+- Dark mode adjustments that are commonly missed: status *text* gets
+  lighter in dark mode (a fill under white text keeps its depth), and
+  low-alpha tints need roughly half again the alpha to stay visible.
 - The "alert tint" trio for banners/badges of any status color:
-  30%-alpha border + 10%-alpha fill + solid text in the status color.
+  the `--ui-border-*` edge (30%) + the `--ui-*-tint` fill (16%, 26% in
+  dark) + solid text in the `--ui-*-text` role.
 
 ## 6. Overlays, without blur
 

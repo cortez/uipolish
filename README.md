@@ -6,7 +6,7 @@ worked out, and the design rules behind them, made for coding agents. All
 of it is free and MIT-licensed: the primitives, the components, and the AI
 components that show a model thinking, acting and asking.
 
-[Docs](https://uipolish.com/docs) · [Components](https://uipolish.com/docs/button) · [Design rules](https://uipolish.com/docs/rules)
+[Site](https://uipolish.com) · [Components](https://uipolish.com/docs/button) · [Design rules](foundation/rules)
 
 ## Start
 
@@ -20,7 +20,7 @@ claude mcp add --transport http uipolish https://uipolish.com/mcp
 ```
 
 Cursor, Codex, VS Code, Gemini CLI and others:
-[uipolish.com/docs](https://uipolish.com/docs#installation).
+[uipolish.com](https://uipolish.com/#get-started).
 
 **Use the shadcn CLI.** Any component by name, with what it depends on:
 
@@ -44,7 +44,7 @@ one value changes every component that uses it.
 2. Springs only where something moves.
 3. Busy waits 300ms before it shows.
 4. Every async action has four states.
-5. Edges come from the text color.
+5. One line for every edge.
 6. Focus is for keyboards.
 7. Nothing shifts.
 8. One shape per job.
@@ -72,17 +72,18 @@ One folder per component in `registry/`: the React component, its CSS module
 (tokens only), and a guide covering when to use it, when not to, every state,
 motion specs, accessibility and before/after code.
 
-**Components (45):** Accordion, Alert, Avatar, Badge, Breadcrumbs, Button, Checkbox,
-Chip, Code input, Combobox, Command palette, Copy field, Data table, Date
-picker, Dialog, Drawer, Dropdown menu, Empty state, File upload, Inline edit,
-Kbd, List, Nav rail, Number input, Pagination, Popover, Progress, Prompt
-input, Radio group, Response actions, Scroll area, Search field, Segmented
-control, Select, Sidebar, Skeleton, Slider, Switch, Tabs, Text field, Theme toggle, Toast and
-Tooltip.
+**Components (43):** Accordion, Alert, Avatar, Badge, Breadcrumbs, Button,
+Checkbox, Chip, Code input, Combobox, Command palette, Copy field, Data
+table, Date picker, Dialog, Drawer, Dropdown menu, Empty state, File upload,
+Inline edit, Kbd, List, Nav rail, Number input, Pagination, Popover,
+Progress, Prompt input, Radio group, Response actions, Scroll area, Search
+field, Segmented control, Select, Sidebar, Skeleton, Slider, Switch, Tabs,
+Text field, Theme toggle, Toast and Tooltip.
 
-**Agent kit:** components for AI products, grouped in the docs by
-`"kit": "agent"` in `meta.json`: Code block, Diff view, Markdown, Message
-thread, Model picker, Reasoning, Tool steps and Usage meter.
+**Agent kit (12):** components for AI products, grouped in the docs by
+`"kit": "agent"` in `meta.json`: Agent question, Code block, Diff view,
+Markdown, Message branches, Message thread, Model picker, Prompt
+suggestions, Reasoning, Terminal output, Tool steps and Usage meter.
 
 The interactive components run on [Base UI](https://base-ui.com)
 (`@base-ui/react`) for focus, keyboard, ARIA, positioning and dismissal; the
@@ -90,7 +91,7 @@ look, motion and states are UI Polish's own CSS modules. A component lists the
 packages it imports in `meta.json` (`packages`), and `get_component`, the REST
 API and the shadcn registry item all tell the project to install them.
 
-**Primitives**, the parts the other components are built from, each usable
+**Primitives (6)**, the parts the other components are built from, each usable
 on its own: Animated size, Field, Icons, Listbox, Text, Text morph.
 
 `list_components` (or `GET /api/components`) is the live list.
@@ -110,7 +111,7 @@ In a Tailwind CSS v4 project, agents pass `tailwind: true` to
 so utility classes override them. `foundation/tailwind.css` names the
 `--ui-*` roles as theme values (`bg-ui-surface`, `text-ui-muted`), and
 `foundation/tailwind.md` is the setup guide, served as `get_rules("tailwind")`
-and at `/docs/tailwind`.
+and `/api/rules/tailwind`.
 
 ## shadcn CLI
 

@@ -36,7 +36,7 @@ tool-steps, model-picker and usage-meter. All of it is free.
 - **Springs only where something moves.** A pill sliding between tabs or a panel changing size overshoots a little, then settles. Opacity and color never bounce.
 - **Busy waits 300ms before it shows.** A fast answer never flashes a spinner. Once a spinner appears, it stays at least 400ms so it can be read.
 - **Every async action has four states.** Idle, busy, done and failed, each designed, with the failure saying what to do next.
-- **Edges come from the text color.** Borders are the text color at 4 to 13% opacity, so they sit right on any background, in light and dark.
+- **One line for every edge.** A card, a field, a button and a divider share one solid neutral at one 1px weight, so no line reads darker, lighter or thicker than the one beside it.
 - **Focus is for keyboards.** A thin ring inside the control's edge on `:focus-visible`, never a halo on click.
 - **Nothing shifts.** Labels that change hold their width, numbers use tabular figures, and content that loads in has its space reserved.
 - **One shape per job.** Controls are 32, 40 or 48px tall, whatever they are, and pill-shaped; every other corner is on one 4px scale: 4 for inline marks, 8 for tags, 12 for fields and rows, 16 for boxes. An icon-only button is a capsule 1.375 times as wide as it is tall.
