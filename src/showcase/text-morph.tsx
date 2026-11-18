@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { TextMorph } from "@registry/text-morph/text-morph";
 
-const PHRASES = ["Sending invitations", "12 guests invited", "9 going, 3 maybe", "Table for 12"];
+const PHRASES = ["Inviting 12 guests", "Invited 12 guests", "12 guests going", "12 guests seated"];
 
-/** Just the text, changing on its own every 2s, so the morph is the whole
- *  demo. Held on the first phrase under reduced motion. */
+/** Just the text, changing on its own every 2s. The phrases share their
+ *  words, so what you see is letters moving, not a swap. Held on the first phrase under reduced motion. */
 export default function Showcase() {
   const [i, setI] = useState(0);
   useEffect(() => {

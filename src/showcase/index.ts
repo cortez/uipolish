@@ -66,4 +66,4 @@ export const SHOWCASES: Record<string, ComponentType> = {
 
 /** Components that are already a box of their own: on the home page they
  *  are the card, with no edge or padding around them. */
-export const BLEED = new Set(["code-block", "data-table", "diff-view", "file-upload"]);
+export const BLEED = new Set(["code-block", "data-table", "diff-view", "file-upload", "sidebar"]);

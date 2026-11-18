@@ -46,3 +46,33 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+
+/* A sidebar in its card: the card is the app window, the sidebar down its
+   side on the canvas, and the page beside it on the surface. */
+.app {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: clip;
+  border-radius: var(--ui-radius-lg);
+}
+
+/* The card's edge, over both halves so neither paints over it. */
+.app::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  pointer-events: none;
+}
+
+.page {
+  padding: var(--ui-space-2);
+  background: var(--ui-surface);
+  /* The edge between sidebar and page. */
+  box-shadow: inset var(--ui-hairline) 0 0 var(--ui-border);
+}

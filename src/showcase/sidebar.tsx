@@ -26,9 +26,11 @@ export default function Showcase() {
   const [page, setPage] = useState("home");
   return (
     <SidebarProvider shortcut={false}>
-      <div className={styles.wide}>
-        <SidebarToggle />
+      <div className={styles.app}>
         <Sidebar aria-label="Supper club" items={ITEMS} sections={SECTIONS} value={page} onValueChange={setPage} />
+        <div className={styles.page}>
+          <SidebarToggle />
+        </div>
       </div>
     </SidebarProvider>
   );
