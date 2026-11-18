@@ -1,9 +1,15 @@
-/* Equal-width figures, so a digit that rolls never changes the width. */
 .root {
   position: relative;
   display: inline-flex;
-  font-variant-numeric: tabular-nums;
   white-space: pre;
+}
+
+/* Equal-width figures on the digits alone, so a digit that rolls never
+   changes the width. Never on the whole label: in some fonts the tabular
+   feature also widens the space, and every word gap would grow. */
+.glyph[data-digit],
+.ghost[data-digit] {
+  font-variant-numeric: tabular-nums;
 }
 
 /* The real label, for screen readers and find-in-page. */

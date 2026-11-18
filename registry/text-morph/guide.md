@@ -48,8 +48,9 @@ Button uses it for string labels.
    its place: the old one leaves a full step (0.6em) up and the new one
    comes from below, the other way when the number drops. While digits
    roll, the row's block padding fades out with a mask, so a digit is whole
-   on the line and gone past it, like a wheel behind a window. Figures are
-   tabular, so a roll never changes the width; a new place (9 → 10) rolls
+   on the line and gone past it, like a wheel behind a window. The digits
+   alone are tabular (never the whole label, so letters and spaces keep the
+   font's own widths), so a roll never changes the width; a new place (9 → 10) rolls
    in beside the others and the width follows.
 7. **Paced.** A change that arrives within 200ms of the last one waits its
    turn, so the text changes at most five times a second and the latest

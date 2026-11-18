@@ -284,6 +284,7 @@ export function TextMorph({ children, className }: { children: string; className
     function ghost(char: string, left: number, from: { y: number; opacity: number }) {
       const el = document.createElement("span");
       el.className = styles.ghost;
+      if (/\d/.test(char)) el.dataset.digit = "";
       el.textContent = char;
       el.style.left = `${left}px`;
       ghosts!.append(el);
@@ -371,7 +372,7 @@ export function TextMorph({ children, className }: { children: string; className
       <span ref={rowRef} className={styles.row} aria-hidden="true">
         {split
           ? glyphs.map((g) => (
-              <span key={g.key} data-glyph={g.key} className={styles.glyph}>
+              <span key={g.key} data-glyph={g.key} data-digit={/\d/.test(g.char) || undefined} className={styles.glyph}>
                 {g.char}
               </span>
             ))
