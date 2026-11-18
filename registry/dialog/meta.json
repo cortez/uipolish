@@ -3,7 +3,7 @@
   "title": "Dialog",
   "summary": "Modal that grows from its own center and eases to fit its content as steps change. It locks scroll without a shift and asks before discarding edits.",
   "blurb": "A modal that grows out of its trigger and fits its content.",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "dependencies": [
     "animated-size",
     "button",

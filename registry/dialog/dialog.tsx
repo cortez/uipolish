@@ -2,6 +2,7 @@
 
 import {
   useId,
+  useCallback,
   useLayoutEffect,
   useRef,
   useState,
@@ -92,6 +93,49 @@ export function Modal({
   }, [open, triggerRef]);
 
 
+  // Centered as it opens; from then on its top edge stays where it opened,
+  // so content that grows or shrinks moves only what's below it (the height
+  // eases in AnimatedSize). It recenters only when it would no longer fit,
+  // or when the window resizes. Docked at the bottom on a phone, the bottom
+  // edge stays put already.
+  const pinRef = useCallback((popup: HTMLDivElement | null) => {
+    const viewport = popup?.parentElement;
+    if (!popup || !viewport) return;
+    const docked = () => matchMedia("(max-width: 480px)").matches;
+    const room = () => {
+      const cs = getComputedStyle(viewport);
+      return viewport.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    };
+    const centered = () => Math.max(0, (room() - popup.offsetHeight) / 2);
+    const pin = (top: number) => {
+      viewport.style.setProperty("--dialog-top", `${Math.round(top)}px`);
+      viewport.setAttribute("data-pinned", "");
+    };
+    let frame = requestAnimationFrame(() => {
+      if (!docked()) pin(centered());
+    });
+    const fit = () => {
+      if (docked() || !viewport.hasAttribute("data-pinned")) return;
+      const top = parseFloat(viewport.style.getPropertyValue("--dialog-top")) || 0;
+      if (top + popup.offsetHeight > room()) pin(centered());
+    };
+    const observer = new ResizeObserver(fit);
+    observer.observe(popup);
+    const onResize = () => {
+      cancelAnimationFrame(frame);
+      viewport.removeAttribute("data-pinned");
+      frame = requestAnimationFrame(() => {
+        if (!docked()) pin(centered());
+      });
+    };
+    addEventListener("resize", onResize);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      removeEventListener("resize", onResize);
+    };
+  }, []);
+
   const Root = role === "alertdialog" ? BaseAlertDialog.Root : BaseDialog.Root;
 
   return (
@@ -106,6 +150,7 @@ export function Modal({
         <BaseDialog.Backdrop className={styles.backdrop} />
         <BaseDialog.Viewport className={styles.viewport}>
           <BaseDialog.Popup
+            ref={pinRef}
             className={className ? `${styles.modal} ${className}` : styles.modal}
             initialFocus={() => {
               const el = typeof initialFocus === "function" ? initialFocus() : initialFocus?.current;

@@ -32,6 +32,16 @@
   padding: var(--ui-space-5) var(--ui-space-4);
 }
 
+/* Once open, the panel keeps the top it opened at (set by the component),
+   so a change in its content grows or shrinks it downward. */
+.viewport[data-pinned] {
+  place-items: start center;
+}
+
+.viewport[data-pinned] > .modal {
+  margin-top: var(--dialog-top, 0px);
+}
+
 .modal {
   position: relative;
   box-sizing: border-box;

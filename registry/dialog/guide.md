@@ -50,7 +50,7 @@ The file exports three things:
 | On a phone | Docked at the bottom, 8px off the edges and above the home indicator, in reach of a thumb; it grows upward when its content does | `max-width: 480px` |
 | Open | Panel on a dimmed page; page doesn't scroll | Base UI's modal `Dialog.Root`, which locks scroll |
 | Body overflow | Body scrolls on its own; header and footer stay put | `overflow-y: auto; overscroll-behavior: contain` |
-| Content changes size | The panel eases to the new height; it stays centered, so it grows evenly up and down | `AnimatedSize` around the panel's layout |
+| Content changes size | The panel eases to the new height and keeps the top edge it opened at, so it grows and shrinks downward and nothing above the change moves; it recenters only if it would no longer fit, or when the window resizes. Docked on a phone, the bottom edge stays | `AnimatedSize` around the panel's layout; the viewport pins `--dialog-top` once open (`data-pinned`) |
 | Step changes | The old step fades out over the top while the new one fades in, half a beat later, and the panel eases to the new step's height | `step`, with `children` as a function of the step |
 | Size changes | The panel eases to the new width | `size` (`sm` 420, `md` 480, `lg` 640) |
 | Guard | Footer swaps for "Discard changes?" with Keep editing / Discard; body and header dim and go inert; focus on Keep editing | `dirty` is true when the user tries to leave |
