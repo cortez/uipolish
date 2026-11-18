@@ -102,9 +102,9 @@
   margin-inline: auto;
   border-start-start-radius: var(--ui-radius-lg);
   border-start-end-radius: var(--ui-radius-lg);
-  /* The floating shadow carries the edge: one ring, so the top line is the
-     same weight as every other box's. */
-  box-shadow: var(--ui-shadow-floating);
+  /* No drawn edge: a sheet rises over the dimmed page and its rounded top
+     and soft shadow are enough; a ring drew a line across the top. */
+  box-shadow: var(--ui-shadow-raised);
 }
 
 .drawer[data-mode="sheet"][data-keyboard] {
@@ -228,6 +228,7 @@
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-heading);
   text-wrap: balance;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .description {

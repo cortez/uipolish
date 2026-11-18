@@ -321,12 +321,10 @@ type MenuRadioItemProps = ItemCommon & {
 export function MenuRadioItem({ value, closeOnSelect = true, disabled = false, ...props }: MenuRadioItemProps) {
   const id = useId();
   return (
+    // The chosen row shows as a quiet fill (data-checked), not a dot, so a
+    // radio row lines up with every other row: no column kept for a mark.
     <BaseMenu.RadioItem {...itemProps(id, props)} value={value} disabled={disabled} closeOnClick={closeOnSelect}>
-      <ItemBody
-        id={id}
-        {...props}
-        leading={<BaseMenu.RadioItemIndicator keepMounted className={`${styles.indicator} ${styles.dot}`} />}
-      />
+      <ItemBody id={id} {...props} />
     </BaseMenu.RadioItem>
   );
 }

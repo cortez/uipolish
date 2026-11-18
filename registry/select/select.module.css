@@ -13,6 +13,7 @@
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .control {
@@ -89,9 +90,8 @@
 }
 
 @media (hover: hover) {
-  .trigger:hover:not(:disabled, [data-disabled], [data-popup-open], :focus-visible, [aria-invalid]) {
-    box-shadow:
-      inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
+  .trigger:hover:not(:disabled, [data-disabled], [data-popup-open], :focus-visible) {
+    background: var(--ui-field-focus-fill);
   }
 }
 
@@ -100,21 +100,17 @@
   transition-duration: var(--ui-dur-press);
 }
 
-/* The dark edge is for keyboard focus only. Opened by a click or a tap,
-   the trigger takes the hover edge: the open list already says where you are. */
+/* Open, or focused from the keyboard, the trigger takes the field focus
+   fill at once; its edge stays as it rests. */
 .trigger:focus {
   outline: none;
 }
 
-.trigger[data-popup-open] {
-  box-shadow:
-    inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
-}
-
+.trigger[data-popup-open],
 .trigger:focus-visible,
 .field[data-native] .control:has(.native:focus-visible) .trigger {
   outline: none;
-  box-shadow: inset 0 0 0 1px var(--ui-field-focus);
+  background: var(--ui-field-focus-fill);
   transition-duration: 0s;
 }
 
@@ -348,6 +344,7 @@
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 @media (prefers-reduced-motion: reduce) {

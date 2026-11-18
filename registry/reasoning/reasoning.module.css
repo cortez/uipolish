@@ -23,6 +23,7 @@
   transition:
     color var(--ui-dur-instant) var(--ui-ease-color),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 @media (hover: hover) {
@@ -79,6 +80,7 @@
   transition:
     grid-template-columns var(--ui-dur-glide) var(--ui-ease-glide),
     opacity var(--ui-dur-instant) var(--ui-ease-exit);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .timer > span {

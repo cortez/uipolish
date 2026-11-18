@@ -15,12 +15,13 @@ const ROOTS = ["registry", "src"];
 // Each exception names the file, a piece of text from the button's opening
 // tag that picks it out, and why it's small.
 const ALLOW = [
-  { file: "registry/code-block/code-block.tsx", match: "aria-pressed={wrap}", reason: "Wrap, inside the code block's header strip." },
+  { file: "registry/terminal-output/terminal-output.tsx", match: "onClick={handleCopy}", reason: "Copy, plain text in the terminal card's header strip, as Code block's." },
+  { file: "registry/terminal-output/terminal-output.tsx", match: "busyLabel=\"Stopping…\"", reason: "Stop, plain text in the terminal card's header strip beside Copy." },
+  { file: "registry/message-branches/message-branches.tsx", match: "className={styles.step}", reason: "Previous and next version, 32px capsules in the row under a reply beside 13px meta text, as Response actions'." },
   { file: "registry/code-block/code-block.tsx", match: "onClick={handleCopy}", reason: "Copy, inside the code block's header strip." },
   { file: "registry/toast/toast.tsx", match: "data.action!.onClick()", reason: "The toast's action, on the 32px row it shares with dismiss." },
   { file: "registry/toast/toast.tsx", match: "aria-label={`Dismiss:", reason: "Dismiss, on the toast's 32px row, concentric with its corner." },
   { file: "src/components/install-command.tsx", match: "className={styles.copy}", reason: "The copy button inside the install command's pill." },
-  { file: "registry/dialog/dialog.tsx", match: 'aria-label="Close"', reason: "The corner close on the dialog's title line, sized by --close-size." },
   { file: "src/components/site-search.tsx", match: 'aria-label="Search components"', reason: "Search, an icon in the top bar beside the 32px theme toggle and GitHub." },
   { file: "src/components/site-head.tsx", match: "href={DONATE_URL}", reason: "Support, a quiet text link beside the 32px theme toggle in the page header." },
   { file: "src/components/site-head.tsx", match: 'aria-label="UI Polish on GitHub"', reason: "GitHub, an icon beside the 32px theme toggle in the page header." },

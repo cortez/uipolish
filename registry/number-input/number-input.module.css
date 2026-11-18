@@ -74,6 +74,7 @@
   font-variant-numeric: tabular-nums;
   line-height: var(--ui-leading-md);
   text-align: center;
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .input {

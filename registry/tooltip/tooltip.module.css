@@ -27,6 +27,7 @@
     opacity var(--ui-dur-fast) var(--ui-ease-enter),
     scale var(--ui-dur-fast) var(--ui-ease-enter),
     filter var(--ui-dur-fast) var(--ui-ease-enter);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .surface[hidden] {
@@ -64,6 +65,7 @@
   font-weight: var(--ui-weight-regular);
   /* Otherwise the mono face on the baseline makes the tooltip taller. */
   line-height: 1;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* Base UI sets the arrow's offset along the edge; the SVG points down by default. */

@@ -165,6 +165,10 @@ Grammar for on-scroll or on-mount entrances:
 - **Popovers/dropdowns/tooltips**: `opacity 0 → 1` + `scale(0.97 → 1)` with
   `transform-origin` at the trigger side, `--ui-dur-fast` on `--ui-ease-enter`
   in, `--ui-dur-instant` on `--ui-ease-exit` out.
+- **Dialogs and modals** grow from their own center (from the bottom edge
+  when docked at the bottom of a phone), never from the trigger, and the
+  origin isn't an option: a centered panel flying out of a button reads as
+  motion, not focus.
 - Native `<dialog>`/popover animation without JS:
 
 ```css

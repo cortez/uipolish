@@ -3,7 +3,7 @@
   "title": "Badge",
   "summary": "A static label for a status or a count, exactly as tall as the line it sits in. Counts are round for one digit and set in equal-width figures.",
   "blurb": "A status or count label exactly as tall as its line.",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "dependencies": [
     "text",
     "text-morph"

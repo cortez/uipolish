@@ -1,0 +1,53 @@
+.thread {
+  display: grid;
+  gap: var(--ui-space-5);
+}
+
+/* Reply, switcher and actions 16px apart, as in Message thread. */
+.message {
+  display: grid;
+  gap: var(--ui-space-4);
+}
+
+.reply {
+  display: grid;
+  gap: var(--ui-space-3);
+}
+
+.text {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-prose);
+}
+
+.list {
+  display: grid;
+  gap: var(--ui-space-1);
+  margin: 0;
+  padding-inline-start: var(--ui-space-5);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-prose);
+}
+
+/* The message thread's bubble: 12 + 22 + 12 inside the 22 radius. */
+.bubble {
+  justify-self: end;
+  max-width: 80%;
+  margin: 0;
+  padding: var(--ui-space-3) var(--ui-space-4);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-fill);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+/* The answer to the prompt shown: it fades in when the prompt changes, never on load. */
+.answer[data-changed] {
+  animation: answer-in var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+}
+
+@keyframes answer-in {
+  from {
+    opacity: 0;
+  }
+}

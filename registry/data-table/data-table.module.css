@@ -17,10 +17,7 @@
   --data-table-edge: var(--ui-space-4);
   --data-table-fade: var(--ui-space-6);
   /* Mixed into the surface, not translucent, so sticky cells stay opaque. */
-  --data-table-selected: light-dark(
-    color-mix(in oklch, var(--ui-accent) 7%, var(--ui-surface)),
-    color-mix(in oklch, var(--ui-accent) 15%, var(--ui-surface))
-  );
+  --data-table-selected: var(--ui-fill-solid);
 
   position: relative;
   isolation: isolate;
@@ -33,6 +30,7 @@
   background: var(--ui-surface);
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 /* Drawn on top so the sticky header and column backgrounds never cover the edge. */
@@ -163,6 +161,7 @@
   line-height: var(--ui-leading-sm);
   white-space: nowrap;
   outline: none;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .sortButton,
@@ -460,6 +459,7 @@
 
 .footerWhere {
   font-weight: var(--ui-weight-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* ---------- Loading and empty ---------- */

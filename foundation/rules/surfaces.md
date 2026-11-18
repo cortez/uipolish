@@ -35,9 +35,9 @@ mode for free.
   it, so one box's line drifts from the next. Never a literal `1px` for
   an edge; always the token. No
   glints, lighter top edges or glassy double rings: a plain line fits any
-  product the component lands in. The exceptions are deliberate: a
-  focused field's edge is 1px (the weight change is part of the focus
-  cue), and forced-colors outlines stay 1px so they never vanish.
+  product the component lands in. The one exception is deliberate:
+  forced-colors outlines stay 1px so they never vanish. A focused field
+  keeps its edge and changes its fill (`--ui-field-focus-fill`) instead.
 - **Page layout gets no borders.** Headers, sections, hero bands and
   gallery tiles separate with space and a change of surface, not lines.
 - **One neutral edge for every line.** A card's frame, a field, a button,
@@ -50,15 +50,16 @@ mode for free.
   from a darker outline.
 
   Beyond that one:
-  - `--ui-field-focus`: a hovered, selected or focused control (or the one
-    selected box in a set, like the current plan).
+  - `--ui-field-focus`: a hovered or selected control (or the one
+    selected box in a set, like the current plan). Never a focused text
+    field: that keeps its edge and fills with `--ui-field-focus-fill`.
   - A colored edge, only for status or a component's own hue:
     `--ui-border-accent`, `-success`, `-warning`, `-danger`, or a hue (a
     phase, a brand) mixed at `--ui-border-tint`.
   - `--ui-border-control` over `--ui-fill-control`: an empty checkbox or
-    radio. A soft edge (the text color at 28%) over a soft flat fill, so the box is found by its shape and shade together, never by a
-    hard line. It is a clear step from the one edge, so the two never read
-    as near-twins; its label is always part of the target.
+    radio. The same edge as every field and button, over a soft flat
+    fill, so the box is found by its shape and shade together and its line
+    matches the controls beside it; its label is always part of the target.
 
   Nothing else at rest: a button and a card rest on the one edge. No
   hand-picked alphas, no other `color-mix` of the text color for an edge,
@@ -72,6 +73,23 @@ mode for free.
   Two rings stack into a heavier line, and an inset ring plus an outer one
   draws a double edge. Pick a real `border` or a ring
   `box-shadow` per box, never both.
+- **"On" is ink, like the primary button.** A ticked checkbox, a chosen
+  radio, a switch that's on and a slider's range fill with
+  `--ui-control-on` (the ink), with marks in `--ui-on-control-on`; a
+  pressed chip or a selected row takes the neutral selected fill. The
+  accent is for links, focus and status, not for "on".
+- **What floats is glass.** Menus, popovers, lists under a field and
+  hover cards fill with `--ui-surface-floating`, set
+  `backdrop-filter: var(--ui-blur-floating)` and put `--ui-glass-edge`
+  before their shadow: the surface at 93% over a soft blur, with a faint
+  light line inside the top edge, so it reads as a solid panel with only a
+  hint of what's behind, in light and dark. Cards,
+  dialogs, drawers and toasts stay solid: they hold more reading than a
+  menu does.
+  Keep the blur small and the glass on small, short-lived panels only:
+  never a full-screen or long-lived surface, where the browser would
+  redraw the blur on every frame of scrolling. Under
+  `prefers-reduced-transparency: reduce` the tokens turn solid.
 - Hover states on bordered elements move one step up the set
   (strong → field-focus). Polished hover deltas are
   small — sometimes just a few percent.
@@ -93,7 +111,7 @@ One weight for every line on the page, so nothing reads heavier by accident:
   `--ui-hairline`, never `border` (it renders at twice the weight). Where a
   child's background would cover an inset line (opaque sticky cells, a
   tinted row), draw the line on a `::after` over the children instead.
-  Exceptions: a focused field's 1px edge, forced-colors outlines, a 2px
+  Exceptions: forced-colors outlines, a 2px
   quote bar, and cut-out rings in the surface color around an overlapping
   mark (an avatar stack, a corner badge).
 - **Icon strokes match the text they sit with**, in two tiers:

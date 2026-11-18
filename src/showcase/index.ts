@@ -62,6 +62,10 @@ export const SHOWCASES: Record<string, ComponentType> = {
   "tool-steps": dynamic(() => import("./tool-steps")),
   "tooltip": dynamic(() => import("./tooltip")),
   "usage-meter": dynamic(() => import("./usage-meter")),
+  "agent-question": dynamic(() => import("./agent-question")),
+  "message-branches": dynamic(() => import("./message-branches")),
+  "prompt-suggestions": dynamic(() => import("./prompt-suggestions")),
+  "terminal-output": dynamic(() => import("./terminal-output")),
 };
 
 /** Components that are already a box of their own: on the home page they

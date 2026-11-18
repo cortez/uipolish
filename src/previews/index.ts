@@ -66,4 +66,8 @@ export const PREVIEWS: Record<string, ComponentType> = {
   "text": dynamic(() => import("@/previews/text").then((m) => m.TextPreview)),
   "field": dynamic(() => import("@/previews/field").then((m) => m.FieldPreview)),
   "listbox": dynamic(() => import("@/previews/listbox").then((m) => m.ListboxPreview)),
+  "agent-question": dynamic(() => import("@/previews/agent-question").then((m) => m.AgentQuestionPreview)),
+  "message-branches": dynamic(() => import("@/previews/message-branches").then((m) => m.MessageBranchesPreview)),
+  "prompt-suggestions": dynamic(() => import("@/previews/prompt-suggestions").then((m) => m.PromptSuggestionsPreview)),
+  "terminal-output": dynamic(() => import("@/previews/terminal-output").then((m) => m.TerminalOutputPreview)),
 };

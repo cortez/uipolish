@@ -11,10 +11,10 @@ It has no look of its own beyond what those fields share.
   select use it too.
 - `field.module.css`, composed into a component's classes:
   - `field`, `label`: the stack and its label (6px apart, label 15px / 500).
-  - `shell`: the edge of a field that holds buttons or a picker. Hover
-    darkens it a step; focus anywhere inside darkens and thickens it,
-    inside the field and never animated; `data-invalid` turns it to
-    danger, `data-open` holds the focus edge while a popover is open.
+  - `shell`: the edge of a field that holds buttons or a picker. Focus
+    anywhere inside fills it with `--ui-field-focus-fill`, at once, and
+    the edge stays as it rests; `data-open` holds the fill while a popover
+    is open; `data-invalid` turns the edge to danger.
     Sets `--shell-inset`, the gap from the edge to a 34px button.
   - `bare`: a text input with no edge, for inside a shell. 16px on touch
     screens so iOS doesn't zoom.

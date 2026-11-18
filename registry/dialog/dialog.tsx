@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  useCallback,
   useId,
   useLayoutEffect,
   useRef,
@@ -56,12 +55,10 @@ export type ModalProps = {
   onForceClose?: () => void;
   /** Where focus goes when it opens. Defaults to the first control inside. */
   initialFocus?: FocusTarget;
-  /** Focus returns to this element (and with growFrom="trigger", the panel grows out of it). Defaults to whatever had focus when it opened. */
+  /** Focus returns to this element on close. Defaults to whatever had focus when it opened. */
   triggerRef?: RefObject<HTMLElement | null>;
   /** Where focus goes on close when the trigger is gone (a deleted row, say). */
   finalFocus?: RefObject<HTMLElement | null>;
-  /** Where the panel grows from. "center", the default, is the same every time; "trigger" grows it out of the trigger. */
-  growFrom?: "trigger" | "center";
   role?: "dialog" | "alertdialog";
   className?: string;
   children: ReactNode;
@@ -79,7 +76,6 @@ export function Modal({
   initialFocus,
   triggerRef,
   finalFocus,
-  growFrom = "center",
   role = "dialog",
   className,
   children,
@@ -95,26 +91,6 @@ export function Modal({
     setTrigger(triggerRef?.current ?? (active instanceof HTMLElement && active !== document.body ? active : null));
   }, [open, triggerRef]);
 
-  const latest = useRef({ trigger, growFrom });
-  useLayoutEffect(() => {
-    latest.current = { trigger, growFrom };
-  });
-
-  // Grow out of the trigger's center. The viewport is fixed at 0,0, so the
-  // panel's offsets are viewport coordinates, untouched by the starting scale.
-  const popupRef = useCallback((popup: HTMLDivElement | null) => {
-    if (!popup) return;
-    const { trigger: t, growFrom: from } = latest.current;
-    // On phones the panel is docked at the bottom (dialog.module.css), so it rises from there.
-    const docked = matchMedia("(max-width: 480px)").matches;
-    const rect = from === "trigger" && !docked && t?.isConnected ? t.getBoundingClientRect() : null;
-    popup.style.transformOrigin =
-      rect && (rect.width || rect.height)
-        ? `${rect.left + rect.width / 2 - popup.offsetLeft}px ${rect.top + rect.height / 2 - popup.offsetTop}px`
-        : docked && from === "trigger"
-          ? "50% 100%"
-          : "50% 50%";
-  }, []);
 
   const Root = role === "alertdialog" ? BaseAlertDialog.Root : BaseDialog.Root;
 
@@ -130,7 +106,6 @@ export function Modal({
         <BaseDialog.Backdrop className={styles.backdrop} />
         <BaseDialog.Viewport className={styles.viewport}>
           <BaseDialog.Popup
-            ref={popupRef}
             className={className ? `${styles.modal} ${className}` : styles.modal}
             initialFocus={() => {
               const el = typeof initialFocus === "function" ? initialFocus() : initialFocus?.current;
@@ -315,7 +290,7 @@ export function Dialog({
                 </p>
               )}
             </div>
-            <Button variant="ghost" size="sm" className={styles.close} aria-label="Close" onClick={dismiss}>
+            <Button variant="secondary" className={styles.close} aria-label="Close" onClick={dismiss}>
               <Icon name="close" />
             </Button>
           </header>

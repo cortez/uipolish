@@ -124,8 +124,8 @@ Light glass, like the menus: `--ui-surface-glass` over a
 | Loading row and empty state in | `--ui-dur-fast` (160ms) fade | `--ui-ease-enter` |
 | Light band across the loading row | `--ui-dur-sweep` (2.4s) per sweep | `linear` |
 
-The palette grows from its own center, whether a button or ⌘K opened it: a
-search box opens in place rather than flying in from its trigger. It sits near the top of the screen rather than in the
+The palette grows from its own center, like every dialog, whether a button
+or ⌘K opened it. It sits near the top of the screen rather than in the
 middle, so a list that grows or shrinks only moves the bottom edge.
 
 **How the height animates.** The results live in a scroller with a

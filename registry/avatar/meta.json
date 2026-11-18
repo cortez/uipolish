@@ -3,6 +3,6 @@
   "title": "Avatar",
   "summary": "Photo with initials on an opaque quiet fill behind it, or a head and shoulders with no name. A quick photo never flashes initials, a broken one never shows its broken mark, and groups overlap with a +N that says how many.",
   "blurb": "A photo or initials, alone or in an overlapping group.",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "dependencies": []
 }

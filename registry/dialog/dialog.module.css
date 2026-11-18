@@ -75,6 +75,7 @@
   }
   .modal {
     max-height: calc(100dvh - var(--ui-space-5) - max(var(--ui-space-2), env(safe-area-inset-bottom, 0px)));
+    transform-origin: 50% 100%;
   }
 }
 
@@ -160,10 +161,14 @@
 /* The top is a step short of the sides: the title's line height already
    puts air above its capitals, so the two edges read the same. */
 .header {
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: var(--ui-space-3);
-  padding: calc(var(--dialog-pad) - var(--ui-space-1)) var(--dialog-pad) var(--ui-space-4);
+  /* The title keeps clear of Close, which sits in the corner. */
+  padding: calc(var(--dialog-pad) - var(--ui-space-1))
+    calc(var(--corner) + var(--ui-control-md) * var(--ui-capsule) + var(--ui-space-3)) var(--ui-space-4)
+    var(--dialog-pad);
 }
 
 .heading {
@@ -182,6 +187,7 @@
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-heading);
   text-wrap: balance;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .description {
@@ -195,27 +201,14 @@
 /* The close button is a ghost icon Button: a capsule like every other.
    Centered on the title's first line, with its X on the content's edge.
    Doubled to win over the button's own size, whatever order sheets load in. */
+/* Close is a full-size secondary icon button, the standard 40px capsule
+   with its edge and fill, so it reads as a button. It sits --corner from
+   the top and from the end, the same distance both ways, concentric with
+   the panel's corner (whose radius is --corner plus half the button). */
 .close.close {
-  --close-size: var(--ui-control-sm);
-  --close-width: calc(var(--close-size) * var(--ui-capsule));
-  flex-shrink: 0;
-  width: var(--close-width);
-  height: var(--close-size);
-  margin: calc(var(--ui-leading-2xl) / 2 - var(--close-size) / 2) calc((16px - var(--close-width)) / 2) 0 0;
-  color: var(--ui-muted);
-}
-
-@media (hover: hover) {
-  .close.close:hover {
-    color: var(--ui-foreground);
-  }
-}
-
-/* 40px on touch screens, the finger's size. */
-@media (pointer: coarse) {
-  .close.close {
-    --close-size: var(--ui-control-md);
-  }
+  position: absolute;
+  top: var(--corner);
+  inset-inline-end: var(--corner);
 }
 
 .body {
@@ -327,6 +320,7 @@
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .guardDescription {

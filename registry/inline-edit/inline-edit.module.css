@@ -21,9 +21,10 @@
   width: fit-content;
 }
 
+/* Editing, it's a field: the resting edge, filled as a focused field is. */
 .root[data-editing] {
-  --inline-edge: var(--ui-field-focus);
-  background: var(--ui-surface);
+  --inline-edge: var(--ui-border-strong);
+  background: var(--ui-field-focus-fill);
   transition-duration: 0s;
 }
 
@@ -208,6 +209,7 @@
   transition:
     opacity var(--ui-dur-instant) var(--ui-ease-exit),
     visibility 0s linear var(--ui-dur-instant);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .error[data-shown] {

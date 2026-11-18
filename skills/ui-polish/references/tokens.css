@@ -136,12 +136,15 @@
      16-unit viewBox drawn at 16px. Icons beside regular text take regular;
      beside a medium label (button, tab, nav or menu item) medium. A smaller
      glyph that stands on its own keeps the line: calc(tier * 16 / size).
+     The default is regular, as most text is; a component sets medium only
+     where the label beside its icons is medium.
      --ui-icon-stroke-semibold is the medium value, kept so older code
      still resolves; don't use it in new code. */
   --ui-icon-stroke-regular: 1.25;
   --ui-icon-stroke-medium: 1.5;
   --ui-icon-stroke-semibold: var(--ui-icon-stroke-medium);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  /* Most text is regular, so icons are too unless their label is medium. */
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 
   /* Icon sizes: an icon is sized by the text it sits with, so every chevron,
      check or glyph in the same role is the same size. md beside 14-16px text
@@ -231,10 +234,10 @@
      Colored ones mix a hue at --ui-border-tint: the status edges below, or
      a component's own hue (a phase, a brand) at the same strength. */
   --ui-border-strong: light-dark(oklch(0.954 0 0), oklch(0.26 0 0));
-  /* An empty checkbox or radio: a soft edge over a soft flat fill, so the
-     box is found by its shape and shade together rather than by a hard
-     line. */
-  --ui-border-control: color-mix(in oklch, var(--ui-foreground) 28%, var(--ui-surface));
+  /* An empty checkbox or radio: the one edge every field and button has,
+     over a soft flat fill, so the box is found by its shape and shade
+     together and its line matches the controls beside it. */
+  --ui-border-control: var(--ui-border-strong);
   --ui-fill-control: var(--ui-fill-solid);
   --ui-border: var(--ui-border-strong);
   --ui-border-subtle: var(--ui-border);
@@ -247,10 +250,19 @@
      sticky cell, an avatar, a shell around panels): never a third gray. */
   --ui-fill-solid: color-mix(in oklch, var(--ui-foreground) 4.5%, var(--ui-surface));
   --ui-fill-strong-solid: color-mix(in oklch, var(--ui-foreground) 8%, var(--ui-surface));
+  /* A field takes this fill while it has focus or its list is open; its
+     edge stays as it rests. */
+  --ui-field-focus-fill: var(--ui-fill-solid);
   --ui-ink: var(--ui-foreground);
   --ui-on-ink: light-dark(oklch(0.99 0 0), oklch(0.17 0 0));
   /* Secondary text on ink (a shortcut in a tooltip): the muted step. */
   --ui-on-ink-muted: color-mix(in oklch, var(--ui-on-ink) 60%, var(--ui-ink));
+  /* A control that's on (a ticked checkbox, a chosen radio, a switch, a
+     slider's range) fills with the primary button's ink, so the controls
+     read as one set with buttons and fields. Point it at --ui-accent for a
+     colored "on". */
+  --ui-control-on: var(--ui-ink);
+  --ui-on-control-on: var(--ui-on-ink);
   /* Each theme has its own tuned hues; fills and icons hold 3:1, text 4.5:1. */
   --ui-accent: light-dark(oklch(0.55 0.22 262), oklch(0.6 0.19 258));
   --ui-on-accent: oklch(0.99 0 0);
@@ -339,10 +351,30 @@
   --ui-knockout: 2px;
 }
 
+/* Asked for less transparency (a system setting, also used on low-power
+   setups): floating panels go solid, with no blur behind them. */
+@media (prefers-reduced-transparency: reduce) {
+  :root,
+  [data-theme] {
+    --ui-surface-floating: var(--ui-surface);
+    --ui-blur-floating: none;
+    --ui-glass-edge: 0 0 transparent;
+  }
+}
+
 [data-theme="light"] { color-scheme: light; }
 [data-theme="dark"] { color-scheme: dark; }
 
 /* Code drops ligatures, so != and => stay two characters. */
+/* Base UI's portal wrapper takes no layout space. Popups portal into the
+   nearest themed element so they keep its tokens; inside a grid or flex
+   box the wrapper would otherwise be one more item and shift the layout
+   (a grid gained a row and its items jumped 8px as a menu opened). The
+   popups inside position themselves, so the wrapper needs no box. */
+:where([data-base-ui-portal]) {
+  display: contents;
+}
+
 :where(code, kbd, pre, samp) {
   font-variant-ligatures: none;
 }

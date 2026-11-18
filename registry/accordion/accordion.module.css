@@ -14,9 +14,8 @@
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
-.item + .item {
-  box-shadow: inset 0 var(--ui-hairline) 0 var(--ui-border);
-}
+/* Items part with space only: the rows' own 12px above and below, never a
+   drawn line. */
 
 .heading {
   /* Each row measures itself, so a narrow one can move its value under
@@ -45,6 +44,7 @@
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .title {
@@ -74,6 +74,7 @@
   line-height: var(--ui-leading-md);
   font-variant-numeric: tabular-nums;
   text-align: end;
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .title,

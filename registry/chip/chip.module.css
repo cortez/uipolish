@@ -66,23 +66,16 @@
   transition: color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
+/* On: the neutral selected fill and the selected edge, like a chosen
+   card, so chips read as one set with the other controls. */
 .chip[aria-pressed="true"] {
-  --chip-bg: light-dark(
-    color-mix(in oklch, var(--ui-accent) 10%, var(--ui-surface)),
-    color-mix(in oklch, var(--ui-accent) 18%, var(--ui-surface))
-  );
-  --chip-bg-hover: light-dark(
-    color-mix(in oklch, var(--ui-accent) 14%, var(--ui-surface)),
-    color-mix(in oklch, var(--ui-accent) 23%, var(--ui-surface))
-  );
-  --chip-bg-press: light-dark(
-    color-mix(in oklch, var(--ui-accent) 19%, var(--ui-surface)),
-    color-mix(in oklch, var(--ui-accent) 28%, var(--ui-surface))
-  );
-  --chip-edge: var(--ui-border-accent);
-  --chip-edge-hover: var(--ui-border-accent);
-  --chip-mark: var(--ui-accent-text);
-  color: var(--ui-accent-text);
+  --chip-bg: var(--ui-fill-strong-solid);
+  --chip-bg-hover: color-mix(in oklch, var(--ui-foreground) 11%, var(--ui-surface));
+  --chip-bg-press: color-mix(in oklch, var(--ui-foreground) 14%, var(--ui-surface));
+  --chip-edge: var(--ui-field-focus);
+  --chip-edge-hover: var(--ui-field-focus);
+  --chip-mark: var(--ui-foreground);
+  color: var(--ui-foreground);
 }
 
 .chip::before {

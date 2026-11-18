@@ -54,6 +54,7 @@
   font-weight: var(--ui-weight-regular);
   font-style: normal;
   line-height: 1;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .root[data-variant="plain"] .keys {

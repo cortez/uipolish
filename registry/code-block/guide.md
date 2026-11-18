@@ -3,8 +3,10 @@
 Shows code in an AI app, including code that's still streaming in. Finished
 lines never re-render or flash as new text arrives, and the block scrolls on
 its own only when the reader is already at the bottom. The
-header has the language (or a file name), a Wrap toggle and a Copy button
-whose label morphs to "Copied". Highlighting is built in, with no library:
+header has the language (or a file name) and Copy, a plain text button with
+no fill, edge or icon, quiet in the corner, whose label morphs to "Copied". Code never
+wraps: a long line scrolls sideways, so indentation and columns read as
+written. Highlighting is built in, with no library:
 four quiet hues mixed from the theme's accent and status colors, the rest in the text grays, so it
 follows any theme. Bring your own highlighter through `lineHtml` if you need
 more.
@@ -35,7 +37,6 @@ more.
 | `language` | | `ts`, `tsx`, `js`, `py`, `sh`, `bash`, `json`, `css`… Sets the label and tokenizer |
 | `title` | language name | Header label, for example a file name |
 | `lineNumbers` | `false` | Numbers lines; they can't be selected or copied |
-| `defaultWrap` | `false` | Start wrapped; the user can still toggle |
 | `streaming` | `false` | Shows whole words only, fading each in as it lands, and sets `aria-busy` |
 | `highlight` | `true` | Use the built-in tokenizer for supported languages |
 | `lineHtml` | | One trusted HTML string per line from your own highlighter |
@@ -49,7 +50,6 @@ more.
 | Streaming | Each word appears once it's whole and fades in once; earlier text never moves or animates | `streaming`, `aria-busy` |
 | Overflowing | Fades on the edge(s) that have more code; scroller becomes a tab stop | `data-fade-start`, `data-fade-end`, `tabIndex={0}` |
 | Scroller focused | 2px ring around the whole block, appears instantly | `:has(.scroller:focus-visible)` |
-| Wrapped | Long lines wrap; Wrap button holds a fill | `aria-pressed="true"` |
 | Copied | "Copy" morphs to "Copied" for 2s; "Copied to clipboard" is announced | `TextMorph`, `role="status"` |
 | Copy failed | Label reads "Copy failed"; the announcement says to select and copy by hand | clipboard missing or blocked |
 
@@ -138,7 +138,7 @@ Map the highlighter's colors to the `--code-*` properties above, or to the
 | Button press release | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 | Edge fades | instant | n/a |
 
-Wrapping doesn't animate; streamed words fade in once over `--ui-dur-base`. Under
+Streamed words fade in once over `--ui-dur-base`. Under
 `prefers-reduced-motion: reduce` words appear without fading, the label swaps without morphing and the
 check appears without drawing.
 
@@ -147,7 +147,6 @@ check appears without drawing.
 - When the code overflows, the scroller gets `tabIndex={0}`, `role="region"`
   and an `aria-label` ("Shell code"), so keyboard users can focus it and
   scroll with the arrow keys. When nothing overflows it isn't a tab stop.
-- Wrap is a toggle button with `aria-pressed`.
 - Copy keeps the accessible name "Copy Shell code"; the result goes to a
   `role="status"` region ("Copied to clipboard"), and a failure says what to
   do instead.

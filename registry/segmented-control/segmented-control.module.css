@@ -76,6 +76,7 @@
   transition:
     color var(--ui-dur-instant) var(--ui-ease-color),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .option[data-checked] {

@@ -24,15 +24,17 @@ stack of plain fields keeps the form's own gap.
 | State | What you see | How |
 |---|---|---|
 | Rest | Hairline edge in `--ui-border-strong`, hint in muted text below | |
-| Hover | Edge one step darker, eased in and out | `@media (hover: hover)`, skipped when focused, invalid or disabled |
-| Focus | Edge thickens to 1px and darkens to `--ui-field-focus`, the instant focus lands; leaving eases back | `:focus` (fields show focus on click too) |
+| Hover | Nothing changes; the text cursor is the cue | |
+| Focus | Fills with `--ui-field-focus-fill` the instant focus lands; the edge stays as it rests; leaving eases back | `:focus` (fields show focus on click too) |
 | Invalid | Edge eases to danger; the hint fades out and the error, with its icon, fades in in the same place | `aria-invalid`, set on blur by `validate` or by `error` |
-| Invalid + focus | 1px danger edge | |
+| Invalid + focus | Danger edge at the hairline weight, and the focus fill | |
 | Fixed while typing | Edge eases from danger back to the focus color; the error fades out and the hint fades back in | `validate` re-runs on each keystroke once an error showed |
 | New error over an old one | The new message fades in where the old one was | |
 | Disabled | 50% opacity, default cursor, no transitions in or out | native `disabled` |
 | Password, hidden | Dots, an eye button inside the end of the field | `type="password"` |
 | Password, shown | Plain text, the eye gets a slash, the button turns to the text color | the button's `aria-pressed="true"` |
+| Value wider than the field | Fades over its last 24px instead of stopping hard at the edge; focus lifts the fade to show the caret | `data-overflow` on the control, measured on input and resize |
+| Label hidden | No visible label; screen readers still read it. Only where the field's purpose is plain from what's around it | `hideLabel` |
 
 **One reserved slot.** The hint and the error sit in the same grid cell and
 trade places with a crossfade. The cell is as tall as the taller of the two,
@@ -65,7 +67,8 @@ it can be pressed again.
 | What | Duration | Easing |
 |---|---|---|
 | Edge on hover, and back from focus | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
-| Edge on focus | 0ms, never animated | n/a |
+| Fill on focus | 0ms, never animated | n/a |
+| Overflow fade in and out | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Edge to danger and back | `--ui-dur-fast` (160ms), also while focused | `--ui-ease-color` |
 | Leaving message (hint or error) fades out | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Arriving message fades in, 75ms after | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |

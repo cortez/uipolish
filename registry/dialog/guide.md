@@ -46,7 +46,7 @@ The file exports three things:
 
 | State | What you see | How |
 |---|---|---|
-| Opening | Panel fades in and grows from 0.97 from its own center; backdrop fades in. Pass `growFrom="trigger"` to grow it out of the trigger instead | `[data-starting-style]` |
+| Opening | Panel fades in and grows from 0.97 from its own center; backdrop fades in. | `[data-starting-style]` |
 | On a phone | Docked at the bottom, 8px off the edges and above the home indicator, in reach of a thumb; it grows upward when its content does | `max-width: 480px` |
 | Open | Panel on a dimmed page; page doesn't scroll | Base UI's modal `Dialog.Root`, which locks scroll |
 | Body overflow | Body scrolls on its own; header and footer stay put | `overflow-y: auto; overscroll-behavior: contain` |
@@ -55,6 +55,7 @@ The file exports three things:
 | Size changes | The panel eases to the new width | `size` (`sm` 420, `md` 480, `lg` 640) |
 | Guard | Footer swaps for "Discard changes?" with Keep editing / Discard; body and header dim and go inert; focus on Keep editing | `dirty` is true when the user tries to leave |
 | Locked | Escape, backdrop and close do nothing | `locked`, e.g. while saving |
+| Close button | A full-size secondary icon button, the standard 40px capsule with edge and fill, 16px (`--corner`) from the top and from the end, concentric with the panel's corner like the footer buttons; the title keeps clear of it | `Button variant="secondary"` |
 | Confirm busy | Confirm button's label dims and shimmers, keeps its width; Cancel disabled | `onConfirm` returns a promise |
 | Confirm failed | Error message in danger text beside the buttons; dialog stays open | the promise rejects; its message is shown |
 | Closing | Panel fades and shrinks to 0.97; backdrop fades; then it unmounts | `[data-ending-style]`; Base UI waits for the transition before unmounting |
@@ -135,8 +136,8 @@ change at once and steps swap without fading. The backdrop is a plain dim
 in `--ui-scrim`, never blurred.
 
 Panel and backdrop are CSS transitions on Base UI's `[data-starting-style]`
-and `[data-ending-style]`. The panel's `transform-origin` is set when it
-mounts, measured against its centered spot in the fixed viewport.
+and `[data-ending-style]`. The panel's `transform-origin` is fixed in CSS:
+its center, or its bottom edge when docked on a phone.
 
 ## Scroll lock
 

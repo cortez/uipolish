@@ -94,6 +94,12 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* A radio row that's chosen: a quiet fill, a step under the highlight's,
+   under the sliding highlight when the pointer is on it. */
+.item[role="menuitemradio"][data-checked] {
+  background: var(--ui-fill);
+}
+
 .item[data-tone="danger"] {
   color: var(--ui-danger-text);
 }
@@ -210,6 +216,7 @@
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-md);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .chevron {
@@ -232,12 +239,18 @@
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
+/* When the rows keep a leading column (an icon or a check), a group's label
+   starts where the rows' text does: past the 16px column and its 12px gap. */
+.surface:has(.leading[data-filled]) .groupLabel {
+  padding-inline-start: calc(var(--ui-pad-row) + 16px + var(--ui-space-3));
+}
+
+/* Groups part with space, never a drawn line. */
 .separator {
-  height: var(--ui-hairline);
-  margin: var(--ui-space-2) calc(-1 * var(--menu-inset));
-  background: var(--ui-border);
+  height: var(--ui-space-2);
 }
 
 @media (pointer: coarse) {

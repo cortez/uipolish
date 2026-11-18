@@ -1,5 +1,5 @@
 .root {
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
   font-family: var(--ui-font-sans);
   color: var(--ui-foreground);
 }
@@ -22,6 +22,7 @@
   transition:
     color var(--ui-dur-instant) var(--ui-ease-color),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 @media (hover: hover) {
@@ -273,6 +274,7 @@
   font: var(--ui-weight-medium) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
   text-align: start;
   transition: color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .title:focus {
@@ -395,6 +397,7 @@ button.title:active {
   overflow-wrap: anywhere;
   scrollbar-width: thin;
   scrollbar-color: var(--ui-border-strong) transparent;
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .block pre:focus-visible {

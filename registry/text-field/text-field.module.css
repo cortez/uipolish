@@ -10,14 +10,49 @@
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
 }
 
 .control {
   --field-height: var(--ui-control-md);
   --reveal-size: var(--ui-control-sm);
   --reveal-inset: calc((var(--field-height) - var(--reveal-size)) / 2);
+  /* Where the text stops: the field's end padding. */
+  --text-end: calc(var(--reveal-inset) + 10px);
   position: relative;
   display: grid;
+}
+
+.control:has(.input[data-reveal]) {
+  --text-end: calc(var(--reveal-size) + var(--reveal-inset) * 2);
+}
+
+/* A value wider than the field fades over its last 24px while it isn't
+   focused, like cut text elsewhere (text.module.css .truncate). It's a
+   veil in the field's own fill laid over the end of the text, inside the
+   edge, so the edge and fill stay whole; focus lifts it to show the caret. */
+.control::after {
+  content: "";
+  position: absolute;
+  inset-block: var(--ui-hairline);
+  inset-inline-end: var(--text-end);
+  width: var(--ui-space-5);
+  background: linear-gradient(to right, transparent, var(--ui-surface));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+:is([dir="rtl"]) .control::after {
+  background: linear-gradient(to left, transparent, var(--ui-surface));
+}
+
+.control[data-overflow]:not(:focus-within)::after {
+  opacity: 1;
 }
 
 .field[data-size="lg"] .control {
@@ -54,7 +89,9 @@
   outline: none;
   transition:
     --field-edge var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
     --field-danger var(--ui-dur-fast) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .field[data-size="lg"] .input {
@@ -131,17 +168,11 @@
   color: var(--ui-subtle);
 }
 
-@media (hover: hover) {
-  .input:hover:not(:focus, :disabled, [aria-invalid]) {
-    --field-edge: var(--ui-field-focus);
-  }
-}
-
+/* Focus fills the field, at once; the edge stays as it rests. */
 .input:focus {
-  --field-edge: var(--ui-field-focus);
-  --field-edge-width: 1px;
+  background: var(--ui-field-focus-fill);
   transition:
-    --field-edge 0s,
+    background-color 0s,
     --field-danger var(--ui-dur-fast) var(--ui-ease-color);
 }
 

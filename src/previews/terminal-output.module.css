@@ -1,0 +1,11 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+.prompt {
+  margin: 0;
+  font-size: var(--ui-text-md);
+}

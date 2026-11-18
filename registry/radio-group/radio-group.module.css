@@ -22,6 +22,7 @@
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .options {
@@ -95,8 +96,8 @@
 }
 
 .option[data-checked] .radio {
-  --radio-edge: var(--ui-accent);
-  background: var(--ui-accent);
+  --radio-edge: var(--ui-control-on);
+  background: var(--ui-control-on);
 }
 
 .control::before {
@@ -129,6 +130,7 @@
 
 .label {
   font-weight: var(--ui-weight-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .meta {
@@ -145,8 +147,9 @@
 }
 
 @media (hover: hover) {
+  /* One step up the edge set, as every field does; never the text gray. */
   .option:hover:not([data-disabled], [data-checked]) .radio {
-    --radio-edge: var(--ui-muted);
+    --radio-edge: var(--ui-field-focus);
   }
 }
 

@@ -86,8 +86,7 @@ box and why deleting from the middle closes the gap.
 | State | What you see | How |
 |---|---|---|
 | Empty or filled box | Hairline edge in `--ui-border-strong`, the same edge as a text field | |
-| Hover | Edge darkens to `--ui-field-focus` | `@media (hover: hover)` |
-| Active box | Edge in `--ui-field-focus`, instant. Empty: a drawn 2px caret blinks in the middle (steady under reduced motion). Filled: the digit is selected | `:focus` |
+| Active box | Fills with `--ui-field-focus-fill`, instant; the edge stays. Empty: a drawn 2px caret blinks in the middle (steady under reduced motion). Filled: the digit is selected | `:focus` |
 | Invalid | Every edge eases to danger; the hint fades out and the error fades in, in the same reserved line | `error` → `aria-invalid` |
 | Disabled | 50% opacity, default cursor | `disabled` |
 

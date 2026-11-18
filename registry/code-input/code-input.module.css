@@ -18,6 +18,7 @@
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* The boxes and the pill share one cell; the boxes stay in flow, so the row
@@ -120,6 +121,7 @@
     opacity var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
     translate var(--ui-dur-glide) var(--ui-ease-glide),
     filter var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .box::selection {
@@ -144,17 +146,11 @@
   }
 }
 
-@media (hover: hover) {
-  .box:hover:not(:focus, :disabled) {
-    --code-edge: var(--ui-field-focus);
-  }
-}
-
-/* The active box: its edge darkens at once and, while it's empty, a caret blinks in it. */
+/* The active box fills at once (its edge stays) and, while it's empty, a caret blinks in it. */
 .box:focus {
-  --code-edge: var(--ui-field-focus);
+  background: var(--ui-field-focus-fill);
   transition:
-    --code-edge 0s,
+    background-color 0s,
     --code-danger var(--ui-dur-fast) var(--ui-ease-color),
     opacity var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
     translate var(--ui-dur-glide) var(--ui-ease-glide),
@@ -368,6 +364,7 @@
   transition:
     opacity var(--ui-dur-instant) var(--ui-ease-exit),
     filter var(--ui-dur-instant) var(--ui-ease-exit);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .root[data-phase="verifying"] .pillContent,

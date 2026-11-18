@@ -53,8 +53,7 @@ an empty value whether the field is controlled or not.
 | State | What you see | How |
 |---|---|---|
 | Empty | Magnifier, placeholder, and the key label if there is one | |
-| Hover | Edge one step darker | `@media (hover: hover)` |
-| Focus | Edge darkens and thickens to 1px at once; the key label fades out | `:focus-within` on the shell |
+| Focus | Fills with `--ui-field-focus-fill` at once, the edge stays; the key label fades out | `:focus-within` on the shell |
 | Has text | The clear button fades in at the end | `data-filled` |
 | Loading | After 300ms, the magnifier breathes between full and 30% | `loading`, `aria-busy` on the input |
 | Disabled | 50% opacity; no clear button, no key label, the shortcut is off | native `disabled` |

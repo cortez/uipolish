@@ -1,0 +1,33 @@
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+/* A stand-in for the thread around it: messages 24 apart, questions 12. */
+.thread {
+  composes: measure from "./preview.module.css";
+  display: grid;
+  gap: var(--ui-space-3);
+}
+
+.prompt {
+  justify-self: end;
+  max-width: min(85%, 440px);
+  margin: 0 0 var(--ui-space-3);
+  padding: var(--ui-space-3) var(--ui-space-4);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-fill);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.reply {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-prose);
+  text-wrap: pretty;
+}
