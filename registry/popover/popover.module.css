@@ -27,6 +27,7 @@
     opacity var(--ui-dur-fast) var(--ui-ease-enter),
     scale var(--ui-dur-fast) var(--ui-ease-enter),
     filter var(--ui-dur-fast) var(--ui-ease-enter);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .panel[data-starting-style],

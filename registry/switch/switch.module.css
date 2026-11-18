@@ -34,6 +34,7 @@
   user-select: none;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .root[data-size="sm"] {
@@ -220,6 +221,7 @@
 .label {
   composes: wrap from "../text/text.module.css";
   font-weight: var(--ui-weight-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .description {

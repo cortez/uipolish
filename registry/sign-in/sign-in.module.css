@@ -89,6 +89,7 @@
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-title);
   text-wrap: balance;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .title:focus {
@@ -109,6 +110,7 @@
   color: var(--ui-foreground);
   font-weight: var(--ui-weight-medium);
   overflow-wrap: anywhere;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* Field, then its button: closer to each other than to anything else. */
@@ -213,6 +215,7 @@
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-semibold);
   line-height: 1;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .mark > :is(img, svg) {
@@ -270,6 +273,7 @@
   text-underline-offset: 3px;
   cursor: pointer;
   transition: text-decoration-color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 @media (hover: hover) {

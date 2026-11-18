@@ -26,6 +26,7 @@
   color: var(--badge-text);
   font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
   white-space: nowrap;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* In running text (a badge straight inside a paragraph or list item) the

@@ -7,6 +7,7 @@
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-prose) var(--ui-font-sans);
   overflow-wrap: break-word;
   hanging-punctuation: first;
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 /* ---------- Rhythm ---------- */
@@ -61,6 +62,7 @@
   font-weight: var(--ui-weight-semibold);
   line-height: var(--ui-leading-md);
   text-wrap: balance;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .heading[data-depth="1"] {
@@ -80,12 +82,14 @@
 .heading[data-depth="4"] {
   color: var(--ui-muted);
   font-weight: var(--ui-weight-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* ---------- Inline ---------- */
 
 .root strong {
   font-weight: var(--ui-weight-semibold);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .root del {
@@ -248,6 +252,7 @@ ol.list {
   color: var(--ui-muted);
   font-weight: var(--ui-weight-medium);
   white-space: nowrap;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .table :is(th, td)[data-align="center"] {

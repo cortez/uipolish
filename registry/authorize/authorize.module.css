@@ -74,6 +74,7 @@
   font-weight: var(--ui-weight-semibold);
   line-height: 1;
   letter-spacing: var(--ui-tracking-title);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .link {
@@ -256,6 +257,7 @@
   font-weight: var(--ui-weight-semibold);
   line-height: var(--ui-leading-md);
   text-wrap: balance;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .title:focus {
@@ -335,6 +337,7 @@
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .description {
@@ -342,6 +345,7 @@
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 /* Centered with the rest; the icon sits in the line like a word. */

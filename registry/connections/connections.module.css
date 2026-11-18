@@ -111,6 +111,7 @@
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-semibold);
   line-height: 1;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .row[data-status="disabled"] .mark {
@@ -138,6 +139,7 @@
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   transition: color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .disclosure::after {
@@ -210,6 +212,7 @@
   cursor: pointer;
   touch-action: manipulation;
   transition: text-decoration-color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* 24px tall to the pointer, 40 to a finger, without moving the line. */
@@ -315,6 +318,7 @@
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-sm);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .sectionNote {
@@ -426,6 +430,7 @@
 
 .confirm strong {
   font-weight: var(--ui-weight-semibold);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .confirm .failure {
@@ -451,6 +456,7 @@
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .emptyNote {
@@ -500,6 +506,7 @@
   transition:
     background-color var(--ui-dur-instant) var(--ui-ease-color),
     color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 @media (hover: hover) {
@@ -567,6 +574,7 @@
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .signinTitle:focus {

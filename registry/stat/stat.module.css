@@ -21,6 +21,7 @@
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
   white-space: nowrap;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .label[data-clipped] {
@@ -37,6 +38,7 @@
   font-weight: var(--ui-weight-semibold);
   line-height: var(--ui-leading-2xl);
   white-space: nowrap;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .figure[data-word] .figureText {

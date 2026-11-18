@@ -229,6 +229,7 @@
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-sm);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .figure {
@@ -248,6 +249,7 @@
   font-weight: var(--ui-weight-semibold);
   line-height: var(--ui-leading-2xl);
   white-space: nowrap;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .of {
@@ -265,6 +267,7 @@
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
   transition: color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* Each segment is a full-width layer clipped to its span, so a change slides its edges
@@ -445,6 +448,7 @@
 
 .count {
   font-weight: var(--ui-weight-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .message[data-enter],

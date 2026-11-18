@@ -87,6 +87,7 @@
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .avatar > img {
@@ -174,6 +175,7 @@
 
 .prose strong {
   font-weight: var(--ui-weight-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .prose code {
@@ -366,6 +368,7 @@
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   transition: color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* No clip on the button, so a label morphing into "Copied" is never cut off. */

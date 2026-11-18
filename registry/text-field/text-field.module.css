@@ -10,6 +10,7 @@
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .control {
@@ -54,7 +55,9 @@
   outline: none;
   transition:
     --field-edge var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
     --field-danger var(--ui-dur-fast) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .field[data-size="lg"] .input {
@@ -131,17 +134,11 @@
   color: var(--ui-subtle);
 }
 
-@media (hover: hover) {
-  .input:hover:not(:focus, :disabled, [aria-invalid]) {
-    --field-edge: var(--ui-field-focus);
-  }
-}
-
+/* Focus fills the field, at once; the edge stays as it rests. */
 .input:focus {
-  --field-edge: var(--ui-field-focus);
-  --field-edge-width: 1px;
+  background: var(--ui-field-focus-fill);
   transition:
-    --field-edge 0s,
+    background-color 0s,
     --field-danger var(--ui-dur-fast) var(--ui-ease-color);
 }
 

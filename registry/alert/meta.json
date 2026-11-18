@@ -2,7 +2,7 @@
   "name": "alert",
   "title": "Alert",
   "summary": "Inline banner for info, success, warning and error. It reserves its space up front or opens on a press, so a late status never pushes the page.",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "dependencies": [
     "field",
     "icons"

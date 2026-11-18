@@ -2,7 +2,7 @@
   "name": "select",
   "title": "Select",
   "summary": "Select-only combobox whose trigger fits the chosen label and morphs to the next one. Touch screens get the native picker instead.",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "dependencies": [
     "icons",
     "listbox",

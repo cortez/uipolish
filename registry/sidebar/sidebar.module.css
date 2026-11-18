@@ -14,7 +14,7 @@
   --sidebar-bg: var(--ui-canvas);
   /* Opaque versions of the row fills, so the collapsed count can cut out of them. */
   --sidebar-bg-current: color-mix(in oklch, var(--ui-foreground) 8%, var(--sidebar-bg));
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 /* A finger gets 40px rows; collapsed, that's Nav rail's 55px capsule. */
@@ -192,6 +192,7 @@
   transition:
     background-color var(--ui-dur-instant) var(--ui-ease-color),
     color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 @media (hover: hover) {
@@ -228,6 +229,7 @@
 .row[data-nested] {
   padding-inline-start: calc(var(--sidebar-inset) + 16px + var(--ui-space-2));
   font-weight: var(--ui-weight-regular);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .icon {
@@ -275,6 +277,7 @@
   font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-sm);
   white-space: nowrap;
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 /* The shortcut is a hint: it shows on hover and focus, and stays in the
@@ -284,6 +287,7 @@
   font-weight: var(--ui-weight-regular);
   opacity: 0;
   transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .row:focus-visible .kbd {
@@ -309,6 +313,7 @@
   color: var(--ui-on-accent);
   font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
   font-variant-numeric: tabular-nums;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* Collapsed, the count sits at the icon's top right, as on Nav rail, cut
@@ -409,6 +414,7 @@
   padding: 0 var(--sidebar-inset);
   color: var(--ui-muted);
   font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .headingButton {
@@ -490,6 +496,7 @@
 .row[data-kind="recent"] {
   font-weight: var(--ui-weight-regular);
   font-size: var(--ui-text-sm);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 /* One line, faded at the end when cut; the whole title is in `title`. */
@@ -648,6 +655,7 @@
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
   outline: none;
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .renameInput[aria-invalid] {
@@ -705,6 +713,7 @@
 .empty > p:first-child {
   color: var(--ui-foreground);
   font-weight: var(--ui-weight-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* One bone per title, in a row of the real height. */
@@ -747,6 +756,7 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 @media (hover: hover) {
@@ -808,6 +818,7 @@
 .menuDetail {
   color: var(--ui-muted);
   font-weight: var(--ui-weight-regular);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 /* As wide as the button it opens from, when that's wider than a menu. */

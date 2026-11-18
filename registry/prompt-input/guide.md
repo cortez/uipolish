@@ -40,7 +40,7 @@ pasted, dropped or picked, and show as chips above the text.
 |---|---|---|
 | Empty | Placeholder, send button as a quiet gray circle with a gray arrow | `data-state="empty"`, `aria-disabled` |
 | Ready | Send fills with the text color the moment there's non-whitespace text or a file | `data-state="ready"` |
-| Focused | The whole composer gets a darker hairline and a 4px soft halo, instantly | `:focus-within` |
+| Focused | The whole composer fills with `--ui-field-focus-fill`, instantly; the edge stays as it rests | `:focus-within` |
 | Growing | The textarea grows a row at a time up to `maxRows` (8), then scrolls | `field-sizing: content`, JS fallback |
 | Streaming | Send becomes a "■ Stop" pill; Esc stops too. The textarea stays editable | `streaming` |
 | Attachments | Image chips are fixed 56×56 thumbnails that fade in; files show name, type and size | paste, drop, or the + button |
@@ -73,7 +73,7 @@ the height is set from `scrollHeight` in a layout effect, before paint.
 | What | Duration | Easing |
 |---|---|---|
 | Composer border on hover | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
-| Focus edge | 0ms, never animated | n/a |
+| Focus fill | 0ms, never animated; the edge never changes | n/a |
 | Arrow retracts into its tip, stop block sweeps in (`Icon` send → stop) | see the icon set's guide | |
 | "Stop" label and pill width | `--ui-dur-move` (380ms) via TextMorph | `--ui-ease-move` |
 | Chip in | `--ui-dur-fast` (160ms), fade, scale from 0.97 | `--ui-ease-enter` |

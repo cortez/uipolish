@@ -79,9 +79,9 @@ Disabled options are skipped by the keys and can't be chosen.
 |---|---|---|
 | Rest | Value, chevron; hairline edge (`md`) or light fill (`sm`) | |
 | Placeholder | Placeholder in the subtle text color | nothing chosen |
-| Hover | Edge one step darker (`md`), fill one step darker (`sm`) | `@media (hover: hover)` |
-| Open | The hover edge, easing in and out with the list over `--ui-dur-instant`; chevron flips. The thicker focus edge is only for keyboard focus, so a click or tap never rings it | `[data-popup-open]` |
-| Focus | `md`: edge darkens and thickens, inside the field. `sm`: a line just inside the pill | `:focus-visible`, never animated |
+| Hover | Fills with `--ui-field-focus-fill` (`md`), fill one step darker (`sm`); the edge never changes | `@media (hover: hover)` |
+| Open | The same fill, held while the list is open; chevron flips | `[data-popup-open]` |
+| Focus | `md`: the field focus fill, at once; the edge stays. `sm`: a line just inside the pill | `:focus-visible`, never animated |
 | Invalid | Danger edge, error with an icon in the hint's place | `aria-invalid` |
 | Disabled | 50% opacity, default cursor | `disabled`, `[data-disabled]` |
 | Highlighted option | One rounded fill under the option, sliding between options | `[data-highlighted]`, pointer or keyboard |

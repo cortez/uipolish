@@ -78,6 +78,7 @@ a.crumb:focus-visible {
 .crumb[aria-current] {
   color: var(--ui-foreground);
   font-weight: var(--ui-weight-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .label {
@@ -128,6 +129,7 @@ a.crumb:focus-visible {
   transition:
     color var(--ui-dur-instant) var(--ui-ease-color),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 @media (hover: hover) {

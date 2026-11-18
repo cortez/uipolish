@@ -214,6 +214,7 @@
   font-variant-numeric: tabular-nums;
   pointer-events: none;
   transition: box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .item[data-current] .badge {
@@ -297,6 +298,7 @@
     opacity var(--ui-dur-fast) var(--ui-ease-enter),
     scale var(--ui-dur-fast) var(--ui-ease-enter),
     filter var(--ui-dur-fast) var(--ui-ease-enter);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .positioner[data-glide] .tooltip {

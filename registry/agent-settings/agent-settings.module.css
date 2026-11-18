@@ -27,6 +27,7 @@
   line-height: var(--ui-leading-display);
   letter-spacing: var(--ui-tracking-title);
   text-wrap: balance;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .lede {
@@ -74,6 +75,7 @@
   transition:
     color var(--ui-dur-instant) var(--ui-ease-color),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 @media (hover: hover) {
@@ -150,6 +152,7 @@
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-heading);
   text-wrap: balance;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .sectionTitle:focus {
@@ -182,6 +185,7 @@
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
   text-wrap: balance;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* Embedded as it is, at the column's full width. */
@@ -249,6 +253,7 @@
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .description {
@@ -388,6 +393,7 @@
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-sm);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .tools {
@@ -565,6 +571,7 @@
 
 .confirm strong {
   font-weight: var(--ui-weight-semibold);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .confirm .failure {

@@ -206,6 +206,7 @@
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-md);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .chevron {
@@ -228,6 +229,7 @@
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-sm);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* Groups part with space, never a drawn line. */

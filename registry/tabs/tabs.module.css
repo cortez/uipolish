@@ -92,6 +92,7 @@
   transition:
     color var(--ui-dur-instant) var(--ui-ease-color),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .tab[data-active] {
@@ -127,6 +128,7 @@
   font-weight: var(--ui-weight-regular);
   font-variant-numeric: tabular-nums;
   transition: color var(--ui-dur-instant) var(--ui-ease-color);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .tab[data-active] .count {

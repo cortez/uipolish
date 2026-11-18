@@ -35,9 +35,9 @@ mode for free.
   it, so one box's line drifts from the next. Never a literal `1px` for
   an edge; always the token. No
   glints, lighter top edges or glassy double rings: a plain line fits any
-  product the component lands in. The exceptions are deliberate: a
-  focused field's edge is 1px (the weight change is part of the focus
-  cue), and forced-colors outlines stay 1px so they never vanish.
+  product the component lands in. The one exception is deliberate:
+  forced-colors outlines stay 1px so they never vanish. A focused field
+  keeps its edge and changes its fill (`--ui-field-focus-fill`) instead.
 - **Page layout gets no borders.** Headers, sections, hero bands and
   gallery tiles separate with space and a change of surface, not lines.
 - **One neutral edge for every line.** A card's frame, a field, a button,
@@ -50,8 +50,9 @@ mode for free.
   from a darker outline.
 
   Beyond that one:
-  - `--ui-field-focus`: a hovered, selected or focused control (or the one
-    selected box in a set, like the current plan).
+  - `--ui-field-focus`: a hovered or selected control (or the one
+    selected box in a set, like the current plan). Never a focused text
+    field: that keeps its edge and fills with `--ui-field-focus-fill`.
   - A colored edge, only for status or a component's own hue:
     `--ui-border-accent`, `-success`, `-warning`, `-danger`, or a hue (a
     phase, a brand) mixed at `--ui-border-tint`.
@@ -97,7 +98,7 @@ One weight for every line on the page, so nothing reads heavier by accident:
   `--ui-hairline`, never `border` (it renders at twice the weight). Where a
   child's background would cover an inset line (opaque sticky cells, a
   tinted row), draw the line on a `::after` over the children instead.
-  Exceptions: a focused field's 1px edge, forced-colors outlines, a 2px
+  Exceptions: forced-colors outlines, a 2px
   quote bar, and cut-out rings in the surface color around an overlapping
   mark (an avatar stack, a corner badge).
 - **Icon strokes match the text they sit with**, in two tiers:

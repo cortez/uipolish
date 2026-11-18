@@ -45,6 +45,7 @@
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
   outline: none;
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .input::placeholder {
@@ -99,6 +100,7 @@
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-sm);
   user-select: none;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .option {
@@ -197,6 +199,7 @@
   font-weight: var(--ui-weight-medium);
   font-style: normal;
   line-height: 1;
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 /* The shortcut and the Enter key share one cell, at the row's end. The
@@ -265,6 +268,7 @@
   color: var(--ui-foreground);
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .emptyHint {

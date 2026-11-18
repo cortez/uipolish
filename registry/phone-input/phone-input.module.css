@@ -27,6 +27,7 @@
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / 1 var(--ui-font-sans);
   white-space: nowrap;
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .trigger::before {
@@ -113,6 +114,7 @@
 
 .option[data-selected] .name {
   font-weight: var(--ui-weight-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .code {
