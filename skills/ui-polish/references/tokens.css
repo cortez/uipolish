@@ -243,7 +243,7 @@
   --ui-border-subtle: var(--ui-border);
   /* Soft: a colored edge is a quiet line in its hue, never an outline
      that competes with the fill or the text inside it. */
-  --ui-border-tint: 14%;
+  --ui-border-tint: 30%;
   --ui-fill: color-mix(in oklch, var(--ui-foreground) 4.5%, transparent);
   --ui-fill-strong: color-mix(in oklch, var(--ui-foreground) 8%, transparent);
   /* The same two fills, opaque, for what must hide what's under it (a
@@ -263,19 +263,20 @@
      colored "on". */
   --ui-control-on: var(--ui-ink);
   --ui-on-control-on: var(--ui-on-ink);
-  /* Each theme has its own tuned hues; fills and icons hold 3:1, text 4.5:1. */
-  --ui-accent: light-dark(oklch(0.55 0.22 262), oklch(0.6 0.19 258));
+  /* Vivid hues: red, blue, green and orange near the most saturated a
+     screen shows, tuned per theme; fills and icons hold 3:1, text 4.5:1. */
+  --ui-accent: light-dark(oklch(0.56 0.245 263), oklch(0.56 0.23 262));
   --ui-on-accent: oklch(0.99 0 0);
-  --ui-success: light-dark(oklch(0.6 0.16 150), oklch(0.7 0.17 150));
-  /* Text on a success fill (a Merge button): white on light, ink on the lighter dark-theme green. */
-  --ui-on-success: light-dark(oklch(0.99 0 0), oklch(0.17 0 0));
-  --ui-warning: light-dark(oklch(0.67 0.155 58), oklch(0.78 0.15 72));
-  --ui-danger: light-dark(oklch(0.58 0.22 27), oklch(0.62 0.21 25));
+  --ui-success: light-dark(oklch(0.62 0.2 148), oklch(0.74 0.22 148));
+  /* Text on a success fill (a Merge button): ink, which reads on the vivid green in both themes. */
+  --ui-on-success: oklch(0.17 0 0);
+  --ui-warning: light-dark(oklch(0.66 0.2 48), oklch(0.8 0.18 65));
+  --ui-danger: light-dark(oklch(0.565 0.235 27), oklch(0.57 0.235 27));
   --ui-on-danger: oklch(0.99 0 0);
-  --ui-accent-text: light-dark(oklch(0.49 0.21 263), oklch(0.76 0.12 255));
-  --ui-success-text: light-dark(oklch(0.5 0.13 150), oklch(0.8 0.17 152));
-  --ui-warning-text: light-dark(oklch(0.53 0.13 52), oklch(0.85 0.135 82));
-  --ui-danger-text: light-dark(oklch(0.51 0.2 27), oklch(0.74 0.15 22));
+  --ui-accent-text: light-dark(oklch(0.5 0.25 264), oklch(0.78 0.15 258));
+  --ui-success-text: light-dark(oklch(0.5 0.16 148), oklch(0.82 0.2 150));
+  --ui-warning-text: light-dark(oklch(0.52 0.155 48), oklch(0.86 0.16 75));
+  --ui-danger-text: light-dark(oklch(0.49 0.215 27), oklch(0.76 0.18 22));
   --ui-scrim: light-dark(oklch(0.2 0 0 / 0.2), oklch(0 0 0 / 0.5));
   --ui-selection: color-mix(in oklch, var(--ui-accent) 24%, transparent);
   --ui-border-accent: color-mix(in oklch, var(--ui-accent) var(--ui-border-tint), transparent);
@@ -284,10 +285,10 @@
   --ui-border-danger: color-mix(in oklch, var(--ui-danger) var(--ui-border-tint), transparent);
   /* Tints: the one fill behind status text (a badge, a pill, a changed
      line). Stronger in dark, where a low-alpha hue disappears. */
-  --ui-accent-tint: light-dark(color-mix(in oklch, var(--ui-accent) 10%, transparent), color-mix(in oklch, var(--ui-accent) 16%, transparent));
-  --ui-success-tint: light-dark(color-mix(in oklch, var(--ui-success) 10%, transparent), color-mix(in oklch, var(--ui-success) 16%, transparent));
-  --ui-warning-tint: light-dark(color-mix(in oklch, var(--ui-warning) 10%, transparent), color-mix(in oklch, var(--ui-warning) 16%, transparent));
-  --ui-danger-tint: light-dark(color-mix(in oklch, var(--ui-danger) 10%, transparent), color-mix(in oklch, var(--ui-danger) 16%, transparent));
+  --ui-accent-tint: light-dark(color-mix(in oklch, var(--ui-accent) 16%, transparent), color-mix(in oklch, var(--ui-accent) 26%, transparent));
+  --ui-success-tint: light-dark(color-mix(in oklch, var(--ui-success) 16%, transparent), color-mix(in oklch, var(--ui-success) 26%, transparent));
+  --ui-warning-tint: light-dark(color-mix(in oklch, var(--ui-warning) 16%, transparent), color-mix(in oklch, var(--ui-warning) 26%, transparent));
+  --ui-danger-tint: light-dark(color-mix(in oklch, var(--ui-danger) 16%, transparent), color-mix(in oklch, var(--ui-danger) 26%, transparent));
 
   /* Focus: a line just inside the control's edge; fields darken their edge instead. */
   --ui-ring-focus: 1px solid color-mix(in oklch, currentColor 45%, transparent);
