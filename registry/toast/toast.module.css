@@ -2,7 +2,7 @@
   position: fixed;
   z-index: 50;
   bottom: max(var(--ui-space-4), env(safe-area-inset-bottom));
-  width: min(360px, 100vw - 2 * var(--ui-space-4));
+  width: min(320px, 100vw - 2 * var(--ui-space-4));
   outline: none;
   font-family: var(--ui-font-sans);
 }
@@ -17,9 +17,10 @@
 
 .item {
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
-  --toast-inset: var(--ui-space-4);
+  --toast-inset: var(--ui-space-3);
   --toast-close: 24px;
-  --toast-radius: calc(var(--toast-inset) + var(--toast-close) / 2);
+  /* A plain box: the medium corner, like a field or a menu row, not a pill. */
+  --toast-radius: var(--ui-radius-md);
   position: absolute;
   right: 0;
   bottom: 0;
@@ -99,8 +100,8 @@
   display: flex;
   align-items: flex-start;
   gap: var(--ui-space-3);
-  min-height: 56px;
-  padding: var(--ui-space-3) var(--toast-inset) var(--ui-space-3)
+  /* As tall as its words: a one-line message is one 32px row and 8 above and below. */
+  padding: var(--ui-space-2) var(--toast-inset) var(--ui-space-2)
     calc(var(--toast-inset) + (var(--toast-close) - 16px) / 2);
   opacity: var(--toast-content, 1);
   transition: opacity var(--ui-dur-fast) var(--ui-ease-color);

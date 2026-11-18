@@ -94,8 +94,10 @@ already drawn, and the loading dot holds its size and fades slowly instead.
 
 The region is `position: fixed` in the chosen bottom corner, 16px from the
 edges or further when `env(safe-area-inset-*)` is larger, so it clears the
-home indicator and rounded corners. It's 360px wide, or the screen width
-minus 32px on phones. The page needs `viewport-fit=cover` in its viewport meta
+home indicator and rounded corners. It's 320px wide, or the screen width
+minus 32px on phones. Each toast is a plain box with the medium corner
+(`--ui-radius-md`, 14px), as tall as its words: 8px above and below a
+32px row for one line, more only when the description wraps. The page needs `viewport-fit=cover` in its viewport meta
 for the safe-area insets to be non-zero on iOS.
 
 It sits at `z-index: 50`, portaled to `<body>` (or into the nearest

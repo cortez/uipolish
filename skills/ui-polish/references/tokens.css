@@ -329,6 +329,17 @@
   --ui-knockout: 2px;
 }
 
+/* Asked for less transparency (a system setting, also used on low-power
+   setups): floating panels go solid, with no blur behind them. */
+@media (prefers-reduced-transparency: reduce) {
+  :root,
+  [data-theme] {
+    --ui-surface-floating: var(--ui-surface);
+    --ui-blur-floating: none;
+    --ui-glass-edge: 0 0 transparent;
+  }
+}
+
 [data-theme="light"] { color-scheme: light; }
 [data-theme="dark"] { color-scheme: dark; }
 

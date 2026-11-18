@@ -77,6 +77,10 @@ mode for free.
   hint of what's behind, in light and dark. Cards,
   dialogs, drawers and toasts stay solid: they hold more reading than a
   menu does.
+  Keep the blur small and the glass on small, short-lived panels only:
+  never a full-screen or long-lived surface, where the browser would
+  redraw the blur on every frame of scrolling. Under
+  `prefers-reduced-transparency: reduce` the tokens turn solid.
 - Hover states on bordered elements move one step up the set
   (strong → field-focus). Polished hover deltas are
   small — sometimes just a few percent.
