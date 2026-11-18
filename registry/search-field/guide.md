@@ -60,9 +60,9 @@ an empty value whether the field is controlled or not.
 
 **A bare key only works outside fields.** A shortcut with no modifier, like
 "/", is ignored while the user is typing in another field (or in this
-one), so it can still be typed. One with Control, Meta or Alt works from
-anywhere. Shift only counts when the combination names it or the key is a
-letter, since "/" needs Shift on some layouts.
+one), so it can still be typed. `shortcut` is one key: the same key held
+with Control, Meta or Alt is left to the browser and your own handlers.
+Shift isn't checked, since "/" needs it on some layouts.
 
 **Escape.** The first Escape clears the text and keeps focus; it's stopped
 there, so a dialog around the field doesn't close too. With the field
@@ -71,10 +71,10 @@ listens for it.
 
 ## Layout
 
-The field fills its container's width and is 48px tall, like every field.
-The magnifier and the clear button each sit in a 34px slot, 7px in from the
+The field fills its container's width and is 40px tall, like every field.
+The magnifier and the clear button each sit in a 32px slot, 4px in from the
 edge, so their marks sit the same distance from either end; the text starts
-9px after the magnifier. The clear button and the key label share one cell
+8px after the magnifier. The clear button and the key label share one cell
 at the end, as wide as the wider of the two, so the text never makes room
 for either. The clear button grows to a 40px hit area on touch; the key
 label is hidden on touch screens, which have no key to press. A press on
@@ -84,8 +84,8 @@ the magnifier or the shell's padding puts the caret in the text.
 
 | What | Duration | Easing |
 |---|---|---|
-| Edge on hover, and back from focus | `--ui-dur-instant` | `--ui-ease-color` |
-| Edge on focus | 0ms, never animated | n/a |
+| Fill back from focus | `--ui-dur-instant` | `--ui-ease-color` |
+| Fill on focus | 0ms, never animated | n/a |
 | Clear button fades in | `--ui-dur-fast` | `--ui-ease-enter` |
 | Clear button fades out, then hides | `--ui-dur-instant` | `--ui-ease-exit` |
 | Key label fades in, out | `--ui-dur-fast`, `--ui-dur-instant` | `--ui-ease-color` |

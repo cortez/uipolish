@@ -19,8 +19,8 @@ export function CopyPrompt({ prompt, label, variant }: { prompt: string; label: 
     try {
       await navigator.clipboard.writeText(prompt);
     } catch {
-      // Clipboard blocked: the label says so in place. The full prompt is
-      // on the Docs page.
+      // Clipboard blocked: the label says so in place. Get started, beside
+      // this button, has the same setup.
       next = "blocked";
     }
     setState(next);
@@ -44,7 +44,7 @@ export function CopyPrompt({ prompt, label, variant }: { prompt: string; label: 
       </span>
       <span className={styles.srOnly}>{label}</span>
       <span role="status" className={styles.srOnly}>
-        {state === "copied" ? "Copied. Paste it into your coding agent." : state === "blocked" ? "Couldn’t copy. The instructions are on the Docs page." : ""}
+        {state === "copied" ? "Copied. Paste it into your coding agent." : state === "blocked" ? "Couldn’t copy. Get started has the same setup." : ""}
       </span>
     </Button>
   );

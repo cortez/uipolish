@@ -99,7 +99,7 @@ color only, so labels never change width as you type.
 ## Look
 
 Light glass, like the menus: `--ui-surface-glass` over a
-`--ui-glass-blur` (4px) backdrop blur, on the dialog's dimmed backdrop.
+`--ui-glass-blur` (12px) backdrop blur, on the dialog's dimmed backdrop.
 
 ## States
 

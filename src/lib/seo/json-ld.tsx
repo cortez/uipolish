@@ -54,7 +54,7 @@ const software = () => ({
   author: person,
   isAccessibleForFree: true,
   license: "https://opensource.org/licenses/MIT",
-  offers: { "@type": "Offer", price: 0, priceCurrency: "USD", url: abs("/docs") },
+  offers: { "@type": "Offer", price: 0, priceCurrency: "USD", url: siteUrl() },
 });
 
 /** Home: who, what site, what product. */

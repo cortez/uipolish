@@ -160,7 +160,7 @@ export function DataTablePreview() {
           stickyFirstColumn
           empty={
             <EmptyState
-              icon="search"
+              icon="list"
               title="No guests yet"
               description="Replies to the invitation land here as they come in."
               action={

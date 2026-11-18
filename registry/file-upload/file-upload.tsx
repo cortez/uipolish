@@ -80,6 +80,7 @@ export function FileUpload({
   const baseId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const browseRef = useRef<HTMLButtonElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
   const refocus = useRef(false);
   const controllers = useRef(new Map<string, AbortController>());
   const depth = useRef(0);
@@ -157,12 +158,20 @@ export function FileUpload({
   function remove(id: string) {
     controllers.current.get(id)?.abort();
     controllers.current.delete(id);
+    // The pressed button goes with its row: focus moves to "Add more files"
+    // rather than falling to the page.
+    if (listRef.current?.contains(document.activeElement)) {
+      browseRef.current?.focus();
+      refocus.current = true;
+    }
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) setItems((list) => list.filter((i) => i.id !== id));
     else setLeaving((s) => new Set(s).add(id));
   }
 
   function forget(id: string) {
+    // The last row leaving swaps the bar for the prompt: keep focus on it.
+    if (document.activeElement === browseRef.current) refocus.current = true;
     setItems((list) => list.filter((i) => i.id !== id));
     setLeaving((s) => {
       const next = new Set(s);
@@ -194,7 +203,7 @@ export function FileUpload({
   useLayoutEffect(() => {
     if (refocus.current) browseRef.current?.focus();
     refocus.current = false;
-  }, [has]);
+  });
 
   const constraints = [acceptLabel, maxSize !== undefined && `up to ${formatBytes(maxSize)}`].filter(Boolean).join(", ");
 
@@ -258,7 +267,7 @@ export function FileUpload({
         {!has && browseButton}
         {has && (
           <ScrollArea className={styles.scroll}>
-            <ul className={styles.list} aria-labelledby={`${baseId}-label`}>
+            <ul ref={listRef} className={styles.list} aria-labelledby={`${baseId}-label`}>
               {items.map((item) => (
                 <Row
                   key={item.id}
@@ -321,7 +330,9 @@ function Row({
         <span className={styles.name} title={file.name}>
           {file.name}
         </span>
-        <span className={styles.meta}>{meta}</span>
+        <span className={styles.meta} title={status === "failed" || status === "rejected" ? error : undefined}>
+          {meta}
+        </span>
       </span>
       <span className={styles.actions}>
         {status === "failed" && (

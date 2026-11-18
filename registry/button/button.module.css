@@ -83,7 +83,6 @@
   height: var(--ui-control-lg);
   min-width: var(--ui-control-lg);
   padding-inline: var(--ui-space-5);
-  font-size: var(--ui-text-md);
 }
 
 /* Hover and press mix from --button-bg and --button-fg, so overrides get

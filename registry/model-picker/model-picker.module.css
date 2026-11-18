@@ -135,15 +135,19 @@
   transform-origin: var(--transform-origin);
   opacity: 1;
   scale: 1;
+  filter: none;
+  /* The same arrival as the select's list and the dropdown menu. */
   transition:
     opacity var(--ui-dur-fast) var(--ui-ease-enter),
-    scale var(--ui-dur-fast) var(--ui-ease-enter);
+    scale var(--ui-dur-fast) var(--ui-ease-enter),
+    filter var(--ui-dur-fast) var(--ui-ease-enter);
 }
 
 .surface[data-starting-style],
 .surface[data-ending-style] {
   opacity: 0;
   scale: 0.97;
+  filter: blur(2px);
 }
 
 .surface[data-ending-style] {
@@ -186,12 +190,9 @@
   gap: var(--ui-space-3);
   padding: var(--ui-space-2) var(--ui-pad-row);
   border-radius: var(--menu-row-radius);
+  outline: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-}
-
-.option {
-  outline: none;
 }
 
 .option[data-disabled] {

@@ -70,26 +70,14 @@ export default async function ComponentPage({
     <>
       <JsonLd nodes={ld} />
       <header className={site.intro}>
-        {/* The title, and what kind of thing it is beside it: one chip whose
-            note shows on hover, so the header is title, summary, action. */}
-        <div className={styles.titleRow}>
-          <h1 className={site.title}>{meta.title}</h1>
-        </div>
+        <h1 className={site.title}>{meta.title}</h1>
         <p className={site.text}>{meta.summary}</p>
         <div className={site.actions}>
           <CopyPage />
         </div>
       </header>
 
-      <div
-        className={
-          meta.stage === "wide"
-              ? `${site.stage} ${styles.blockStage} ${styles.wideStage}`
-              : meta.type
-                ? `${site.stage} ${styles.blockStage}`
-                : site.stage
-        }
-      >
+      <div className={site.stage}>
         <LivePreview name={name} />
       </div>
 
@@ -117,6 +105,8 @@ export default async function ComponentPage({
             label="shadcn command"
           />
         </div>
+        {/* Nothing to list for a component that stands alone: no empty box. */}
+        {(packages.length > 0 || deps.length > 0) && (
         <div className={site.table}>
           <table>
             <tbody>
@@ -153,6 +143,7 @@ export default async function ComponentPage({
             </tbody>
           </table>
         </div>
+        )}
       </section>
 
       <article className={styles.prose}>

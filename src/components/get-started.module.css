@@ -1,7 +1,7 @@
 /* The tab panels: each a short stack of text and a command, a group gap
-   under the tabs. */
+   under the tabs. The tabs already leave 16 of it. */
 .panels {
-  margin-top: var(--ui-gap-group);
+  margin-top: calc(var(--ui-gap-group) - var(--ui-space-4));
 }
 
 /* Only the selected panel is laid out: the others carry `hidden`, which a

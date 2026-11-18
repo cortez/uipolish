@@ -6,6 +6,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type KeyboardEvent,
   type ReactNode,
 } from "react";
@@ -68,7 +69,14 @@ type AgentQuestionProps = {
   answer?: AgentQuestionAnswer;
   /** Return a promise to show Send as busy until it settles; a rejection shows an error. */
   onAnswer: (answer: AgentQuestionAnswer) => void | Promise<unknown>;
-  /** Default: focus the question only when nothing else on the page has focus. */
+  /**
+   * Default true: a card that mounts waiting has just been asked, so its space
+   * opens, it fades in, and it is announced. Pass false for one that is on the
+   * page from the start (a saved conversation, a static page): it renders in
+   * place, holds still and takes no focus. A server-rendered card never enters.
+   */
+  entrance?: boolean;
+  /** Default: an entering card focuses the question only when nothing else on the page has focus. */
   autoFocus?: boolean;
   className?: string;
 };
@@ -101,6 +109,7 @@ export function AgentQuestion({
   status = "waiting",
   answer: answerProp,
   onAnswer,
+  entrance = true,
   autoFocus,
   className,
 }: AgentQuestionProps) {
@@ -127,8 +136,10 @@ export function AgentQuestion({
   const [sent, setSent] = useState<AgentQuestionAnswer | null>(null);
   const [reopened, setReopened] = useState(false);
   const [announcement, setAnnouncement] = useState("");
-  // Only a card that arrives waiting animates in; history doesn't replay.
-  const [entering] = useState(status === "waiting");
+  // True only while hydrating a server-rendered page: that card was already there.
+  const fromServer = useSyncExternalStore(subscribeNever, clientSnapshot, serverSnapshot);
+  // Only a card that arrives waiting animates in; history and first paint don't.
+  const [entering] = useState(status === "waiting" && entrance && !fromServer);
 
   const settled = status === "answered";
   const otherOn = selected.includes(otherValue);
@@ -145,11 +156,14 @@ export function AgentQuestion({
 
   // Announced a beat after mount, so the live region exists before it changes.
   useEffect(() => {
+    const active = document.activeElement;
+    // Asked for, or a card that just arrived while the person is in nothing
+    // else: never from the prompt, and never on a page's first paint.
+    if (autoFocus ?? (entering && (!active || active === document.body))) {
+      questionRef.current?.focus({ preventScroll: autoFocus === undefined });
+    }
     if (!entering) return;
     const id = window.setTimeout(() => setAnnouncement(`${agent} asks: ${question}`), 150);
-    const active = document.activeElement;
-    // Don't take focus from the prompt or anything else the person is in.
-    if (autoFocus ?? (!active || active === document.body)) questionRef.current?.focus({ preventScroll: autoFocus === undefined });
     return () => window.clearTimeout(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -376,6 +390,10 @@ export function AgentQuestion({
     </div>
   );
 }
+
+const subscribeNever = () => () => {};
+const clientSnapshot = () => false;
+const serverSnapshot = () => true;
 
 function ChoiceCard({
   choice,

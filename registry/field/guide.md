@@ -10,17 +10,17 @@ It has no look of its own beyond what those fields share.
   the field to reserve more when a longer error can arrive. Text field and
   select use it too.
 - `field.module.css`, composed into a component's classes:
-  - `field`, `label`: the stack and its label (6px apart, label 15px / 500).
+  - `field`, `label`: the stack and its label (8px apart, label 14px).
   - `shell`: the edge of a field that holds buttons or a picker. Focus
     anywhere inside fills it with `--ui-field-focus-fill`, at once, and
     the edge stays as it rests; `data-open` holds the fill while a popover
     is open; `data-invalid` turns the edge to danger.
-    Sets `--shell-inset`, the gap from the edge to a 34px button.
+    Sets `--shell-inset`, the gap from the edge to a 32px button.
   - `bare`: a text input with no edge, for inside a shell. 16px on touch
     screens so iOS doesn't zoom.
-  - `inset`: a 34px icon button for inside a field, panel or banner. The
+  - `inset`: a 32px icon button for inside a field, panel or banner. The
     fill is a layer under the icon, so a press shrinks only the fill
-    (0.97). 40px hit area on touch screens. Set its radius to the outer
+    (`--ui-scale-press`). 40px hit area on touch screens. Set its radius to the outer
     radius less the inset.
 
 ```tsx

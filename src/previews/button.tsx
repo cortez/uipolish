@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@registry/button/button";
+import { Icon } from "@registry/icons/icons";
 import own from "./button.module.css";
 import styles from "./preview.module.css";
 
@@ -68,6 +69,26 @@ export function ButtonPreview() {
           <Button size="sm">Small</Button>
           <Button size="md">Medium</Button>
           <Button size="lg">Large</Button>
+        </div>
+      </section>
+
+      <section className={styles.group}>
+        <h2 className={styles.label}>With an icon, and icon only</h2>
+        <div className={styles.row}>
+          <Button>
+            <Icon name="plus" />
+            Add a guest
+          </Button>
+          <Button variant="secondary">
+            <Icon name="calendar" />
+            Add to calendar
+          </Button>
+          <Button variant="secondary" aria-label="Share the event">
+            <Icon name="share" />
+          </Button>
+          <Button variant="ghost" aria-label="More actions">
+            <Icon name="more" />
+          </Button>
         </div>
       </section>
 

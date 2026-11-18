@@ -46,11 +46,10 @@ The behavior is built on Base UI's `<NumberField>`.
 
 | | Steppers (default) | `steppers={false}` |
 |---|---|---|
-| Number | Centered between − and + | At the start, 15px in, lined up with text fields |
+| Number | Centered between − and + | At the start, 14px in, lined up with text fields |
 | Currency or unit | Inside the formatted number | Muted, pinned to the edge: "$" at the start, "€" at the end in `de-DE`. Typing edits the digits only |
 | Width | `--number-width`, 136px | The same; set `--number-width: 100%` to match the fields around it |
 | Keys | Arrows, Page Up/Down, Home/End step | The same, unless `arrowKeys={false}` |
-| Stepping keys | On | On, unless `arrowKeys={false}` |
 
 Values keep as many decimals as the step, the minimum or the format shows,
 so a currency field keeps typed cents ("86,75" stays 86.75 with a step of

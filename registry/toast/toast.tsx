@@ -11,7 +11,8 @@ import styles from "./toast.module.css";
 
 export type ToastType = "default" | "success" | "error" | "loading";
 
-const ICONS = { default: "info", success: "check-circle", error: "alert" } as const;
+// A plain toast has no icon: the mark is for an outcome.
+const ICONS = { success: "check-circle", error: "alert" } as const;
 
 export type ToastAction = { label: string; onClick: () => void };
 
@@ -213,19 +214,22 @@ function ToastItem({ toast: item, place }: { toast: Item; place?: Place }) {
         return state.transitionStatus === "ending" ? { ...vars, opacity: 0 } : vars;
       }}
     >
-      <div className={styles.card}>
-        <span className={styles.icon} aria-hidden="true">
-          {type === "loading" ? <span className={styles.pulse} /> : <Icon name={ICONS[type]} />}
-        </span>
+      <div className={styles.card} data-action={data?.action ? "" : undefined}>
+        {type !== "default" && (
+          <span className={styles.icon} aria-hidden="true">
+            {type === "loading" ? <span className={styles.pulse} /> : <Icon name={ICONS[type]} />}
+          </span>
+        )}
         <div className={styles.text}>
-          <BaseToast.Title className={styles.title} render={<p />}>
+          {/* A morphing title is one row of letters, so it keeps to one line; any other clamps at two. */}
+          <BaseToast.Title className={data?.morph ? styles.titleLine : styles.title} render={<p />}>
             {data?.morph ? <TextMorph>{String(title ?? "")}</TextMorph> : title}
           </BaseToast.Title>
           {description && <BaseToast.Description className={styles.description}>{description}</BaseToast.Description>}
         </div>
         {data?.action && (
           <Button
-            variant="ghost"
+            variant="secondary"
             size="sm"
             className={styles.action}
             onClick={() => {
@@ -236,9 +240,7 @@ function ToastItem({ toast: item, place }: { toast: Item; place?: Place }) {
             {data.action.label}
           </Button>
         )}
-        <BaseToast.Close
-          render={<Button variant="ghost" size="sm" className={styles.close} aria-label={`Dismiss: ${String(title ?? "")}`} />}
-        >
+        <BaseToast.Close className={styles.close} aria-label={`Dismiss: ${String(title ?? "")}`}>
           <Icon name="close" />
         </BaseToast.Close>
       </div>

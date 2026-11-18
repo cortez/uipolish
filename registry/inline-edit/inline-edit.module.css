@@ -10,7 +10,7 @@
   padding: var(--inline-pad-y) var(--inline-pad-x);
   border-radius: var(--ui-radius-sm);
   --inline-edge: transparent;
-  box-shadow: inset 0 0 0 1px var(--inline-edge);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--inline-edge);
   transition:
     box-shadow var(--ui-dur-instant) var(--ui-ease-color),
     background-color var(--ui-dur-instant) var(--ui-ease-color);

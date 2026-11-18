@@ -87,13 +87,13 @@
   }
 }
 
-/* A table in a hairline box: rows split by hairlines, no fills. Wraps the
-   <table> and scrolls sideways on its own when it can't fit. */
 /* Code in guides is the Code block component, spaced like a table. */
 .code {
   margin: 0 0 var(--ui-space-6);
 }
 
+/* A table in a hairline box: rows split by hairlines, no fills. Wraps the
+   <table> and scrolls sideways on its own when it can't fit. */
 .table {
   margin: 0 0 var(--ui-space-6);
   overflow-x: auto;
@@ -155,6 +155,7 @@
    the rest rather than pushing the table sideways. */
 @media (max-width: 480px) {
   .table th[scope="row"] {
+    width: 0;
     min-width: 0;
   }
 }

@@ -139,15 +139,14 @@
   color: var(--ui-danger-text);
 }
 
+/* A 40px touch on every side: the hit area reaches past the button by what
+   it lacks, and the buttons part by twice that so two areas never overlap. */
 @media (pointer: coarse) {
   .button::after {
-    inset: calc(var(--shell-inset) * -1) -1px;
-  }
-  .button:last-child::after {
-    inset-inline-end: calc(var(--shell-inset) * -1);
+    inset: min(0px, calc((var(--copy-height) - var(--shell-inset) * 2 - var(--ui-control-md)) / 2));
   }
   .actions {
-    gap: var(--ui-space-1);
+    gap: var(--ui-space-2);
   }
 }
 

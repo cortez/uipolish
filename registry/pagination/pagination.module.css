@@ -33,7 +33,7 @@
   overflow: clip;
   overflow-clip-margin: var(--ui-space-1);
   /* Must match the small button's label, so `ch` matches the numbers. */
-  font: var(--ui-weight-medium) 14px / 1 var(--ui-font-sans);
+  font: var(--ui-weight-medium) var(--ui-text-md) / 1 var(--ui-font-sans);
   font-variant-numeric: tabular-nums;
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }

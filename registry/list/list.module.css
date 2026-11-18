@@ -75,6 +75,8 @@
   flex: 1;
   align-items: center;
   gap: var(--ui-space-3);
+  /* Stated, so the minimum height includes the padding with or without a reset. */
+  box-sizing: border-box;
   min-width: 0;
   min-height: var(--ui-control-md);
   padding-block: var(--ui-space-3);

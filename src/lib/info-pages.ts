@@ -18,7 +18,7 @@ export type InfoPage = {
 const CONTACT: InfoPage = {
   path: "/contact",
   heading: "Contact",
-  title: "Contact UI Polish",
+  title: "Contact",
   description: "How to reach UI Polish for support and bug reports.",
   body: `Email [${SUPPORT_EMAIL}](mailto:${SUPPORT_EMAIL}) for anything about UI Polish.
 

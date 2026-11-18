@@ -34,12 +34,12 @@ Every `<kbd>` prop passes through.
 |---|---|
 | `keys` | The keys pressed together, in order: `["mod", "shift", "N"]`, `["esc"]`. Single letters are shown in capitals |
 | `variant` | `caps` (default) draws each key as a small cap. `plain` is text in the surrounding size and color: "⌘⇧P" on Apple, "Ctrl+Shift+P" elsewhere |
-| `size` | `md` (default) for 15px text, `sm` for 13px text |
+| `size` | `md` (default) for 14px text, `sm` for 12px text |
 | `platform` | `apple` or `other`: show one spelling whatever the reader uses |
 
 Key names: `mod` (⌘ / Ctrl), `cmd`, `ctrl` (⌃ / Ctrl), `alt` or
 `option` (⌥ / Alt), `shift` (⇧ / Shift), `enter` or `return` (↵),
-`backspace` (⌫), `delete` (⌦ / Del), `tab`, `esc`, `space`, `up`, `down`,
+`backspace` (⌫), `delete` (⌦ / Del), `tab`, `esc` (esc / Esc), `space`, `up`, `down`,
 `left`, `right`. Anything else is shown as given.
 
 ## States
@@ -52,7 +52,7 @@ to get right: which spelling shows.
 | Server-rendered page | Both spellings are in the HTML. A one-line script sent with them adds a small stylesheet to `<head>` while the page is still parsing, before any Kbd paints. The other spelling is `display: none`, so the right one is the only one laid out, from the first frame |
 | Mounted later (a tooltip, a menu, client navigation) | The stylesheet is already there; no script is rendered |
 | Inline scripts blocked by a content security policy, or scripts off | The non-Apple spelling shows, and the Apple one holds its width unseen in the same grid cell. When the bundle loads it shows the right one in that cell: what's visible changes, the width never does. Set `--kbd-align: end` where the shortcut ends a row, so the reserved room sits before it |
-| Same everywhere (`esc`, an arrow) | One spelling, nothing to decide |
+| Same everywhere (`tab`, an arrow) | One spelling, nothing to decide |
 
 The stylesheet goes in `<head>` rather than as an attribute on `<html>`:
 React skips extra nodes in `<head>` when it hydrates, but reports an
@@ -60,12 +60,12 @@ attribute it didn't render.
 
 ## Layout
 
-- **Caps fill the line.** The box is exactly the line's height (22px at
-  `md`, 18px at `sm`) and set `vertical-align: top`, so it fills the line
+- **Caps fill the line.** The box is exactly the line's height (20px at
+  `md`, 16px at `sm`) and set `vertical-align: top`, so it fills the line
   box and the caps sit centered in it; a shortcut in a sentence never
-  makes the line taller. The caps are a pixel shorter at each end: 20px,
-  the command palette's caps, and 16px.
-- Each cap is at least as wide as tall, 13px / 500 text, 5px sides (4px at
+  makes the line taller. The caps are a pixel shorter at each end: 18px,
+  the command palette's caps, and 14px.
+- Each cap is at least as wide as tall, 12px text, 5px sides (4px at
   `sm`), 2px between caps, as in the palette.
 - **Color comes from the context.** The cap's fill is the text color
   at 7%, flat, with no edge, so caps

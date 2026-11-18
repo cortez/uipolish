@@ -58,13 +58,21 @@ export function CommandPalettePreview() {
   const [dark, toggleTheme] = useRootTheme();
   const triggerRef = useRef<HTMLButtonElement>(null);
 
+  const isMac = useSyncExternalStore(
+    () => () => {},
+    () => /Mac|iPhone|iPad/.test(navigator.platform),
+    () => true,
+  );
+  // The rows show the same modifier as the field's own hint.
+  const mod = isMac ? "⌘" : "Ctrl";
+
   const commands = useMemo<Command[]>(
     () => [
-      { id: "new", label: "New event", group: "Events", icon: ICONS.plus, shortcut: ["⌘", "N"], keywords: ["create", "plan", "dinner"], onSelect: () => setLast("New event") },
+      { id: "new", label: "New event", group: "Events", icon: ICONS.plus, shortcut: [mod, "N"], keywords: ["create", "plan", "dinner"], onSelect: () => setLast("New event") },
       { id: "open-alder", label: "Open Saturday supper", group: "Events", icon: ICONS.doc, hint: "14 Alder Lane", onSelect: () => setLast("Opened Saturday supper") },
       { id: "open-birch", label: "Open the harvest dinner", group: "Events", icon: ICONS.doc, hint: "9 Birch Court", onSelect: () => setLast("Opened the harvest dinner") },
-      { id: "send", label: "Send invitations to guests", group: "Events", icon: ICONS.send, shortcut: ["⌘", "I"], keywords: ["email", "share", "invite"], onSelect: () => setLast("Sent invitations for Saturday supper") },
-      { id: "duplicate", label: "Duplicate event", group: "Events", icon: ICONS.duplicate, shortcut: ["⌘", "D"], keywords: ["copy"], onSelect: () => setLast("Duplicated Saturday supper") },
+      { id: "send", label: "Send invitations to guests", group: "Events", icon: ICONS.send, shortcut: [mod, "I"], keywords: ["email", "share", "invite"], onSelect: () => setLast("Sent invitations for Saturday supper") },
+      { id: "duplicate", label: "Duplicate event", group: "Events", icon: ICONS.duplicate, shortcut: [mod, "D"], keywords: ["copy"], onSelect: () => setLast("Duplicated Saturday supper") },
       {
         id: "theme",
         label: dark ? "Switch to light mode" : "Switch to dark mode",
@@ -78,7 +86,7 @@ export function CommandPalettePreview() {
       },
       { id: "tax", label: "Edit tax rates", group: "Settings", icon: ICONS.percent, keywords: ["vat", "sales tax"], onSelect: () => setLast("Edit tax rates") },
     ],
-    [dark, toggleTheme],
+    [dark, toggleTheme, mod],
   );
 
   const sources = useMemo<CommandSource[]>(
@@ -113,12 +121,6 @@ export function CommandPalettePreview() {
       },
     ],
     [],
-  );
-
-  const isMac = useSyncExternalStore(
-    () => () => {},
-    () => /Mac|iPhone|iPad/.test(navigator.platform),
-    () => true,
   );
 
   return (

@@ -50,8 +50,8 @@ moves. Every row is one height in every state.
 |---|---|
 | `variant` (List) | `box` (default): rows in a rounded surface with an edge. `plain`: no box; the rows' fills reach past the text by the row padding, so text lines up with the content above |
 | `leading` | An avatar, icon or thumbnail. Decorative: the title names the row |
-| `title` | The row's name, cut with a fade if it runs long. On a link or button row it's the accessible name |
-| `description` | One line under the title, cut with a fade. Read as the row's description. For a disabled row, say why here |
+| `title` | The row's name. It wraps when it runs long, and a long unbroken word breaks inside itself. On a link or button row it's the accessible name |
+| `description` | Smaller text under the title; wraps like the title. Read as the row's description. For a disabled row, say why here |
 | `trailing` | A value, badge or control after the text. Plain text here is read after the description |
 | `actions` | Secondary actions, usually `ListAction`s. Shown on hover and focus, always on touch |
 | `chevron` | A chevron at the end, for rows that open something deeper. Nudges 2px on hover and focus |
@@ -74,12 +74,12 @@ name, "Remove Maya Chen", not "Remove") and every `<button>` prop.
 | Current | A stronger fill, held; its hairlines step aside | `current` → `aria-current` |
 | Disabled | Leading, title, trailing and chevron at 50%; the description stays readable; no hover, no press, out of the tab order | `disabled` |
 | Static | No hover, no press, no pointer cursor: nothing to promise | no `href` or `onClick` |
-| Long text | The title and description fade out over their last 24px, only when cut | the `text` primitive |
+| Long text | The title and description wrap inside the row, which grows; the leading, trailing value and chevron stay centered on it | the `text` primitive's `wrap` |
 
 No state changes a row's height or moves its contents. Actions are laid
 out at every moment and only their opacity changes; the separators are a
-color that fades. A title with a description makes a 64px row, a title
-alone 48px (52px on touch screens).
+color that fades. A title with a description makes a 60px row, a title
+alone 44px (48px on touch screens); a 40px avatar makes it at least 56px.
 
 ## Layout
 

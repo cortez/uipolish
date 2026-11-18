@@ -56,14 +56,14 @@ starts to fade (20em by default).
 | Hover | A fill behind the crumb, text in the text color | `@media (hover: hover)` |
 | Press | Darker fill in 80ms | `:active` |
 | Focus | A line just inside the crumb's pill, instantly | `:focus-visible` |
-| Current page | Text color, a step heavier, no hover or press | `aria-current="page"` |
+| Current page | Text color, no hover or press | `aria-current="page"` |
 | Level with no page | Muted text, no hover or press | no `href` |
 | Folded | First crumb, "…", the last two | more than `max` items |
 | Long label | Its last 24px fade, only when cut; pointing at it shows the full label in a native tooltip | `truncate` from `text` |
 
 ## Layout
 
-Text is the Small step (13px), each crumb a 24px pill with 6px of padding,
+Text is the Small step (12px), each crumb a 24px pill with 6px of padding,
 and a 14px chevron between crumbs in the subtle color. The pills reach
 past the start edge by their padding, so the first label's text lines up
 with the title under it and the hover fill hangs outside.
@@ -85,7 +85,8 @@ targets don't overlap.
 Opening the fold is the only movement. The crumbs already on screen slide
 (FLIP on `translate`, onto the next line if the trail now wraps) rather
 than jumping to make room. Nothing animates on the first paint. Under
-`prefers-reduced-motion: reduce` the crumbs land at once.
+`prefers-reduced-motion: reduce` nothing slides: the crumbs take their
+places at once and the revealed ones still fade in.
 
 ## Accessibility
 

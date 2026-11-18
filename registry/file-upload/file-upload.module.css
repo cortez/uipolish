@@ -320,18 +320,19 @@
   min-width: 0;
 }
 
+/* One line each, faded where cut: a row is one height in every state, so
+   a long name or reason can't wrap. The full text is in its title. */
 .name {
-  composes: wrap from "../text/text.module.css";
+  composes: truncate from "../text/text.module.css";
   font-size: var(--ui-text-md);
   line-height: var(--ui-leading-md);
 }
 
 .meta {
-  overflow: hidden;
+  composes: truncate from "../text/text.module.css";
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
   line-height: var(--ui-leading-sm);
-  overflow-wrap: anywhere;
 }
 
 .row[data-status="uploading"] .meta {

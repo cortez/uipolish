@@ -14,16 +14,18 @@ export type CatalogItem = {
  * One card: the component itself, live and interactive (its showcase, not
  * its docs demo), then its name, the one link to its docs page. A component
  * that is already a box (a code block, a table) is the card: no edge or
- * padding around it. The showcase mounts when the card nears the screen.
+ * padding around it. The showcase mounts when the card nears the screen;
+ * an `eager` card (one on the first screen) is in the page's HTML instead,
+ * so it doesn't arrive empty and fill in after the script loads.
  */
-function Card({ item }: { item: CatalogItem }) {
+function Card({ item, eager = false }: { item: CatalogItem; eager?: boolean }) {
   const stage = useRef<HTMLDivElement>(null);
-  const [near, setNear] = useState(false);
+  const [near, setNear] = useState(eager);
   const Showcase = SHOWCASES[item.name];
 
   useEffect(() => {
     const el = stage.current;
-    if (!el) return;
+    if (!el || eager) return;
     const io = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) {
@@ -35,7 +37,7 @@ function Card({ item }: { item: CatalogItem }) {
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [eager]);
 
   return (
     <div className={styles.item}>
@@ -53,16 +55,17 @@ function Card({ item }: { item: CatalogItem }) {
   );
 }
 
-/** Every item with a showcase, or only the first `limit` of them. */
-export function Catalog({ items, limit }: { items: CatalogItem[]; limit?: number }) {
+/** Every item with a showcase, or only the first `limit` of them. The first
+ *  `eager` cards render with the page; the rest as they near the screen. */
+export function Catalog({ items, limit, eager = 0 }: { items: CatalogItem[]; limit?: number; eager?: number }) {
   return (
     <ul className={styles.grid}>
       {items
         .filter((item) => SHOWCASES[item.name])
         .slice(0, limit)
-        .map((item) => (
+        .map((item, i) => (
           <li key={item.name}>
-            <Card item={item} />
+            <Card item={item} eager={i < eager} />
           </li>
         ))}
     </ul>

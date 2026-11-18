@@ -37,7 +37,7 @@ export async function getFaq(): Promise<Faq[]> {
     {
       id: "agent-kit",
       question: "What’s the agent kit?",
-      answer: `The components an AI product needs and other libraries don’t have: ${list(kit.slice(0, 5))} and more. What an MCP consent screen should say, how a tool call asks permission, how a long run reports back. Every one of them is free.`,
+      answer: `The components an AI product needs and other libraries don’t have: ${kit.slice(0, 5).join(", ")} and more. Every one of them is free.`,
     },
     {
       id: "disagree",
@@ -77,7 +77,7 @@ export async function getFaq(): Promise<Faq[]> {
     {
       id: "agents",
       question: "Which coding agents does it work with?",
-      answer: `${list([...agents, "any other agent that supports remote MCP servers"])}. The docs have the setup for each. An agent without MCP can read the same components and rules from the REST API described at /openapi.json, or ask for any docs page as Markdown by adding .md to its address.`,
+      answer: `${list([...agents, "any other agent that supports remote MCP servers"])}. Get started on the home page has the setup for each. An agent without MCP can read the same components and rules from the REST API described at /openapi.json, or ask for any docs page as Markdown by adding .md to its address.`,
     },
     {
       id: "stack",

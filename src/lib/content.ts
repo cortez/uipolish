@@ -21,9 +21,6 @@ export type ComponentMeta = {
   kit?: "agent";
   /** "block": a whole section composed from components. */
   type?: "block";
-  /** "wide": a screen that fills its frame; its docs demo reaches past the
-   *  text column. A block that caps its own width or is one card leaves it out. */
-  stage?: "wide";
   version: string;
   dependencies: string[];
   /** npm packages its code imports, as name@range (e.g. @base-ui/react@^1.9.0). */

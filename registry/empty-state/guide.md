@@ -45,7 +45,7 @@ the content would take.
 | | Compact | Page |
 |---|---|---|
 | Icon | 20px, `--ui-subtle` | 20px |
-| Title | `--ui-text-md`, title weight | `--ui-text-md`, title weight |
+| Title | `--ui-text-md`, the body weight | `--ui-text-2xl`, title weight |
 | Sentence | `--ui-text-md`, muted, at most 36ch | at most 40ch |
 | Padding | 32px top and bottom | 64px |
 

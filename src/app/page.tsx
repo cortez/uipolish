@@ -32,7 +32,8 @@ export default async function Home() {
         <h2 id="components-title" className={site.heading}>
           Components
         </h2>
-        <Catalog items={all.sort(byTitle).map(item)} />
+        {/* The first two rows of a wide screen come with the page. */}
+        <Catalog items={all.sort(byTitle).map(item)} eager={6} />
       </section>
     </SiteLayout>
   );

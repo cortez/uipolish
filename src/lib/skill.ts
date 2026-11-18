@@ -17,7 +17,7 @@ async function body() {
   const opinions = (await getOpinions()).map((o) => `- **${o.title}** ${o.body}`).join("\n");
   return [
     "# UI Polish design rules",
-    `Concrete rules for UI, with values. Before you write or change UI, read the section for what you're touching (spacing for a layout, motion for anything that moves, states for loading and errors). Before you call UI work done, go through the checklist at the end. Components built on these rules: ${abs("/docs")}.`,
+    `Concrete rules for UI, with values. Before you write or change UI, read the section for what you're touching (spacing for a layout, motion for anything that moves, states for loading and errors). Before you call UI work done, go through the checklist at the end. Components built on these rules: ${abs("/")}.`,
     "## Opinions",
     opinions,
     "## Tokens",

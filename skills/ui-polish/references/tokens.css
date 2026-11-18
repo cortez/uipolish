@@ -335,9 +335,9 @@
     0 4px 12px -4px light-dark(oklch(0.21 0 0 / 0.06), transparent),
     0 16px 40px -12px light-dark(oklch(0.21 0 0 / 0.12), transparent);
   /* Floating surfaces (toasts, menus, popovers, tooltips, the palette) are
-     light glass: the surface at 92% over a 4px blur of what's behind. */
-  --ui-surface-glass: color-mix(in oklch, var(--ui-surface) 92%, transparent);
-  --ui-glass-blur: 4px;
+     light glass: the surface at 96% over a 12px blur of what's behind. */
+  --ui-surface-glass: color-mix(in oklch, var(--ui-surface) 96%, transparent);
+  --ui-glass-blur: 12px;
   --ui-shadow-floating:
     var(--ui-edge),
     0 2px 4px light-dark(oklch(0.21 0 0 / 0.05), transparent),
@@ -357,9 +357,8 @@
 @media (prefers-reduced-transparency: reduce) {
   :root,
   [data-theme] {
-    --ui-surface-floating: var(--ui-surface);
-    --ui-blur-floating: none;
-    --ui-glass-edge: 0 0 transparent;
+    --ui-surface-glass: var(--ui-surface);
+    --ui-glass-blur: 0px;
   }
 }
 

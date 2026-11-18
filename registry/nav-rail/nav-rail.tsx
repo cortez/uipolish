@@ -444,6 +444,12 @@ type NavRailTriggerProps = Omit<HTMLAttributes<HTMLElement>, "children"> & {
  */
 export function NavRailTrigger({ label, shortcut, disabled = false, children, ...props }: NavRailTriggerProps) {
   const rail = useContext(Context);
+  const handle = rail?.handle;
+  // Turned off while its tooltip shows (a sidebar expanding under the pointer):
+  // Base UI stops opening it but leaves an open one up, so close it here.
+  useEffect(() => {
+    if (disabled) handle?.close();
+  }, [disabled, handle]);
   if (!rail) return children;
   return (
     <BaseTooltip.Trigger

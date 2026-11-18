@@ -145,7 +145,9 @@ function glide(el: HTMLElement, to: number, frame: { current: number }) {
     return;
   }
   const start = performance.now();
-  const duration = 320;
+  // The glide token, so the window follows on the same clock as the label's width.
+  const token = getComputedStyle(el).getPropertyValue("--ui-dur-glide").trim();
+  const duration = token.endsWith("ms") ? parseFloat(token) : token ? parseFloat(token) * 1000 : 320;
   const tick = (now: number) => {
     const t = Math.min(1, (now - start) / duration);
     el.scrollTop = from + (to - from) * (1 - Math.pow(1 - t, 3));

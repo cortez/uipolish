@@ -79,8 +79,8 @@ On and off never differ by color alone: the plus becomes a check.
 
 ## Layout
 
-- 34px tall (`--ui-control-sm`), the small button's height, with 14px
-  labels at 500 like a small button, so a row of chips lines up with the
+- 32px tall (`--ui-control-sm`), the small button's height, with 14px
+  labels like a small button, so a row of chips lines up with the
   "Clear filters" button beside it. Fully round: chips are things you
   press.
 - **The mark holds the width.** The plus and the check share one 16px
@@ -88,12 +88,12 @@ On and off never differ by color alone: the plus becomes a check.
   The mark's side has 12px of padding (`--ui-pad-tag`) against 16px on
   the other, half the chip's height so the label ends where the round end
   stops: a 16px mark has air inside its box.
-- **Removable chips** have 16px before the label and a 26px remove button
+- **Removable chips** have 16px before the label and a 24px remove button
   4px in from the end, so its curve is concentric with the chip's. The ×
-  is drawn at the medium stroke, matching the 500 label.
-- **Hit areas.** Chips are 34px, above the 24px mouse minimum; on touch
-  screens their hit area grows to 40px tall. The remove button is 26px for
-  a mouse and 40px on touch; that reaches 3px past the chip, less than the
+  is drawn at the medium stroke, matching the label.
+- **Hit areas.** Chips are 32px, above the 24px mouse minimum; on touch
+  screens their hit area grows to 40px tall. The remove button is 24px for
+  a mouse and 40px on touch; that reaches 4px past the chip, half the
   8px to the next chip, so two targets never overlap.
 - **The group** wraps with `--ui-gap-inline` (8px) across and down, so a second row reads as
   the same group.

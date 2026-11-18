@@ -208,13 +208,11 @@
   text-wrap: pretty;
 }
 
-/* The close button is a ghost icon Button: a capsule like every other.
-   Centered on the title's first line, with its X on the content's edge.
-   Doubled to win over the button's own size, whatever order sheets load in. */
 /* Close is a full-size secondary icon button, the standard 40px capsule
    with its edge and fill, so it reads as a button. It sits --corner from
    the top and from the end, the same distance both ways, concentric with
-   the panel's corner (whose radius is --corner plus half the button). */
+   the panel's corner (whose radius is --corner plus half the button).
+   Doubled to win over the button's own rules, whatever order sheets load in. */
 .close.close {
   position: absolute;
   top: var(--corner);
@@ -290,7 +288,7 @@
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: var(--ui-space-2);
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .error {

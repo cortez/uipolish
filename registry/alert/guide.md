@@ -40,7 +40,7 @@ collapses the alert: that answers a press, so it's allowed to move things.
 
 ## Look and motion
 
-The status color tints the surface 6% with a hairline edge of it, and colors
+The status color tints the surface (3.5% in light, 7% in dark) with a hairline edge of it, and colors
 the mark (`--ui-success`, `--ui-warning`, `--ui-danger`; info uses the text color); title and text stay in the text colors so contrast holds in
 every tone. Info is neutral. The mark sits centered in a square the
 height of the title's line; the dismiss button is centered on that line
@@ -61,7 +61,8 @@ new tone (registered `--alert-tone` and `--alert-edge`, `--ui-dur-base` on
 a beat later, and the height eases to fit (`AnimatedSize`). So "Two guests
 haven't replied" with a button becomes "Reminder sent" without a jump.
 
-Under `prefers-reduced-motion` it appears, changes and collapses at once.
+Under `prefers-reduced-motion` nothing moves: the space opens and collapses
+at once, content changes in place, and an alert that arrives still fades in.
 
 ## Accessibility
 

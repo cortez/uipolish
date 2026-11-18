@@ -116,6 +116,10 @@ export function CodeInput({
   const locked = status === "verifying" || status === "success";
   // Applied after the new value renders, so the target box is judged against it.
   const pendingFocus = useRef<number | null>(null);
+  // The row is one tab stop: the box that has focus, else the first empty one.
+  // Tab from any box leaves the code rather than landing on the next box,
+  // which would only hand focus straight back.
+  const [focused, setFocused] = useState<number | null>(null);
 
   const complete = value.length === length;
   const errorText = error || (status === "error" ? labels.error : null);
@@ -351,6 +355,7 @@ export function CodeInput({
 
   function handleFocus(index: number) {
     const target = reachable(index);
+    setFocused(target);
     if (target !== index) focus(target);
     else boxes.current[index]?.select();
   }
@@ -424,6 +429,8 @@ export function CodeInput({
             enterKeyHint={i === length - 1 ? "done" : "next"}
             disabled={disabled}
             autoFocus={autoFocus && i === 0}
+            tabIndex={i === (focused ?? reachable(length - 1)) ? 0 : -1}
+            onBlur={() => setFocused(null)}
             onChange={(e) => handleChange(i, e)}
             onPaste={(e) => handlePaste(i, e)}
             onKeyDown={(e) => handleKeyDown(i, e)}

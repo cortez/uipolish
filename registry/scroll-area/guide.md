@@ -54,19 +54,19 @@ Override the fade length per instance with `--scroll-area-fade` (default
 - **First paint is already right.** The fades start easing only after the
   first measurement has been painted, so a list that loads with more below
   shows its bottom fade at once instead of fading it in.
-- **The scrollbar stays crisp.** A classic scrollbar (one that takes room in
-  the box) is kept out of the fade by a second, solid mask layer the width
-  of the bar. Overlay scrollbars take no room and fade with the content.
+- **One fade layer, scrollbar included.** The mask covers the whole
+  viewport, so a classic scrollbar fades at the ends with the rows beside
+  it; a solid strip kept for it left a sliver of each row at full opacity.
 - **Every `var()` in the gradient has a fallback**, so a missing token never
   drops the mask and hides the content.
-- Right to left: a horizontal row fades from the right first, and the
-  vertical scrollbar's solid strip moves to the left.
+- Right to left: a horizontal row fades from the right first.
 
 ## Motion
 
 | What | Duration | Easing |
 |---|---|---|
-| An edge fading in or out | `--ui-dur-fast` (160ms) | `--ui-ease-color` |
+| An edge fading in or out | Tied to the scroll position: it fades over the first and last fade length of travel (`animation-timeline: scroll()`) | `linear`, the scroll is the easing |
+| The same, where scroll timelines aren't supported | `--ui-dur-fast` (160ms) once content passes the edge | `--ui-ease-color` |
 | First state | 0ms | n/a |
 
 It's opacity feedback, not movement, so it stays under reduced motion.

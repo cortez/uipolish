@@ -221,11 +221,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* The panel only fades: no scale, no blur. */
   .panel {
-    transition: none;
+    transition-property: opacity;
   }
-  .panel {
+  .panel:is([data-starting-style], [data-ending-style]) {
     scale: none;
+    filter: none;
   }
   .highlight {
     transition-property: opacity, background-color;

@@ -72,7 +72,7 @@ export function Avatar({
       style={style}
       {...props}
     >
-      {letters ? <Letters text={letters} /> : <Person />}
+      {letters ? <Letters text={letters} size={size} /> : <Person />}
       {src && (status === "loading" || status === "loaded") && (
         // eslint-disable-next-line @next/next/no-img-element -- any URL, fixed size
         <img
@@ -94,10 +94,11 @@ export function Avatar({
   );
 }
 
-function Letters({ text }: { text: string }) {
+function Letters({ text, size }: { text: string; size: Size }) {
   /* One letter only a touch larger than two, so a row of mixed avatars
-     reads as one size. */
-  const fontSize = Array.from(text).length <= 1 ? 16 : 15;
+     reads as one size. In the 40-unit box a single letter never draws under
+     10px, like the +N beside it: at 20 and 24px it would be 8 and 9.6px. */
+  const fontSize = Array.from(text).length <= 1 ? Math.max(16, 400 / size) : 15;
   return (
     <svg className={styles.letters} viewBox="0 0 40 40" aria-hidden="true" focusable="false">
       <text x="20" y="20" fontSize={fontSize} textAnchor="middle" dominantBaseline="central">

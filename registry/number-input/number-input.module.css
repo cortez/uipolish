@@ -23,7 +23,8 @@
 .control:not([data-steppers]) {
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 0;
-  padding-inline: calc(var(--shell-inset) + var(--ui-space-2));
+  /* The text field's own inset, so the digits line up with the fields around it. */
+  padding-inline: calc(var(--shell-inset) + 10px);
 }
 
 .control:not([data-steppers]) :is(.input, .morph) {

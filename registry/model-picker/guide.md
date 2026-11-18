@@ -43,8 +43,8 @@ const models = [
 | State | What you see | How |
 |---|---|---|
 | Rest | Name and a chevron in muted text, no fill | |
-| Hover | Text darkens, a 6% fill appears behind it | `@media (hover: hover)` |
-| Press | Fill darkens to 10% at once. The trigger never shrinks: it opens a list, and the list opens from where the trigger really is | `:active` on `::before` |
+| Hover | Text darkens, a light fill (`--ui-fill`) appears behind it | `@media (hover: hover)` |
+| Press | Fill darkens a step (`--ui-fill-strong`) at once. The trigger never shrinks: it opens a list, and the list opens from where the trigger really is | `:active` on `::before` |
 | Open | Fill stays, the chevron's tip moves to point up | `aria-expanded` |
 | Highlighted option | One rounded fill under the option; it slides from the last one | pointer and keyboard share it, `data-highlighted` |
 | Selected option | A check at the end of the name's line | `aria-selected` |
@@ -53,7 +53,7 @@ const models = [
 | Flipped / shifted | Opens the other way near a viewport edge and stays 8px inside it; the list scrolls if it's taller than the room | Base UI `Positioner`, `--available-height` |
 
 **Rows.** The list is a menu: inset `--ui-inset-menu` (4px) inside its
-24px corner, rows with the concentric 12px radius and `--ui-pad-row` (12px)
+16px corner, rows with the concentric 12px radius and `--ui-pad-row` (12px)
 inside them, so the text clears each row's curve. The same as the dropdown
 menu and the command palette.
 
@@ -81,13 +81,13 @@ label's width to the new one. Nothing else in the row moves suddenly.
 - A press outside closes the list. The page doesn't lock its scroll while
   the list is open (`modal={false}`).
 
-The list's edge is the one in `--ui-shadow-floating`: the same outline color as fields (`--ui-border-strong`), drawn once. Don't add a ring of your own on top. Its fill is glass: `--ui-surface-floating` (the surface at 93%) over `--ui-blur-floating`, with `--ui-glass-edge`, a light line inside the top edge, so it reads as a solid panel with a hint of what's behind. For a solid panel set them to `var(--ui-surface)`, `none` and `0 0 transparent`.
+The list's edge is the one in `--ui-shadow-floating`: the same outline color as fields (`--ui-border-strong`), drawn once. Don't add a ring of your own on top. Its fill is glass: `--ui-surface-glass` (the surface at 96%) over a `--ui-glass-blur` (12px) blur of what's behind, so it reads as a solid panel with a hint of the page under it. For a solid panel set them to `var(--ui-surface)` and `0px`.
 
 ## Motion
 
 | What | Duration | Easing |
 |---|---|---|
-| List opens: fade and scale 0.97 → 1 from the trigger side | `--ui-dur-fast` | `--ui-ease-enter` |
+| List opens: fade, unblur from 2px and scale 0.97 → 1 from the trigger side | `--ui-dur-fast` | `--ui-ease-enter` |
 | List closes | `--ui-dur-instant` | `--ui-ease-exit` |
 | Highlight moves between options | `--ui-dur-snap` | `--ui-ease-snap` |
 | Check draws in on the new selection | `--ui-dur-base` | `--ui-ease-draw` |

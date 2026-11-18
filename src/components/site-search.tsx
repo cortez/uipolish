@@ -80,7 +80,7 @@ export function SiteSearch({ components }: { components: Item[] }) {
           onOpenChange={setOpen}
           commands={commands}
           label="Search UI Polish"
-          placeholder="Search components and docs…"
+          placeholder="Search components…"
           triggerRef={button}
         />
       )}

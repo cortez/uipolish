@@ -178,7 +178,7 @@
   }
 }
 
-/* Beside the trigger's 15px label: the md icon, like every disclosure. */
+/* Beside the trigger's label: the chevron size, like every disclosure. */
 .trigger .chevron {
   width: var(--ui-icon-chevron);
   height: var(--ui-icon-chevron);
@@ -253,7 +253,7 @@
 }
 
 .body[data-capped="true"] {
-  max-height: calc(var(--ui-text-sm) * 1.6 * 6);
+  max-height: calc(var(--ui-text-sm) * var(--ui-leading-prose) * 6);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
@@ -263,7 +263,7 @@
 /* While it thinks, the window is its full height from the first line, so
    it opens once and nothing below it moves as the text streams in. */
 .body[data-capped="true"][data-live] {
-  height: calc(var(--ui-text-sm) * 1.6 * 6);
+  height: calc(var(--ui-text-sm) * var(--ui-leading-prose) * 6);
 }
 
 .body[data-capped="true"][data-scrolled="true"] {
@@ -294,7 +294,7 @@
   .root[data-state="thinking"] .label,
   .root[data-state="thinking"] .label * {
     animation: none;
-    background: none;
+    mask-image: none;
     color: var(--ui-muted);
   }
   .swap,

@@ -26,7 +26,7 @@ export async function openApiDocument() {
       license: { name: "MIT", identifier: "MIT" },
     },
     servers: [{ url: siteUrl() }],
-    externalDocs: { description: "Docs", url: abs("/docs") },
+    externalDocs: { description: "Docs", url: abs("/llms.txt") },
     tags: [
       { name: "components", description: "React components with their code and guides." },
       { name: "rules", description: "Design rules, design tokens and the pre-ship checklist." },

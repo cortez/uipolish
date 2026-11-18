@@ -19,7 +19,7 @@ export function ToastPreview() {
   const sends = useRef(0);
 
   function saveDraft() {
-    toast.success("Draft saved", { description: "Menu for Saturday supper." });
+    toast.success("Draft saved");
   }
 
   function syncPrices() {

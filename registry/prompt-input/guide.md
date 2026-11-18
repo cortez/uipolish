@@ -61,18 +61,18 @@ checks `isComposing`, `keyCode === 229` (what Safari reports right after
 reply and doesn't bubble, so a surrounding dialog stays open. Enter while a
 reply streams does nothing; the draft is kept for when it finishes.
 
-**No jump on the first keystroke.** The textarea renders with `rows={1}` and a
-one-row min height. With `field-sizing: content`, an empty field sizes to its
-placeholder, so a placeholder that wrapped would make the empty field two rows
-tall and snap to one when you start typing. The placeholder is kept on one
-line with an ellipsis to prevent that. Where `field-sizing` isn't supported,
+**No jump on the first keystroke.** The textarea is two rows tall at least.
+With `field-sizing: content`, an empty field sizes to its placeholder, so a
+placeholder that wraps on a phone would otherwise make the empty field taller
+than a typed one and snap back on the first character; two rows hold both.
+Keep the placeholder short enough for two lines. Where `field-sizing` isn't supported,
 the height is set from `scrollHeight` in a layout effect, before paint.
 
 ## Motion
 
 | What | Duration | Easing |
 |---|---|---|
-| Composer border on hover | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
+| Fill back from focus | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Focus fill | 0ms, never animated; the edge never changes | n/a |
 | Arrow retracts into its tip, stop block sweeps in (`Icon` send → stop) | see the icon set's guide | |
 | "Stop" label and pill width | `--ui-dur-move` (380ms) via TextMorph | `--ui-ease-move` |
@@ -83,7 +83,7 @@ the height is set from `scrollHeight` in a layout effect, before paint.
 | Suggestions in, as one group | `--ui-dur-fast` (160ms), 4px rise | `--ui-ease-enter` |
 | Drop overlay | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Hint and notice trade places: text fades in, color eases | `--ui-dur-fast` (160ms) | `--ui-ease-enter`, `--ui-ease-color` |
-| Press | 0ms to `--ui-scale-press` (0.985), snaps back over 250ms | `--ui-ease-snap` |
+| Press | `--ui-dur-press` (80ms) to `--ui-scale-press` (0.985), back over `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 
 Under `prefers-reduced-motion: reduce` chips and suggestions appear without
 moving, removals are instant, the icon swap is a crossfade and nothing scales
@@ -94,9 +94,9 @@ there would make typing feel late.
 
 ## Layout
 
-- Composer padding is 8px, so the 34px round buttons sit concentric with the
-  25px corner (17 + 8). Text starts 20px in. Chips are inset 12px and take a
-  13px radius.
+- Composer padding is 8px, so the 32px round buttons sit concentric with the
+  24px corner (16 + 8). Text starts 16px in. Chips are inset 12px and take a
+  12px radius.
 - The line under the composer is centered. It shows `hint` if you pass one;
   with attachments on it's kept, empty, so a rejection notice never moves
   the page.

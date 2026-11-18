@@ -255,6 +255,7 @@
 .foldBody[data-open] {
   grid-template-rows: 1fr;
   transition-duration: var(--ui-dur-panel);
+  transition-timing-function: var(--ui-ease-expand);
 }
 
 .foldInner {

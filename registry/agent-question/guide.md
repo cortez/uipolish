@@ -63,7 +63,8 @@ and `tool-steps`.
 | `status` | `waiting` (default) or `answered`. Controlled |
 | `answer` | With `answered`: what the line shows. Defaults to what was just sent |
 | `onAnswer` | Gets `{ values, other? }`. Return a promise to show busy and any error |
-| `autoFocus` | As on `tool-approval` |
+| `entrance` | Default `true`: a card that mounts waiting opens its space, fades in and is announced. `false` for a question already on the page when it loads (a saved conversation, a static page): it renders in place, holds still and takes no focus. A server-rendered card never enters |
+| `autoFocus` | Default: an entering card focuses the question only when nothing else has focus. `true` always focuses it; `false` never does |
 
 Write the reason as the end of "Recommended: …", lower case, with no full
 stop: "keeps the guest list private", not "I recommend this because…".
@@ -97,7 +98,9 @@ the words carry it. Don't choose it for the person; an answer they didn't
 make isn't one.
 
 **History.** A question that's already answered when it mounts shows as its
-line with no motion. Pass `answer` so it can say what was chosen.
+line with no motion. Pass `answer` so it can say what was chosen. A question
+still waiting when the page loads takes `entrance={false}`, so it doesn't
+replay its arrival or pull focus.
 
 ## Layout
 
@@ -137,7 +140,8 @@ height of the card changes in one step, and the dot and tick appear at once.
   first), arrows move and choose. Several: each box is a tab stop, arrows
   also move between them, Space ticks. Enter sends from any choice or the
   field. Disabled choices are skipped.
-- **Focus.** By default the card takes focus only when nothing else has it:
+- **Focus.** By default a card that has just arrived takes focus only when
+  nothing else has it (one already on the page at load never does):
   it lands on the question, not on a choice. When the person is typing in
   the prompt, focus stays there. Choosing "Something else…" with a click
   moves focus into the field; arrowing past it doesn't.

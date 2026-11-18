@@ -2,7 +2,7 @@
   position: fixed;
   z-index: 50;
   bottom: max(var(--ui-space-4), env(safe-area-inset-bottom));
-  width: min(356px, 100vw - 2 * var(--ui-space-4));
+  width: min(380px, 100vw - 2 * var(--ui-space-4));
   outline: none;
   font-family: var(--ui-font-sans);
 }
@@ -16,10 +16,11 @@
 }
 
 .item {
-  /* A quiet card: 12px in, 16 at the start where the icon is, on the box
-     radius. The buttons hang off the title's line so they never make the
-     card taller than its text. */
+  /* A compact card: 12px above and below its text, so a title alone is
+     44px tall, and 16 at the sides, the box radius, so the text clears the
+     corners. */
   --toast-inset: var(--ui-space-3);
+  --toast-side: var(--ui-space-4);
   --toast-radius: var(--ui-radius-lg);
   position: absolute;
   right: 0;
@@ -54,11 +55,13 @@
   position: relative;
   display: flex;
   align-items: flex-start;
-  gap: var(--ui-space-3);
-  padding: var(--toast-inset) var(--toast-inset) var(--toast-inset) var(--ui-space-4);
+  gap: var(--ui-space-2);
+  padding: var(--toast-inset) var(--toast-side);
   border-radius: var(--toast-radius);
-  /* Opaque: a toast lands over whatever is there, so nothing shows through. */
-  background: var(--ui-surface);
+  /* Light glass, like every floating surface. */
+  background: var(--ui-surface-glass);
+  backdrop-filter: blur(var(--ui-glass-blur));
+  -webkit-backdrop-filter: blur(var(--ui-glass-blur));
   box-shadow: var(--ui-shadow-floating);
   color: var(--ui-foreground);
   clip-path: var(--toast-clip, none);
@@ -71,6 +74,12 @@
     clip-path var(--ui-dur-move) var(--ui-ease-move),
     translate var(--ui-dur-snap) var(--ui-ease-snap);
   animation: toast-in var(--ui-dur-base) var(--ui-ease-enter);
+}
+
+/* With an action the card ends in a button, not text: the button sits
+   the card's own inset from the edge. */
+.card[data-action] {
+  padding-inline-end: var(--toast-inset);
 }
 
 /* A toast stacked behind the front one shows only its edge. */
@@ -107,8 +116,7 @@
   outline-offset: var(--ui-ring-offset);
 }
 
-
-/* The icon, level with the title's line. */
+/* The icon, level with the title's first line. */
 .icon {
   display: grid;
   place-items: center;
@@ -118,46 +126,15 @@
   color: var(--ui-foreground);
 }
 
-/* Action and dismiss: 32px buttons centered on the title's line, so the
-   row stays as tall as the text. */
-.action,
-.close {
-  flex-shrink: 0;
-  margin-block: calc((var(--ui-leading-md) - var(--ui-control-sm)) / 2);
-}
-
-.close {
-  margin-inline-start: calc(var(--ui-space-2) * -1);
-  opacity: 0;
-  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
-}
-
-/* Dismiss shows when the toast is pointed at or focused; on touch it's
-   always there. */
-.item:is(:hover, :focus-within) .close,
-.close:focus-visible {
-  opacity: 1;
-}
-
-@media (hover: none) {
-  .close {
-    opacity: 1;
-  }
-}
-
-
 .item[data-type="error"] .icon {
   color: var(--ui-danger-text);
-}
-
-.item[data-type="default"] .icon {
-  color: var(--ui-muted);
 }
 
 .item[data-type="success"] .icon {
   color: var(--ui-success-text);
 }
 
+/* The text takes all the width the action leaves. */
 .text {
   display: grid;
   flex: 1;
@@ -165,27 +142,116 @@
   min-width: 0;
 }
 
+/* Two lines at most, fading at the end of the second when cut. */
 .title {
+  composes: truncateLines from "../text/text.module.css";
   margin: 0;
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-title);
   line-height: var(--ui-leading-md);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  overflow-wrap: anywhere;
 }
 
+/* A morphing title (loading, promise): one line, fading when cut. */
+.titleLine {
+  composes: truncate from "../text/text.module.css";
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-title);
+  line-height: var(--ui-leading-md);
+}
+
+/* One line under the title, fading at the end when cut; never a paragraph. */
 .description {
-  margin: 0;
+  composes: truncate from "../text/text.module.css";
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
   line-height: var(--ui-leading-sm);
-  text-wrap: pretty;
 }
 
+/* The action: a 32px button centered on the card. The negative margin lets
+   it hang past a single line of text, so it never makes the card taller. */
+.action {
+  flex-shrink: 0;
+  align-self: center;
+  margin-block: calc((var(--ui-leading-md) - var(--ui-control-sm)) / 2);
+  margin-inline-start: var(--ui-space-1);
+}
 
+/* Dismiss: a small raised round on the card's top corner, out of the row
+   so the text keeps its width. It shows when the toast is pointed at or
+   focused; on touch it's always there on the toast in front. */
+.close {
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  position: absolute;
+  top: calc(var(--ui-space-2) * -1);
+  inset-inline-end: calc(var(--ui-space-2) * -1);
+  display: grid;
+  place-items: center;
+  width: var(--ui-space-5);
+  height: var(--ui-space-5);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-edge), var(--ui-shadow-control);
+  color: var(--ui-muted);
+  cursor: pointer;
+  pointer-events: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
 
+.close > svg {
+  width: var(--ui-icon-xs);
+  height: var(--ui-icon-xs);
+}
 
+.card > .close {
+  opacity: 0;
+}
 
+.item:is(:hover, :focus-within) .close {
+  opacity: var(--toast-content, 1);
+  pointer-events: auto;
+}
 
+@media (hover: hover) {
+  .close:hover {
+    background: var(--ui-fill-solid);
+    color: var(--ui-foreground);
+  }
+}
+
+.close:active {
+  background: var(--ui-fill-strong-solid);
+  color: var(--ui-foreground);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.close:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+@media (hover: none) {
+  .card > .close {
+    opacity: var(--toast-content, 1);
+    pointer-events: auto;
+  }
+
+  /* A 40px target around the 24px round. */
+  .close::before {
+    content: "";
+    position: absolute;
+    inset: calc(var(--ui-space-2) * -1);
+  }
+}
 
 /* Registered so the gradient's radius can animate. */
 @property --toast-dot {
@@ -217,7 +283,6 @@
     --toast-dot: 3.5px;
   }
 }
-
 
 @keyframes toast-in {
   from {
@@ -251,6 +316,9 @@
     transition: none;
     animation-name: toast-fade;
     animation-duration: var(--ui-dur-fast);
+  }
+  .close:active {
+    scale: none;
   }
   .pulse {
     --toast-dot: 2.75px;

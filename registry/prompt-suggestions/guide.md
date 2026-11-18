@@ -92,7 +92,7 @@ node. `detail` shows on cards only.
   doesn't leave its neighbor short.
 - The icon sits on the title's first line, 12px before the text. Titles and
   details wrap rather than cut: a suggestion is read in full.
-- **Chips** are 32px pills (`--ui-control-sm`) with 15px labels at 500, the
+- **Chips** are 32px pills (`--ui-control-sm`) with 14px labels, the
   same height and type as `Chip`, padded half their height so the label ends
   where the round end starts. A long one wraps into a rounded box instead of
   cutting. They wrap with 8px across and down.

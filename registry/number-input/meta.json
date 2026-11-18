@@ -2,7 +2,7 @@
   "name": "number-input",
   "title": "Number input",
   "summary": "Spinbutton whose − and + buttons speed up while held. A typed value outside min or max is pulled into range, with a note that says so.",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "dependencies": [
     "field",
     "icons",

@@ -83,13 +83,13 @@ export async function llmsText(full: boolean): Promise<string> {
   for (const c of components) {
     const tag = c.kit === "agent" ? "agent kit" : AI_COMPONENTS.includes(c.name) ? "AI" : "";
     if (!full) {
-      out.push(`- [${c.title}](${abs(`/docs/${c.name}`)}) (\`${c.name}\`, ${tag}): ${c.summary}`);
+      out.push(`- [${c.title}](${abs(`/docs/${c.name}`)}) (\`${c.name}\`${tag ? `, ${tag}` : ""}): ${c.summary}`);
       continue;
     }
     const guide = (await getComponentGuide(c.name).catch(() => ""))
       .replace(/^#\s.*\n/, "")
       .replace(/^(#{2,3})\s/gm, "##$1 ");
-    w(`### ${c.title}`, `\`${c.name}\` · ${tag} · v${c.version} · ${abs(`/docs/${c.name}`)}`, "", c.summary, "", guide.trim());
+    w(`### ${c.title}`, [`\`${c.name}\``, tag, `v${c.version}`, abs(`/docs/${c.name}`)].filter(Boolean).join(" · "), "", c.summary, "", guide.trim());
   }
   return out.join("\n").trimEnd() + "\n";
 }

@@ -12,8 +12,11 @@ export async function SiteLayout({ children }: { children: React.ReactNode }) {
   const components = sortComponents(await listComponents()).map((c) => ({ name: c.name, title: c.title }));
   return (
     <div className={styles.page}>
+      <a className={styles.skip} href="#content">
+        Skip to content
+      </a>
       <SiteHead components={components} />
-      <main className={styles.main}>
+      <main id="content" tabIndex={-1} className={styles.main}>
         {children}
       </main>
     </div>

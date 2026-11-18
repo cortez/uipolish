@@ -114,8 +114,11 @@
     display: none;
   }
 
+  /* Several lines tall, the pill's round corner would cut into the last
+     line's first letter; a small corner clears the text. */
   .code {
     height: auto;
+    border-radius: var(--ui-radius-sm);
     line-height: var(--ui-leading-sm);
     white-space: normal;
   }

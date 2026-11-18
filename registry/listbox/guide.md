@@ -26,9 +26,13 @@ highlight.
   `--listbox-width` on the popup to size it, such as
   `var(--anchor-width)` to match the field.
 
-The `panel`'s edge is the one in `--ui-shadow-floating`: the outline Its fill is glass: `--ui-surface-floating` (the surface at 93%) over `--ui-blur-floating`, with `--ui-glass-edge`, a light line inside the top edge, so it reads as a solid panel with a hint of what's behind. For a solid panel set them to `var(--ui-surface)`, `none` and `0 0 transparent`.
+The `panel`'s edge is the one in `--ui-shadow-floating`: the outline
 color fields use (`--ui-border-strong`), drawn once. Don't stack another
-ring on it.
+ring on it. Its fill is glass: `--ui-surface-glass` (the surface at 96%)
+over a `--ui-glass-blur` (12px) blur, so it reads as a solid panel with a
+hint of what's behind. For a solid panel set them to `var(--ui-surface)`
+and `0px`. Under `prefers-reduced-motion: reduce` the panel only fades and
+the highlight jumps between rows.
 
 Disabled and chosen rows are styled from Base UI's `data-disabled` and
 `data-selected`.

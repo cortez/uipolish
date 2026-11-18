@@ -36,7 +36,7 @@ segmented progress through named steps. Neither ever spins.
 
 ## Look
 
-The label and the value share one 13px line: the label truncates, the
+The label and the value share one 12px line: the label truncates, the
 value sits at the end in the muted color. The track is 4px in
 `--ui-fill-strong`; the fill is the text color, `--ui-danger` once the
 work has failed. No accent.

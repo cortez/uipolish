@@ -22,8 +22,8 @@ component's own.
   disappeared, a toggle flipped). Highlight it in place instead.
 - Errors on a form field: show them next to the field.
 - Anything the user must answer before continuing: use a dialog.
-- Long text or several actions. A toast has one line of title, an optional
-  line of detail, and at most one action.
+- Long text or several actions. A toast has a short title, an optional
+  line of detail that is cut when it runs long, and at most one action.
 
 ## API
 
@@ -49,12 +49,25 @@ place instead of adding another.
 
 ## Look
 
-A quiet card: the icon level with the title, the title and description,
-then the action as a plain ghost button and dismiss, both hung on the
-title's line so they never make the card taller than its text. Dismiss
-shows on hover or focus (always on touch). The card is the opaque surface
-with the floating shadow, 12px in (16 at the icon's side), on the lg
-(16px) radius. Icons are `info`, `check-circle` and `alert` from Icons.
+A compact card, 380px wide at most: an optional 16px icon level with the
+title's first line, the title with one line of description under it, and
+the action, a 32px secondary `Button`, centered at the end. The text takes
+all the width the action leaves. A title alone is 44px tall; with a
+description, 62px.
+
+- **Title**: body size (14px), up to two lines, then it fades. A title
+  that morphs (`toast.loading`, `toast.promise`) keeps to one line.
+- **Description**: one step smaller (12px), one line, fading at the end
+  when cut. Put anything longer somewhere else.
+- **Icon**: only for an outcome: `check-circle` for success, `alert` for
+  an error, the breathing dot while loading. A plain `toast()` has none.
+- **Dismiss**: a 24px round on the card's top corner, out of the row so
+  it takes no width from the text. It shows when the toast is pointed at
+  or focused, and always on touch.
+
+The card is the light glass every floating surface uses (`--ui-surface-glass`
+over `--ui-glass-blur`) with the floating shadow, 12px in above
+and below and 16px at the sides, on the lg (16px) radius.
 
 ## States
 
@@ -101,7 +114,7 @@ changes without moving, swipes don't spring back, and the loading dot holds its 
 
 The region is `position: fixed` in the chosen bottom corner, 16px from the
 edges or further when `env(safe-area-inset-*)` is larger, so it clears the
-home indicator and rounded corners. It's 356px wide, or the screen width
+home indicator and rounded corners. It's 380px wide, or the screen width
 minus 32px on phones. The page needs `viewport-fit=cover` in its viewport meta
 for the safe-area insets to be non-zero on iOS.
 
@@ -123,8 +136,9 @@ cancelled"), which is also when the user can see them.
   to the next.
 - Focus inside the region expands the stack and pauses every timer, so
   keyboard users get as long as they need.
-- The dismiss button is the 32px ghost `Button`, and the action the 32px
-  secondary one, with an accessible name that includes the toast's title.
+- The action is the 32px secondary `Button`. The dismiss button's name
+  includes the toast's title ("Dismiss: Draft saved"); it's 24px for a
+  mouse with a 40px target on touch.
 - Hover only expands the stack. Every action is also reachable by keyboard
   and by touch.
 

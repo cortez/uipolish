@@ -106,7 +106,7 @@ Disabled options are skipped by the keys and can't be chosen.
   reserved, so an error appearing moves nothing. It's Field's
   `FieldMessage`, the same line as under a text field.
 
-The open list's edge is the one in `--ui-shadow-floating`: the same outline color as the field (`--ui-border-strong`), drawn once. Don't add a ring of your own on top; two rings read as a darker edge. Its fill is glass: `--ui-surface-floating` (the surface at 93%) over `--ui-blur-floating`, with `--ui-glass-edge`, a light line inside the top edge, so it reads as a solid panel with a hint of what's behind. For a solid panel set them to `var(--ui-surface)`, `none` and `0 0 transparent`.
+The open list's edge is the one in `--ui-shadow-floating`: the same outline color as the field (`--ui-border-strong`), drawn once. Don't add a ring of your own on top; two rings read as a darker edge. Its fill is glass: `--ui-surface-glass` (the surface at 96%) over a `--ui-glass-blur` (12px) blur of what's behind, so it reads as a solid panel with a hint of the page under it. For a solid panel set them to `var(--ui-surface)` and `0px`.
 
 ## Motion
 

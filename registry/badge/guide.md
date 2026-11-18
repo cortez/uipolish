@@ -37,7 +37,7 @@ Every `<span>` prop passes through.
 |---|---|
 | `tone` | `neutral` (default), `accent`, `positive`, `warning`, `danger`. See below |
 | `dot` | A 6px mark in the tone's color before the label |
-| `size` | `md` (default) is 24px, for a 15px line; `sm` is 20px, for a 13px line |
+| `size` | `md` (default) is 24px, for a 14px line; `sm` is 20px, for a 12px line |
 | `count` | Shows a number instead of a label. Round for one digit, longer for more |
 | `max` | Over this, a count reads `99+` (default 99) |
 | `label` | What a count means, read instead of the bare number ("3 unread replies") |
@@ -81,15 +81,15 @@ and 11 the same size, and the digits that change roll (see Motion).
 
 ## Layout
 
-- **A little taller than the line.** `md` is 24px and `sm` 20px: two pixels
-  more than a 15px or 13px line, so the letters have air above and below and
+- **A little taller than the line.** `md` is 24px and `sm` 20px: four pixels
+  more than the 20px and 16px lines they sit on, so the letters have air above and below and
   the pill doesn't look squeezed. In a row, aligned to the top of the line
   (`vertical-align: top`).
 - **In a sentence** (straight inside a `p`, `li`, `dd` or `figcaption`) it
   drops to 20px and sits on the text's baseline, so there's room above and
   below and it never touches the lines around it, with 2px at each side so
   punctuation doesn't butt against it.
-- Text is 13px / 500, trimmed to its capitals and baseline, so the box centers the letters:
+- Text is 12px, trimmed to its capitals and baseline, so the box centers the letters:
   `--ui-pad-tag` (12px, half the height, so the label starts where the
   round end stops) each side at `md`, `--ui-pad-tag-sm` (8px) at `sm` and
   inside a sentence.

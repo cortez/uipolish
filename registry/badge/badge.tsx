@@ -12,7 +12,7 @@ type BadgeProps = Omit<ComponentProps<"span">, "children"> & {
   tone?: Tone;
   /** A small mark in the tone's color before the label. */
   dot?: boolean;
-  /** `md` fits a 15px line, `sm` a 13px one. */
+  /** `md` (24px) fits a 14px line, `sm` (20px) a 12px one. */
   size?: "sm" | "md";
   /** The label, always in words. */
   children?: ReactNode;

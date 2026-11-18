@@ -31,9 +31,9 @@ and the old `xs`, `lg` and `xl` steps alias into these),
 `--ui-leading-prose`, `--ui-text-code`, `--ui-weight-{regular,title}` (`medium` and `semibold` alias regular),
 `--ui-measure`, `--ui-text-touch`.
 
-- Line-heights are px for the UI steps so rows line up: 13px text in a 20px
+- Line-heights are px for the UI steps so rows line up: 12px text in a 20px
   row (a footer beside 14px text, a field message) takes `--ui-leading-md`,
-  not its own 18px.
+  not its own 16px.
 - Controls, pills and badges use `line-height: 1` so padding alone sets the
   box. That's a rule, not a step.
 - Weight: two in all. 400 for text, everything but the Title style, and
@@ -80,7 +80,7 @@ face's own tightening is tuned for reading, and a heading set at its default
 reads as separate letters instead of one shape. At these sizes the system
 face has no ligatures to lose, and a heading rarely contains a time, so the
 cost from the first point doesn't apply. Set it on the heading's class, never
-on the `h1`–`h3` elements globally: a small `h2` used as a 13px label must
+on the `h1`–`h3` elements globally: a small `h2` used as a 12px label must
 stay untracked.
 
 The other exception is all-caps: short uppercase labels need air,
@@ -213,7 +213,7 @@ letters: **icon stroke matches the text's stem**.
 - A stroke in a 16-unit viewBox renders at `size / 16 × stroke` px, so the
   stroke number is `stem × 16 / icon size`. A 14px icon needs a slightly
   higher number than a 16px one for the same weight.
-- Size: 16px icons beside 14–16px text, 14px beside 13px (the scale is
+- Size: 16px icons beside 14–16px text, 14px beside 12px (the scale is
   under "Icon sizes" below). The icon's drawn
   height (about 9.5 of 16 units) then sits between the x-height and the cap
   height. Centre it on the line box, not the baseline; with `line-height: 1`
@@ -252,7 +252,7 @@ Four sizes, picked by the text the icon sits with, never by the component:
 | Token | Size | Where |
 |---|---|---|
 | `--ui-icon-md` | 16px | Beside 14–16px text, and in every control (button, field, select, menu row) |
-| `--ui-icon-sm` | 14px | Beside 13px text: sm controls, meta lines, notes, a 13px disclosure |
+| `--ui-icon-sm` | 14px | Beside 12px text: sm controls, meta lines, notes, a 12px disclosure |
 | `--ui-icon-xs` | 12px | Only a tiny mark in a node, a corner badge or a 24px tile |
 | `--ui-icon-lg` | 20px | A glyph alone in a 36–44px tile |
 

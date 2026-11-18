@@ -47,7 +47,7 @@
 }
 
 .avatar:is([data-status="loading"], [data-status="error"]) .letters {
-  animation: avatar-letters-late var(--ui-dur-fast) var(--ui-ease-enter) 300ms both;
+  animation: avatar-letters-late var(--ui-dur-fast) var(--ui-ease-enter) var(--ui-delay-busy) both;
 }
 
 @keyframes avatar-letters-late {

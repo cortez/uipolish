@@ -79,11 +79,10 @@ mode for free.
   pressed chip or a selected row takes the neutral selected fill. The
   accent is for links, focus and status, not for "on".
 - **What floats is glass.** Menus, popovers, lists under a field and
-  hover cards fill with `--ui-surface-floating`, set
-  `backdrop-filter: var(--ui-blur-floating)` and put `--ui-glass-edge`
-  before their shadow: the surface at 93% over a soft blur, with a faint
-  light line inside the top edge, so it reads as a solid panel with only a
-  hint of what's behind, in light and dark. Cards,
+  hover cards fill with `--ui-surface-glass` and set
+  `backdrop-filter: blur(var(--ui-glass-blur))`: the surface at 96% over a
+  soft blur, so it reads as a solid panel with only a hint of what's
+  behind, in light and dark. Cards,
   dialogs, drawers and toasts stay solid: they hold more reading than a
   menu does.
   Keep the blur small and the glass on small, short-lived panels only:
@@ -348,8 +347,8 @@ behind it and dates fast. The only glass here is light, and it's one token.
 
 - Small floating surfaces you open (menus, popovers, select lists, the
   command palette) are light glass: `--ui-surface-glass` (the surface at
-  92%) over
-  `--ui-glass-blur` (4px), a hairline and a shadow. They still read as above
+  96%) over
+  `--ui-glass-blur` (12px), a hairline and a shadow. They still read as above
   the page by shadow; the glass only softens what's under them. Text on
   them passes contrast against the surface alone. Toasts, which land over
   whatever is there unasked, and dialogs, drawers and sheets stay opaque.

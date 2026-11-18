@@ -72,6 +72,7 @@ back up with the digits still in them.
 | Delete | Clears the box and closes the gap. |
 | ← → | Move between boxes (mirrored in right to left), never past the first empty one. |
 | Home / End | First box / last reachable box. |
+| Tab | The boxes are one tab stop: Tab lands on the first empty box (the last one when the code is full) and the next Tab leaves the code. |
 | Paste | A whole code replaces the value; part of one continues from the box pasted into. Non-digits (spaces, dashes) are dropped. |
 | Platform autofill | The first box has `autocomplete="one-time-code"`; a code dropped into it fills every box. |
 | Typing while `verifying` or `success` | Nothing changes: the boxes are read-only, so the code can't change under the check. |
@@ -90,7 +91,7 @@ box and why deleting from the middle closes the gap.
 | Invalid | Every edge eases to danger; the hint fades out and the error fades in, in the same reserved line | `error` → `aria-invalid` |
 | Disabled | 50% opacity, default cursor | `disabled` |
 
-Only the active box has a dark edge, so where the next digit goes is never
+Only the active box is filled, so where the next digit goes is never
 in doubt. Nothing moves between these states: edges change color, messages
 fade. Digits appear the instant they're typed, as in any field.
 
@@ -118,11 +119,10 @@ as wide as its boxes, and the pill takes its middle.
 
 | What | Duration | Easing |
 |---|---|---|
-| Edge on hover | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Caret blink | `--ui-dur-pulse` on, `--ui-dur-pulse` off, while the active box is empty | steps |
-| Edge on focus | 0ms | n/a |
+| Fill on focus | 0ms | n/a |
 | Edge to danger and back | `--ui-dur-fast` (160ms) | `--ui-ease-color` |
-| Hint ↔ error crossfade | 150ms out, 200ms in after 75ms | `--ui-ease-color`, `--ui-ease-enter` |
+| Hint ↔ error crossfade | `--ui-dur-instant` (120ms) out, `--ui-dur-fast` (160ms) in after 60ms | `--ui-ease-color`, `--ui-ease-enter` |
 | Error arriving | 2px drop and a 2px blur clearing, `--ui-dur-base` | `--ui-ease-enter` |
 | Boxes into the pill | fade and 2px blur `--ui-dur-fast`; drift toward the middle `--ui-dur-glide` | `--ui-ease-exit`; `--ui-ease-glide` |
 | Pill width, either way, from both sides | `--ui-dur-glide` (320ms) | `--ui-ease-glide`, no overshoot |

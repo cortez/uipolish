@@ -264,13 +264,28 @@
   border-radius: calc(var(--alert-radius) - var(--alert-dismiss-inset));
 }
 
+/* Reduced motion: nothing moves, blurs or opens gradually; an alert that
+   arrives or leaves still fades, so the change is seen. */
 @media (prefers-reduced-motion: reduce) {
-  .root,
-  .layer,
+  .root {
+    transition: none;
+  }
+  .layer {
+    translate: none;
+    transition:
+      opacity var(--ui-dur-instant) var(--ui-ease-color),
+      visibility 0s linear var(--ui-dur-instant);
+  }
   .layer[data-on],
   .root[data-mode="expand"] .layer[data-on] {
     filter: none;
     scale: none;
+    translate: none;
+    transition:
+      opacity var(--ui-dur-fast) var(--ui-ease-color),
+      visibility 0s;
+  }
+  .root[data-mode="static"] .layer[data-on] {
     transition: none;
   }
   .root[data-mode="expand"][data-shown] .clip,

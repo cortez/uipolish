@@ -71,13 +71,13 @@ not a call to action: the row itself is what you press.
 
 ## Layout
 
-Items are separated by space alone, never a drawn line. The title row is 46px; its focus line
+Items are separated by space alone, never a drawn line. The title row is 44px; its focus line
 reaches 12px past the text on every side, so titles and content stay
 aligned with the rest of the page. Open content ends 12px above the next
 title row, the same as a title, so open and collapsed rows keep one rhythm. The chevron sits on the title's first
-line when it wraps. Content is muted 15px text, at most 65 characters wide.
+line when it wraps. Content is muted 14px text, at most 65 characters wide.
 
-**Meta.** The value is 13px, muted, in tabular figures, on the title's
+**Meta.** The value is 12px, muted, in tabular figures, on the title's
 first baseline. It sits 8px from the chevron and at least 16px from the
 title, so the two at the end read as one cluster. When the row runs short
 of room, the value gives way first: the title keeps its one line and the

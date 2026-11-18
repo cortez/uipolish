@@ -19,6 +19,8 @@ export default function Showcase() {
         status={answer ? "answered" : "waiting"}
         answer={answer ?? undefined}
         onAnswer={setAnswer}
+        // On the page from the start: it holds still and leaves focus alone.
+        entrance={false}
       />
     </div>
   );

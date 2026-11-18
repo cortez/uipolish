@@ -1,8 +1,8 @@
-"use client";
-
 import type { ComponentProps, ReactNode } from "react";
 import { Icon, type IconName } from "../icons/icons";
 import styles from "./empty-state.module.css";
+
+// No "use client": it holds no state, so it renders on the server.
 
 type EmptyStateProps = Omit<ComponentProps<"div">, "title"> & {
   /** A plain icon above the title. Leave it out for text alone. */

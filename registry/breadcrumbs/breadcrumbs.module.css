@@ -163,8 +163,9 @@ a.crumb:focus-visible {
   }
 }
 
+/* Reduced motion: nothing slides; a revealed crumb still fades in. */
 @media (prefers-reduced-motion: reduce) {
   .item {
-    transition: none;
+    transition-property: opacity;
   }
 }

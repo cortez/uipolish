@@ -49,7 +49,7 @@ summary heading per reasoning block; those are exactly what `steps` wants.
 | Done, opened | The full reasoning, no height cap | click, or `defaultOpen` |
 | Hover | Label and chevron go to the text color | `@media (hover: hover)` |
 | Press | A light fill behind the label, in 80ms | `:active` |
-| Focus | 2px ring around the pill-shaped label | `:focus-visible` |
+| Focus | A line just inside the pill-shaped label | `:focus-visible` |
 
 **The duration.** Pass `duration` in seconds when you know it (from the API,
 or from history). Otherwise the block measures from when `streaming` turned
@@ -69,7 +69,7 @@ open for a user who opened it last time.
 | A new step, or "Thought for 8s": the old line rises out with a 2px blur | `--ui-dur-base` (200ms) | `--ui-ease-exit` |
 | The new line rises in from below, half a beat later (`--ui-dur-instant` / 2, 60ms) | `--ui-dur-base` (200ms) | `--ui-ease-enter` |
 | The label's width glides to the new line; the timer and chevron move with it | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
-| The window follows new text; a new paragraph rises 6px and clears a 2px blur | 320ms scroll; `--ui-dur-base` (200ms) | ease-out; `--ui-ease-enter` |
+| The window follows new text; a new paragraph rises 6px and clears a 2px blur | `--ui-dur-glide` (320ms) scroll; `--ui-dur-base` (200ms) | ease-out; `--ui-ease-enter` |
 | Timer folds away, chevron glides left | `--ui-dur-glide` (320ms); timer fades out in `--ui-dur-instant` (120ms) | `--ui-ease-glide`, `--ui-ease-exit` |
 | Open: height | `--ui-dur-panel` (280ms) | `--ui-ease-expand` |
 | Open: text fades in, 75ms after the height starts | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |

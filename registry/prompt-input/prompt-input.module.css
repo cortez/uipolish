@@ -66,7 +66,6 @@
 
 .composer[data-disabled] {
   opacity: 0.5;
-  cursor: default;
   transition: none;
 }
 
@@ -182,8 +181,10 @@
   padding: 0;
   border: 0;
   border-radius: inherit;
-  background: oklch(0 0 0 / 0.45);
-  color: white;
+  /* A veil of ink over the picture, in tokens: dark with a light mark in
+     light mode, the reverse in dark. Either reads on any image. */
+  background: color-mix(in oklch, var(--ui-ink) 45%, transparent);
+  color: var(--ui-on-ink);
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -204,7 +205,7 @@
 .remove svg {
   width: var(--ui-icon-md);
   height: var(--ui-icon-md);
-  transition: scale var(--ui-dur-press) var(--ui-ease-snap);
+  transition: scale var(--ui-dur-snap) var(--ui-ease-snap);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -216,7 +217,7 @@
     opacity: 1;
   }
   .remove:hover {
-    background: oklch(0 0 0 / 0.55);
+    background: color-mix(in oklch, var(--ui-ink) 55%, transparent);
   }
   .attachment[data-kind="file"] .remove:hover {
     background: color-mix(in oklch, var(--ui-surface), var(--ui-foreground) 12%);
@@ -225,6 +226,7 @@
 
 .remove:active svg {
   scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
 }
 
 .remove:focus-visible {
@@ -340,7 +342,6 @@
 /* Drop target */
 
 .dropzone {
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -375,14 +376,11 @@
   line-height: var(--ui-leading-md);
   text-align: center;
   text-wrap: balance;
+  transition: color var(--ui-dur-fast) var(--ui-ease-color);
 }
 
 .hint[data-notice] {
   color: var(--ui-danger-text);
-}
-
-.hint {
-  transition: color var(--ui-dur-fast) var(--ui-ease-color);
 }
 
 .hintText[data-swap] {

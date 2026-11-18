@@ -10,6 +10,37 @@
   padding: var(--ui-space-6) var(--ui-space-5) calc(var(--ui-space-8) * 2);
 }
 
+/* Keyboard only: the first Tab shows it over the mark; it jumps past the
+   bar to the page. Off screen until then, so it never takes space. */
+.skip {
+  position: fixed;
+  top: var(--ui-space-3);
+  left: var(--ui-space-3);
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  height: var(--ui-control-md);
+  padding-inline: var(--ui-space-5);
+  border-radius: var(--ui-radius-control);
+  background: var(--ui-ink);
+  color: var(--ui-on-ink);
+  font-size: var(--ui-text-md);
+  text-decoration: none;
+}
+
+.skip:not(:focus-visible) {
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.main:focus {
+  outline: none;
+}
+
 /* The page's title a section gap under the bar. */
 .main {
   min-width: 0;

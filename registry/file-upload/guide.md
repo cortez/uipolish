@@ -65,5 +65,7 @@ The prompt is one button, named "Receipts, Drop files here or browse" and
 described by the limits; it opens the system picker. Each row has
 "Cancel", "Retry" and "Remove" buttons named with the file. Completions,
 failures and turned-away files are announced in a polite live region.
-Long names are cut with the text fade, with the full name in a tooltip.
+Long names and reasons stay on one line and fade where they're cut, with
+the full text in a tooltip. Removing a row from the keyboard moves focus
+to "Add more files" (or the prompt, after the last one).
 Under `prefers-reduced-motion` rows appear and go at once.

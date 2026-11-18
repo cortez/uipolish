@@ -26,9 +26,9 @@ when they change (Copy → Copied).
 | State | What you see | How |
 |---|---|---|
 | Rest | Fill, and an even hairline on secondary | `data-variant` |
-| Hover | Background one step toward the text color, 150ms | `@media (hover: hover)` only, so taps don't stick |
-| Press | Darker step and `scale: var(--ui-scale-press)` (0.985) with no transition; release springs back over 300ms | `:active`, skipped on `[aria-haspopup]` |
-| Focus | 2px ring, 2px offset, appears instantly | `:focus-visible` |
+| Hover | Background one step toward the text color, in 120ms | `@media (hover: hover)` only, so taps don't stick |
+| Press | Darker step and `scale: var(--ui-scale-press)` (0.985) in 80ms; release springs back over 240ms | `:active`, skipped on `[aria-haspopup]` |
+| Focus | A 1px line just inside the button's edge, appears instantly | `:focus-visible` |
 | Busy | Presses are ignored at once. If the work is still running after 300ms, the label dims to 40% and a light band passes across it, left to right, and `busyLabel` (if given) morphs in; once shown it stays at least 400ms. No spinner. | `busy` prop → `aria-busy`, `aria-disabled` at once; `data-busy-shown` and the `mask-image` gradient after the delay (`useDelayedBusy`) |
 | Disabled | 50% opacity, default cursor, no hover or press | native `disabled` |
 | Label change | Shared letters slide, leaving letters fade out, new letters fade in, width follows | string children use `TextMorph` |
@@ -65,11 +65,11 @@ page, not in a tooltip.
 | What | Duration | Easing |
 |---|---|---|
 | Color on hover and release | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
-| Press in | 0ms | n/a |
+| Press in (color and scale) | `--ui-dur-press` (80ms) | `--ui-ease-color`, `--ui-ease-snap` |
 | Press release (scale) | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
-| Label dims for busy, once shown (after 300ms of work) | `--ui-dur-base` (200ms); back in `--ui-dur-fast` (160ms) | `--ui-ease-color` |
+| Label dims for busy, once shown (after 300ms of work) | `--ui-dur-base` (200ms); back at once | `--ui-ease-color` |
 | Light band across the busy label | `--ui-dur-sweep` (2.4s) per sweep | `linear` |
-| Text morph | `--ui-dur-move` (380ms), letters out in 150ms | `--ui-ease-move` |
+| Text morph | `--ui-dur-move` (380ms), letters out in 120ms | `--ui-ease-move` |
 
 Under `prefers-reduced-motion: reduce` the press doesn't scale, the label
 swaps without morphing, and a busy label dims to 50% and holds still.

@@ -65,7 +65,8 @@ overlaps a few and ends with a +N that says how many more.
 MC, "Priya" is P, "noor@example.com" is N, "王小明" is 王. Words that are
 only punctuation, like "(host)", are skipped, and accent marks stay with
 their letter. At 20 and 24 only the first letter shows; two would be too
-small to read.
+small to read. A single letter is never drawn under 10px, the same floor
+as the group's +N.
 
 **Fill.** Initials sit on the strong fill mixed onto the surface, in the
 text color: an avatar is a person, not a status, so it takes no hue.
@@ -73,7 +74,7 @@ The fill is opaque, so circles that overlap in a group never show through
 each other. The letters hold 4.5:1 on it in both themes.
 
 **No name.** A plain head and shoulders, filled in the letters' color at
-half strength, the shoulders running off the bottom edge like a portrait.
+a third strength, the shoulders running off the bottom edge like a portrait.
 No face, nothing illustrated: it says "a person" and nothing more, in the
 same place and weight as initials would sit.
 

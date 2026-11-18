@@ -79,10 +79,11 @@ fills its row. The value is one line, centered on the field's middle; the
 text starts 14px in, where a text field's does. The buttons sit
 concentrically inside: 4px from the top, bottom and end at every size (so
 24, 32 or 40px), with the field's radius less those 4px, and 2px apart. On
-touch each hit area reaches out to the field's edge. The value takes the
+touch the buttons sit 8px apart and each hit area grows to 40px, out to the
+field's edge. The value takes the
 rest of the row and truncates with a fade; the field never grows with it,
 and the value never wraps or spills out of it. A small field sets the value
-a step smaller (13px).
+a step smaller (12px).
 
 ## Motion
 

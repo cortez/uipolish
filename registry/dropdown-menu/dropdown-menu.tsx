@@ -361,8 +361,8 @@ export function MenuSub({ label, icon, description, disabled = false, children }
           {label}
         </ItemBody>
       </BaseMenu.SubmenuTrigger>
-      {/* Lines the submenu's first item up with its trigger. */}
-      <MenuPanel side="inline-end" align="start" sideOffset={4} alignOffset={-8}>
+      {/* Lines the submenu's first item up with its trigger: up by the panel's 4px inset. */}
+      <MenuPanel side="inline-end" align="start" sideOffset={4} alignOffset={-4}>
         {children}
       </MenuPanel>
     </BaseMenu.SubmenuRoot>

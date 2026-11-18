@@ -106,7 +106,7 @@
   inset: calc((var(--radio-size) - 6px) / 2);
   z-index: 1;
   border-radius: var(--ui-radius-full);
-  background: var(--ui-on-accent);
+  background: var(--ui-on-control-on);
   clip-path: circle(0 at 50% 50%);
   pointer-events: none;
   transition: clip-path var(--ui-dur-instant) var(--ui-ease-exit);

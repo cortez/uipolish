@@ -55,8 +55,6 @@
     background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
-/* A label longer than the room it has is cut at the trigger's edge instead
-   of pushing the trigger wider than its container. */
 /* A mark before the label (list and trigger). It carries air inside its
    16px box like the chevron does, so the trigger's start padding drops to
    match the end. */
@@ -351,8 +349,10 @@
   .panel {
     transition: none;
   }
-  .panel {
+  .panel[data-starting-style],
+  .panel[data-ending-style] {
     scale: none;
+    filter: none;
   }
   .highlight {
     transition-property: opacity, background-color;

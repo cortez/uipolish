@@ -156,10 +156,11 @@
 }
 
 @media (pointer: coarse) {
+  /* 32px tall, a 40px touch: 4px above and below. */
   .chip::after {
     content: "";
     position: absolute;
-    inset: -3px 0;
+    inset: calc((var(--ui-control-sm) - var(--ui-control-md)) / 2) 0;
   }
 }
 

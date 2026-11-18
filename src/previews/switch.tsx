@@ -84,7 +84,7 @@ export function SwitchPreview() {
         <h2 className={base.label}>Beside a button, small and default</h2>
         <div className={base.row}>
           <Switch size="sm" aria-label="Show past suppers" defaultChecked />
-          <Button variant="secondary">
+          <Button variant="secondary" size="sm">
             Past suppers
           </Button>
         </div>

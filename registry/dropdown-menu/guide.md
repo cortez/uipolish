@@ -142,7 +142,7 @@ learn they exist, but can't be activated.
 When any item has an icon or indicator, every label in that menu starts on
 the same line.
 
-The menu's edge is the one in `--ui-shadow-floating`: the same outline color as fields and secondary buttons (`--ui-border-strong`), drawn once. Don't add a ring of your own on top; two rings read as a darker edge. Its fill is glass: `--ui-surface-floating` (the surface at 93%) over `--ui-blur-floating`, with `--ui-glass-edge`, a light line inside the top edge, so it reads as a solid panel with a hint of what's behind. For a solid panel set them to `var(--ui-surface)`, `none` and `0 0 transparent`.
+The menu's edge is the one in `--ui-shadow-floating`: the same outline color as fields and secondary buttons (`--ui-border-strong`), drawn once. Don't add a ring of your own on top; two rings read as a darker edge. Its fill is glass: `--ui-surface-glass` (the surface at 96%) over a `--ui-glass-blur` (12px) blur, so it reads as a solid panel with a hint of what's behind. For a solid panel set them to `var(--ui-surface)` and `0px`.
 
 ## Motion
 
@@ -160,8 +160,8 @@ The menu's edge is the one in `--ui-shadow-floating`: the same outline color as 
 The highlight moves with `translate` only, so it never causes layout. It
 jumps instead of sliding the first time it appears. The trigger skips the
 button's press-scale (`[aria-haspopup]`), so the menu opens from where the
-button really is. Under `prefers-reduced-motion: reduce` the menu appears at
-once, the highlight jumps between items, labels swap without morphing,
+button really is. Under `prefers-reduced-motion: reduce` the menu only
+fades (no scale, no blur), the highlight jumps between items, labels swap without morphing,
 and a busy label dims to 50% and holds still.
 
 ## Accessibility
