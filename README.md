@@ -140,6 +140,11 @@ UI Polish Pro adds whole product screens, templates and more agent-kit pieces:
 - [Sign in](https://uipolish.com/docs/sign-in?ref=github): A passwordless sign-in and sign-up screen: work email, then a one-time code with a resend countdown, plus optional OAuth providers and SSO by work domain. Wrong, expired and rate-limited codes, blocked domains and failed providers each say what to do next.
 - [Usage meter](https://uipolish.com/docs/usage-meter?ref=github): How much of an agent’s context window or spending budget is used, as a ring and a percentage in the composer toolbar. Opens to a breakdown, warns before the limit and offers to compact.
 
+## Support
+
+UI Polish is free and open source. If it saves you time, you can
+[support](https://buy.polar.sh/polar_cl_Ne3B69dlezuutkrSoXOkzyIERxDUwm34SFCyX02eXVx) it.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
