@@ -330,6 +330,13 @@
   display: inline-flex;
 }
 
+/* The leading space in " Stop" is the only gap: Button's own icon-to-label
+   gap would stay even when the label is empty and push the arrow 4px off
+   center. */
+.send > span {
+  gap: 0;
+}
+
 /* Drop target */
 
 .dropzone {
