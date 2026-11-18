@@ -56,7 +56,7 @@ The file exports three things:
 | Size changes | The panel eases to the new width | `size` (`sm` 420, `md` 480, `lg` 640) |
 | Guard | Footer swaps for "Discard changes?" with Keep editing / Discard; body and header dim and go inert; focus on Keep editing | `dirty` is true when the user tries to leave |
 | Locked | Escape, backdrop and close do nothing | `locked`, e.g. while saving |
-| Close button | A full-size secondary icon button, the standard 40px capsule with edge and fill, centered on the title's first line | `Button variant="secondary"` |
+| Close button | A full-size secondary icon button, the standard 40px capsule with edge and fill, 16px (`--corner`) from the top and from the end, concentric with the panel's corner like the footer buttons; the title keeps clear of it | `Button variant="secondary"` |
 | Confirm busy | Confirm button's label dims and shimmers, keeps its width; Cancel disabled | `onConfirm` returns a promise |
 | Confirm failed | Error message in danger text beside the buttons; dialog stays open | the promise rejects; its message is shown |
 | Closing | Panel fades, blurs and shrinks into its center; backdrop fades; then it unmounts | `[data-ending-style]`; Base UI waits for the transition before unmounting |
