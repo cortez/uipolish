@@ -48,8 +48,8 @@
 }
 
 /* The one state that has to read from across the screen: a file held over
-   the zone. The well takes the accent's tint and edge, the prompt comes up
-   to the text color, and the icon tile rises to meet the file. */
+   the zone. The well takes the accent's tint and edge, and the icon and
+   prompt come up to the text color. */
 .zone[data-dragging] {
   --zone-bg: var(--ui-accent-tint);
   --zone-edge: var(--ui-border-accent);
@@ -136,34 +136,15 @@
   display: grid;
   place-items: center;
   color: var(--ui-muted);
-  transition:
-    color var(--ui-dur-instant) var(--ui-ease-color),
-    translate var(--ui-dur-move) var(--ui-ease-move),
-    scale var(--ui-dur-move) var(--ui-ease-move);
-}
-
-/* Empty: the icon sits in a raised tile on the surface color, so the zone
-   has something to look at. It lifts on hover, and higher when a file is
-   held over it. */
-.zone:not([data-has]) .mark {
-  width: var(--ui-control-md);
-  height: var(--ui-control-md);
-  border-radius: var(--ui-radius-md);
-  background: var(--ui-surface);
-  box-shadow: var(--ui-shadow-resting);
-  color: var(--ui-foreground);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
 @media (hover: hover) {
   .zone:not([data-has], [data-disabled]) .browse:hover .mark {
-    translate: 0 -2px;
+    color: var(--ui-foreground);
   }
 }
 
-.zone[data-dragging]:not([data-has]) .mark {
-  translate: 0 -4px;
-  scale: 1.06;
-}
 
 .zone[data-has] .mark {
   flex-shrink: 0;
@@ -387,11 +368,6 @@
   .row,
   .row[data-leaving] {
     animation: none;
-  }
-  .zone .mark,
-  .zone .browse:hover .mark {
-    translate: none;
-    scale: none;
   }
   .wash {
     transition: none;

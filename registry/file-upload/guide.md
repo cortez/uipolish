@@ -48,11 +48,11 @@ rather than one moving.
 
 | State | What you see |
 |---|---|
-| Empty | A flat well; the upload icon sits in a raised 40px tile on the surface color |
-| Hover, empty | The well's edge darkens a step, as a field's does, and the tile lifts 2px on the move spring |
+| Empty | A flat well, the upload icon above the prompt in the muted color |
+| Hover, empty | The well's edge darkens a step, as a field's does, and the icon comes up to the text color |
 | Hover, "Add more files" | The text and plus come up to the text color, like a row |
 | Press | Nothing of its own: the system picker opening is the answer, and a well this size shrinking on press reads as the page moving |
-| File held over the zone | The one state meant to read from across the screen: the well takes the accent's tint and edge, the tile rises 4px and grows 6%, and the prompt comes up to the text color and says "Drop to add" |
+| File held over the zone | The one state meant to read from across the screen: the well takes the accent's tint and edge, and the icon and prompt come up to the text color; the prompt comes up to the text color and says "Drop to add" |
 | Focus | A line just inside the well, instantly |
 
 Every change is color only, on `--ui-dur-instant`, in both directions. Removing a row fades it, then closes its

@@ -117,16 +117,17 @@
 }
 
 /* Solid: filled, with a thin stroke in the same color rounding its
-   corners. No dash, so it's whole at rest; it morphs on the glide curve
-   (no overshoot, so the halves of a shape never part), and leaves and
-   arrives by fading and scaling about its own center. */
+   corners. No dash, so it's whole at rest. It morphs over --ui-dur-move on
+   the draw curve, which eases in and out, so the change of shape is on
+   screen long enough to see (and with no overshoot the halves never part);
+   it leaves and arrives by fading and scaling about its own center. */
 .solid {
   fill: currentColor;
   stroke-width: var(--ui-icon-stroke-medium);
   stroke-dasharray: none;
   stroke-dashoffset: 0;
   transition:
-    d var(--ui-dur-glide) var(--ui-ease-glide),
+    d var(--ui-dur-move) var(--ui-ease-draw),
     opacity var(--ui-dur-fast) var(--ui-ease-enter),
     scale var(--ui-dur-glide) var(--ui-ease-glide);
 }

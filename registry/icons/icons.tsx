@@ -113,7 +113,7 @@ const ICONS = {
     stand: { d: "M8 11.75v2" },
   },
   play: {
-    a: { d: "M4.75 3 L8.5 5.34 L8.5 10.66 L4.75 13 Z", solid: true },
+    a: { d: "M4.75 3 L9.25 5.81 L9.25 10.19 L4.75 13 Z", solid: true },
     b: { d: "M8.5 5.34 L12.75 8 L12.75 8 L8.5 10.66 Z", solid: true },
   },
   pause: {
@@ -349,13 +349,14 @@ const HIDE = 0.3;
 
 const nums = (d: string) => (d.match(/-?[\d.]+(?:e-?\d+)?/g) ?? []).map(Number);
 
-/** The glide curve, close enough: a quick start that settles with no overshoot. */
-const glide = (t: number) => 1 - Math.pow(1 - t, 3.2);
+/** The draw curve, close enough: eases in and out, so the middle of a
+ *  morph is on screen long enough to see. */
+const inOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 /**
  * A stroke whose `d` morphs. Where CSS can transition `d`, the stylesheet
  * does it; elsewhere this tweens the attribute itself, number by number,
- * over --ui-dur-glide, so a morph is a morph in every browser.
+ * over --ui-dur-move, so a morph is a morph in every browser.
  */
 function MorphPath({ d, ...props }: ComponentProps<"path"> & { d: string }) {
   const ref = useRef<SVGPathElement>(null);
@@ -369,11 +370,11 @@ function MorphPath({ d, ...props }: ComponentProps<"path"> & { d: string }) {
     const a = nums(from);
     const b = nums(d);
     const parts = d.split(/-?[\d.]+(?:e-?\d+)?/);
-    const ms = parseFloat(getComputedStyle(el).getPropertyValue("--ui-dur-glide")) || 320;
+    const ms = parseFloat(getComputedStyle(el).getPropertyValue("--ui-dur-move")) || 380;
     const start = performance.now();
     let frame = 0;
     const step = (now: number) => {
-      const k = glide(Math.min(1, (now - start) / ms));
+      const k = inOut(Math.min(1, (now - start) / ms));
       el.setAttribute("d", parts.map((s, i) => (i < a.length ? s + (a[i] + (b[i] - a[i]) * k).toFixed(3) : s)).join(""));
       if (k < 1) frame = requestAnimationFrame(step);
     };

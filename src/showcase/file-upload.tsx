@@ -24,8 +24,14 @@ function upload(_file: File, { signal, onProgress }: { signal: AbortSignal; onPr
 
 export default function Showcase() {
   return (
-    <div className={styles.stack}>
-      <FileUpload label="Receipts" upload={upload} accept=".pdf,.jpg,.jpeg,.png" acceptLabel="PDF, JPG or PNG" maxSize={10_000_000} maxFiles={6} />
-    </div>
+    <FileUpload
+      className={styles.fill}
+      label="Receipts"
+      upload={upload}
+      accept=".pdf,.jpg,.jpeg,.png"
+      acceptLabel="PDF, JPG or PNG"
+      maxSize={10_000_000}
+      maxFiles={6}
+    />
   );
 }

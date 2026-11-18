@@ -30,3 +30,19 @@
 .icons {
   gap: var(--ui-space-6);
 }
+
+/* A drop zone that is the card: it fills the cell, so its corners are the
+   card's. Its label stays as the name, read but not shown. */
+.fill.fill {
+  --upload-height: 320px;
+  width: 100%;
+}
+
+.fill > span:first-child {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
