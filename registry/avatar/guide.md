@@ -83,8 +83,8 @@ The circle is `size` square from the first render, so a photo arriving
 moves nothing. The letters are drawn in a 40-unit SVG, like an icon, so
 they scale with the circle instead of adding type sizes: two letters at
 15 units, one at 19. A hairline in `--ui-border` sits inside the
-edge, over the photo, so a white background in a photo doesn't melt into a
-white surface.
+edge of initials and the placeholder; once a photo has loaded
+(`data-status="loaded"`) it goes, since a photo has its own edge.
 
 In a group, each circle overlaps the one before it by a fifth of its
 width, with a 2px ring in the surface color, so the overlap reads as a

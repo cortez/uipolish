@@ -41,6 +41,11 @@
   pointer-events: none;
 }
 
+/* A photo has its own edge: the rim is only for initials and the placeholder. */
+.avatar[data-status="loaded"]::after {
+  content: none;
+}
+
 .letters,
 .image {
   grid-area: 1 / 1;
