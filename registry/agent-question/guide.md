@@ -99,6 +99,12 @@ make isn't one.
 **History.** A question that's already answered when it mounts shows as its
 line with no motion. Pass `answer` so it can say what was chosen.
 
+## Layout
+
+The card has the large corner (`--ui-radius-lg`). The choices sit 8px in
+from its edge, so their corner is concentric with it (16 − 8 = 8px); the
+question and the footer keep a 16px inset.
+
 ## Motion
 
 | What | Duration | Easing |

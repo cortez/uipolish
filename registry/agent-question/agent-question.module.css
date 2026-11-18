@@ -55,10 +55,14 @@
 
 /* ---------- Card ---------- */
 
+/* The choices sit 8px in, so their corner is concentric with the card's
+   (16 − 8 = 8); the question and the footer keep a 16px inset. */
 .card {
+  --card-gap: var(--ui-space-2);
+  --card-text: calc(var(--ui-space-4) - var(--card-gap));
   display: grid;
   gap: var(--ui-space-4);
-  padding: var(--ui-space-4);
+  padding: var(--card-gap);
   border-radius: var(--ui-radius-lg);
   background: var(--ui-surface);
   box-shadow: var(--ui-shadow-resting);
@@ -67,6 +71,7 @@
 .heading {
   display: grid;
   gap: var(--ui-space-1);
+  padding: var(--card-text) var(--card-text) 0;
 }
 
 .eyebrow {
@@ -102,7 +107,7 @@
   gap: var(--ui-space-2);
 }
 
-/* Inset by the card's padding, so its corner is the card's less that padding. */
+/* Inset by the card's 8px gap, so its corner is the card's less that gap. */
 .choice {
   --choice-pad: var(--ui-space-3);
   --control-size: 16px;
@@ -112,7 +117,7 @@
   align-items: flex-start;
   gap: var(--ui-space-3);
   padding: var(--choice-pad);
-  border-radius: calc(var(--ui-radius-lg) - var(--ui-space-4));
+  border-radius: calc(var(--ui-radius-lg) - var(--card-gap));
   background: transparent;
   box-shadow: inset 0 0 0 var(--ui-hairline) var(--choice-edge);
   cursor: pointer;
@@ -329,6 +334,7 @@
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--ui-space-3);
+  padding: 0 var(--card-text) var(--card-text);
 }
 
 .message {
