@@ -69,6 +69,11 @@ mode for free.
   Two rings stack into a heavier line, and an inset ring plus an outer one
   draws a double edge. Pick a real `border` or a ring
   `box-shadow` per box, never both.
+- **"On" is ink, like the primary button.** A ticked checkbox, a chosen
+  radio, a switch that's on and a slider's range fill with
+  `--ui-control-on` (the ink), with marks in `--ui-on-control-on`; a
+  pressed chip or a selected row takes the neutral selected fill. The
+  accent is for links, focus and status, not for "on".
 - **What floats is glass.** Menus, popovers, lists under a field and
   hover cards fill with `--ui-surface-floating`, set
   `backdrop-filter: var(--ui-blur-floating)` and put `--ui-glass-edge`

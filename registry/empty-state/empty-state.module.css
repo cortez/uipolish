@@ -18,7 +18,7 @@
    --art-size is its width in px as a plain number, so strokes can be divided
    by the scale and stay at icon weight on screen. */
 .art {
-  --art-size: 196;
+  --art-size: 144;
   --art-width: calc(var(--art-size) * 1px);
   --art-step: calc(var(--ui-dur-instant) / 2);
   display: block;
@@ -30,7 +30,7 @@
 }
 
 .root[data-size="page"] .art {
-  --art-size: 264;
+  --art-size: 200;
   margin-bottom: var(--ui-space-5);
 }
 

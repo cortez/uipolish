@@ -17,10 +17,7 @@
   --data-table-edge: var(--ui-space-4);
   --data-table-fade: var(--ui-space-6);
   /* Mixed into the surface, not translucent, so sticky cells stay opaque. */
-  --data-table-selected: light-dark(
-    color-mix(in oklch, var(--ui-accent) 7%, var(--ui-surface)),
-    color-mix(in oklch, var(--ui-accent) 15%, var(--ui-surface))
-  );
+  --data-table-selected: var(--ui-fill-solid);
 
   position: relative;
   isolation: isolate;

@@ -96,8 +96,8 @@
 }
 
 .option[data-checked] .radio {
-  --radio-edge: var(--ui-accent);
-  background: var(--ui-accent);
+  --radio-edge: var(--ui-control-on);
+  background: var(--ui-control-on);
 }
 
 .control::before {
@@ -106,7 +106,7 @@
   inset: calc((var(--radio-size) - 6px) / 2);
   z-index: 1;
   border-radius: 50%;
-  background: var(--ui-on-accent);
+  background: var(--ui-on-control-on);
   clip-path: circle(0 at 50% 50%);
   pointer-events: none;
   transition: clip-path var(--ui-dur-instant) var(--ui-ease-exit);

@@ -2,7 +2,7 @@
   "name": "slider",
   "title": "Slider",
   "summary": "A label row with a steady-width value over a sunken track, an accent range and a raised capsule thumb that glides to place. Base UI's slider underneath handles pointer, keyboard and touch.",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "dependencies": [
     "text-morph"
   ],

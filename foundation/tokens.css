@@ -236,6 +236,12 @@
   --ui-on-ink: light-dark(oklch(0.99 0 0), oklch(0.17 0 0));
   /* Secondary text on ink (a shortcut in a tooltip): the muted step. */
   --ui-on-ink-muted: color-mix(in oklch, var(--ui-on-ink) 60%, var(--ui-ink));
+  /* A control that's on (a ticked checkbox, a chosen radio, a switch, a
+     slider's range) fills with the primary button's ink, so the controls
+     read as one set with buttons and fields. Point it at --ui-accent for a
+     colored "on". */
+  --ui-control-on: var(--ui-ink);
+  --ui-on-control-on: var(--ui-on-ink);
   /* Each theme has its own tuned hues; fills and icons hold 3:1, text 4.5:1. */
   --ui-accent: light-dark(oklch(0.55 0.22 262), oklch(0.6 0.19 258));
   --ui-on-accent: oklch(0.99 0 0);

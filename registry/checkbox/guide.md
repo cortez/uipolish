@@ -67,8 +67,8 @@ under the parent's label.
 | State | What you see | How |
 |---|---|---|
 | Empty | Surface fill, hairline edge | |
-| Checked | Accent fill, tick in the color that reads on it | `data-state="on"` |
-| Mixed | Accent fill, dash | `indeterminate` → `data-state="mixed"` |
+| Checked | `--ui-control-on` fill (the primary button's ink), tick in `--ui-on-control-on` | `data-state="on"` |
+| Mixed | `--ui-control-on` fill, dash | `indeterminate` → `data-state="mixed"` |
 | Hover | Edge one step darker; a filled box one step lighter | `@media (hover: hover)`, anywhere on the row |
 | Press | Fill one step further, in 80ms | `:active` |
 | Focus | A line just inside the box's edge, instantly | `:focus-visible` |

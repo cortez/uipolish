@@ -47,15 +47,16 @@ the space the content would take.
 
 | | Compact | Page |
 |---|---|---|
-| Drawing | 196 × 144 | 264 × 194 |
+| Drawing | 144 × 106 | 200 × 147 |
 | Title | `--ui-text-md`, 500 | `--ui-text-2xl`, 600 |
 | Sentence | `--ui-text-md`, muted, at most 36ch | at most 40ch |
 | Padding | 32px top and bottom | 64px |
 
 - **The drawing.** An isometric drawing on the 2:1 pixel grid (one unit
   across, half a unit down), so its straight edges stay clean at 1x and 2x.
-  It's the focal point, so it's big: 196px wide in a panel, 264px on a
-  page (never wider than its space). Pick the one that names the space:
+  It sets the scene without taking over: 144px wide in a panel, 200px on a
+  page (never wider than its space), so the title and the action stay the
+  first thing read. Pick the one that names the space:
 
   | `art` | Drawing | For |
   |---|---|---|

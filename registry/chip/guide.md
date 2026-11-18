@@ -3,7 +3,7 @@
 Two kinds of small pill for a row of choices. A **toggle chip** is a filter
 that stays on or off: a real `<button aria-pressed>`. Off, it shows a plus;
 pressed, the plus's two bars swing into a check, so on and off differ by
-shape as well as by the accent tint, and the chip never changes width. A **removable chip** is a value already chosen, with its own remove
+shape as well as by its fill, and the chip never changes width. A **removable chip** is a value already chosen, with its own remove
 button named for what it removes ("Remove Vegan"). In a `ChipGroup`, a
 removed chip fades out, the chips after it slide into its place, and focus
 moves to the remove button that took its place.
@@ -66,8 +66,8 @@ moves to the remove button that took its place.
 | State | What you see | How |
 |---|---|---|
 | Off | Surface fill, hairline edge, muted plus | |
-| On | Accent tint, accent edge and text, a check where the plus was | `aria-pressed="true"` |
-| Hover | Fill and edge one step darker (on: the fill steps, the accent edge holds); the plus takes the text color | `@media (hover: hover)` |
+| On | The selected fill (`--ui-fill-strong-solid`) and edge (`--ui-field-focus`), text in the text color, a check where the plus was | `aria-pressed="true"` |
+| Hover | Fill and edge one step darker (on: the fill steps, the edge holds); the plus takes the text color | `@media (hover: hover)` |
 | Press | Fill another step darker in 80ms; nothing moves, so a row of chips stays still | `:active` on a layer under the label |
 | Focus | A line just inside the edge, in the label's color, at once | `:focus-visible` |
 | Disabled | 50%, no hover or press; say why next to the row | native `disabled` |

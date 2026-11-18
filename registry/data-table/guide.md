@@ -92,7 +92,7 @@ the sort and the validation pass rerun when it changes.
 | Active row | The row a step darker while the grid has focus | `data-active` |
 | Sorted column | Header label at full contrast, arrow shown | `aria-sort` on the header |
 | Sort hover | Header filled a step, an unsorted column previews its arrow at half strength | `@media (hover: hover)` |
-| Selected row | A pale accent tint, opaque under the sticky column | `aria-selected` |
+| Selected row | The quiet fill (`--ui-fill-solid`), opaque under the sticky column | `aria-selected` |
 | Some selected | Select-all shows its dash | Checkbox `indeterminate` |
 | Resize edge | A short hairline at every header edge; it lengthens under the pointer and turns full contrast while dragged or focused | `role="separator"` |
 | Needs a look | Text in the danger color and an alert mark on the side away from the alignment edge | `validate`; `aria-invalid` |

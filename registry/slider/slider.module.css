@@ -11,7 +11,7 @@
   /* The switch's thumb: the raised surface in light, a light gray in dark,
      where a knob the color of the surface would read as a hole. */
   --slider-knob: light-dark(var(--ui-surface), color-mix(in oklch, var(--ui-foreground) 86%, var(--ui-surface)));
-  --slider-range: var(--ui-accent);
+  --slider-range: var(--ui-control-on);
   display: grid;
   min-width: 0;
   font-family: var(--ui-font-sans);

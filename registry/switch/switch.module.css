@@ -54,10 +54,10 @@
 
 /* On: the accent, as on a checked checkbox and a slider's range. */
 .root:has(.track[data-checked]) {
-  --switch-track: var(--ui-accent);
-  --switch-track-hover: color-mix(in oklch, var(--ui-accent) 86%, var(--ui-on-accent));
-  --switch-track-press: color-mix(in oklch, var(--ui-accent) 78%, var(--ui-on-accent));
-  --switch-thumb: var(--ui-on-accent);
+  --switch-track: var(--ui-control-on);
+  --switch-track-hover: color-mix(in oklch, var(--ui-control-on) 86%, var(--ui-on-control-on));
+  --switch-track-press: color-mix(in oklch, var(--ui-control-on) 78%, var(--ui-on-control-on));
+  --switch-thumb: var(--ui-on-control-on);
 }
 
 /* With no text its baseline is its bottom edge; the shift centers it on the first line's capitals. */
@@ -116,8 +116,8 @@
 /* On: the accent fill is its own edge, like a checked checkbox, so no gray
    ring haloes the blue in dark mode. */
 .track[data-checked] {
-  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-accent);
-  color: var(--ui-on-accent);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-control-on);
+  color: var(--ui-on-control-on);
   transition-duration: var(--ui-dur-fast);
 }
 
@@ -147,7 +147,7 @@
   inset-inline-end: var(--switch-pad);
   /* On the accent, the thumb needs no ring: its light fill is the edge. */
   box-shadow: var(--ui-shadow-control);
-  color: var(--ui-accent);
+  color: var(--ui-control-on);
 }
 
 /* Press: the thumb reaches toward its new side at once; the release glides on from there. */
