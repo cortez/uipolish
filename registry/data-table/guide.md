@@ -76,7 +76,7 @@ Each column:
 | `value` | What it sorts on. Defaults to `row[key]`. Numbers and dates sort as such, text naturally ("Table 2" before "Table 10") |
 | `compare` | Your own ascending order, when `value` isn't enough |
 | `width`, `minWidth`, `maxWidth` | 160, 72 and 640 by default |
-| `align` | `end` for numbers: right-aligned on their last digit, in tabular figures, with the sort arrow on the far side of the label |
+| `align` | `end` for numbers: right-aligned on their last digit, with the sort arrow on the far side of the label. Text cells (the default, or a `cell` that returns a string) set their digits in tabular figures; in a `cell` that returns an element, put `font-variant-numeric: tabular-nums` on the number yourself |
 | `sortable` | The header becomes a sort button |
 | `resizable` | `false` to fix the width. On by default |
 | `validate` | Returns a message when the cell needs a look, or nothing |

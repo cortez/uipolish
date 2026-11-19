@@ -38,7 +38,7 @@ export type DataTableColumn<Row> = {
   minWidth?: number;
   /** Defaults to 640. */
   maxWidth?: number;
-  /** `end` for numbers (tabular figures). */
+  /** `end` for numbers: right-aligned, digits in tabular figures. */
   align?: "start" | "end";
   sortable?: boolean;
   /** Custom ascending comparator. */
@@ -341,7 +341,7 @@ export function DataTable<Row>({
     const viewport = viewportRef.current;
     if (!viewport) return;
     measure();
-      const frame = requestAnimationFrame(() => viewport.setAttribute("data-ready", ""));
+    const frame = requestAnimationFrame(() => viewport.setAttribute("data-ready", ""));
     const observer = new ResizeObserver(measure);
     observer.observe(viewport);
     viewport.addEventListener("scroll", measure, { passive: true });
@@ -719,13 +719,25 @@ export function DataTable<Row>({
  *  When its text is cut, the full value is its title, so it's never lost. */
 function CellValue<Row>({ column, row }: { column: DataTableColumn<Row>; row: Row }) {
   const content = renderCell(column, row);
+  const text = typeof content === "string" ? content : undefined;
   return (
-    <span
-      className={styles.value}
-      title={typeof content === "string" ? content : undefined}
-    >
-      {content}
+    <span className={styles.value} title={text}>
+      {text !== undefined && column.align === "end" ? figures(text) : content}
     </span>
+  );
+}
+
+/** Equal-width figures on the digits alone: on the whole cell, some fonts
+ *  would widen every space in "12 of 40" too. */
+function figures(text: string): ReactNode {
+  return text.split(/(\d+)/).map((part, i) =>
+    i % 2 ? (
+      <span key={i} className={styles.figure}>
+        {part}
+      </span>
+    ) : (
+      part
+    ),
   );
 }
 
@@ -831,7 +843,7 @@ function HeaderCell<Row>({ id, column, col, width, sort, isActive, onSort, onRes
 
   const label = (
     <>
-      <span className={styles.headLabel} title={typeof column.header === "string" ? column.header : undefined}>
+      <span className={styles.headLabel} title={column.header}>
         {column.header}
       </span>
       {column.sortable && <Icon name={arrow} className={styles.sortIcon} />}

@@ -7,11 +7,17 @@
   --switch-pad: 3px;
   --switch-hit: var(--ui-control-md);
   --switch-thumb-h: calc(var(--switch-h) - var(--switch-pad) * 2);
-  /* A capsule, like every pressable thing: wider than tall. */
-  --switch-thumb-w: calc(var(--switch-thumb-h) * var(--ui-capsule));
+  /* A capsule, like every pressable thing: wider than tall.
+     A whole pixel, so the thumb is as sharp at the far end as at the near one. */
+  --switch-thumb-w: round(var(--switch-thumb-h) * var(--ui-capsule), 1px);
   --switch-travel: calc(var(--switch-w) - var(--switch-thumb-w) - var(--switch-pad) * 2);
-  /* How far a press stretches the thumb toward its new side. */
-  --switch-reach: 3px;
+  /* How far a press stretches the thumb toward its new side: 3px, as a
+     ratio of its width, because the stretch is a scale. */
+  --switch-stretch: calc(28 / 25);
+  --switch-reach: calc(var(--switch-thumb-w) * (var(--switch-stretch) - 1));
+  --switch-thumb-r: min(var(--ui-radius-control), var(--switch-thumb-h) / 2);
+  /* 1 left to right, -1 right to left: which way "on" is. */
+  --switch-dir: 1;
 
   /* Off: the segmented control's track and pill. The track takes the strong
      fill: with no labels in it, the faint one barely reads as a control. */
@@ -42,6 +48,11 @@
   --switch-w: 36px;
   --switch-pad: 2px;
   --switch-hit: var(--ui-control-sm);
+  --switch-stretch: calc(25 / 22);
+}
+
+:is([dir="rtl"]) .root {
+  --switch-dir: -1;
 }
 
 .root[data-side="end"] {
@@ -69,8 +80,6 @@
   height: var(--switch-h);
   margin-top: calc(var(--optical) * -1);
   translate: 0 var(--optical);
-  /* The thumb animates insets; this keeps that layout contained. */
-  contain: layout;
 }
 
 /* Without the `cap` unit (Safari before 17.2) --optical is invalid and the
@@ -121,46 +130,66 @@
   transition-duration: var(--ui-dur-fast);
 }
 
-/* Raised, like the segmented control's pill: placed by its two edges, so a
-   press can stretch it toward its new side; logical insets cover RTL. */
+/* The thumb crosses the track with `translate`, on the compositor, so it
+   keeps gliding while the page re-renders around the change. It only places
+   the surface drawn in it, and its glide never changes duration: a tap on a
+   phone is still :active when the state flips. */
 .thumb {
   position: absolute;
   top: var(--switch-pad);
   bottom: var(--switch-pad);
   inset-inline-start: var(--switch-pad);
-  inset-inline-end: calc(var(--switch-pad) + var(--switch-travel));
-  border-radius: var(--ui-radius-control);
+  width: var(--switch-thumb-w);
+  color: var(--ui-muted);
+  pointer-events: none;
+  transition: translate var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+.thumb[data-checked] {
+  translate: calc(var(--switch-travel) * var(--switch-dir)) 0;
+  color: var(--ui-control-on);
+}
+
+/* Raised, like the segmented control's pill. A press stretches it with
+   `scale` from its trailing edge. */
+.thumb::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--switch-thumb-r);
   background: var(--switch-thumb);
   box-shadow:
     0 0 0 var(--ui-hairline) var(--ui-border-strong),
     var(--ui-shadow-control);
-  color: var(--ui-muted);
-  pointer-events: none;
+  transform-origin: 0 50%;
   transition:
-    inset-inline-start var(--ui-dur-glide) var(--ui-ease-glide),
-    inset-inline-end var(--ui-dur-glide) var(--ui-ease-glide),
+    translate var(--ui-dur-glide) var(--ui-ease-glide),
+    scale var(--ui-dur-glide) var(--ui-ease-glide),
+    border-radius var(--ui-dur-glide) var(--ui-ease-glide),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
-.thumb[data-checked] {
-  inset-inline-start: calc(var(--switch-pad) + var(--switch-travel));
-  inset-inline-end: var(--switch-pad);
-  /* On the accent, the thumb needs no ring: its light fill is the edge. */
-  box-shadow: var(--ui-shadow-control);
-  color: var(--ui-control-on);
+:is([dir="rtl"]) .root .thumb::before {
+  transform-origin: 100% 50%;
 }
 
-/* Press: the thumb reaches toward its new side at once; the release glides on from there. */
-.root:active:not([data-disabled], [data-busy]) .thumb {
+/* On the accent, the thumb needs no ring: its light fill is the edge. */
+.thumb[data-checked]::before {
+  box-shadow: var(--ui-shadow-control);
+}
+
+/* Press: the thumb reaches toward its new side at once; the release glides
+   on from there. The ends' radius narrows by the same ratio the scale
+   widens them, so they stay round while it stretches. */
+.root:active:not([data-disabled], [data-busy]) .thumb::before {
+  scale: var(--switch-stretch) 1;
+  border-radius: calc(var(--switch-thumb-r) / var(--switch-stretch)) / var(--switch-thumb-r);
   transition-duration: var(--ui-dur-press);
 }
 
-.root:active:not([data-disabled], [data-busy]) .thumb[data-unchecked] {
-  inset-inline-end: calc(var(--switch-pad) + var(--switch-travel) - var(--switch-reach));
-}
-
-.root:active:not([data-disabled], [data-busy]) .thumb[data-checked] {
-  inset-inline-start: calc(var(--switch-pad) + var(--switch-travel) - var(--switch-reach));
+/* On, it's held at its far edge, so it reaches back from there. */
+.root:active:not([data-disabled], [data-busy]) .thumb[data-checked]::before {
+  translate: calc(var(--switch-reach) * var(--switch-dir) * -1) 0;
 }
 
 @media (hover: hover) {
@@ -240,15 +269,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .thumb,
-  .root:active:not([data-disabled], [data-busy]) .thumb {
+  .thumb {
+    transition: none;
+  }
+  .thumb::before,
+  .root:active:not([data-disabled], [data-busy]) .thumb::before {
+    translate: none;
+    scale: none;
+    border-radius: var(--switch-thumb-r);
     transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
-  }
-  .root:active:not([data-disabled], [data-busy]) .thumb[data-unchecked] {
-    inset-inline-end: calc(var(--switch-pad) + var(--switch-travel));
-  }
-  .root:active:not([data-disabled], [data-busy]) .thumb[data-checked] {
-    inset-inline-start: calc(var(--switch-pad) + var(--switch-travel));
   }
   /* The dot stays, still and a little dimmer, so the meaning does too. */
   .root[data-busy-shown] .thumb::after {

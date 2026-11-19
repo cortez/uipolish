@@ -15,7 +15,7 @@ Command palette use it.
 
 **Sizes.** The icon draws at `--ui-icon-md` (16px). Size it to the text
 it sits with, from the scale only: `--ui-icon-md` beside 14-16px text and in
-every control, `--ui-icon-sm` (14px) beside 13px text, `--ui-icon-xs` (12px)
+every control, `--ui-icon-sm` (14px) beside 12px text, `--ui-icon-xs` (12px)
 for a tiny mark in a node or badge, `--ui-icon-lg` (20px) for a glyph alone
 in a tile. Every chevron in the same role is the same size.
 
@@ -86,8 +86,8 @@ in a tile. Every chevron in the same role is the same size.
   opens a gap just ahead of it. The mask id comes from `useId()`.
 - **Stroke weight.** The root reads `stroke-width: var(--ui-icon-stroke, 1.5)`.
   Set `--ui-icon-stroke` on the control to the token for its label's weight
-  (`--ui-icon-stroke-regular` beside 400 text, `-medium` beside 500,
-  `-semibold` beside 600) and every icon inside matches. See
+  (`--ui-icon-stroke-regular` beside 400 text, `-medium` beside 500)
+  and every icon inside matches. See
   `foundation/rules/typography.md`, "Icons beside text".
 - **Parent hover, no JS.** The 1px nudges react to the nearest `button`, `a`,
   `[role="button"]` or `[role="menuitem"]` being hovered (behind

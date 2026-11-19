@@ -7,6 +7,7 @@
 /* Equal-width figures on the digits alone, so a digit that rolls never
    changes the width. Never on the whole label: in some fonts the tabular
    feature also widens the space, and every word gap would grow. */
+.digits,
 .glyph[data-digit],
 .ghost[data-digit] {
   font-variant-numeric: tabular-nums;

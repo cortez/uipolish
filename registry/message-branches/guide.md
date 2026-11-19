@@ -49,7 +49,7 @@ moved toward, and the box eases to the new height.
 
 | State | What you see | How |
 |---|---|---|
-| Rest | Muted 16px chevrons on 32px capsules around "2 / 3" in 13px tabular figures; the note after it in the same muted 13px | |
+| Rest | Muted 16px chevrons on 32px capsules around "2 / 3" in 12px text, its figures tabular; the note after it in the same muted 12px | |
 | Hover | The chevron darkens, a 6% fill appears | `@media (hover: hover)` |
 | Press | The fill darkens and shrinks to `--ui-scale-press`; the chevron never moves | Button `:active` |
 | First / last | Previous or Next at 50% with no hover or press. It stays focusable, so focus doesn't drop to the page when you reach the end | `aria-disabled` |

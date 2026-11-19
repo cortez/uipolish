@@ -28,7 +28,7 @@ export function NumberInputPreview() {
           <NumberInput label="Rate" value={rate} onValueChange={setRate} min={0} step={5} format={USD} className={styles.wide} />
           <p className={styles.total}>
             <span className={base.note}>Line total</span>
-            <span className={styles.amount}>{new Intl.NumberFormat(undefined, USD).format(hours * rate)}</span>
+            <span className={styles.amount}>{new Intl.NumberFormat("en-US", USD).format(hours * rate)}</span>
           </p>
         </div>
         <NumberInput label="Printed menus" defaultValue={2} min={1} max={5} disabled hint="Printing opens once the menu is final." />

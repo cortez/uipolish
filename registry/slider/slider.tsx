@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Slider as BaseSlider } from "@base-ui/react/slider";
 import { TextMorph } from "../text-morph/text-morph";
 import styles from "./slider.module.css";
@@ -78,7 +78,8 @@ export function Slider({
   const [widest, setWidest] = useState(() => candidates.reduce((a, b) => (b.length > a.length ? b : a)));
   const valueRef = useRef<HTMLSpanElement>(null);
 
-  // Not every font has tabular figures, so measure the candidates in the readout's own font.
+  // Not every font has tabular figures, so measure the candidates in the readout's own font,
+  // drawn as the readout draws them: equal-width digits, everything else as it is.
   useLayoutEffect(() => {
     const host = valueRef.current;
     if (!host) return;
@@ -89,7 +90,15 @@ export function Slider({
       let best = candidates[0];
       let bestWidth = -1;
       for (const text of candidates) {
-        probe.textContent = text;
+        probe.replaceChildren(
+          ...text.split(DIGITS).map((part, i) => {
+            if (i % 2 === 0) return part;
+            const figure = document.createElement("span");
+            figure.className = styles.figure;
+            figure.textContent = part;
+            return figure;
+          }),
+        );
         const width = probe.getBoundingClientRect().width;
         if (width > bestWidth) [best, bestWidth] = [text, width];
       }
@@ -145,8 +154,8 @@ export function Slider({
       <div className={styles.header}>
         <BaseSlider.Label className={styles.label}>{label}</BaseSlider.Label>
         <span ref={valueRef} className={styles.value} aria-hidden="true">
-          <span className={styles.sizer}>{widest}</span>
-          <span className={styles.shown}>{morph && !following ? <TextMorph>{shown}</TextMorph> : shown}</span>
+          <span className={styles.sizer}>{figures(widest)}</span>
+          <span className={styles.shown}>{morph && !following ? <TextMorph>{shown}</TextMorph> : figures(shown)}</span>
         </span>
       </div>
       <BaseSlider.Control
@@ -170,6 +179,13 @@ export function Slider({
       </BaseSlider.Control>
     </BaseSlider.Root>
   );
+}
+
+const DIGITS = /(\d+)/;
+
+/** Equal-width figures on the digits alone: on the whole readout, some fonts widen its spaces too. */
+function figures(text: string): ReactNode {
+  return text.split(DIGITS).map((part, i) => (i % 2 ? <span key={i} className={styles.figure}>{part}</span> : part));
 }
 
 function pointOf(event: Event) {

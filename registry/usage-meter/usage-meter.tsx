@@ -188,7 +188,17 @@ function Reserve({ widest, children, className }: { widest: string; children: Re
   return (
     <span className={className ? `${styles.reserve} ${className}` : styles.reserve}>
       <span className={styles.sizer} aria-hidden="true">
-        {widest}
+        {/* Equal-width digits, like the figure the text morph draws over it; on the
+            digits alone, since some fonts widen a space ("3,40 €") with them. */}
+        {widest.split(/(\d+)/).map((part, i) =>
+          i % 2 ? (
+            <span key={i} className={styles.digits}>
+              {part}
+            </span>
+          ) : (
+            part
+          ),
+        )}
       </span>
       <span className={styles.reserved}>{children}</span>
     </span>

@@ -41,7 +41,6 @@
   flex-shrink: 0;
   justify-items: end;
   color: var(--ui-muted);
-  font-variant-numeric: tabular-nums;
   white-space: nowrap;
   pointer-events: none;
   transition: color var(--ui-dur-instant) var(--ui-ease-color);
@@ -54,6 +53,12 @@
 
 .sizer {
   visibility: hidden;
+}
+
+/* Equal-width figures on the digits alone, as the text morph sets its own:
+   on the whole readout, some fonts widen the space in "3 people" too. */
+.figure {
+  font-variant-numeric: tabular-nums;
 }
 
 /* Base UI's Slider.Control: a press anywhere on the row sets the value, a drag follows. */

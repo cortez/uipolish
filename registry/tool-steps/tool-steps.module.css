@@ -330,10 +330,15 @@ button.title:active {
   margin-inline-start: auto;
   color: var(--ui-subtle);
   font-size: var(--ui-text-sm);
-  font-variant-numeric: tabular-nums;
   white-space: nowrap;
   min-width: 5ch;
   text-align: end;
+}
+
+/* A ticking time in equal-width figures. On each figure, never the line:
+   some fonts widen the space in "1m 14s" with it. */
+.figure {
+  font-variant-numeric: tabular-nums;
 }
 
 .detail {

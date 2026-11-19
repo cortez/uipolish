@@ -1,4 +1,4 @@
-/* An assistant's reply at chat scale: 15px text on a 1.6 line, blocks 12
+/* An assistant's reply at chat scale: 14px text on a 1.5 line, blocks 12
    apart, headings, code and tables given more room. The first and last
    blocks carry no outer margin, so it sits flush in a bubble. */
 .root {
@@ -54,8 +54,8 @@
 
 /* ---------- Headings ---------- */
 
-/* Four sizes at most (typography.md): # is the 22px heading step, ## and
-   ### the body size in a heavier weight, #### a muted label. */
+/* # is the Title style; ## and ### are the Body style with more room
+   above; #### is a muted label (typography.md: three styles, two weights). */
 .heading {
   color: var(--ui-foreground);
   font-size: var(--ui-text-md);
@@ -67,6 +67,7 @@
 
 .heading[data-depth="1"] {
   font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-title);
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-heading);
 }
@@ -237,7 +238,6 @@ ol.list {
 .table table {
   width: 100%;
   border-collapse: collapse;
-  font-variant-numeric: tabular-nums;
   line-height: var(--ui-leading-md);
 }
 

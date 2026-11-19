@@ -126,10 +126,6 @@
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
-.titleText {
-  font-variant-numeric: tabular-nums;
-}
-
 .nav {
   composes: inset from "../field/field.module.css";
 }
@@ -247,14 +243,16 @@
   background: currentColor;
 }
 
+/* A chosen day is a control that's on: the ink every checkbox, radio and
+   switch fills with (--ui-control-on), not a hue of its own. */
 .day[data-selected] {
-  color: var(--ui-on-accent);
+  color: var(--ui-on-control-on);
   font-weight: var(--ui-weight-medium);
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
 .day[data-selected]::before {
-  background: var(--ui-accent);
+  background: var(--ui-control-on);
 }
 
 .day[aria-disabled] {

@@ -19,17 +19,18 @@ export function ProgressPreview() {
 
   function send() {
     window.clearInterval(timer.current);
+    // Counted here, not in the state updater: an updater runs twice in
+    // strict mode, and the second pass would stop the timer a step early.
+    let count = 0;
     setSent(0);
     setRunning(true);
     timer.current = window.setInterval(() => {
-      setSent((n) => {
-        const next = Math.min(TOTAL, n + 1 + Math.floor(Math.random() * 4));
-        if (next >= TOTAL) {
-          window.clearInterval(timer.current);
-          setRunning(false);
-        }
-        return next;
-      });
+      count = Math.min(TOTAL, count + 1 + Math.floor(Math.random() * 4));
+      setSent(count);
+      if (count >= TOTAL) {
+        window.clearInterval(timer.current);
+        setRunning(false);
+      }
     }, 280);
   }
 

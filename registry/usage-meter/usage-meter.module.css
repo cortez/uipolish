@@ -21,7 +21,6 @@
   color: var(--ui-muted);
   isolation: isolate;
   font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
-  font-variant-numeric: tabular-nums;
   white-space: nowrap;
   cursor: pointer;
   user-select: none;
@@ -160,6 +159,12 @@
 .reserve {
   display: inline-grid;
   justify-items: end;
+}
+
+/* Equal-width figures on the digits alone, never on text that can hold a
+   space: some fonts widen the space with them. The figures that change are
+   drawn by the text morph, which does the same. */
+.digits {
   font-variant-numeric: tabular-nums;
 }
 
@@ -247,7 +252,6 @@
 }
 
 .used {
-  font-variant-numeric: tabular-nums;
   font-size: var(--ui-text-2xl);
   font-weight: var(--ui-weight-title);
   line-height: var(--ui-leading-2xl);
@@ -261,7 +265,6 @@
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
   line-height: var(--ui-leading-sm);
-  font-variant-numeric: tabular-nums;
 }
 
 .percent {
@@ -385,7 +388,6 @@
 
 .amount {
   color: var(--ui-muted);
-  font-variant-numeric: tabular-nums;
   text-align: end;
   white-space: nowrap;
 }
@@ -441,7 +443,6 @@
 }
 
 .figures {
-  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 

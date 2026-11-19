@@ -35,7 +35,6 @@
 .affix {
   color: var(--ui-muted);
   font-size: var(--ui-text-md);
-  font-variant-numeric: tabular-nums;
   line-height: var(--ui-leading-md);
   white-space: pre;
   user-select: none;
@@ -72,10 +71,16 @@
   grid-area: 1 / 1;
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-regular);
-  font-variant-numeric: tabular-nums;
   line-height: var(--ui-leading-md);
   text-align: center;
   --ui-icon-stroke: var(--ui-icon-stroke-regular);
+}
+
+/* Equal-width figures for the input's digits, to sit under the morph's
+   (TextMorph sets them on its digits alone, so a unit's space keeps its
+   width there). An input's text can't be split, so it takes them whole. */
+.input {
+  font-variant-numeric: tabular-nums;
 }
 
 .input {

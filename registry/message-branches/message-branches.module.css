@@ -164,14 +164,13 @@
   scale: -1 1;
 }
 
-/* "2 / 3" in tabular figures; each number holds the width of the total's
+/* "2 / 3", tabular on the figures alone; each number holds the width of the total's
    digits, so 9 → 10 never moves the next button. */
 .counter {
   display: inline-flex;
   align-items: center;
   gap: var(--ui-space-1);
   margin-inline: calc(var(--ui-space-1) * -1);
-  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
@@ -179,6 +178,7 @@
   display: inline-flex;
   justify-content: flex-end;
   min-width: calc(var(--digits, 1) * 1ch);
+  font-variant-numeric: tabular-nums;
 }
 
 .digits[data-total] {

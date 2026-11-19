@@ -499,7 +499,7 @@ export function DatePicker(props: DatePickerProps) {
                   <Icon name="chevron-left" />
                 </button>
                 <Popover.Title id={titleId} className={styles.title} aria-live="polite">
-                  <TextMorph className={styles.titleText}>{title(view)}</TextMorph>
+                  <TextMorph>{title(view)}</TextMorph>
                 </Popover.Title>
                 <button
                   type="button"

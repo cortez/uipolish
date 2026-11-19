@@ -77,8 +77,8 @@ in a table row, beside a button) it's centered like any control.
 
 | Size | Track | Thumb | Hit area |
 |---|---|---|---|
-| `md` | 44 × 24 | 18px tall capsule, 3px in | 40px (`--ui-control-md`) |
-| `sm` | 36 × 20 | 16px tall capsule, 2px in | 32px (`--ui-control-sm`) |
+| `md` | 44 × 24 | 25 × 18 capsule, 3px in | 40px (`--ui-control-md`) |
+| `sm` | 36 × 20 | 22 × 16 capsule, 2px in | 32px (`--ui-control-sm`) |
 
 The hit area is a control height, so the switch lines up with a button of
 the same size beside it, and it lays nothing out: a pseudo-element past the
@@ -98,16 +98,22 @@ on, it's `--ui-on-control-on` in both themes.
 | What | Duration | Easing |
 |---|---|---|
 | Thumb across the track | `--ui-dur-glide` (320ms) | `--ui-ease-glide`: held by the track, it lands without passing its end |
-| Press: leading edge reaches 3px | `--ui-dur-press` (80ms) | `--ui-ease-glide` |
+| Press: leading edge reaches 3px | `--ui-dur-press` (80ms); back in `--ui-dur-glide` on release | `--ui-ease-glide` |
 | Track fill and edge, together (one transition list: same start, duration and curve) | `--ui-dur-fast` turning on, `--ui-dur-instant` turning off; press in `--ui-dur-press` | `--ui-ease-color` |
 | Busy dot | fades in over `--ui-dur-fast` on `--ui-ease-enter`, breathes `--ui-dur-pulse` each way | `--ui-ease-pulse`, alternate |
 
-The thumb is placed by its two logical insets rather than moved as a block,
-so a press can stretch it toward its new side; the release glides on from
-there. The control is `contain: layout`, so the insets lay out nothing
-else, and logical insets make right-to-left free. Nothing else on the row
-moves. Under `prefers-reduced-motion: reduce` the thumb jumps and doesn't
-reach, the busy dot holds still at 70%, and the colors still change.
+The thumb moves with `translate` and the press stretches the surface drawn
+in it with `scale` from its trailing edge, its ends' radius narrowing by the
+same ratio so they stay round. Both run on the compositor: nothing lays
+out, and the glide holds its pace while the page re-renders around the
+change. The glide and the stretch are separate layers, so a tap on a phone,
+which is still pressed when the state flips, glides the full distance
+instead of snapping in the press's 80ms. Interrupted (pressed or flipped
+again midway), each carries on from where it is, and the thumb is never
+narrower than at rest. Right to left, the directions flip under any
+`[dir="rtl"]` ancestor. Nothing else on the row moves. Under
+`prefers-reduced-motion: reduce` the thumb jumps and doesn't reach, the
+busy dot holds still at 70%, and the colors still change.
 
 ## Accessibility
 

@@ -540,7 +540,7 @@
   }
 }
 
-/* Meta at the row's end (a time, faces): subtle, figures of equal width,
+/* Meta at the row's end (a time, faces): subtle,
    at least as wide as the "…", which takes its place on hover, focus, the
    current row and while the menu is open. The row keeps its padding, so
    the title never moves when the two swap. */
@@ -554,7 +554,6 @@
   color: var(--ui-subtle);
   font-size: var(--ui-text-sm);
   line-height: var(--ui-leading-sm);
-  font-variant-numeric: tabular-nums;
   transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
 }
 

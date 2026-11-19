@@ -335,7 +335,9 @@
   line-height: var(--ui-leading-sm);
 }
 
-.row[data-status="uploading"] .meta {
+/* The percentage ticks, so its digits are tabular: on the figure alone,
+   never the line, where some fonts would widen every space with it. */
+.figure {
   font-variant-numeric: tabular-nums;
 }
 

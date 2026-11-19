@@ -38,9 +38,10 @@
   white-space: nowrap;
 }
 
+/* As wide as "100%" in equal-width digits (the text morph sets those on the
+   digits alone), so the percentage's box holds from 0 to done. */
 .value[data-live] {
-  min-width: 4ch;
-  font-variant-numeric: tabular-nums;
+  min-width: 5ch;
   text-align: end;
 }
 
@@ -116,6 +117,7 @@
   overflow: hidden;
   border-radius: var(--ui-radius-control);
   background: var(--ui-fill-strong);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
 /* Clipped, not scaled, so the rounded ends stay round. */
@@ -140,7 +142,6 @@
 
 .segment[data-state="current"] {
   background: color-mix(in oklch, var(--ui-foreground) 22%, transparent);
-  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
 .caption {

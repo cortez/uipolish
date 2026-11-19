@@ -40,7 +40,8 @@ and screen readers all get a proper slider.
 ## Anatomy
 
 - **Label row:** the label (Body, medium) at the start, wrapping rather than
-  cut; the value (Body, muted, tabular figures) at the end. The value's
+  cut; the value (Body, muted, tabular figures on its digits alone, so a
+  space in "3 people" keeps its width) at the end. The value's
   cell holds the width of the widest value the slider can show (measured
   once in the readout's own font, since not every font has tabular
   figures), so dragging never moves the label or re-wraps it.

@@ -162,23 +162,43 @@ function ms(value: string) {
   return value.endsWith("ms") ? parseFloat(value) : parseFloat(value) * 1000;
 }
 
+/** Where each letter of the plain label sits, read from its text nodes. */
 function measureText(row: HTMLElement, text: string, glyphs: Glyph[]): Layout {
-  const node = row.firstChild;
   const origin = row.getBoundingClientRect().left;
   const lefts = new Map<string, number>();
   let width = 0;
-  if (node?.nodeType === Node.TEXT_NODE) {
-    const range = document.createRange();
-    let offset = 0;
-    for (const g of glyphs) {
-      range.setStart(node, offset);
-      range.setEnd(node, (offset += g.char.length));
-      const box = range.getBoundingClientRect();
-      lefts.set(g.key, box.left - origin);
-      width = Math.max(width, box.right - origin);
+  // The label is words as text and digit runs in spans, so walk every text node in order.
+  const walker = document.createTreeWalker(row, NodeFilter.SHOW_TEXT);
+  const range = document.createRange();
+  let node = walker.nextNode() as Text | null;
+  let offset = 0;
+  for (const g of glyphs) {
+    while (node && offset >= node.data.length) {
+      node = walker.nextNode() as Text | null;
+      offset = 0;
     }
+    if (!node) break;
+    range.setStart(node, offset);
+    range.setEnd(node, (offset = Math.min(node.data.length, offset + g.char.length)));
+    const box = range.getBoundingClientRect();
+    lefts.set(g.key, box.left - origin);
+    width = Math.max(width, box.right - origin);
   }
   return { text, glyphs, lefts, width };
+}
+
+const DIGIT = /\d/;
+
+/** The label as runs of digits and of everything else, so the digits alone can be tabular. */
+function runs(glyphs: Glyph[]) {
+  const out: { digit: boolean; text: string }[] = [];
+  for (const g of glyphs) {
+    const digit = DIGIT.test(g.char);
+    const last = out.at(-1);
+    if (last && last.digit === digit) last.text += g.char;
+    else out.push({ digit, text: g.char });
+  }
+  return out;
 }
 
 /** At most five changes a second, so each one is seen; the latest always lands. */
@@ -198,15 +218,18 @@ export function TextMorph({ children, className }: { children: string; className
     setResting(true);
     setState((prev) => ({ generation: prev.generation + 1, ...toGlyphs(prev.glyphs, children, prev.generation + 1) }));
   }
+  const { glyphs, roll, generation } = state;
+  // Keyed on the generation too: a change that waited its turn lands in the
+  // same render that ends the rest, so `resting` alone never changes and the
+  // next rest would have no timer to end it.
   useEffect(() => {
     if (!resting) return;
     const timer = window.setTimeout(() => setResting(false), PACE);
     return () => window.clearTimeout(timer);
-  }, [resting]);
+  }, [resting, generation]);
 
-  const { glyphs, roll } = state;
   // Plain text until the label first changes.
-  const split = state.generation > 0;
+  const split = generation > 0;
   const rowRef = useRef<HTMLSpanElement>(null);
   const ghostsRef = useRef<HTMLSpanElement>(null);
   const layout = useRef<Layout | null>(null);
@@ -284,7 +307,7 @@ export function TextMorph({ children, className }: { children: string; className
     function ghost(char: string, left: number, from: { y: number; opacity: number }) {
       const el = document.createElement("span");
       el.className = styles.ghost;
-      if (/\d/.test(char)) el.dataset.digit = "";
+      if (DIGIT.test(char)) el.dataset.digit = "";
       el.textContent = char;
       el.style.left = `${left}px`;
       ghosts!.append(el);
@@ -372,11 +395,21 @@ export function TextMorph({ children, className }: { children: string; className
       <span ref={rowRef} className={styles.row} aria-hidden="true">
         {split
           ? glyphs.map((g) => (
-              <span key={g.key} data-glyph={g.key} data-digit={/\d/.test(g.char) || undefined} className={styles.glyph}>
+              <span key={g.key} data-glyph={g.key} data-digit={DIGIT.test(g.char) || undefined} className={styles.glyph}>
                 {g.char}
               </span>
             ))
-          : shown}
+          : // Digits are tabular from the first paint, as they are once split,
+            // so the first change never shifts them.
+            runs(glyphs).map((run, i) =>
+              run.digit ? (
+                <span key={i} className={styles.digits}>
+                  {run.text}
+                </span>
+              ) : (
+                run.text
+              ),
+            )}
         <span ref={ghostsRef} className={styles.ghosts} />
       </span>
     </span>

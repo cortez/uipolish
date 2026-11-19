@@ -334,8 +334,13 @@
 
 .cell[data-align="end"] {
   justify-content: flex-end;
-  font-variant-numeric: tabular-nums;
   text-align: end;
+}
+
+/* Equal-width figures on the digits alone; on the cell they would widen
+   the spaces of any words in it as well. */
+.figure {
+  font-variant-numeric: tabular-nums;
 }
 
 .value {

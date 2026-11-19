@@ -90,6 +90,16 @@ function said(command: string, status: TerminalStatus, exitCode?: number) {
   return "";
 }
 
+/** Tabular on each figure, not the line: on "1m 14s" some fonts would widen the space too. */
+function figures(time: string) {
+  return time.split(" ").flatMap((part, i) => [
+    i ? " " : null,
+    <span key={i} className={styles.figure}>
+      {part}
+    </span>,
+  ]);
+}
+
 type CopyState = "idle" | "copied" | "failed";
 
 export function TerminalOutput({
@@ -238,7 +248,7 @@ export function TerminalOutput({
                   <span>Running</span>
                   {elapsed && (
                     <span className={styles.time} aria-hidden="true">
-                      {elapsed}
+                      {figures(elapsed)}
                     </span>
                   )}
                 </>
@@ -251,7 +261,7 @@ export function TerminalOutput({
                         ? "Failed"
                         : `Exit ${exitCode ?? 0}`}
                   </span>
-                  {duration && <span className={styles.time}>{duration}</span>}
+                  {duration && <span className={styles.time}>{figures(duration)}</span>}
                 </>
               )}
             </span>
@@ -288,9 +298,7 @@ export function TerminalOutput({
       {foldable && (
         <div className={styles.fold}>
           <Button variant="ghost" className={styles.more} onClick={toggle} aria-expanded={expanded} aria-controls={scrollerId}>
-            <span className={styles.count}>
-              {expanded ? `Show last ${collapseAfter} ${collapseAfter === 1 ? "line" : "lines"}` : `Show all ${lines.length} lines`}
-            </span>
+            {expanded ? `Show last ${collapseAfter} ${collapseAfter === 1 ? "line" : "lines"}` : `Show all ${lines.length} lines`}
           </Button>
         </div>
       )}

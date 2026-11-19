@@ -1,7 +1,7 @@
 # Number input
 
 A number with − and + buttons: guests, quantities, hours, prices. The
-field is one fixed width, the number is set in tabular figures, and a
+field is one fixed width, its digits are set in tabular figures, and a
 step rolls only the digits that changed, so nothing moves sideways; typing
 edits the real input underneath. For money and other
 values nobody steps through, the buttons come off and it reads like a text

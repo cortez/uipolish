@@ -62,7 +62,7 @@ A block that's finished doesn't render again while text arrives below it,
 and nothing above the last block moves: a held-back marker is a line that
 hasn't appeared yet, not one that appears and changes.
 
-**Typography.** Chat scale: 15px text on a 1.6 line, blocks 12px apart.
+**Typography.** Chat scale: 14px text on a 1.5 line, blocks 12px apart.
 `#` is the Title style, `##` and `###` the Body style
 with more room above, `####` a muted label. The first and last blocks have
 no outer margin, so it sits flush in a bubble or card.

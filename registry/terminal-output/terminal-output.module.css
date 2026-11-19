@@ -60,9 +60,14 @@
   --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
-/* Elapsed and duration in equal-width figures, so ticking moves nothing. */
 .time {
   color: var(--ui-subtle);
+}
+
+/* Elapsed and duration in equal-width figures, so ticking moves nothing.
+   On each figure, never the line: some fonts widen the space in "1m 14s"
+   with it. */
+.figure {
   font-variant-numeric: tabular-nums;
 }
 
@@ -156,10 +161,6 @@
   .more.more:hover {
     color: var(--ui-foreground);
   }
-}
-
-.count {
-  font-variant-numeric: tabular-nums;
 }
 
 /* ---------- Body ---------- */

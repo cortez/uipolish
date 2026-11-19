@@ -88,8 +88,10 @@ The box sits its rows 4px in, each row's corners the box's radius less
 below, so a 32px avatar fits a one-line row and a 40px one a two-line row.
 The hairline between rows is drawn on the top of the text column, so it
 starts where the text starts whatever the leading holds, and ends at the
-row's padding. Titles are 15px / 500, descriptions 13px muted, trailing
-values 15px muted with tabular figures, so values line up down the list.
+row's padding. Titles are 14px, descriptions 12px muted, trailing
+values 14px muted. Wrap a figure that should line up down the list in a
+span with `font-variant-numeric: tabular-nums`: the row doesn't set it,
+since a trailing value can hold words, and some fonts widen every space with it.
 
 When actions are last in a row, the last icon lines up with the end of
 the text in the rows around it and its round fill reaches into the row's

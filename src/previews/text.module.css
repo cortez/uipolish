@@ -25,7 +25,6 @@
   flex: none;
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-  font-variant-numeric: tabular-nums;
 }
 
 .excerpt {

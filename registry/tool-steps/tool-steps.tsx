@@ -115,7 +115,8 @@ function Step({ step, now, onRetry }: { step: ToolStep; now: number; onRetry?: (
   if (step.status === "running" && step.startedAt !== undefined) meta = formatElapsed(Math.max(0, now - step.startedAt));
   else if ((step.status === "done" || step.status === "failed") && step.startedAt !== undefined && step.finishedAt !== undefined)
     meta = formatElapsed(step.finishedAt - step.startedAt, true);
-  else if (step.status === "skipped" || step.status === "cancelled") meta = STATUS_TEXT[step.status];
+  const timed = meta !== "";
+  if (step.status === "skipped" || step.status === "cancelled") meta = STATUS_TEXT[step.status];
 
   function retry() {
     onRetry?.(step.id);
@@ -148,7 +149,15 @@ function Step({ step, now, onRetry }: { step: ToolStep; now: number; onRetry?: (
             </span>
           )}
           <span className={styles.meta} aria-hidden={step.status === "running" ? true : undefined}>
-            {meta}
+            {/* Tabular on each figure, not the line: on "1m 14s" some fonts would widen the space too. */}
+            {timed
+              ? meta.split(" ").flatMap((part, i) => [
+                  i ? " " : null,
+                  <span key={i} className={styles.figure}>
+                    {part}
+                  </span>,
+                ])
+              : meta}
           </span>
         </div>
         {step.detail && <p className={styles.detail}>{step.detail}</p>}

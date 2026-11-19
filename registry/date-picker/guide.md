@@ -46,11 +46,13 @@ The calendar follows the WAI-ARIA date picker dialog.
 
 - The field fits the date and morphs to the next one (`TextMorph`).
 - The panel's radius is the large one; everything in its corners sits
-  12px in with the radius less 12px, so the month buttons and days have
-  10px corners.
+  8px in with the radius less 8px, so the month buttons and days have
+  8px corners.
 - Always six weeks, so the panel's height never changes between months.
 - Days are 36px, 40px on touch screens. Today has a short line under the
   number.
+- A chosen day fills with `--ui-control-on`, the ink a ticked checkbox
+  takes; point that token at `--ui-accent` for a colored one.
 - A range is a band behind the days that rounds off at each week's edge.
 
 ## Motion
@@ -58,7 +60,7 @@ The calendar follows the WAI-ARIA date picker dialog.
 | What | How |
 |---|---|
 | Month changes: weeks | The new month slides 20px in from the side you moved toward (next from the right, previous from the left; mirrored in RTL) and the old one 20px out the other way, both on `--ui-ease-glide` over `--ui-dur-glide`, so neither swings past its place. The old one fades on `--ui-dur-instant` / `--ui-ease-color`; the new one fades in on `--ui-dur-fast` / `--ui-ease-enter` half a beat later, so the two months never read on top of each other |
-| Month changes: edges | The sliding weeks are clipped at the panel's edge and fade through its 12px padding (a mask), never a hard cut. At rest no day is in the fade |
+| Month changes: edges | The sliding weeks are clipped at the panel's edge and fade through its 8px padding (a mask), never a hard cut. At rest no day is in the fade |
 | Month changes: title | Morphs with `TextMorph`: "November" → "December" keeps "ember 2026" and swaps the rest |
 | Paging fast | A month interrupted mid-slide leaves from where it is, not from rest, so repeated PageDown never jumps |
 | Weekday row, panel size | Hold still. Always six weeks, so the panel's height never changes |

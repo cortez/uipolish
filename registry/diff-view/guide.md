@@ -70,7 +70,7 @@ doesn't sweep.
 
 ## Layout
 
-- Monospace at 13px on a 20px line. Line numbers are tabular and their
+- Monospace at 12px on a 20px line. Line numbers are tabular and their
   columns are sized from the largest line number, so the code starts on the
   same x on every row.
 - The tints are layered over the block's own background, so the sticky

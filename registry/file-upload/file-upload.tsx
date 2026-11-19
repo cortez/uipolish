@@ -305,9 +305,11 @@ function Row({
 }) {
   const { file, status, progress, error } = item;
   const meta =
-    status === "uploading"
-      ? `${Math.round(progress * 100)}% of ${formatBytes(file.size)}`
-      : status === "done"
+    status === "uploading" ? (
+      <>
+        <span className={styles.figure}>{Math.round(progress * 100)}</span>% of {formatBytes(file.size)}
+      </>
+    ) : status === "done"
         ? `Uploaded, ${formatBytes(file.size)}`
         : error;
 

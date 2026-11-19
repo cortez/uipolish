@@ -3,7 +3,3 @@
   font-size: var(--ui-text-2xl);
   line-height: var(--ui-leading-2xl);
 }
-
-.count {
-  font-variant-numeric: tabular-nums;
-}

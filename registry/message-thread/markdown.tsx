@@ -63,6 +63,9 @@ export function parse(source: string): Block[] {
     if (marker) {
       const kind = bullet ? "ul" : "ol";
       const content = raw.slice(marker[0].length);
+      // A marker with no words yet (the stream is between "- " and the item,
+      // or stopped there) draws nothing: no empty bullet.
+      if (!content.trim()) continue;
       const item = { start: lineStart, lines: [parseInline(content, lineStart + marker[0].length)] };
       if (current?.kind === kind) current.items.push(item);
       else {

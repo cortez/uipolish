@@ -29,7 +29,7 @@ export function TextMorphPreview() {
 
       <section className={base.group}>
         <h2 className={base.label}>Shared letters stay, the rest trade places</h2>
-        <p className={`${styles.line} ${styles.count}`}>
+        <p className={styles.line}>
           <TextMorph>{COUNTS[count]}</TextMorph>
         </p>
         <div className={base.row}>
