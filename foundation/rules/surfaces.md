@@ -354,8 +354,9 @@ behind it and dates fast. The only glass here is light, and it's one token.
   whatever is there unasked, and dialogs, drawers and sheets stay opaque.
 - Modal scrims: a plain dim, roughly black at 25–30% in light mode and
   50–55% in dark. No `backdrop-filter`.
-- Motion never blurs: letters, words and icons enter and leave with opacity
-  and a small translate, not `filter: blur()`.
+- Motion blurs only a little and only in passing: letters and panels that
+  arrive clear a 2px blur as they fade in (and take it as they leave),
+  never more, and nothing at rest is blurred.
 - Edge fades on scrollable rows are masks, not blur:
   `mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent)`.
 - If a design truly needs glass (media behind a control), one layer per

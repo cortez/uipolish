@@ -96,7 +96,7 @@ export function SegmentedControl({
 
       const moved = last && last.value !== value;
       if (!animate || !moved || !origin || !painted.current) return;
-      // The same flight as the Tabs pill: stretch, dip and draw in.
+      // The same flight as the Tabs pill: stretch and draw in.
       flyPill(indicator, origin, { start: x, length: width });
     },
     [value],
