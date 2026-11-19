@@ -46,10 +46,10 @@ more.
 
 | State | What you see | How |
 |---|---|---|
-| Rest | Panel one step off the page with the field edge color (`--ui-border-strong`) as its hairline, like any box, muted label, ghost buttons | `.block` |
+| Rest | Panel one step off the page with the field edge color (`--ui-border-strong`) as its hairline, like any box, muted label, Copy as muted text | `.block` |
 | Streaming | Each word appears once it's whole and fades in once; earlier text never moves or animates | `streaming`, `aria-busy` |
 | Overflowing | Fades on the edge(s) that have more code; scroller becomes a tab stop | `data-fade-start`, `data-fade-end`, `tabIndex={0}` |
-| Scroller focused | 2px ring around the whole block, appears instantly | `:has(.scroller:focus-visible)` |
+| Scroller focused | The 1px focus ring around the whole block, appears instantly | `:has(.scroller:focus-visible)` |
 | Copied | "Copy" morphs to "Copied" for 2s; "Copied to clipboard" is announced | `TextMorph`, `role="status"` |
 | Copy failed | Label reads "Copy failed"; the announcement says to select and copy by hand | clipboard missing or blocked |
 
@@ -60,8 +60,10 @@ more.
   comment, a template literal, a triple-quoted string), so a finished line
   gets the identical token array on every update and React skips it. Only the
   line being written re-renders.
-- New text isn't animated. Fading each chunk in would make the whole block
-  shimmer while it streams.
+- Only whole new words fade in, once each. Every line keeps its per-word
+  spans until the stream ends, so a line that finishes doesn't remount its
+  colored words and fade them in a second time; fading whole chunks or
+  whole lines would make the block shimmer while it streams.
 - No caret. The newest words fading in already show where text lands; a
   caret on every reply in a thread is motion with no cause.
 - Scroll: horizontal position is never touched. The page uses the browser's
@@ -133,14 +135,13 @@ Map the highlighter's colors to the `--code-*` properties above, or to the
 | What | Duration | Easing |
 |---|---|---|
 | Copy → Copied label morph | `--ui-dur-move` (380ms), letters out in 150ms | `--ui-ease-move` |
-| Copy outline runs into a check (`<Icon name={copied ? "check" : "copy"} />`) | see the icon set's guide | |
 | Button hover color | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Button press release | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 | Edge fades | instant | n/a |
 
 Streamed words fade in once over `--ui-dur-base`. Under
-`prefers-reduced-motion: reduce` words appear without fading, the label swaps without morphing and the
-check appears without drawing.
+`prefers-reduced-motion: reduce` words appear without fading and the label
+swaps without morphing.
 
 ## Accessibility
 
@@ -157,7 +158,7 @@ check appears without drawing.
 - Code uses `--ui-font-mono` with ligatures off (the tokens file sets
   `font-variant-ligatures: none` on code): `!=` and `=>` stay as the
   characters the user will type.
-- On coarse pointers the header buttons grow to 40px.
+- On coarse pointers Copy grows to 40px.
 
 ## Before / after
 

@@ -255,7 +255,10 @@ export function CommandPalette({
 
   const rows = groups.flatMap((g) => g.rows);
   const active = rows.find((r) => r.key === activeKey) ?? rows[0] ?? null;
-  const optionId = (key: string) => `${id}-opt-${key.replace(/[^\w-]/g, "_")}`;
+  // Group names and command ids can hold spaces, which an id (and aria-labelledby) can't.
+  const safe = (key: string) => key.replace(/[^\w-]/g, "_");
+  const optionId = (key: string) => `${id}-opt-${safe(key)}`;
+  const headingId = (key: string) => `${id}-group-${safe(key)}`;
 
   const current = (s: CommandSource) => (results[s.id]?.query === trimmed ? results[s.id] : undefined);
   const pending = trimmed ? sources.filter((s) => current(s)?.status === "loading") : [];
@@ -271,6 +274,13 @@ export function CommandPalette({
     document.getElementById(optionId(active.key))?.scrollIntoView({ block: "nearest" });
   });
 
+  // Nothing to show yet and a source still to answer: the list keeps the
+  // height it had, so it doesn't fold to nothing and reopen 300ms later.
+  const holdHeight = useRef(false);
+  useLayoutEffect(() => {
+    holdHeight.current = trimmed !== "" && rows.length === 0 && !empty && slow.length === 0;
+  });
+
   // Only the viewport's height animates, so the scroller's rows lay out once per change.
   useLayoutEffect(() => {
     const viewport = viewportRef.current;
@@ -280,7 +290,7 @@ export function CommandPalette({
     viewport.style.height = `${scroller.offsetHeight}px`;
     const frame = requestAnimationFrame(() => delete viewport.dataset.instant);
     const observer = new ResizeObserver(() => {
-      viewport.style.height = `${scroller.offsetHeight}px`;
+      if (!holdHeight.current) viewport.style.height = `${scroller.offsetHeight}px`;
     });
     observer.observe(scroller);
     return () => {
@@ -328,13 +338,14 @@ export function CommandPalette({
     }
   }
 
+  const count = `${rows.length} ${rows.length === 1 ? "result" : "results"}`;
   const status = !trimmed
     ? ""
     : empty
       ? `No results for ${trimmed}`
       : slow.length
-        ? `${rows.length} results, searching ${slow.map((s) => s.heading.toLowerCase()).join(", ")}`
-        : `${rows.length} ${rows.length === 1 ? "result" : "results"}`;
+        ? `${count}, searching ${slow.map((s) => s.heading.toLowerCase()).join(", ")}`
+        : count;
 
   // The field keeps focus whatever is pressed inside the palette.
   function keepFocus(event: ReactPointerEvent<HTMLElement>) {
@@ -385,8 +396,8 @@ export function CommandPalette({
         <div ref={scrollerRef} className={styles.scroller}>
           <div id={listId} role="listbox" aria-label={label} className={styles.listbox}>
             {groups.map((group) => (
-              <div key={group.key} role="group" aria-labelledby={`${id}-${group.key}`} className={styles.group}>
-                <div id={`${id}-${group.key}`} className={styles.heading} aria-hidden="true">
+              <div key={group.key} role="group" aria-labelledby={headingId(group.key)} className={styles.group}>
+                <div id={headingId(group.key)} className={styles.heading} aria-hidden="true">
                   {group.heading}
                 </div>
                 {group.rows.map((row) => {

@@ -175,7 +175,9 @@ export function CodeBlock({
                 text={text}
                 tokens={lineTokens?.[i]}
                 html={lineHtml?.[i]}
-                live={streaming && i === lines.length - 1}
+                // Every line, not only the last: a line that finishes keeps its
+                // word spans, so its colored words don't remount and fade in again.
+                live={streaming}
               />
             ))}
           </code>

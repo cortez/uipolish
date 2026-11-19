@@ -49,6 +49,9 @@
   gap: var(--ui-space-2);
   min-width: 0;
   padding: var(--ui-space-4) var(--ui-space-5) var(--ui-space-5);
+}
+
+.page[data-moved] {
   animation: page-in var(--ui-dur-base) var(--ui-ease-enter);
 }
 
@@ -127,7 +130,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .page {
+  .page[data-moved] {
     animation-name: page-fade;
   }
   @keyframes page-fade {

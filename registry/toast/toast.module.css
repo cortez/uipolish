@@ -60,8 +60,10 @@
   border-radius: var(--toast-radius);
   /* Light glass, like every floating surface. */
   background: var(--ui-surface-glass);
-  backdrop-filter: blur(var(--ui-glass-blur));
+  /* Prefixed first: the CSS build keeps only the last of the pair, and
+     Chrome and Firefox read the unprefixed one alone. */
   -webkit-backdrop-filter: blur(var(--ui-glass-blur));
+  backdrop-filter: blur(var(--ui-glass-blur));
   box-shadow: var(--ui-shadow-floating);
   color: var(--ui-foreground);
   clip-path: var(--toast-clip, none);

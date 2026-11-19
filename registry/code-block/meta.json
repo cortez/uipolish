@@ -3,7 +3,7 @@
   "title": "Code block",
   "summary": "Code block for AI apps that streams in without flashing or jumping. Copy, sideways scrolling for long lines and calm token-colored highlighting are built in, with no highlighter library.",
   "kit": "agent",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "dependencies": [
     "button",
     "text"

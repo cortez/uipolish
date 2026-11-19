@@ -37,8 +37,10 @@
 }
 
 /* Copy is plain text: no fill, no edge, no icon, quiet in the corner;
-   it turns to the text color on hover. */
-.action.action {
+   it turns to the text color on hover. Under .block so the padding and the
+   touch height outrank the button's own size rule in any stylesheet order
+   (doubled alone, they tied with it). */
+.block .action.action {
   --button-bg: transparent;
   --button-bg-hover: transparent;
   --button-bg-press: transparent;
@@ -47,7 +49,7 @@
 }
 
 @media (hover: hover) {
-  .action.action:hover {
+  .block .action.action:hover {
     color: var(--ui-foreground);
   }
 }
@@ -56,7 +58,7 @@
   .block {
     --block-action: var(--ui-control-md);
   }
-  .action.action {
+  .block .action.action {
     height: var(--block-action);
   }
 }
@@ -127,7 +129,7 @@
 /* Numbers are generated content so copying the code never picks them up. */
 .pre[data-numbers] .line {
   display: grid;
-  grid-template-columns: calc(var(--digits) * 1ch) minmax(0, 1fr);
+  grid-template-columns: calc(var(--digits) * 1ch) max-content;
   column-gap: var(--ui-space-4);
 }
 
@@ -138,10 +140,6 @@
   font-variant-numeric: tabular-nums;
   text-align: end;
   user-select: none;
-}
-
-.pre[data-numbers] .line {
-  grid-template-columns: calc(var(--digits) * 1ch) max-content;
 }
 
 /* ---------- Tokens ---------- */

@@ -173,6 +173,12 @@ export function SidebarPreview() {
 function Demo() {
   const sidebar = useSidebar();
   const [value, setValue] = useState("c2");
+  // The page fades in when it changes, not on first paint.
+  const [moved, setMoved] = useState(false);
+  function go(id: string) {
+    setValue(id);
+    setMoved(true);
+  }
   const [chats, setChats] = useState(CHATS);
   const [recentState, setRecentState] = useState<RecentState>("chats");
   const [workspace, setWorkspace] = useState("acme");
@@ -205,7 +211,7 @@ function Demo() {
   function remove(id: string) {
     const title = chats.find((c) => c.id === id)?.title;
     setChats((all) => all.filter((c) => c.id !== id));
-    if (value === id) setValue("new");
+    if (value === id) go("new");
     setStatus(`Deleted “${title}”.`);
   }
 
@@ -245,7 +251,7 @@ function Demo() {
         <Sidebar
           aria-label={workspaceName}
           value={value}
-          onValueChange={setValue}
+          onValueChange={go}
           header={
             <SidebarSwitcher mark={<StarMark />} name={workspaceName}>
               <MenuRadioGroup label="Workspaces" value={workspace} onValueChange={setWorkspace}>
@@ -292,7 +298,7 @@ function Demo() {
             <SidebarToggle />
             {sidebar.mobile && <AcmeBrand className={styles.brand} />}
           </header>
-          <div key={value} className={styles.page} dir="auto">
+          <div key={value} className={styles.page} dir="auto" data-moved={moved || undefined}>
             <h2 className={styles.title}>{page.title}</h2>
             <p className={styles.note}>{page.note}</p>
             {page.rows && (

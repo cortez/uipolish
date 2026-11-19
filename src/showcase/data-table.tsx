@@ -24,10 +24,13 @@ export default function Showcase() {
       <DataTable
         aria-label="Guests"
         columns={[
-          { key: "name", header: "Guest", width: 160, sortable: true },
-          { key: "diet", header: "Diet", width: 140, sortable: true },
-          { key: "paid", header: "Paid", width: 104, align: "end", sortable: true, cell: (g) => money.format(g.paid) },
+          // The three columns fit the card beside a scrollbar, so nothing is cut at its edge.
+          { key: "name", header: "Guest", width: 120, sortable: true },
+          { key: "diet", header: "Diet", width: 104, sortable: true },
+          { key: "paid", header: "Paid", width: 78, align: "end", sortable: true, cell: (g) => money.format(g.paid) },
         ]}
+        // The card's own height: the table is the card, and scrolls inside it.
+        style={{ height: 320 }}
         rows={GUESTS}
         getRowId={(g) => g.id}
         getRowLabel={(g) => g.name}

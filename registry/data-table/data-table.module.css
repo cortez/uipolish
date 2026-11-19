@@ -459,6 +459,9 @@
 
 .footerText {
   min-width: 0;
+}
+
+.footerText[data-swap] {
   animation: data-table-arrive var(--ui-dur-fast) var(--ui-ease-enter);
 }
 

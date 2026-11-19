@@ -499,6 +499,15 @@ export function DataTable<Row>({
   const activeRowLabel =
     activeIssue && getRowLabel ? getRowLabel(sortedRows[current.row - 1]) : `Row ${current.row}`;
 
+  // The line under the grid fades when its message changes, not on first paint.
+  const footerKey = activeIssue && focused ? `${activeId}-${activeColumn?.key}` : "summary";
+  const [shownFooter, setShownFooter] = useState(footerKey);
+  const [footerSwapped, setFooterSwapped] = useState(false);
+  if (shownFooter !== footerKey) {
+    setShownFooter(footerKey);
+    setFooterSwapped(true);
+  }
+
   const placeholderRows = Math.max(1, Math.ceil(bodyHeight / rowHeight));
 
   const vars = {
@@ -693,14 +702,14 @@ export function DataTable<Row>({
         <p className={styles.footer} data-issue={activeIssue && focused ? "" : undefined}>
           <Icon name="alert" className={styles.footerIcon} />
           {activeIssue && focused ? (
-            <span key={`${activeId}-${activeColumn?.key}`} className={styles.footerText}>
+            <span key={footerKey} className={styles.footerText} data-swap={footerSwapped || undefined}>
               <span className={styles.footerWhere}>
                 {activeRowLabel}, {activeColumn?.header}
               </span>{" "}
               {activeIssue}
             </span>
           ) : (
-            <span key="summary" className={styles.footerText}>
+            <span key="summary" className={styles.footerText} data-swap={footerSwapped || undefined}>
               {/* The count rolls as cells are fixed or flagged. */}
               <TextMorph>{issues.size === 1 ? "1 cell needs a look" : `${issues.size} cells need a look`}</TextMorph>
             </span>

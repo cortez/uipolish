@@ -141,6 +141,9 @@ the wrapper transitions `height` on the spring.
   Typing "s", "sg", "sgt" quickly gives one smooth settle, not three
   restarts.
 - The palette is in the top layer, so nothing else on the page reflows.
+- While nothing matches yet and a source hasn't answered, the list keeps the
+  height it had; it moves once, to the loading row or the answer, not down
+  to nothing and back.
 
 Animating `grid-template-rows` doesn't fit, since the target is a measured
 pixel height that changes many times a second, and `interpolate-size` isn't

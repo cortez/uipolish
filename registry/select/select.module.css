@@ -208,8 +208,10 @@
   overflow: hidden;
   border-radius: var(--ui-radius-md);
   background: var(--ui-surface-glass);
-  backdrop-filter: blur(var(--ui-glass-blur));
+  /* Prefixed first: the CSS build keeps only the last of the pair, and
+     Chrome and Firefox read the unprefixed one alone. */
   -webkit-backdrop-filter: blur(var(--ui-glass-blur));
+  backdrop-filter: blur(var(--ui-glass-blur));
   box-shadow: var(--ui-shadow-floating);
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
