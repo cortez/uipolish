@@ -125,8 +125,9 @@ shows the surface, so neighboring colors never touch.
 - Money is `Intl.NumberFormat` with `style: "currency"`: "$3.40".
 - The percentage is floored, so it never says 100% before it's full, and
   any use at all shows at least 1%.
-- Every changing figure is in tabular digits. Percentages sit in a box as
-  wide as "100%", so the ring and the trigger never change width. The large
+- Every changing figure is in tabular digits, set on the digits alone
+  (never on text with a space in it, which some fonts would widen).
+  Percentages sit in a box as wide as "100%", so the ring and the trigger never change width. The large
   figure isn't boxed (a box as wide as "200k" leaves a gap after "38k");
   when it gains or loses a digit, "of 200k tokens" slides on the text
   morph's width glide instead of jumping.

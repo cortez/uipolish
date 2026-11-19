@@ -145,6 +145,22 @@ function span(tab: HTMLElement, list: HTMLElement, vertical: boolean) {
     : { start: t.left - l.left + list.scrollLeft - list.clientLeft, length: t.width };
 }
 
+/**
+ * Scrolls an overflowing row so the selected tab is clear of the edge fade,
+ * however it was picked: a press on a tab half under the fade, a key, the
+ * URL. Only the list scrolls, never the page, and the first and last tab
+ * come back to the track's inset because the scroll stops at its ends.
+ */
+function reveal(list: HTMLElement, tab: HTMLElement, animate: boolean) {
+  if (list.scrollWidth <= list.clientWidth) return;
+  const pad = parseFloat(getComputedStyle(list).scrollPaddingLeft) || 0;
+  const l = list.getBoundingClientRect();
+  const t = tab.getBoundingClientRect();
+  const by = t.left < l.left + pad ? t.left - l.left - pad : t.right > l.right - pad ? t.right - l.right + pad : 0;
+  // `auto` follows the list's own scroll-behavior: smooth, or at once under reduced motion.
+  if (by) list.scrollBy({ left: by, behavior: animate ? "auto" : "instant" });
+}
+
 export function TabList({ className, children, ...props }: TabListProps) {
   const { value, manual, setAxis } = useTabs("TabList");
   const listRef = useRef<HTMLDivElement>(null);
@@ -169,16 +185,16 @@ export function TabList({ className, children, ...props }: TabListProps) {
     const indicator = indicatorRef.current;
     const from = previous.current;
     previous.current = value;
-    if (!list || !indicator || from === null || from === value) return;
+    if (!list || !indicator || from === value) return;
     const tab = list.querySelector<HTMLElement>('[role="tab"][data-active]');
-    const last = Array.from(list.querySelectorAll<HTMLElement>('[role="tab"]')).find((t) => t.dataset.value === from);
-    if (!tab || !last) return;
-
+    if (!tab) return;
     const vertical = axisOf(list) === "vertical";
+    const last =
+      from === null ? undefined : Array.from(list.querySelectorAll<HTMLElement>('[role="tab"]')).find((t) => t.dataset.value === from);
     // A change mid-move starts from where the pill is on screen.
-    const origin = stopPill(indicator, vertical) ?? span(last, list, vertical);
-    if (!painted.current) return;
-    flyPill(indicator, origin, span(tab, list, vertical), vertical);
+    const origin = last && (stopPill(indicator, vertical) ?? span(last, list, vertical));
+    if (origin && painted.current) flyPill(indicator, origin, span(tab, list, vertical), vertical);
+    reveal(list, tab, painted.current);
   }, [value]);
 
   useLayoutEffect(() => {
@@ -216,7 +232,8 @@ export function TabList({ className, children, ...props }: TabListProps) {
       const start = Math.abs(list.scrollLeft);
       if ((by > 0) !== rtl ? max - start <= 1 : start <= 1) return;
       event.preventDefault();
-      list.scrollBy({ left: by });
+      // The wheel is already the motion: no smooth scroll on top of it.
+      list.scrollBy({ left: by, behavior: "instant" });
     };
     list.addEventListener("scroll", edges, { passive: true });
     list.addEventListener("wheel", wheel, { passive: false });

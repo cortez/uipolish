@@ -16,7 +16,7 @@ export function TextMorphPreview() {
   return (
     <div className={base.stack}>
       <section className={base.group}>
-        <h2 className={base.label}>A status that changes in place</h2>
+        <h2 className={base.label}>A status that changes in place: shared letters stay, the rest trade places</h2>
         <p className={styles.line}>
           <TextMorph>{STATUSES[status]}</TextMorph>
         </p>
@@ -28,7 +28,7 @@ export function TextMorphPreview() {
       </section>
 
       <section className={base.group}>
-        <h2 className={base.label}>Shared letters stay, the rest trade places</h2>
+        <h2 className={base.label}>A count: only the digit that changed rolls</h2>
         <p className={styles.line}>
           <TextMorph>{COUNTS[count]}</TextMorph>
         </p>

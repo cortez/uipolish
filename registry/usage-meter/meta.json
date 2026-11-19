@@ -4,7 +4,7 @@
   "summary": "How much of an agent’s context window or spending budget is used, as a ring and a percentage in the composer toolbar. Opens to a breakdown, warns before the limit and offers to compact.",
   "blurb": "How much context or budget is used, as a ring in the composer.",
   "kit": "agent",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "dependencies": [
     "animated-size",
     "button",

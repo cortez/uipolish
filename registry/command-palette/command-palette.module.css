@@ -6,10 +6,12 @@
   --palette-inner-radius: calc(var(--palette-radius) - var(--palette-pad));
 
   border-radius: var(--palette-radius);
-  /* Light glass, like the menus: the surface at 92% over a 4px blur. */
+  /* Light glass, like the menus: the glass surface over the glass blur.
+     The prefixed line comes first: the CSS build keeps only the last of the
+     pair, and Chrome and Firefox read the unprefixed one alone. */
   background: var(--ui-surface-glass);
-  backdrop-filter: blur(var(--ui-glass-blur));
   -webkit-backdrop-filter: blur(var(--ui-glass-blur));
+  backdrop-filter: blur(var(--ui-glass-blur));
   /* The viewport pads by --ui-space-5 already; this sets the gap from the top of the screen. */
   align-self: start;
   margin-top: calc(min(14dvh, 120px) - var(--ui-space-5));
@@ -83,10 +85,6 @@
   scroll-padding-block: var(--palette-pad);
   scrollbar-width: thin;
   scrollbar-color: var(--ui-border-strong) transparent;
-}
-
-.scroller:empty {
-  padding: 0;
 }
 
 .listbox:empty {
@@ -288,7 +286,6 @@
   }
 }
 
-
 /* 16px input text so iOS doesn't zoom on focus. */
 @media (pointer: coarse) {
   .option {
@@ -321,12 +318,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* The height jumps; the loading row and the empty state still fade in. */
   .viewport {
     transition: none;
-  }
-  .loading,
-  .empty {
-    animation: none;
   }
   .loadingLabel {
     color: var(--ui-muted);

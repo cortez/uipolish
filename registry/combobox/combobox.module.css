@@ -121,10 +121,3 @@
 .srOnly {
   composes: srOnly from "../text/text.module.css";
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .status[data-searching],
-  .panel[data-waiting] {
-    animation: none;
-  }
-}

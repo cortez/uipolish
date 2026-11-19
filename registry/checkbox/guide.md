@@ -67,8 +67,8 @@ under the parent's label.
 | State | What you see | How |
 |---|---|---|
 | Empty | A soft flat fill (`--ui-fill-control`) under the standard hairline edge (`--ui-border-control`, the same as fields and buttons), found by shape and shade, not a hard line | |
-| Checked | Accent fill, tick in the color that reads on it | `data-state="on"` |
-| Mixed | Accent fill, dash | `indeterminate` → `data-state="mixed"` |
+| Checked | Ink fill (`--ui-control-on`), tick in the color that reads on it | `data-state="on"` |
+| Mixed | Ink fill, dash | `indeterminate` → `data-state="mixed"` |
 | Hover | Edge one step darker; a filled box one step lighter | `@media (hover: hover)`, anywhere on the row |
 | Press | Fill one step further, in 80ms | `:active` |
 | Focus | A line just inside the box's edge, instantly | `:focus-visible` |
@@ -83,8 +83,12 @@ Checked and mixed are told apart by the mark, not by color.
 | Fill on check | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Tick or dash draws on | `--ui-dur-base` (200ms) | `--ui-ease-draw` |
 | Tick or dash un-draws | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |
-| Fill clears, after the un-draw | `--ui-dur-instant` (120ms), 150ms delay | `--ui-ease-color` |
+| Fill clears, after the un-draw | `--ui-dur-instant` (120ms), after a `--ui-dur-instant` (120ms) delay | `--ui-ease-color` |
 | Tick ↔ dash | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
+
+The fill is a layer over the empty box and its edge, so while a box
+unchecks the edge stays covered until the fill fades: no pale ring around a
+still-dark box.
 
 How the mark works:
 

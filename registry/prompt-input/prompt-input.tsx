@@ -63,7 +63,6 @@ type PromptInputProps = {
   ref?: Ref<PromptInputHandle>;
 };
 
-
 let nextId = 0;
 
 function token(el: Element, name: string, fallback: string) {
@@ -148,6 +147,16 @@ export function PromptInput({
   const flip = useRef<Map<string, [number, number]> | null>(null);
   const focusAfterRemove = useRef<string | null>(null);
   const noticeTimer = useRef(0);
+
+  // Suggestions that are there on first paint are just there; ones that
+  // arrive later (the thread was cleared) rise in.
+  const hasSuggestions = Boolean(suggestions?.length);
+  const [hadSuggestions, setHadSuggestions] = useState(hasSuggestions);
+  const [suggestionsArrived, setSuggestionsArrived] = useState(false);
+  if (hadSuggestions !== hasSuggestions) {
+    setHadSuggestions(hasSuggestions);
+    if (hasSuggestions) setSuggestionsArrived(true);
+  }
 
   const hintId = useId();
   const canSend = !disabled && !streaming && (text.trim() !== "" || files.length > 0);
@@ -359,7 +368,7 @@ export function PromptInput({
       onKeyDown={handleKeyDown}
     >
       {suggestions && suggestions.length > 0 && (
-        <ul className={styles.suggestions} aria-label="Suggestions">
+        <ul className={styles.suggestions} aria-label="Suggestions" data-arrived={suggestionsArrived || undefined}>
           {suggestions.map((s) => (
             <li key={s}>
               <Button variant="secondary" size="sm" className={styles.suggestion} onClick={() => fillSuggestion(s)} disabled={disabled}>
@@ -385,7 +394,14 @@ export function PromptInput({
             {files.map(({ id, file }) => {
               const image = file.type.startsWith("image/");
               return (
-                <li key={id} data-id={id} className={styles.attachment} data-kind={image ? "image" : "file"}>
+                <li
+                  key={id}
+                  data-id={id}
+                  className={styles.attachment}
+                  data-kind={image ? "image" : "file"}
+                  // `defaultFiles` are there from the first paint; only added files arrive.
+                  data-added={id.startsWith("file-") || undefined}
+                >
                   {image ? (
                     <Thumbnail file={file} />
                   ) : (

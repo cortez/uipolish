@@ -41,23 +41,23 @@ export function TooltipPreview() {
         </p>
         <div className={local.tooltipToolbar}>
           <Tooltip content="Copy link" kbd="⌘C" describe={false}>
-            <Button variant="ghost" className={local.tooltipIcon} aria-label="Copy link" aria-keyshortcuts="Meta+C" onClick={() => announce("Link copied")}>
+            <Button variant="ghost" aria-label="Copy link" aria-keyshortcuts="Meta+C" onClick={() => announce("Link copied")}>
               <Icon name="link" />
             </Button>
           </Tooltip>
           <Tooltip content="Download PDF" kbd="⌘D" describe={false}>
-            <Button variant="ghost" className={local.tooltipIcon} aria-label="Download PDF" aria-keyshortcuts="Meta+D" onClick={() => announce("Downloading saturday-supper.pdf")}>
+            <Button variant="ghost" aria-label="Download PDF" aria-keyshortcuts="Meta+D" onClick={() => announce("Downloading saturday-supper.pdf")}>
               <Icon name="download" />
             </Button>
           </Tooltip>
           <Tooltip content="Print" kbd="⌘P" describe={false}>
-            <Button variant="ghost" className={local.tooltipIcon} aria-label="Print" aria-keyshortcuts="Meta+P" onClick={() => announce("Opening print dialog")}>
+            <Button variant="ghost" aria-label="Print" aria-keyshortcuts="Meta+P" onClick={() => announce("Opening print dialog")}>
               <PathIcon d={ICONS.print} />
             </Button>
           </Tooltip>
           <span className={local.tooltipDivider} aria-hidden="true" />
           <Tooltip content="Delete event" describe={false}>
-            <Button variant="ghost" className={local.tooltipIcon} aria-label="Delete event" onClick={() => announce("Nothing deleted in the preview")}>
+            <Button variant="ghost" aria-label="Delete event" onClick={() => announce("Nothing deleted in the preview")}>
               <Icon name="trash" />
             </Button>
           </Tooltip>
@@ -101,14 +101,14 @@ export function TooltipPreview() {
         <h2 className={styles.label}>Disabled control, wrapped</h2>
         <div className={styles.row}>
           <Tooltip content="Needs a reply from every guest first." arrow>
-            <span className={local.tooltipWrap} tabIndex={0} aria-describedby="invoice-reason">
+            <span className={local.tooltipWrap} tabIndex={0} aria-describedby="seating-reason">
               <Button variant="secondary" disabled>
                 Lock the seating
               </Button>
             </span>
           </Tooltip>
         </div>
-        <p id="invoice-reason" className={styles.note}>
+        <p id="seating-reason" className={styles.note}>
           Seating locks once every guest has replied.
         </p>
       </section>

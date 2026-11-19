@@ -119,7 +119,10 @@
   line-height: var(--ui-leading-md);
 }
 
+/* Two lines held whether the text needs one or two, so the skeleton's two
+   bars and a description that fits on one line take the same room. */
 .about {
+  min-height: calc(var(--ui-leading-sm) * 2);
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
   line-height: var(--ui-leading-sm);

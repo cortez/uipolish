@@ -38,6 +38,9 @@
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-md);
+  /* A command that wraps hangs under its first word, not under the "$". */
+  padding-inline-start: 2ch;
+  text-indent: -2ch;
 }
 
 .prompt {
@@ -120,8 +123,10 @@
 }
 
 /* Copy and Stop are plain text: no fill, no edge, no icon, quiet in the
-   corner; they turn to the text color on hover. */
-.action.action {
+   corner; they turn to the text color on hover. Under .block so the padding
+   and the touch height outrank the button's own size rule in any stylesheet
+   order (doubled alone, they tied with it). */
+.block .action.action {
   --button-bg: transparent;
   --button-bg-hover: transparent;
   --button-bg-press: transparent;
@@ -139,7 +144,7 @@
   .block {
     --block-action: var(--ui-control-md);
   }
-  .action.action {
+  .block .action.action {
     height: var(--block-action);
   }
 }

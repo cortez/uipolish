@@ -19,7 +19,7 @@
   list-style: none;
 }
 
-.suggestions li {
+.suggestions[data-arrived] li {
   animation: suggestion-in var(--ui-dur-fast) var(--ui-ease-enter) backwards;
 }
 
@@ -93,6 +93,9 @@
   border-radius: var(--attachment-radius);
   background: var(--ui-surface);
   box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+}
+
+.attachment[data-added] {
   animation: attachment-in var(--ui-dur-fast) var(--ui-ease-enter);
 }
 
@@ -224,6 +227,20 @@
   }
 }
 
+/* Without hover the X is always there, so on a picture it's a small disc
+   of the veil, not the whole veil: the picture stays in view. */
+@media not all and (hover: hover) and (pointer: fine) {
+  .attachment[data-kind="image"] .remove {
+    background: transparent;
+  }
+  .attachment[data-kind="image"] .remove svg {
+    box-sizing: content-box;
+    padding: var(--ui-space-1);
+    border-radius: var(--ui-radius-control);
+    background: color-mix(in oklch, var(--ui-ink) 55%, transparent);
+  }
+}
+
 .remove:active svg {
   scale: var(--ui-scale-press);
   transition-duration: var(--ui-dur-press);
@@ -231,7 +248,7 @@
 
 .remove:focus-visible {
   outline: none;
-  box-shadow: inset 0 0 0 1px var(--ui-field-focus);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
 }
 
 /* Textarea */
@@ -405,8 +422,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .suggestions li,
-  .attachment,
+  .suggestions[data-arrived] li,
+  .attachment[data-added],
   .hintText {
     animation: none;
   }

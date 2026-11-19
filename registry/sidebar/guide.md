@@ -145,9 +145,9 @@ Ids must be unique across items, sections and the recent list, since one
 |---|---|
 | Sidebar | 264px (`--sidebar-width`); collapsed, the 44px capsule plus 8px each side: 60px |
 | Rows | 32px, Tabs' height; 40px on touch screens. 2px apart |
-| Primary and section items | 15px medium, icon 16px in `--ui-muted`. Nested rows indent to the label above |
-| Recent titles | 13px regular, one line, faded at the end when cut, the full title in `title` |
-| Section headings | 13px medium, muted, in a row of their own height so a heading that folds and one that doesn't line up |
+| Primary and section items | 14px medium, icon 16px in `--ui-muted`. Nested rows indent to the label above |
+| Recent titles | 12px regular, one line, faded at the end when cut, the full title in `title` |
+| Section headings | 12px medium, muted, in a row of their own height so a heading that folds and one that doesn't line up |
 | Switcher and account | 40px; the 24px mark or avatar centered on the icon column below |
 
 Everything lines up on one column: each icon sits where it would be
@@ -161,7 +161,7 @@ the edge.
 
 | State | What you see | How |
 |---|---|---|
-| Rest | Labels in the text color, icons muted | |
+| Rest | Labels and icons in the muted color | |
 | Hover | No fill: the row's label and icon come up from the muted color to the text color, as Nav rail's items do; a shortcut shows at the row's end | `@media (hover: hover)` |
 | Current | Tabs' flat pill (`--ui-track-pill`), icon in the text color | `aria-current="page"` |
 | Focus | A line inside the row's pill; the shortcut shows | `:focus-visible` |
@@ -212,7 +212,8 @@ from one row to the next. It only flies between rows of the same width that
 are both on screen; otherwise it moves at once.
 
 Under `prefers-reduced-motion: reduce` the width, labels, groups and
-removals change at once, the pill jumps, and the tooltip swaps in place.
+removals change at once, the pill jumps, the tooltip swaps in place, and a
+chat that arrives takes its space at once and fades in.
 
 ## Accessibility
 
@@ -236,8 +237,10 @@ removals change at once, the pill jumps, and the tooltip swaps in place.
 - Rename: Enter saves, Escape cancels (and doesn't close a drawer around
   it), leaving the field saves. Focus returns to the row. After a delete,
   focus moves to the next chat.
-- Titles and names carry `dir="auto"`, so a Hebrew chat title reads right in
-  an English sidebar and an English one in a Hebrew sidebar.
+- Titles and names take the direction of their first letter (what
+  `dir="auto"` resolves to), so a Hebrew chat title reads right in an English
+  sidebar and an English one in a Hebrew sidebar, and a cut one fades at its
+  own end.
 - The phone drawer traps focus and returns it to the toggle on close.
 
 ## Before / after

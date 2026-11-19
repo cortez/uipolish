@@ -23,6 +23,14 @@
   scrollbar-width: none;
 }
 
+/* A tab picked past the fade is brought into view by a scroll, not a cut:
+   the row slides while the pill travels. */
+@media (prefers-reduced-motion: no-preference) {
+  .list {
+    scroll-behavior: smooth;
+  }
+}
+
 .list::-webkit-scrollbar {
   display: none;
 }
@@ -126,7 +134,6 @@
 .count {
   color: var(--ui-subtle);
   font-weight: var(--ui-weight-regular);
-  font-variant-numeric: tabular-nums;
   transition: color var(--ui-dur-instant) var(--ui-ease-color);
   --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
@@ -242,11 +249,4 @@
   transition:
     opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
     visibility 0s;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .panel[data-crossfade],
-  .panel[data-crossfade][data-selected] {
-    transition: none;
-  }
 }

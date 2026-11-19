@@ -76,11 +76,11 @@ the height is set from `scrollHeight` in a layout effect, before paint.
 | Focus fill | 0ms, never animated; the edge never changes | n/a |
 | Arrow retracts into its tip, stop block sweeps in (`Icon` send → stop) | see the icon set's guide | |
 | "Stop" label and pill width | `--ui-dur-move` (380ms) via TextMorph | `--ui-ease-move` |
-| Chip in | `--ui-dur-fast` (160ms), fade, scale from 0.97 | `--ui-ease-enter` |
+| Chip in (an added file; `defaultFiles` are there from the first paint) | `--ui-dur-fast` (160ms), fade, scale from 0.97 | `--ui-ease-enter` |
 | Chip out | `--ui-dur-instant` (120ms), fade, scale to 0.97 | `--ui-ease-exit` |
 | Chips after a removed one slide over | `--ui-dur-move` (380ms), FLIP | `--ui-ease-move` |
 | Thumbnail fade-in on load | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |
-| Suggestions in, as one group | `--ui-dur-fast` (160ms), 4px rise | `--ui-ease-enter` |
+| Suggestions in, as one group, when they arrive after the first paint (a cleared thread) | `--ui-dur-fast` (160ms), 4px rise | `--ui-ease-enter` |
 | Drop overlay | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Hint and notice trade places: text fades in, color eases | `--ui-dur-fast` (160ms) | `--ui-ease-enter`, `--ui-ease-color` |
 | Press | `--ui-dur-press` (80ms) to `--ui-scale-press` (0.985), back over `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
@@ -123,7 +123,8 @@ there would make typing feel late.
   file picker.
 - The remove button is an X over the chip's icon tile (or the whole
   thumbnail), so it never sticks out past the chip. It shows on hover with a
-  mouse and is always visible on touch and on focus. Every button has a 40px
+  mouse and is always visible on touch and on focus; on touch a thumbnail's X
+  sits on a small disc, so the picture stays in view. Every button has a 40px
   hit area on coarse pointers.
 - The textarea is 16px on touch devices so iOS doesn't zoom into it.
 

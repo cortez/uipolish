@@ -25,10 +25,12 @@ Button uses it for string labels.
 
 ## How it works
 
-1. Until the label first changes, it renders as plain text: one node, kerned
-   as the font intends, so a page of labels that never change carries no
-   per-letter boxes. Each letter's place is measured from the text, so the
-   first morph starts from exactly where the letters were drawn.
+1. Until the label first changes, it renders as plain text, kerned as the
+   font intends, so a page of labels that never change carries no
+   per-letter boxes; only a run of digits gets a span, so figures are
+   tabular from the first paint and the first change doesn't shift them.
+   Each letter's place is measured from the text, so the first morph starts
+   from exactly where the letters were drawn.
 2. The string is split into graphemes (`Intl.Segmenter`, so emoji and accents
    stay whole). Whole words the two labels share move as one piece; between
    them, only letters at a shared start or end stay. "Copy" and "Copied"
@@ -54,7 +56,12 @@ Button uses it for string labels.
    in beside the others and the width follows.
 7. **Paced.** A change that arrives within 200ms of the last one waits its
    turn, so the text changes at most five times a second and the latest
-   value always lands. The accessible copy updates at once.
+   value always lands, however fast and however long the changes keep
+   coming. The accessible copy updates at once.
+
+Don't set `font-variant-numeric: tabular-nums` on an element around a
+`TextMorph`: it already sets it on the digits, and on the whole label some
+fonts widen the spaces too.
 
 This is the one number animator in the registry: Number input, Usage
 meter, Progress, Pagination, Badge counts, Tab counts and the Data table's

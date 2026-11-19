@@ -30,16 +30,16 @@ segmented progress through named steps. Neither ever spins.
 | `value` | 0 to `max`, or `null` for unknown |
 | `max` | Defaults to 100 |
 | `label` | What the work is; names the bar |
-| `valueText` | End of the label line, muted. Defaults to the percentage, in tabular digits in a fixed box so it never moves anything; `false` hides it |
+| `valueText` | End of the label line, muted. Defaults to the percentage, its digits tabular, in a box as wide as "100%" so it never moves anything; `false` hides it |
 | `tone` | `warning` near a limit (say from 80% of a quota); `danger` once the work failed, where the bar stays where it stopped, or once the limit is hit |
 | `steps`, `current` (steps) | Step names, and the index in progress; `steps.length` when done |
 
 ## Look
 
-The label and the value share one 12px line: the label truncates, the
-value sits at the end in the muted color. The track is 4px in
-`--ui-fill-strong`; the fill is the text color, `--ui-danger` once the
-work has failed. No accent.
+The label and the value share one 12px line: a long label wraps, the
+value sits at the end in the muted color and never wraps. The track is 4px
+in `--ui-fill-strong`; the fill is the text color, `--ui-warning` near a
+limit and `--ui-danger` once the work has failed. No accent.
 
 ## Motion
 
@@ -48,6 +48,7 @@ work has failed. No accent.
 | Fill moves to a new amount | A full-width bar slid back by what's left (its round end stays round), `--ui-dur-glide` on `--ui-ease-glide`: held by the track, it lands on the amount without passing it. Updates mid-way retarget smoothly |
 | Unknown amount | A short pill of the fill slides across the track at constant speed (`linear`) and starts again off the other side. The track never moves |
 | A step finishes | Its segment fills from its start edge with `clip-path`, `--ui-dur-base` on `--ui-ease-draw`; going back un-fills a step faster |
+| The step in progress | Its track darkens, and lightens again as it's left, `--ui-dur-instant` on `--ui-ease-color` |
 | Percentage, step count and step name | `TextMorph`: digits that change roll (up as the work advances), on `--ui-ease-glide`; at most five changes a second, the last always lands |
 
 Under `prefers-reduced-motion` the fill jumps, figures swap at once, and an unknown amount is a

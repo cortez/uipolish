@@ -57,8 +57,10 @@ The scale grows out of Base UI's `--transform-origin`, so the tooltip seems
 to come from the trigger. The positioner is never scaled, only the surface
 inside it, which animates between `[data-starting-style]` and
 `[data-ending-style]`; Base UI keeps it mounted until the exit has played.
-A warm tooltip slides in from where the previous one sat. Under
-`prefers-reduced-motion: reduce` it appears and disappears without animating.
+A warm tooltip slides in from where the previous one sat, over
+`--ui-dur-snap` on `--ui-ease-snap`. Under `prefers-reduced-motion: reduce`
+movement becomes a fade: it fades in and out on the same durations, with no
+scale, blur or slide.
 
 ## Accessibility
 

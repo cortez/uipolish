@@ -157,8 +157,10 @@ export function NumberInput({
 
   function noteFor(clamped: number, raw: number | null) {
     if (raw === null) return null;
-    if (clamped > raw) return `At least ${full.format(clamped)}`;
-    if (clamped < raw) return `Up to ${full.format(clamped)}`;
+    // Rounding to the field's decimals isn't a limit: 86.756 becoming 86.76 gets no note.
+    const typedValue = round(raw);
+    if (clamped > typedValue) return `At least ${full.format(clamped)}`;
+    if (clamped < typedValue) return `Up to ${full.format(clamped)}`;
     return null;
   }
 

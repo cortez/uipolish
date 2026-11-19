@@ -1,7 +1,8 @@
 # Terminal output
 
 Shows a command an agent ran, or is running, and what it printed. The header
-has the command in mono, how it's going and two quiet text buttons, Copy and,
+has the command in mono (a long one wraps and hangs under its first word,
+not under the `$`), how it's going and two quiet text buttons, Copy and,
 while it runs, Stop. Running reads "Running" with the elapsed time ticking in
 equal-width figures; once it ends, the exit code and how long it took, the
 code in the danger color when it isn't 0. Output arrives line by line, each
@@ -38,7 +39,7 @@ danger-tinted text.
 | `output` | | A string (stdout) or `{ text, stderr? }[]`. The output so far; only append |
 | `status` | | `running`, `done`, `failed` or `stopped` |
 | `exitCode` | `0` when `done` | Shown as "Exit 1" once it ends; danger text when `failed` |
-| `startedAt`, `finishedAt` | | `Date.now()` values. Drive the elapsed time and the duration |
+| `startedAt`, `finishedAt` | | `Date.now()` values. Drive the elapsed time and the duration, which reads to one decimal under ten seconds ("2.0s") |
 | `onStop` | | Shows Stop while running. Return a promise to show "Stopping…" and, if it rejects, "Stop failed" |
 | `collapseAfter` | none | Shows only the last this-many lines, with "Show all 214 lines" above |
 | `maxHeight` | about 16 lines | Caps the body; it scrolls and follows new lines at the bottom |
@@ -62,10 +63,10 @@ elsewhere.
 | stderr line | Danger-tinted text on the same surface | `{ stderr: true }`, `data-stderr` |
 | Folded | The last `collapseAfter` lines, "Show all 214 lines" above; it reads "Show last 12 lines" once open | `aria-expanded` |
 | Overflowing | Fades on the edge(s) that have more output; scroller becomes a tab stop | `data-fade-start`, `data-fade-end`, `tabIndex={0}` |
-| Scroller focused | 2px ring around the whole card, appears instantly | `:has(.scroller:focus-visible)` |
+| Scroller focused | The focus line around the whole card, inside its edge, appears instantly | `:has(.scroller:focus-visible)` |
 | Stopping | Stop reads "Stopping…" if the promise takes over 300ms | `Button busy` |
 | Stop failed | Stop reads "Stop failed"; the announcement says to press it again | `onStop` rejected |
-| Copied | "Copy" morphs to "Copied" for 2s; "Copied to clipboard" is announced | `TextMorph`, `role="status"` |
+| Copied | "Copy" morphs to "Copied" for 2s; "Copied to clipboard" is announced | Button's label morph, `role="status"` |
 | Copy failed | Label reads "Copy failed"; the announcement says to select and copy by hand | clipboard missing or blocked |
 
 A command that ends inside 300ms never shows "Running" or Stop: it goes
@@ -82,8 +83,9 @@ straight from the command alone to its exit code.
 - Horizontal position is never touched.
 - Opening or closing the fold keeps the reader at the end, where they were
   reading.
-- The elapsed time and the line count use tabular figures, so ticking moves
-  nothing beside them.
+- The elapsed time, the duration and the fold's line count use tabular
+  figures, set on the figures alone (never on a line with a space in it),
+  so ticking moves nothing beside them.
 
 Pass the full output so far on each update (`output={received}`), not only
 the new chunk.
@@ -94,7 +96,7 @@ the new chunk.
 |---|---|---|
 | A new line fades in | `--ui-dur-base` (200ms) | `--ui-ease-enter` |
 | Running dot breathes | `--ui-dur-pulse` (700ms), alternating | `--ui-ease-pulse` |
-| Copy → Copied, Stop → Stopping… label morph | `--ui-dur-move` (380ms), letters out in 150ms | `--ui-ease-move` |
+| Copy → Copied, Stop → Stopping…, Show all 214 lines → Show last 12 lines: label morph | `--ui-dur-glide` (320ms), letters out in `--ui-dur-instant` (120ms) | `--ui-ease-glide` |
 | Copy and Stop hover color | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Edge fades | instant | n/a |
 

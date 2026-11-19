@@ -2,7 +2,7 @@
   "name": "command-palette",
   "title": "Command palette",
   "summary": "⌘K palette with fuzzy matching, recents and grouped results. Async sources never flash a loading state, and the height follows the results.",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "dependencies": [
     "dialog",
     "icons",

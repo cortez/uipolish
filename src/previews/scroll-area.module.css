@@ -1,3 +1,11 @@
+/* Each demo is the width of a pane, not the page: on a wide screen the
+   filter row would otherwise fit and the notes would barely scroll. */
+.list,
+.row,
+.short {
+  max-width: 420px;
+}
+
 .list {
   height: 240px;
   border-radius: var(--ui-radius-md);

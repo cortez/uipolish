@@ -43,10 +43,12 @@ type TerminalOutputProps = {
   className?: string;
 };
 
-/** 2400 → "2.4s" (precise), 12000 → "12s", 74000 → "1m 14s". */
+/** 2400 → "2.4s" and 2000 → "2.0s" (precise), 12000 → "12s", 74000 → "1m 14s". */
 export function formatElapsed(ms: number, precise = false) {
   const s = Math.max(0, ms) / 1000;
-  if (s < 10 && precise) return `${Math.max(0.1, Math.round(s * 10) / 10)}s`;
+  // One decimal always, so "Exit 0 2.0s" doesn't read as a rounder figure than "1.6s".
+  const tenths = Math.max(0.1, Math.round(s * 10) / 10);
+  if (precise && tenths < 10) return `${tenths.toFixed(1)}s`;
   const whole = Math.floor(s);
   if (whole < 60) return `${whole}s`;
   const rest = whole % 60;

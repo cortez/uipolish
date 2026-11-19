@@ -30,6 +30,9 @@ let exiting: Handle | null = null;
 let lastClosedAt = -Infinity;
 // Where the previous tooltip sat, so a warm hand-off can slide from there.
 let handoff: DOMRect | undefined;
+// The tooltip a hand-off replaces. It stays up until the next one is on
+// screen, so there is never a frame with neither.
+let leaving: Handle | null = null;
 
 function isWarm() {
   return active !== null || performance.now() - lastClosedAt < WARM_WINDOW;
@@ -94,12 +97,12 @@ export function Tooltip({
   function onOpenChange(next: boolean) {
     const self = handle.current;
     if (next) {
-      const skipEntrance = isWarm();
+      // Reopened while it was still fading out: it fades back from where it is.
+      const skipEntrance = isWarm() && exiting !== self;
       const previous = active ?? exiting;
       if (previous && previous !== self) {
         handoff = previous.rect();
-        // Don't cross-fade: the outgoing one just goes.
-        previous.finishExit();
+        leaving = previous;
       }
       active = self;
       exiting = null;
@@ -118,11 +121,14 @@ export function Tooltip({
   useEffect(() => {
     if (!open || !instant) return;
     const from = handoff;
+    const previous = leaving;
     handoff = undefined;
-    if (!from || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    leaving = null;
     const frame = requestAnimationFrame(() => {
+      // Don't cross-fade: the outgoing one just goes, in the frame this one shows.
+      if (previous && previous !== active) previous.finishExit();
       const popup = popupRef.current;
-      if (!popup) return;
+      if (!popup || !from || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const to = popup.getBoundingClientRect();
       const dx = from.left + from.width / 2 - (to.left + to.width / 2);
       const dy = from.top - to.top;
@@ -131,12 +137,16 @@ export function Tooltip({
       popup.animate(
         { translate: [`${dx}px ${dy}px`, "0 0"] },
         {
-          duration: ms(style.getPropertyValue("--ui-dur-snap"), 250),
+          duration: ms(style.getPropertyValue("--ui-dur-snap"), 240),
           easing: style.getPropertyValue("--ui-ease-snap").trim() || "ease-out",
         },
       );
     });
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(frame);
+      // Never left hanging: if this one closed before its first frame, the outgoing one still goes.
+      if (previous && previous !== active) previous.finishExit();
+    };
   }, [open, instant]);
 
   useEffect(() => {
@@ -144,6 +154,7 @@ export function Tooltip({
     return () => {
       if (active === self) active = null;
       if (exiting === self) exiting = null;
+      if (leaving === self) leaving = null;
     };
   }, []);
 

@@ -2,7 +2,7 @@
   "name": "combobox",
   "title": "Combobox",
   "summary": "Type-to-filter autocomplete for local or async results. Each match marks the typed text, and stale results stay in place while new ones load.",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "dependencies": [
     "field",
     "icons",

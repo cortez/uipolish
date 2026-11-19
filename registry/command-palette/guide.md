@@ -144,8 +144,10 @@ the wrapper transitions `height` on the spring.
 
 Animating `grid-template-rows` doesn't fit, since the target is a measured
 pixel height that changes many times a second, and `interpolate-size` isn't
-reliable across browsers. Under `prefers-reduced-motion: reduce` the height
-changes instantly and the loading row is plain muted text with no band.
+reliable across browsers. Under `prefers-reduced-motion: reduce` the palette
+fades in and out without scaling (the dialog's rule), the height changes
+instantly, the loading row and the empty state still fade in, and the loading
+row is plain muted text with no band.
 
 ## Accessibility
 

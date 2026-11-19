@@ -44,10 +44,12 @@ const STATUS_TEXT: Record<StepStatus, string> = {
   cancelled: "Cancelled",
 };
 
-/** 2400 → "2.4s", 12000 → "12s", 74000 → "1m 14s". */
+/** 2400 → "2.4s" and 2000 → "2.0s" (precise), 12000 → "12s", 74000 → "1m 14s". */
 export function formatElapsed(ms: number, precise = false) {
-  const s = ms / 1000;
-  if (s < 10 && precise) return `${Math.max(0.1, Math.round(s * 10) / 10)}s`;
+  const s = Math.max(0, ms) / 1000;
+  // One decimal always, so a column of times reads "2.0s" beside "1.6s".
+  const tenths = Math.max(0.1, Math.round(s * 10) / 10);
+  if (precise && tenths < 10) return `${tenths.toFixed(1)}s`;
   const whole = Math.floor(s);
   if (whole < 60) return `${whole}s`;
   const rest = whole % 60;
@@ -104,9 +106,16 @@ function Chevron({ open }: { open: boolean }) {
   return <Icon className={styles.chevron} name="chevron-right" data-turn={open ? "open" : ""} />;
 }
 
-function Step({ step, now, onRetry }: { step: ToolStep; now: number; onRetry?: (id: string) => void }) {
+function Step({ step, now, arrived, onRetry }: { step: ToolStep; now: number; arrived: boolean; onRetry?: (id: string) => void }) {
   const ioId = useId();
   const [open, setOpen] = useState(false);
+  // The error rises in when the step fails, not when the list is first drawn with a failure in it.
+  const [status, setStatus] = useState(step.status);
+  const [changed, setChanged] = useState(false);
+  if (status !== step.status) {
+    setStatus(step.status);
+    setChanged(true);
+  }
   const itemRef = useRef<HTMLLIElement>(null);
   const hasIO = Boolean(step.input || step.output);
   const settled = SETTLED.includes(step.status);
@@ -125,7 +134,7 @@ function Step({ step, now, onRetry }: { step: ToolStep; now: number; onRetry?: (
   }
 
   return (
-    <li ref={itemRef} className={styles.step} data-status={step.status}>
+    <li ref={itemRef} className={styles.step} data-status={step.status} data-arrived={arrived || undefined}>
       <StatusIcon status={step.status} />
       <span className={styles.rail} aria-hidden="true" />
       <div className={styles.main}>
@@ -162,7 +171,7 @@ function Step({ step, now, onRetry }: { step: ToolStep; now: number; onRetry?: (
         </div>
         {step.detail && <p className={styles.detail}>{step.detail}</p>}
         {step.status === "failed" && (
-          <div className={styles.error}>
+          <div className={styles.error} data-arrived={changed || undefined}>
             <p>{step.error ?? "This step didn’t finish."}</p>
             {onRetry && (
               <Button variant="secondary" onClick={retry}>
@@ -204,6 +213,8 @@ export function ToolSteps({ steps, onRetry, label = "Agent steps", defaultOpen, 
   const listId = useId();
   const [open, setOpen] = useState(defaultOpen ?? !allSucceeded(steps));
   const [announcement, setAnnouncement] = useState("");
+  // The steps the list was first drawn with: only ones added later rise in.
+  const [first] = useState(() => new Set(steps.map((s) => s.id)));
 
   // Announce settled steps; fold on a clean finish, open on failure.
   const [previous, setPrevious] = useState(steps);
@@ -265,7 +276,7 @@ export function ToolSteps({ steps, onRetry, label = "Agent steps", defaultOpen, 
         <div className={styles.clip}>
           <ol className={styles.list} aria-label={label}>
             {steps.map((step) => (
-              <Step key={step.id} step={step} now={now} onRetry={onRetry} />
+              <Step key={step.id} step={step} now={now} arrived={!first.has(step.id)} onRetry={onRetry} />
             ))}
           </ol>
         </div>

@@ -382,6 +382,15 @@ type NavProps = {
 
 const ITEM = "[data-sidebar-item]";
 
+const RTL_LETTER = /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/;
+
+/** What `dir="auto"` would resolve to, from the first letter, written out so
+ *  the stylesheet can fade a cut title at its own end, not the sidebar's. */
+function textDir(text: string) {
+  const first = text.match(/\p{L}/u)?.[0];
+  return first ? (RTL_LETTER.test(first) ? "rtl" : "ltr") : "auto";
+}
+
 function usable(el: Element) {
   return el.getClientRects().length > 0 && !el.closest("[inert]");
 }
@@ -564,10 +573,10 @@ function ItemRow({ item, current, onSelect, tooltip = false, nested = false }: I
 }
 
 /** Opens and closes on height: grid rows 0fr → 1fr, its content inert while closed. */
-function Fold({ open, id, children }: { open: boolean; id?: string; children: ReactNode }) {
+function Fold({ open, children }: { open: boolean; children: ReactNode }) {
   return (
     <div className={styles.fold} data-open={open || undefined} inert={!open}>
-      <div id={id} className={styles.foldInner}>
+      <div className={styles.foldInner}>
         {children}
       </div>
     </div>
@@ -901,7 +910,7 @@ function RecentRow({
   // Titles are people's own words, in any script: each takes its own direction.
   const title = (
     <>
-      <span className={styles.recentTitle} dir="auto">
+      <span className={styles.recentTitle} dir={textDir(item.title)}>
         {item.title}
       </span>
       {item.meta && <span className={styles.recentMeta}>{item.meta}</span>}
@@ -1123,11 +1132,11 @@ function MenuButton({ media, name, detail, children, kind }: MenuButtonProps) {
               {media}
             </span>
             <span className={styles.menuText}>
-              <span className={styles.menuName} dir="auto" title={name}>
+              <span className={styles.menuName} dir={textDir(name)} title={name}>
                 {name}
               </span>
               {detail && (
-                <span className={styles.menuDetail} dir="auto">
+                <span className={styles.menuDetail} dir={textDir(detail)}>
                   {detail}
                 </span>
               )}

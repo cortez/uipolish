@@ -86,11 +86,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* The panel only fades: no scale, no blur. */
   .panel {
-    transition: none;
+    transition-property: opacity;
   }
   .panel[data-starting-style],
   .panel[data-ending-style] {
     scale: none;
+    filter: none;
   }
 }

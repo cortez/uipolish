@@ -170,8 +170,7 @@ export function ThemeToggle({
 }: ThemeToggleProps) {
   const controlled = value !== undefined;
   const page = useDocumentTheme({ storageKey, transition }, !controlled);
-  const system = useSystemTheme();
-  const resolved = controlled ? (value === "system" ? system : value) : page.resolvedTheme;
+  const resolved = controlled ? (value === "system" ? page.systemTheme : value) : page.resolvedTheme;
   const next: ResolvedTheme = resolved === "dark" ? "light" : "dark";
 
   // Fade (reduced motion) only on a real change, never on hydration.

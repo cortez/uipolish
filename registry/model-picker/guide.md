@@ -94,7 +94,7 @@ The list's edge is the one in `--ui-shadow-floating`: the same outline color as 
 | Name morph and trigger width | `--ui-dur-glide` | `--ui-ease-glide`: the width lands once, with no overshoot to narrow the trigger past its new size |
 | Fill and text color | `--ui-dur-instant` | `--ui-ease-color` |
 
-Under `prefers-reduced-motion: reduce` the list appears at once, the
+Under `prefers-reduced-motion: reduce` the list fades in without scaling, the
 highlight jumps, the check appears drawn, and the name and width change
 in one step.
 

@@ -1,7 +1,7 @@
 # Tabs
 
 Switches between sibling views of one thing: the menu, notes and
-activity of a single dinner. A pill sits behind the selected tab and springs
+activity of a single dinner. A pill sits behind the selected tab and glides
 to the next one. The selected tab can live in the URL, so a refresh, a shared
 link or the back button lands on the same tab. A tab can carry a count, and
 the list can stand as a column beside the panels, as a settings sidebar.
@@ -71,7 +71,8 @@ in one size.
 ```
 
 The count sits 6px after the label, a step quieter (subtle at rest, muted
-when selected or hovered), at regular weight, in tabular figures. A count
+when selected or hovered), at regular weight, its digits in tabular figures
+(the text morph sets them on the digits alone). A count
 that changes keeps its width as long as it keeps its digits; when it gains
 or loses one (9 → 10), the digits roll with `TextMorph`, the tab's width
 follows on the glide spring, and the pill follows the tab frame by frame,
@@ -109,14 +110,14 @@ one.
 | State | What you see | How |
 |---|---|---|
 | Rest | Muted label, no background | `.tab` |
-| Hover | Label turns to the text color, 150ms | `@media (hover: hover)` only |
+| Hover | Label turns to the text color, `--ui-dur-instant` | `@media (hover: hover)` only |
 | Press | Nothing of its own: the pill moving to the tab is the feedback | — |
 | Selected | Label in the text color, pill behind it | `[data-active]` (Base UI) |
-| Focus | 2px ring with a 2px offset, appears instantly | `:focus-visible` |
+| Focus | A line just inside the tab's edge, appears instantly | `:focus-visible` |
 | Before JS | The selected tab paints its own pill until the moving pill is measured | indicator still `hidden` |
 | Count | Number after the label, subtle; muted when selected or hovered | `count` |
 | Vertical | A column with no edge, full-width rows, counts at the end; rows are 40px on touch | `orientation="vertical"`, at 480px and wider |
-| Overflow | List scrolls sideways with no scrollbar; the edge with hidden tabs fades. A mouse wheel scrolls it sideways, then the page once it reaches an end; a swipe past the end stops there, with no rubber band or back gesture. Selecting a tab scrolls it clear of the fade, and the first and last back to the 4px inset | `data-overflow-start`, `data-overflow-end`, `scroll-padding-inline` |
+| Overflow | List scrolls sideways with no scrollbar; the edge with hidden tabs fades. A mouse wheel scrolls it sideways, then the page once it reaches an end; a swipe past the end stops there, with no rubber band or back gesture. Selecting a tab scrolls it clear of the fade (smoothly; at once under reduced motion), and the first and last back to the 4px inset | `data-overflow-start`, `data-overflow-end`, `scroll-padding-inline` |
 
 Every state uses the same font weight. A bold selected tab is wider than a
 regular one, so selecting it would push its neighbors sideways.
@@ -148,8 +149,8 @@ How the pill moves:
   sampled from the two easing tokens in JS and played as one Web Animation
   on top of the resting position, which takes over when it ends. The flight
   lives in `pill-flight.ts`, which the Segmented control plays too.
-- The pill keeps its height in flight. A dip and a springy leading edge
-  were tried and read as organic, a blob more than a control.
+- The pill keeps its height in flight and never overshoots: a dip and a
+  springy leading edge read as organic, a blob more than a control.
 - Nothing animates until the page has painted once. A tab selected from
   the URL is already in place; it doesn't slide in from the left.
 - Base UI observes the list and every tab and re-places it without
@@ -158,11 +159,16 @@ How the pill moves:
 - If the user picks another tab mid-move, the pill starts from where it is
   on screen, so the motion stays continuous.
 
-Under `prefers-reduced-motion: reduce` the pill, panels and counts switch instantly.
+Under `prefers-reduced-motion: reduce` the pill and counts switch at once
+and the list scrolls without easing; the panels still crossfade, which is a
+fade and no movement.
 
 ## URL sync
 
-With `param="tab"`, Tabs reads `?tab=` before the first paint, writes it with
+With `param="tab"`, Tabs reads `?tab=` as it mounts, before the browser
+paints the hydrated tree (server-rendered HTML can't see the URL's query, so
+it shows `defaultValue` until then; where the tab must be right in the HTML,
+control `value` from the router instead), writes it with
 `history.replaceState` on every change (no new history entries, so Back
 leaves the page rather than stepping through tabs), and follows `popstate`
 so back and forward update the selected tab. An unknown value falls back to
@@ -231,7 +237,7 @@ const [tab, setTab] = useState("menu");
 {tab === "menu" && <DinnerMenu />}
 ```
 
-After: arrow keys work, nothing reflows, the pill springs between tabs, and
+After: arrow keys work, nothing reflows, the pill glides between tabs, and
 `?tab=notes` survives reload and Back.
 
 ```tsx

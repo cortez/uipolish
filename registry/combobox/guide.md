@@ -54,7 +54,7 @@ component's own.
 
 | State | What you see |
 |---|---|
-| Searching | Nothing for 300ms, then "Searching…" with the text sweep under the results. With no results yet, the whole panel waits |
+| Searching | Nothing for 300ms, then "Searching…" with the text sweep under the results. With no results yet, the whole panel waits. The wait and the fade hold under reduced motion |
 | Match | The row's text muted, the typed part in full color, painted with `::highlight()`: color only, so nothing in a row moves as you type |
 | Nothing found | A status line, not an option, so arrows skip it |
 | Load failed | A "Try again" row |

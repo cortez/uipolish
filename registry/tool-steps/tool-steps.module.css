@@ -70,7 +70,7 @@
   }
 }
 
-/* Beside 15px text: the md icon, like every disclosure. */
+/* One chevron size everywhere, a step under the icons around it. */
 :is(.header, .title) .chevron {
   width: var(--ui-icon-chevron);
   height: var(--ui-icon-chevron);
@@ -122,6 +122,11 @@
   grid-template-columns: 16px minmax(0, 1fr);
   column-gap: var(--ui-space-3);
   padding-bottom: var(--ui-space-4);
+}
+
+/* A step added to a list that's already on screen rises in; the steps a
+   list is first drawn with are simply there. */
+.step[data-arrived] {
   animation: step-in var(--ui-dur-fast) var(--ui-ease-enter);
 }
 
@@ -140,7 +145,7 @@
   position: absolute;
   top: calc(var(--row) / 2 + 8px + 4px);
   bottom: 0;
-  left: 7.75px;
+  inset-inline-start: 7.75px;
   width: var(--ui-hairline);
   background: var(--ui-border-strong);
 }
@@ -355,6 +360,9 @@ button.title:active {
   align-items: center;
   gap: var(--ui-space-2) var(--ui-space-3);
   margin-top: var(--ui-space-2);
+}
+
+.error[data-arrived] {
   animation: step-in var(--ui-dur-fast) var(--ui-ease-enter);
 }
 
@@ -415,14 +423,13 @@ button.title:active {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .root[data-running="true"] .summary,
-  .root[data-running="true"] .summary * {
+  .root[data-running="true"] .summary {
     animation: none;
-    background: none;
+    mask-image: none;
     color: var(--ui-muted);
   }
-  .step,
-  .error {
+  .step[data-arrived],
+  .error[data-arrived] {
     animation: none;
   }
   .panel,

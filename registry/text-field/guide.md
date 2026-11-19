@@ -28,7 +28,7 @@ stack of plain fields keeps the form's own gap.
 | Focus | Fills with `--ui-field-focus-fill` the instant focus lands; the edge stays as it rests; leaving eases back | `:focus` (fields show focus on click too) |
 | Invalid | Edge eases to danger; the hint fades out and the error, with its icon, fades in in the same place | `aria-invalid`, set on blur by `validate` or by `error` |
 | Invalid + focus | Danger edge at the hairline weight, and the focus fill | |
-| Fixed while typing | Edge eases from danger back to the focus color; the error fades out and the hint fades back in | `validate` re-runs on each keystroke once an error showed |
+| Fixed while typing | Edge eases from danger back to its resting color; the error fades out and the hint fades back in | `validate` re-runs on each keystroke once an error showed |
 | New error over an old one | The new message fades in where the old one was | |
 | Disabled | 50% opacity, default cursor, no transitions in or out | native `disabled` |
 | Password, hidden | Dots, an eye button inside the end of the field | `type="password"` |
@@ -66,8 +66,8 @@ it can be pressed again.
 
 | What | Duration | Easing |
 |---|---|---|
-| Edge on hover, and back from focus | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Fill on focus | 0ms, never animated | n/a |
+| Fill easing back on blur | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Overflow fade in and out | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Edge to danger and back | `--ui-dur-fast` (160ms), also while focused | `--ui-ease-color` |
 | Leaving message (hint or error) fades out | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
@@ -77,10 +77,9 @@ it can be pressed again.
 | Reveal button hover color | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Reveal button press release | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 
-Nothing in the field moves: the edge only changes color and width, and the
-messages only fade. The edge is drawn from two registered custom properties,
-one for the neutral color and one for how far it's mixed toward danger, so
-focus can land instantly while validity still eases. Under
+Nothing in the field moves: the edge only changes color, and the messages
+only fade. How far the edge is mixed toward danger is a registered custom
+property, so the focus fill can land instantly while validity still eases. Under
 `prefers-reduced-motion: reduce` the colors and fades stay (they're short
 feedback, not motion), a replaced error swaps without fading, and the reveal
 button doesn't scale.
@@ -88,7 +87,7 @@ button doesn't scale.
 ## Layout
 
 Stack fields with a 16px gap (`--ui-space-4`). Inside a field the label,
-input and message sit 6px apart, so each field reads as one group and the
+input and message sit 8px apart (`--ui-space-2`), so each field reads as one group and the
 reserved message line never crowds the next label.
 
 ## Accessibility

@@ -59,14 +59,8 @@
   --field-height: var(--ui-control-lg);
 }
 
-/* Separate registered parts, so focus can move --field-edge instantly while
-   --field-danger still eases. */
-@property --field-edge {
-  syntax: "<color>";
-  inherits: false;
-  initial-value: transparent;
-}
-
+/* How far the edge is mixed toward danger: registered, so it can ease on
+   its own while the focus fill lands at once. */
 @property --field-danger {
   syntax: "<percentage>";
   inherits: false;
@@ -74,8 +68,6 @@
 }
 
 .input {
-  --field-edge: var(--ui-border-strong);
-  --field-edge-width: var(--ui-hairline);
   width: 100%;
   height: var(--ui-control-md);
   /* 14px in, the same as a select's label, so stacked fields line up. */
@@ -83,12 +75,11 @@
   border: 0;
   border-radius: var(--ui-radius-md);
   background: var(--ui-surface);
-  box-shadow: inset 0 0 0 var(--field-edge-width) color-mix(in oklch, var(--field-edge), var(--ui-danger) var(--field-danger));
+  box-shadow: inset 0 0 0 var(--ui-hairline) color-mix(in oklch, var(--ui-border-strong), var(--ui-danger) var(--field-danger));
   color: var(--ui-foreground);
   font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
   outline: none;
   transition:
-    --field-edge var(--ui-dur-instant) var(--ui-ease-color),
     background-color var(--ui-dur-instant) var(--ui-ease-color),
     --field-danger var(--ui-dur-fast) var(--ui-ease-color);
   --ui-icon-stroke: var(--ui-icon-stroke-regular);

@@ -60,7 +60,7 @@ export function TabsPreview() {
       <section className={base.group}>
         <div className={styles.header}>
           <h2 className={base.heading}>Saturday supper, 14 Alder Lane</h2>
-          <p className={base.note}>Event #1182 · 14 guests</p>
+          <p className={base.note}>Event #1182 · Saturday, November 7</p>
         </div>
 
         <Tabs defaultValue="items" param="tab" crossfade onValueChange={refreshSearch}>

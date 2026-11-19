@@ -213,7 +213,7 @@ export function ToolStepsPreview() {
         <div className={own.reserve}>
           {GHOSTS.map((ghost, i) => (
             <div key={i} className={own.ghost} aria-hidden="true" inert>
-              <ToolSteps steps={ghost} label="" />
+              <ToolSteps steps={ghost} onRetry={() => {}} label="" />
             </div>
           ))}
           <ToolSteps key={run} steps={steps} onRetry={retry} label="Steps for the Saturday supper shopping list" />

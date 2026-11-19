@@ -98,12 +98,15 @@
   rotate: 90deg;
 }
 
+/* Movement becomes a fade: it still arrives and leaves, without the scale
+   and the blur. */
 @media (prefers-reduced-motion: reduce) {
   .surface {
-    transition: none;
+    transition-property: opacity;
   }
   .surface[data-starting-style],
   .surface[data-ending-style] {
     scale: none;
+    filter: none;
   }
 }

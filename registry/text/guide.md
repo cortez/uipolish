@@ -23,9 +23,19 @@ Compose it into the class that holds the text:
 }
 ```
 
-- `line`: one line. In a flex row it already sets `min-width: 0`.
-- `lines`: several lines, 2 unless `--truncate-lines` says otherwise. The
-  element has to be block-level (or a grid or flex item).
+- `truncate`: one line. In a flex row it already sets `min-width: 0`.
+- `truncateLines`: several lines, 2 unless `--truncate-lines` says otherwise.
+  The element has to be block-level (or a grid or flex item).
+
+The same file holds three more utilities the components compose:
+
+- `wrap`: text that's never cut. A long name, email or path breaks onto the
+  next line, inside a word only when there's nowhere else to break.
+- `srOnly`: visually hidden, still read by screen readers.
+- `sweep`: work in progress. The text dims and a light band crosses it once
+  every `--ui-dur-sweep` (2.4s), `linear`; `--sweep-dim` sets the dim
+  (default 0.55). Under `prefers-reduced-motion: reduce` the band and the
+  dim are both dropped and the text stays still.
 
 ## When to use it
 

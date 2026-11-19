@@ -121,7 +121,7 @@ The open list's edge is the one in `--ui-shadow-floating`: the same outline colo
 
 The width change is the one place a select moves its neighbors, and only in
 answer to the user's choice. Under `prefers-reduced-motion: reduce` the
-label swaps, the list appears and the highlight jumps.
+label swaps, the list fades in without scaling and the highlight jumps.
 
 ## Touch screens
 

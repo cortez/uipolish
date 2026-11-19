@@ -64,7 +64,7 @@ The panel also unblurs from 2px as it opens. The scale grows from Base UI's
 down and out of that button. The positioner holds the position and is never
 scaled; the panel inside it animates between `[data-starting-style]` and
 `[data-ending-style]`, and Base UI keeps it mounted until the exit finishes.
-Under `prefers-reduced-motion: reduce` it appears and disappears at once.
+Under `prefers-reduced-motion: reduce` it fades in and out, without scaling.
 
 ## Accessibility
 

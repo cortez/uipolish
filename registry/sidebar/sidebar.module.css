@@ -347,7 +347,7 @@
     color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
-/* A group heading is 13px text: its chevron is the sm icon. */
+/* A section heading is small text: its chevron is the sm icon. */
 .headingButton .chevron {
   width: var(--ui-icon-chevron);
   height: var(--ui-icon-chevron);
@@ -424,9 +424,7 @@
   text-align: start;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition:
-    background-color var(--ui-dur-instant) var(--ui-ease-color),
-    color var(--ui-dur-instant) var(--ui-ease-color);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
 @media (hover: hover) {
@@ -518,6 +516,17 @@
 
 [data-rtl] :is(.recentTitle, .menuName, .menuDetail, .renameInput) {
   text-align: right;
+}
+
+/* A cut title fades at its own end: an English title in a Hebrew sidebar
+   still runs out to the right. Doubled to outrank the shared truncate rule,
+   which reads the direction around it. */
+:is(.recentTitle, .menuName, .menuDetail):is(.recentTitle, .menuName, .menuDetail)[dir="ltr"] {
+  --truncate-to: right;
+}
+
+:is(.recentTitle, .menuName, .menuDetail):is(.recentTitle, .menuName, .menuDetail)[dir="rtl"] {
+  --truncate-to: left;
 }
 
 /* Room for the "…" while it shows, so the title fades out before it. */
@@ -672,14 +681,7 @@
 
 .showAll {
   composes: row;
-  color: var(--ui-muted);
   font-size: var(--ui-text-sm);
-}
-
-@media (hover: hover) {
-  .showAll:hover {
-    color: var(--ui-foreground);
-  }
 }
 
 /* Empty: quiet words in the list's place, no drawing. */
@@ -730,8 +732,10 @@
   min-width: 0;
   height: var(--ui-control-md);
   margin: 0;
-  /* The 24px mark centers on the icon column below it. */
-  padding: 0 calc(var(--sidebar-inset) - 4px);
+  /* The 24px mark centers on the icon column below it; the chevron ends
+     where the rows' chevrons and counts do. */
+  padding: 0;
+  padding-inline: calc(var(--sidebar-inset) - 4px) var(--sidebar-inset);
   border: 0;
   border-radius: var(--ui-radius-control);
   background: transparent;
@@ -872,8 +876,8 @@
   .sidebar[data-collapsed] :is(.label, .trailing, .chevron, .menuText, .scrollWrap, .corner) {
     transition: none;
   }
-  .recentItem[data-state="enter"],
-  .recentItem[data-state="enter"] > .recentInner {
+  /* A chat that arrives takes its space at once and still fades in. */
+  .recentItem[data-state="enter"] {
     animation: none;
   }
 }

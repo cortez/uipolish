@@ -252,12 +252,14 @@
   .trigger {
     transition-property: color;
   }
+  /* The list only fades: no scale, no blur. */
   .surface {
-    transition: none;
+    transition-property: opacity;
   }
   .surface[data-starting-style],
   .surface[data-ending-style] {
     scale: none;
+    filter: none;
   }
   .highlight {
     transition-property: opacity, background-color;

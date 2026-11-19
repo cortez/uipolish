@@ -346,8 +346,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* The list only fades: no scale, no blur. */
   .panel {
-    transition: none;
+    transition-property: opacity;
   }
   .panel[data-starting-style],
   .panel[data-ending-style] {
