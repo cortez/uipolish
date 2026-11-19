@@ -147,9 +147,9 @@
 }
 
 @media (hover: hover) {
-  /* One step up the edge set, as every field does; never the text gray. */
+  /* A step darker than the control's own edge; never the text gray. */
   .option:hover:not([data-disabled], [data-checked]) .radio {
-    --radio-edge: var(--ui-field-focus);
+    --radio-edge: color-mix(in oklch, var(--ui-border-control), var(--ui-foreground) 35%);
   }
 }
 

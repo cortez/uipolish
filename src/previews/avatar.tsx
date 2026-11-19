@@ -5,9 +5,9 @@ import base from "./preview.module.css";
 import styles from "./avatar.module.css";
 
 const GOING = [
-  { name: "Maya Chen" },
+  { name: "Maya Chen", src: "/avatars/maya-chen.jpg" },
   { name: "Priya Natarajan" },
-  { name: "Theo Okafor" },
+  { name: "Theo Okafor", src: "/avatars/theo-okafor.jpg" },
   { name: "Lena Fischer" },
   { name: "Sam Ortiz" },
   { name: "Jules Moreau" },
@@ -58,10 +58,10 @@ export function AvatarPreview() {
       </section>
 
       <section className={base.group}>
-        <h2 className={base.label}>Beside the name, and a photo that didn’t load</h2>
+        <h2 className={base.label}>Beside the name: a photo, and a photo that didn’t load</h2>
         <div className={styles.people}>
           <div className={styles.person}>
-            <Avatar name="Theo Okafor" decorative />
+            <Avatar name="Theo Okafor" src="/avatars/theo-okafor.jpg" decorative />
             <span>Theo Okafor</span>
           </div>
           <div className={styles.person}>

@@ -223,7 +223,7 @@
   --ui-muted: light-dark(oklch(0.5 0 0), oklch(0.71 0 0));
   --ui-subtle: light-dark(oklch(0.55 0 0), oklch(0.62 0 0));
   /* Edges: one solid neutral for every line, outline or divider. A card's
-     frame, a field, a button, a checkbox, a table's row rules, a key cap:
+     frame, a field, a button, a table's row rules, a key cap:
      the same color at the same 1px weight, so no line reads darker,
      lighter, thicker or thinner than another. Solid, not a see-through
      tint: a tint came out darker over the page than over a card or a
@@ -234,10 +234,11 @@
      Colored ones mix a hue at --ui-border-tint: the status edges below, or
      a component's own hue (a phase, a brand) at the same strength. */
   --ui-border-strong: light-dark(oklch(0.954 0 0), oklch(0.26 0 0));
-  /* An empty checkbox or radio: the one edge every field and button has,
-     over a soft flat fill, so the box is found by its shape and shade
-     together and its line matches the controls beside it. */
-  --ui-border-control: var(--ui-border-strong);
+  /* An empty checkbox or radio: a 16px box with a frame's faint line
+     could not be found at a glance, so its edge is a clear mid gray over
+     the soft fill. The one exception to the single edge: it marks a thing
+     to tick, not a frame around content. */
+  --ui-border-control: light-dark(oklch(0.8 0 0), oklch(0.4 0 0));
   --ui-fill-control: var(--ui-fill-solid);
   --ui-border: var(--ui-border-strong);
   --ui-border-subtle: var(--ui-border);
@@ -251,8 +252,9 @@
   --ui-fill-solid: color-mix(in oklch, var(--ui-foreground) 4.5%, var(--ui-surface));
   --ui-fill-strong-solid: color-mix(in oklch, var(--ui-foreground) 8%, var(--ui-surface));
   /* A field takes this fill while it has focus or its list is open; its
-     edge stays as it rests. */
-  --ui-field-focus-fill: var(--ui-fill-solid);
+     edge stays as it rests. In dark the soft fill moved too little to see,
+     so it takes the strong one, as tints need more there. */
+  --ui-field-focus-fill: light-dark(var(--ui-fill-solid), var(--ui-fill-strong-solid));
   --ui-ink: var(--ui-foreground);
   --ui-on-ink: light-dark(oklch(0.99 0 0), oklch(0.17 0 0));
   /* Secondary text on ink (a shortcut in a tooltip): the muted step. */
@@ -347,6 +349,14 @@
      control's scale. It starts below the edge, so a button's bottom line
      is the same line as its top, never a darker one. */
   --ui-shadow-control: 0 3px 6px -4px light-dark(oklch(0.21 0 0 / 0.08), transparent);
+  /* A knob (a switch's thumb, a slider's): white on a pale track, it's
+     found by its lift, so it takes a firmer, closer shadow and a faint
+     dark rim than a button does. In dark it's a light gray on a dark
+     track and needs none. */
+  --ui-shadow-knob:
+    0 0 0 var(--ui-hairline) light-dark(oklch(0.21 0 0 / 0.08), transparent),
+    0 1px 2px light-dark(oklch(0.21 0 0 / 0.14), transparent),
+    0 2px 6px -1px light-dark(oklch(0.21 0 0 / 0.12), transparent);
   /* A ring in the surface's color that cuts a dot or avatar out of what it
      overlaps (a status dot on an avatar, a stack of faces). */
   --ui-knockout: 2px;

@@ -135,6 +135,10 @@ controls when the pointer arrives.
   bigger scale reads as a toy. Images inside cards may go to `1.03` on hover,
   `--ui-dur-panel` on `--ui-ease-enter`, inside `overflow: hidden`; never
   scale text on hover.
+  One exception: a knob you hold (a slider's thumb) grows to `1.08` while
+  pressed. It is 20px and under the finger, so 3% is under a pixel and
+  can't be felt; the grow says "you have it" the way a drag lift does. It
+  springs back on `--ui-ease-snap` when let go.
 - Focus appears instantly — never transition focus styles.
 - Kill the mobile tap flash once globally:
   `html { -webkit-tap-highlight-color: transparent; }` and make sure

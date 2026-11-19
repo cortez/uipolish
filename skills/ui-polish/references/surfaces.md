@@ -57,9 +57,10 @@ mode for free.
     `--ui-border-accent`, `-success`, `-warning`, `-danger`, or a hue (a
     phase, a brand) mixed at `--ui-border-tint`.
   - `--ui-border-control` over `--ui-fill-control`: an empty checkbox or
-    radio. The same edge as every field and button, over a soft flat
-    fill, so the box is found by its shape and shade together and its line
-    matches the controls beside it; its label is always part of the target.
+    radio. A clear mid gray (oklch 0.8 light, 0.4 dark) over a soft flat
+    fill: a 16px box drawn with a frame's faint line can't be found at a
+    glance. It marks a thing to tick, not a frame, so it's the one neutral
+    edge that isn't the shared one; its label is always part of the target.
 
   Nothing else at rest: a button and a card rest on the one edge. No
   hand-picked alphas, no other `color-mix` of the text color for an edge,

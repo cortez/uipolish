@@ -122,7 +122,7 @@ the inset to be non-zero.
 
 | What | Duration | Easing |
 |---|---|---|
-| Panel and scrim in, from just past its edge | `--drawer-open` (`--ui-dur-panel` × 1.5, 420ms) | `--ui-ease-expand` |
+| Panel and scrim in, from just past its edge | `--drawer-open` (`--ui-dur-move`, 380ms: the ceiling for any transition) | `--ui-ease-expand` |
 | Panel and scrim out | `--drawer-close` (`--ui-dur-panel`, 280ms) | `--ui-ease-expand` |
 | Out after a flick | `--drawer-close` × `--drawer-swipe-strength` (0.1 to 1) | `--ui-ease-expand` |
 | Glide back after a short drag | `--ui-dur-glide` | `--ui-ease-glide` |

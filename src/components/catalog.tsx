@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Button } from "@registry/button/button";
 import Link from "@/components/link";
 import { BLEED, SHOWCASES } from "@/showcase";
 import styles from "./catalog.module.css";
@@ -56,18 +57,51 @@ function Card({ item, eager = false }: { item: CatalogItem; eager?: boolean }) {
 }
 
 /** Every item with a showcase, or only the first `limit` of them. The first
- *  `eager` cards render with the page; the rest as they near the screen. */
-export function Catalog({ items, limit, eager = 0 }: { items: CatalogItem[]; limit?: number; eager?: number }) {
+ *  `eager` cards render with the page; the rest as they near the screen.
+ *  With `phoneLimit`, a phone shows that many and a button for the rest:
+ *  one column of every card is a very long page. Wider screens show all. */
+export function Catalog({
+  items,
+  limit,
+  eager = 0,
+  phoneLimit,
+}: {
+  items: CatalogItem[];
+  limit?: number;
+  eager?: number;
+  phoneLimit?: number;
+}) {
+  const [open, setOpen] = useState(false);
+  const list = useRef<HTMLUListElement>(null);
+  const shown = items.filter((item) => SHOWCASES[item.name]).slice(0, limit);
+  const folds = phoneLimit !== undefined && shown.length > phoneLimit && !open;
+
+  function showAll() {
+    setOpen(true);
+    // The button leaves with the click: focus goes to the first card it revealed.
+    requestAnimationFrame(() => list.current?.querySelectorAll<HTMLElement>(`li:nth-child(${phoneLimit! + 1}) a`)[0]?.focus());
+  }
+
   return (
-    <ul className={styles.grid}>
-      {items
-        .filter((item) => SHOWCASES[item.name])
-        .slice(0, limit)
-        .map((item, i) => (
-          <li key={item.name}>
+    <>
+      <ul
+        ref={list}
+        className={styles.grid}
+        data-fold={folds || undefined}
+      >
+        {shown.map((item, i) => (
+          <li key={item.name} data-past-fold={phoneLimit !== undefined && i >= phoneLimit ? "" : undefined}>
             <Card item={item} eager={i < eager} />
           </li>
         ))}
-    </ul>
+      </ul>
+      {folds && (
+        <div className={styles.more}>
+          <Button variant="secondary" onClick={showAll}>
+            Show all {shown.length} components
+          </Button>
+        </div>
+      )}
+    </>
   );
 }

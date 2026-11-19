@@ -140,9 +140,7 @@
   margin-top: calc(var(--slider-knob-h) / -2);
   border-radius: var(--ui-radius-control);
   background: var(--slider-knob);
-  box-shadow:
-    0 0 0 var(--ui-hairline) var(--ui-border-strong),
-    var(--ui-shadow-control);
+  box-shadow: var(--ui-shadow-knob);
   /* Drives the focus ring: dark on the knob in both themes. */
   color: light-dark(var(--ui-foreground), var(--ui-surface));
   transition:

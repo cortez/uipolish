@@ -51,8 +51,8 @@ choose, Space chooses the focused one. Disabled options are skipped.
 
 | State | What you see |
 |---|---|
-| Rest | A soft fill (`--ui-fill-control`) and the standard hairline edge (`--ui-border-control`, the same as fields and buttons), as a checkbox has |
-| Hover | Ring and card edge move up to `--ui-field-focus` |
+| Rest | A soft fill (`--ui-fill-control`) and a clear mid-gray hairline edge (`--ui-border-control`, darker than a field's so the ring is found at a glance), as a checkbox has |
+| Hover | The ring's edge steps darker; a card's edge moves up to `--ui-field-focus` |
 | Press | The ring fills a shade at once and gives to `--ui-scale-press` (0.985), springing back on release. Cards: only the card's surface shrinks to 0.985, never its text |
 | Chosen | The ring fills with `--ui-control-on` (the primary button's ink), as a checked checkbox does, and a 6px `--ui-on-control-on` dot grows from its center: `clip-path` opens a circle on `--ui-ease-snap`; it closes a step faster on `--ui-ease-exit`. A chosen card takes the selected edge, `--ui-field-focus` at the hairline, like every edge. Edges are shadows, so nothing moves |
 | Focus | A line inside the circle (list) or inside the card's edge (cards), never animated |

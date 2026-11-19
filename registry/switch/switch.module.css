@@ -158,9 +158,7 @@
   inset: 0;
   border-radius: var(--switch-thumb-r);
   background: var(--switch-thumb);
-  box-shadow:
-    0 0 0 var(--ui-hairline) var(--ui-border-strong),
-    var(--ui-shadow-control);
+  box-shadow: var(--ui-shadow-knob);
   transform-origin: 0 50%;
   transition:
     translate var(--ui-dur-glide) var(--ui-ease-glide),
@@ -171,11 +169,6 @@
 
 :is([dir="rtl"]) .root .thumb::before {
   transform-origin: 100% 50%;
-}
-
-/* On the accent, the thumb needs no ring: its light fill is the edge. */
-.thumb[data-checked]::before {
-  box-shadow: var(--ui-shadow-control);
 }
 
 /* Press: the thumb reaches toward its new side at once; the release glides

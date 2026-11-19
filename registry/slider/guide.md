@@ -52,8 +52,8 @@ and screen readers all get a proper slider.
 - **Range:** `--ui-control-on`, the whole track slid back with `translate` so
   its end sits under the thumb's center.
 - **Thumb:** a 20px capsule (`--ui-capsule` wide), the raised surface with
-  a `--ui-border-strong` hairline and `--ui-shadow-control`, like the
-  segmented pill and the switch's thumb. In dark mode it's a light gray, as
+  lifted by `--ui-shadow-knob` (a faint dark rim and a close shadow), like
+  the switch's thumb, so at 0% it still stands out from the pale track. In dark mode it's a light gray, as
   the switch's is: a thumb the color of the surface reads as a hole.
 - **Base UI control and thumb:** the control covers the row and draws
   nothing. Its thumb is as wide as the drawn one and kept inside the track

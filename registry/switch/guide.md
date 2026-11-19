@@ -88,8 +88,9 @@ evenly, so their ends are concentric, and the thumb is a capsule
 
 **Surfaces.** The track is the segmented control's sunken track, with the
 strong fill: with no labels in it, the faint one barely reads as a control.
-The thumb is its raised pill: the surface, a `--ui-border-strong` hairline
-and `--ui-shadow-control`. In dark mode the off thumb is a light gray
+The thumb is a raised pill: the surface lifted by `--ui-shadow-knob` (a
+faint dark rim and a close shadow), so a white thumb on a pale track is
+found at a glance, on or off. In dark mode the off thumb is a light gray
 rather than the dark surface, which would read as a hole in a dark track;
 on, it's `--ui-on-control-on` in both themes.
 
