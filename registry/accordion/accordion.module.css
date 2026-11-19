@@ -72,7 +72,6 @@
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-md);
-  font-variant-numeric: tabular-nums;
   text-align: end;
   --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }

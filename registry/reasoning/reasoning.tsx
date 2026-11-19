@@ -265,7 +265,11 @@ export function Reasoning({
         </span>
         <span className={styles.timer} aria-hidden="true">
           <span>
-            <span className={styles.time}>{formatDuration(elapsed)}</span>
+            <span className={styles.time}>
+              {formatDuration(elapsed)
+                .split(" ")
+                .flatMap((part, i) => [i ? " " : null, <span key={i} className={styles.figure}>{part}</span>])}
+            </span>
           </span>
         </span>
         <Icon className={styles.chevron} name="chevron-right" data-turn={open ? "open" : ""} />

@@ -77,7 +77,7 @@ aligned with the rest of the page. Open content ends 12px above the next
 title row, the same as a title, so open and collapsed rows keep one rhythm. The chevron sits on the title's first
 line when it wraps. Content is muted 14px text, at most 65 characters wide.
 
-**Meta.** The value is 12px, muted, in tabular figures, on the title's
+**Meta.** The value is 12px and muted (no tabular figures: in some fonts they widen the spaces between words), on the title's
 first baseline. It sits 8px from the chevron and at least 16px from the
 title, so the two at the end read as one cluster. When the row runs short
 of room, the value gives way first: the title keeps its one line and the

@@ -34,7 +34,6 @@
   overflow-clip-margin: var(--ui-space-1);
   /* Must match the small button's label, so `ch` matches the numbers. */
   font: var(--ui-weight-medium) var(--ui-text-md) / 1 var(--ui-font-sans);
-  font-variant-numeric: tabular-nums;
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
@@ -200,6 +199,9 @@
 }
 
 .range {
+  /* On the figures only: on the whole line, some fonts widen the spaces
+     between the words too. */
+  font-variant-numeric: tabular-nums;
   color: var(--ui-foreground);
   font-weight: var(--ui-weight-medium);
   --ui-icon-stroke: var(--ui-icon-stroke-medium);

@@ -76,7 +76,6 @@
   grid-template-columns: 1fr;
   color: var(--ui-subtle);
   font-weight: var(--ui-weight-regular);
-  font-variant-numeric: tabular-nums;
   transition:
     grid-template-columns var(--ui-dur-glide) var(--ui-ease-glide),
     opacity var(--ui-dur-instant) var(--ui-ease-exit);
@@ -87,6 +86,12 @@
   min-width: 0;
   overflow: hidden;
   white-space: nowrap;
+}
+
+/* Tabular on each figure, not the line: some fonts widen the space in
+   "1m 12s" with it. */
+.figure {
+  font-variant-numeric: tabular-nums;
 }
 
 .time {

@@ -191,6 +191,10 @@ the lines above and below, and punctuation butts against it.
 - `font-variant-numeric: tabular-nums` on anything numeric that changes or
   aligns vertically: timers, counters, file sizes, prices in lists, line
   numbers, stat tiles. A two-second fix that kills row jitter.
+  Set it on the figures alone, never on an element that also holds words:
+  in some fonts the tabular feature includes the space, so "3 to add"
+  spreads to "3  to  add". A number on its own (a count, a time, a size)
+  takes it directly; in a phrase, wrap the digits in a span that does.
 - Curly quotes and real apostrophes (’ “ ”) in interface copy; straight
   quotes stay in code.
 - Ellipsis character (…) not three periods, in copy like "Searching…".
