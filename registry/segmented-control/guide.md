@@ -49,7 +49,7 @@ options share the width.
 |---|---|---|
 | Rest | Muted label | |
 | Hover | Label in the text color | `@media (hover: hover)` |
-| Press | Nothing of its own: the pill moving over is the answer | |
+| Press | On another option: its label comes up to the text color and a faint fill (`--ui-fill`) marks where the pill will land, in 80ms; the pill flies there on release. On the chosen option: its pill presses to `--ui-scale-press` and springs back | `:active` |
 | Checked | Label in the text color, pill behind it | `[data-checked]` |
 | Focus | A line just inside the option's pill, instantly | `:focus-visible` |
 | Disabled | 50% opacity, no hover, skipped by the arrow keys | `disabled` → `[data-disabled]` |
@@ -89,6 +89,7 @@ shows), and the pill scrolls with them.
 |---|---|---|
 | Pill stretches a little to the checked option and draws in behind it | `--ui-dur-glide` | both edges `--ui-ease-glide`, the leading one sooner |
 | Label color | `--ui-dur-instant` | `--ui-ease-color` |
+| Press: fill and label down, pill to 0.985; release | `--ui-dur-press` (80ms); `--ui-dur-instant` color, `--ui-dur-snap` scale | `--ui-ease-color`, `--ui-ease-snap` |
 
 The flight is the Tabs pill's own: one function, `flyPill` in
 `tabs/pill-flight.ts`, plays both, so they never drift apart. The edge

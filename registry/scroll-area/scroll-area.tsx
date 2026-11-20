@@ -16,6 +16,9 @@ type ScrollAreaProps = Omit<ComponentProps<"div">, "ref"> & {
 const FOCUSABLE =
   'a[href], area[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), iframe, summary, [contenteditable]:not([contenteditable="false"]), [tabindex]:not([tabindex="-1"])';
 
+/** What a press can land on: a click on one that's cut by an edge scrolls it into view. */
+const PRESSABLE = "a[href], button, input, select, textarea, label, summary, [role], [tabindex]";
+
 /** A scroll container whose edges fade where there's more content past them. */
 export function ScrollArea({
   label,
@@ -87,7 +90,34 @@ export function ScrollArea({
       viewport.scrollLeft += rtl ? -step : step;
     };
 
+    // A press on something cut by an edge (a chip half under the fade), or
+    // keyboard focus landing on it, brings it into view, clear of the fade.
+    // Only this area scrolls, never the page.
+    const reveal = (target: Element | null) => {
+      if (!target || !content.contains(target)) return;
+      const style = getComputedStyle(viewport);
+      const pad = parseFloat(vertical ? style.scrollPaddingTop : style.scrollPaddingLeft) || 0;
+      const v = viewport.getBoundingClientRect();
+      const t = target.getBoundingClientRect();
+      const [start, end, from, to] = vertical ? [t.top, t.bottom, v.top, v.bottom] : [t.left, t.right, v.left, v.right];
+      // Wider than the area: there's no position that shows it all.
+      if (end - start > to - from - pad * 2) return;
+      const by = start < from + pad ? start - from - pad : end > to - pad ? end - to + pad : 0;
+      if (Math.abs(by) < 1) return;
+      const behavior = matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth";
+      viewport.scrollBy({ [vertical ? "top" : "left"]: by, behavior });
+    };
+    const onClick = (event: MouseEvent) => {
+      // A person's press only: controls also click their hidden inputs from script.
+      if (event.isTrusted && event.target instanceof Element) reveal(event.target.closest(PRESSABLE));
+    };
+    const onFocusIn = (event: FocusEvent) => {
+      if (event.target instanceof Element && event.target.matches(":focus-visible")) reveal(event.target);
+    };
+
     measure();
+    viewport.addEventListener("click", onClick);
+    viewport.addEventListener("focusin", onFocusIn);
     viewport.addEventListener("scroll", onScroll, { passive: true });
     viewport.addEventListener("wheel", onWheel, { passive: false });
     const resize = new ResizeObserver(measure);
@@ -99,6 +129,8 @@ export function ScrollArea({
     return () => {
       cancelAnimationFrame(frame);
       cancelAnimationFrame(pending);
+      viewport.removeEventListener("click", onClick);
+      viewport.removeEventListener("focusin", onFocusIn);
       viewport.removeEventListener("scroll", onScroll);
       viewport.removeEventListener("wheel", onWheel);
       resize.disconnect();

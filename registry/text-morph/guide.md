@@ -42,7 +42,11 @@ Button uses it for string labels.
    rapid changes never jump.
 4. Leaving letters are drawn once more in a layer React never renders into,
    then fade and lift out.
-5. The wrapper's width animates from its old width to the new one.
+5. The wrapper's width animates from its old width to the new one. Its
+   clip edge is soft, and the soft part sits just past the width (in
+   padding a negative margin gives back), so letters inside the label are
+   never dimmed by it: a word that stays at the end ("of 19") holds its
+   full color from the first frame while the label grows or shrinks.
 6. **Numbers roll.** When two strings differ only in their numbers ("12
    guests" → "13 guests", "$9.95" → "$10.00", "1–25 of 240" → "26–50 of
    240", "62%" → "63%"), digits pair by place value (the whole part from the

@@ -77,6 +77,8 @@ straight from the command alone to its exit code.
 - Output is split into lines, and each line is a memoized row keyed by its
   place in the whole output, so lines that are done never re-render, and a
   line fades in once when it lands.
+- The body's height eases (the `animated-size` box): a line landing, or
+  the fold opening, pushes what's below the card instead of bumping it.
 - The body follows new lines only while it's scrolled to the bottom; scroll
   up and it stays where you put it. It starts at the bottom: the end of a
   command's output is what's read first.
@@ -95,12 +97,16 @@ the new chunk.
 | What | Duration | Easing |
 |---|---|---|
 | A new line fades in | `--ui-dur-base` (200ms) | `--ui-ease-enter` |
+| The body grows with a new line, or the fold opens | `--ui-dur-panel` (280ms); closing `--ui-dur-base` (200ms) | `--ui-ease-expand`; `--ui-ease-collapse` |
+| The status changes ("Running" to "Exit 0"): the new one fades in. The one a block is first drawn with doesn't | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |
+| Stop fades in with "Running" and out when the command ends, then leaves the header | in `--ui-dur-fast` (160ms), out `--ui-dur-instant` (120ms) | `--ui-ease-enter`, `--ui-ease-exit` |
 | Running dot breathes | `--ui-dur-pulse` (700ms), alternating | `--ui-ease-pulse` |
 | Copy → Copied, Stop → Stopping…, Show all 214 lines → Show last 12 lines: label morph | `--ui-dur-glide` (320ms), letters out in `--ui-dur-instant` (120ms) | `--ui-ease-glide` |
 | Copy and Stop hover color | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Edge fades | instant | n/a |
 
 Under `prefers-reduced-motion: reduce` lines appear without fading, the
+body takes its height at once, the
 running dot fades slowly instead of shrinking, and labels swap without
 morphing. "Running" and the ticking time stay, so the state still reads.
 

@@ -54,7 +54,8 @@ component's own.
 
 | State | What you see |
 |---|---|
-| Searching | Nothing for 300ms, then "Searching…" with the text sweep under the results. With no results yet, the whole panel waits. The wait and the fade hold under reduced motion |
+| Searching | Nothing for 300ms, then "Searching…" with the text sweep under the results. A popup that has shown nothing yet waits whole; if its first results land inside those 300ms it arrives with the popup's usual entrance (fade, scale from 0.97, blur clearing, `--ui-dur-fast`) instead of switching on. A popup already on screen ("No matches") stays put while the next search runs. The wait and the fade hold under reduced motion |
+| Results change | The list's height glides to the new set (`--ui-dur-glide` on `--ui-ease-glide`, no overshoot); only one box animates, the rows lay out once. At once under reduced motion |
 | Match | The row's text muted, the typed part in full color, painted with `::highlight()`: color only, so nothing in a row moves as you type |
 | Nothing found | A status line, not an option, so arrows skip it |
 | Load failed | A "Try again" row |

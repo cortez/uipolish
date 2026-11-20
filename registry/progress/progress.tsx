@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties, ReactNode } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
 import { Progress as BaseProgress } from "@base-ui/react/progress";
 import { TextMorph } from "../text-morph/text-morph";
 import styles from "./progress.module.css";
@@ -28,6 +28,15 @@ export function Progress({ value, max = 100, label, valueText, tone = "neutral",
   const live = valueText === undefined && known;
   const shownValue = valueText === undefined ? (known ? `${percent}%` : null) : valueText;
 
+  // Unknown turning known: the fill comes in from the start of the track
+  // instead of cutting from wherever the sweep was to the amount.
+  const [wasKnown, setWasKnown] = useState(known);
+  const [arriving, setArriving] = useState(false);
+  if (wasKnown !== known) {
+    setWasKnown(known);
+    setArriving(known);
+  }
+
   return (
     <BaseProgress.Root
       value={known ? value : null}
@@ -48,7 +57,7 @@ export function Progress({ value, max = 100, label, valueText, tone = "neutral",
       </div>
       <BaseProgress.Track className={styles.track} style={{ "--progress": fraction } as CSSProperties}>
         {/* Full width and slid back, so Base UI's width is replaced. */}
-        <BaseProgress.Indicator className={styles.fill} style={known ? { width: "auto" } : undefined} />
+        <BaseProgress.Indicator className={styles.fill} data-arriving={arriving || undefined} style={known ? { width: "auto" } : undefined} />
       </BaseProgress.Track>
     </BaseProgress.Root>
   );

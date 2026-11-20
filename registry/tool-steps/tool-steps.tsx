@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { AnimatedSize } from "../animated-size/animated-size";
 import { Button } from "../button/button";
 import { Icon } from "../icons/icons";
 import { TextMorph } from "../text-morph/text-morph";
@@ -109,13 +110,14 @@ function Chevron({ open }: { open: boolean }) {
 function Step({ step, now, arrived, onRetry }: { step: ToolStep; now: number; arrived: boolean; onRetry?: (id: string) => void }) {
   const ioId = useId();
   const [open, setOpen] = useState(false);
-  // The error rises in when the step fails, not when the list is first drawn with a failure in it.
-  const [status, setStatus] = useState(step.status);
-  const [changed, setChanged] = useState(false);
-  if (status !== step.status) {
-    setStatus(step.status);
-    setChanged(true);
-  }
+  // The error opens when the step fails and folds away on a retry; a list
+  // first drawn with a failure in it simply has it. It keeps its words while
+  // it folds, so they fade instead of vanishing.
+  const failed = step.status === "failed";
+  const [error, setError] = useState<{ text: string | undefined; arrived: boolean } | null>(
+    failed ? { text: step.error, arrived: false } : null,
+  );
+  if (failed && (!error || error.text !== step.error)) setError({ text: step.error, arrived: error ? error.arrived : true });
   const itemRef = useRef<HTMLLIElement>(null);
   const hasIO = Boolean(step.input || step.output);
   const settled = SETTLED.includes(step.status);
@@ -170,14 +172,18 @@ function Step({ step, now, arrived, onRetry }: { step: ToolStep; now: number; ar
           </span>
         </div>
         {step.detail && <p className={styles.detail}>{step.detail}</p>}
-        {step.status === "failed" && (
-          <div className={styles.error} data-arrived={changed || undefined}>
-            <p>{step.error ?? "This step didn’t finish."}</p>
-            {onRetry && (
-              <Button variant="secondary" onClick={retry}>
-                Retry
-              </Button>
-            )}
+        {error && (
+          <div className={styles.errorBox} data-open={failed} data-arrived={error.arrived || undefined} inert={!failed}>
+            <div className={styles.errorClip}>
+              <div className={styles.error}>
+                <p>{error.text ?? "This step didn’t finish."}</p>
+                {onRetry && (
+                  <Button variant="secondary" onClick={retry}>
+                    Retry
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
         )}
         {hasIO && (
@@ -274,11 +280,14 @@ export function ToolSteps({ steps, onRetry, label = "Agent steps", defaultOpen, 
 
       <div id={listId} className={styles.panel} inert={!open}>
         <div className={styles.clip}>
-          <ol className={styles.list} aria-label={label}>
-            {steps.map((step) => (
-              <Step key={step.id} step={step} now={now} arrived={!first.has(step.id)} onRetry={onRetry} />
-            ))}
-          </ol>
+          {/* Steps joining the list ease its height open, so what's below is pushed, not bumped. */}
+          <AnimatedSize>
+            <ol className={styles.list} aria-label={label}>
+              {steps.map((step) => (
+                <Step key={step.id} step={step} now={now} arrived={!first.has(step.id)} onRetry={onRetry} />
+              ))}
+            </ol>
+          </AnimatedSize>
         </div>
       </div>
 

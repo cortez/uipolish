@@ -149,6 +149,25 @@
   }
 }
 
+/* Stop arrives with the running status and leaves with it: a fade either
+   way, the exit a step quicker, so Copy never has a neighbor blink out. */
+.stop {
+  display: flex;
+  opacity: 0;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.stop[data-shown="true"] {
+  opacity: 1;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@starting-style {
+  .stop[data-shown="true"] {
+    opacity: 0;
+  }
+}
+
 /* ---------- Fold ---------- */
 
 /* The ghost button's own padding puts its label on the output's edge. */
@@ -240,6 +259,11 @@
 
 .quiet {
   color: var(--ui-subtle);
+}
+
+/* "Running" turning into "Exit 0" fades in rather than switching. */
+.status[data-enter] {
+  animation: terminal-output-in var(--ui-dur-fast) var(--ui-ease-enter);
 }
 
 /* ---------- Streaming ---------- */

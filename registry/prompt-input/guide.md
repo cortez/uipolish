@@ -75,7 +75,8 @@ the height is set from `scrollHeight` in a layout effect, before paint.
 | Fill back from focus | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Focus fill | 0ms, never animated; the edge never changes | n/a |
 | The arrow reshapes into the stop square: a line opens into its outline, then it fills (`Icon` send → stop) | see the icon set's guide | |
-| "Stop" label and pill width | `--ui-dur-move` (380ms) via TextMorph | `--ui-ease-move` |
+| "Stop" label and pill width | `--ui-dur-glide` (320ms) via TextMorph | `--ui-ease-glide` |
+| The attachment row's space: opens for the first file (or a new row of them), closes after the last one has faded (`animated-size`) | `--ui-dur-panel` (280ms) open, `--ui-dur-base` (200ms) close | `--ui-ease-expand`, `--ui-ease-collapse` |
 | Chip in (an added file; `defaultFiles` are there from the first paint) | `--ui-dur-fast` (160ms), fade, scale from 0.97 | `--ui-ease-enter` |
 | Chip out | `--ui-dur-instant` (120ms), fade, scale to 0.97 | `--ui-ease-exit` |
 | Chips after a removed one slide over | `--ui-dur-move` (380ms), FLIP | `--ui-ease-move` |
@@ -86,7 +87,7 @@ the height is set from `scrollHeight` in a layout effect, before paint.
 | Press | `--ui-dur-press` (80ms) to `--ui-scale-press` (0.985), back over `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 
 Under `prefers-reduced-motion: reduce` chips and suggestions appear without
-moving, removals are instant, the icon swap is a crossfade and nothing scales
+moving, the attachment row takes its space at once, removals are instant, the icon swap is a crossfade and nothing scales
 on press.
 
 The textarea's height isn't animated. It changes as you type, and any easing

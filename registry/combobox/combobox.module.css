@@ -52,6 +52,31 @@
   composes: panel from "../listbox/listbox.module.css";
 }
 
+/* The list's height eases to each new set of results as you type. Only
+   this box animates; the rows inside lay out once per change. */
+.viewport {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow: clip;
+  transition: height var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+.viewport[data-instant] {
+  transition: none;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  max-height: var(--available-height, none);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewport {
+    transition: none;
+  }
+}
+
 .list {
   composes: list from "../listbox/listbox.module.css";
 }

@@ -51,6 +51,13 @@
   contain: strict;
   pointer-events: none;
   visibility: hidden;
+  transition: scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+/* Pressing the chosen option presses its pill, like a button's fill. */
+.root:has(.option[data-checked]:active:not([data-disabled])) .indicator {
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
 }
 
 .root[data-ready] .indicator[data-visible] {
@@ -94,6 +101,14 @@
   }
 }
 
+/* Pressing another option answers at once, before the pill arrives: its
+   label comes up and a faint fill marks where the pill will land. */
+.root[data-ready] .option:active:not([data-checked], [data-disabled]) {
+  background: var(--ui-fill);
+  color: var(--ui-foreground);
+  transition-duration: var(--ui-dur-press);
+}
+
 .option:focus-visible {
   outline: var(--ui-ring-focus);
   outline-offset: var(--ui-ring-offset);
@@ -118,6 +133,12 @@
 .option[data-disabled] {
   opacity: 0.5;
   cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root:has(.option[data-checked]:active) .indicator {
+    scale: none;
+  }
 }
 
 @media (pointer: coarse) {

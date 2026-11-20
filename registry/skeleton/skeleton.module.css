@@ -157,6 +157,19 @@
   }
 }
 
+/* Content on its way out when loading starts again: gone before the
+   skeleton's 300ms wait is up. */
+.leaving {
+  pointer-events: none;
+  animation: skeleton-content-out var(--ui-dur-instant) var(--ui-ease-exit) forwards;
+}
+
+@keyframes skeleton-content-out {
+  to {
+    opacity: 0;
+  }
+}
+
 .srOnly {
   composes: srOnly from "../text/text.module.css";
 }

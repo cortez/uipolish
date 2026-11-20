@@ -109,6 +109,7 @@ and "of 5,000" is muted.
 | Pill slides to the new current page | `--ui-dur-glide` | `--ui-ease-glide`, lands without passing its slot |
 | Numbers that stay on screen slide to their new slot | `--ui-dur-glide` | `--ui-ease-glide`, the pill's own curve |
 | Numbers that arrive fade in where they land | `--ui-dur-fast` | `--ui-ease-enter` |
+| Numbers (and gaps) that leave fade out, riding along with the ones that stay, so no slot blinks empty | `--ui-dur-instant` fade, `--ui-dur-glide` slide | `--ui-ease-color`, `--ui-ease-glide` |
 | Hover, press and current colors | `--ui-dur-instant` | `--ui-ease-color` |
 | Range text ("26–50 of 240", "Page 3 of 12"): the digits that change roll, forward pages up and back pages down | `--ui-dur-glide` | `--ui-ease-glide` (text morph) |
 

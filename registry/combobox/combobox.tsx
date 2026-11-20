@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useLayoutEffect, useRef, useState, type FocusEvent, type ReactNode, type Ref } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type FocusEvent, type ReactNode, type Ref } from "react";
 import { Combobox as BaseCombobox } from "@base-ui/react/combobox";
 import { FieldMessage } from "../field/field";
 import { Icon } from "../icons/icons";
@@ -288,6 +288,74 @@ export function Combobox({
     openList();
   }
 
+  // The list's height eases to each new set of results; only this box
+  // animates, so the rows lay out once per change. It lands at once when the
+  // popup mounts and when results arrive in a popup that was still hidden.
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const [viewportMounted, setViewportMounted] = useState(false);
+  const attachViewport = useCallback((node: HTMLDivElement | null) => {
+    viewportRef.current = node;
+    setViewportMounted(node !== null);
+  }, []);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const fit = (instant: boolean) => {
+    const viewport = viewportRef.current;
+    const content = contentRef.current;
+    if (!viewport || !content) return;
+    if (instant) {
+      viewport.dataset.instant = "";
+      viewport.style.height = `${content.offsetHeight}px`;
+      // Lay out the new height before transitions come back.
+      void viewport.offsetHeight;
+      delete viewport.dataset.instant;
+    } else viewport.style.height = `${content.offsetHeight}px`;
+  };
+  const fitRef = useRef(fit);
+  useLayoutEffect(() => {
+    fitRef.current = fit;
+  });
+  useLayoutEffect(() => {
+    const content = contentRef.current;
+    if (!viewportMounted || !content) return;
+    fitRef.current(true);
+    const observer = new ResizeObserver(() => fitRef.current(false));
+    observer.observe(content);
+    return () => observer.disconnect();
+  }, [viewportMounted]);
+
+  // While the first results load the popup stays hidden for the busy delay,
+  // so a quick answer never flashes "Searching…". Its own entrance has played
+  // out unseen by then, so results that land in a still-hidden popup bring
+  // the entrance with them instead of switching on.
+  // Only a popup that hasn't shown anything yet is held back: one already on
+  // screen ("No matches") stays put while the next search runs.
+  const [seen, setSeen] = useState(false);
+  const loadingFirst = Boolean(searching) && rows.length === 0;
+  if (!open && seen) setSeen(false);
+  if (open && !loadingFirst && !seen) setSeen(true);
+  const waiting = loadingFirst && !seen;
+  const waitShown = useRef(false);
+  const wasWaiting = useRef(false);
+  useLayoutEffect(() => {
+    const popup = popupRef.current;
+    const landed = wasWaiting.current && !waiting && !waitShown.current;
+    wasWaiting.current = waiting;
+    if (waiting) waitShown.current = false;
+    if (!landed || !popup || !open) return;
+    fitRef.current(true);
+    const tokens = getComputedStyle(popup);
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    popup.animate(
+      reduced
+        ? { opacity: [0, 1] }
+        : { opacity: [0, 1], scale: [0.97, 1], filter: ["blur(2px)", "blur(0px)"] },
+      {
+        duration: parseFloat(tokens.getPropertyValue("--ui-dur-fast")) || 160,
+        easing: tokens.getPropertyValue("--ui-ease-enter").trim() || "ease-out",
+      },
+    );
+  }, [waiting, open]);
+
   const results = !open
     ? ""
     : failed
@@ -475,23 +543,31 @@ export function Combobox({
             <BaseCombobox.Popup
               ref={popupRef}
               className={styles.panel}
-              data-waiting={searching && rows.length === 0 ? "" : undefined}
+              data-waiting={waiting ? "" : undefined}
+              onAnimationStart={(e) => {
+                // The busy delay is over: "Searching…" is on screen.
+                if (e.target === e.currentTarget) waitShown.current = true;
+              }}
             >
-              <BaseCombobox.List ref={listRef} className={styles.list} aria-label={label}>
-                <span ref={barRef} className={styles.highlight} aria-hidden="true" />
-                {rows.map(renderRow)}
-              </BaseCombobox.List>
-              {(empty || searching || (!trimmed && rows.length === 0 && settled)) && (
-                <div className={styles.status} data-searching={searching || undefined}>
-                  {searching ? (
-                    <span className={styles.sweep}>Searching…</span>
-                  ) : empty ? (
-                    emptyMessage(trimmed)
-                  ) : (
-                    "Type to search"
+              <div ref={attachViewport} className={styles.viewport}>
+                <div ref={contentRef} className={styles.content}>
+                  <BaseCombobox.List ref={listRef} className={styles.list} aria-label={label}>
+                    <span ref={barRef} className={styles.highlight} aria-hidden="true" />
+                    {rows.map(renderRow)}
+                  </BaseCombobox.List>
+                  {(empty || searching || (!trimmed && rows.length === 0 && settled)) && (
+                    <div className={styles.status} data-searching={searching || undefined}>
+                      {searching ? (
+                        <span className={styles.sweep}>Searching…</span>
+                      ) : empty ? (
+                        emptyMessage(trimmed)
+                      ) : (
+                        "Type to search"
+                      )}
+                    </div>
                   )}
                 </div>
-              )}
+              </div>
             </BaseCombobox.Popup>
           </BaseCombobox.Positioner>
         </BaseCombobox.Portal>

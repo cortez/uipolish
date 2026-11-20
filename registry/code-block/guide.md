@@ -134,14 +134,15 @@ Map the highlighter's colors to the `--code-*` properties above, or to the
 
 | What | Duration | Easing |
 |---|---|---|
-| Copy → Copied label morph | `--ui-dur-move` (380ms), letters out in 150ms | `--ui-ease-move` |
+| Copy → Copied label morph | `--ui-dur-glide` (320ms), letters out in `--ui-dur-instant` (120ms) | `--ui-ease-glide` |
+| The body grows as lines stream in (`animated-size`), so what's below is pushed, not bumped | `--ui-dur-panel` (280ms); shrinking `--ui-dur-base` (200ms) | `--ui-ease-expand`; `--ui-ease-collapse` |
 | Button hover color | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Button press release | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 | Edge fades | instant | n/a |
 
 Streamed words fade in once over `--ui-dur-base`. Under
-`prefers-reduced-motion: reduce` words appear without fading and the label
-swaps without morphing.
+`prefers-reduced-motion: reduce` words appear without fading, the body takes
+its height at once and the label swaps without morphing.
 
 ## Accessibility
 

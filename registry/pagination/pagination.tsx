@@ -56,6 +56,11 @@ type Fit = 7 | 5 | 0;
 
 const keyOf = (slot: Slot) => String(slot);
 
+function ms(value: string) {
+  const n = parseFloat(value);
+  return Number.isNaN(n) ? 0 : value.trim().endsWith("ms") ? n : n * 1000;
+}
+
 /** Previous, page numbers and next, in a row that keeps its width on every page. */
 export function Pagination({
   page: requestedPage,
@@ -115,6 +120,7 @@ export function Pagination({
 
   // FLIP from the old slot. A change of fit isn't a move: it lands at once.
   const placed = useRef(new Map<string, number>());
+  const trackRef = useRef<HTMLDivElement>(null);
   const lastFit = useRef(fit);
   useLayoutEffect(() => {
     const root = rootRef.current;
@@ -133,6 +139,35 @@ export function Pagination({
       if (animate && was !== undefined && was !== x) {
         const shown = parseFloat(getComputedStyle(el).translate) || 0;
         moving.push([el, was - x + shown]);
+      }
+    }
+    // A slot that left is drawn once more where it was: it fades out while
+    // riding along with the numbers that stay, so no hole opens on the first frame.
+    const track = trackRef.current;
+    if (animate && track) {
+      const shift = moving.length ? Number(next.get(moving[0][0].dataset.key!)) - Number(placed.current.get(moving[0][0].dataset.key!)) : 0;
+      const tokens = getComputedStyle(root);
+      for (const [key, was] of placed.current) {
+        if (next.has(key)) continue;
+        const ghost = document.createElement("span");
+        ghost.className = styles.ghost;
+        ghost.setAttribute("aria-hidden", "true");
+        ghost.textContent = key.startsWith("gap") ? "…" : key;
+        ghost.style.left = `${was}px`;
+        track.append(ghost);
+        if (shift) {
+          ghost.animate(
+            { translate: ["0 0", `${shift}px 0`] },
+            { duration: ms(tokens.getPropertyValue("--ui-dur-glide")), easing: tokens.getPropertyValue("--ui-ease-glide").trim() || "ease-out", fill: "forwards" },
+          );
+        }
+        const remove = () => ghost.remove();
+        ghost
+          .animate(
+            { opacity: [1, 0] },
+            { duration: ms(tokens.getPropertyValue("--ui-dur-instant")), easing: tokens.getPropertyValue("--ui-ease-color").trim() || "ease-out", fill: "forwards" },
+          )
+          .finished.then(remove, remove);
       }
     }
     placed.current = next;
@@ -274,7 +309,7 @@ export function Pagination({
       }
       {...props}
     >
-      <div className={styles.track}>
+      <div ref={trackRef} className={styles.track}>
         {current >= 0 && <span className={styles.indicator} aria-hidden="true" />}
         <ul ref={listRef} className={styles.list}>
           <li className={styles.item}>{previous}</li>
@@ -290,7 +325,10 @@ export function Pagination({
           {fit === 0 && (
             <li className={styles.item} aria-hidden="true">
               <span className={styles.summary}>
-                <span className={styles.sizer}>{`Page ${count} of ${count}`}</span>
+                {/* Tabular like the morphing digits over it, or the row is a few pixels short of "Page 10". */}
+                <span className={styles.sizer}>
+                  Page <span className={styles.figure}>{count}</span> of <span className={styles.figure}>{count}</span>
+                </span>
                 <span className={styles.text}>
                   <TextMorph>{status}</TextMorph>
                 </span>

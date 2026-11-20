@@ -2,7 +2,7 @@
   "name": "segmented-control",
   "title": "Segmented control",
   "summary": "Base UI radio group with the Tabs' look: a clear hairline track and one flat pill that glides to the checked option. Arrow keys and form values come with the group.",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "dependencies": [
     "tabs",
     "text"

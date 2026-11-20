@@ -111,7 +111,7 @@ one.
 |---|---|---|
 | Rest | Muted label, no background | `.tab` |
 | Hover | Label turns to the text color, `--ui-dur-instant` | `@media (hover: hover)` only |
-| Press | Nothing of its own: the pill moving to the tab is the feedback | — |
+| Press | An unselected tab's label comes up and a faint fill marks where the pill will land, in 80ms, before the pill arrives | `:active` |
 | Selected | Label in the text color, pill behind it | `[data-active]` (Base UI) |
 | Focus | A line just inside the tab's edge, appears instantly | `:focus-visible` |
 | Before JS | The selected tab paints its own pill until the moving pill is measured | indicator still `hidden` |

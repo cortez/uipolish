@@ -362,8 +362,39 @@ button.title:active {
   margin-top: var(--ui-space-2);
 }
 
-.error[data-arrived] {
-  animation: step-in var(--ui-dur-fast) var(--ui-ease-enter);
+/* The error is a height like the input and output below it: it opens when
+   the step fails, and on a retry it fades first and then gives its space
+   back, so the steps under it are never bumped. */
+.errorBox {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse) var(--ui-dur-instant),
+    opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.errorBox[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows var(--ui-dur-panel) var(--ui-ease-expand),
+    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+@starting-style {
+  .errorBox[data-open="true"][data-arrived] {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+}
+
+/* Padding the margin gives back: room for Retry's focus ring inside the clip. */
+.errorClip {
+  min-height: 0;
+  overflow: hidden;
+  margin: 0 -4px -4px;
+  padding: 0 4px 4px;
 }
 
 .error p {
@@ -428,14 +459,15 @@ button.title:active {
     mask-image: none;
     color: var(--ui-muted);
   }
-  .step[data-arrived],
-  .error[data-arrived] {
+  .step[data-arrived] {
     animation: none;
   }
   .panel,
   .io,
+  .errorBox,
   .root[data-open="true"] > .panel,
   .io[data-open="true"],
+  .errorBox[data-open="true"],
   .icon > * {
     transition-property: opacity, color;
   }

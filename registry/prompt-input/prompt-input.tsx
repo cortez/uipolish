@@ -17,6 +17,7 @@ import {
 } from "react";
 import { Button } from "../button/button";
 import { Icon } from "../icons/icons";
+import { AnimatedSize } from "../animated-size/animated-size";
 import { TextMorph } from "../text-morph/text-morph";
 import styles from "./prompt-input.module.css";
 
@@ -389,50 +390,53 @@ export function PromptInput({
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
-        {files.length > 0 && (
-          <ul ref={listRef} className={styles.attachments} aria-label="Attachments">
-            {files.map(({ id, file }) => {
-              const image = file.type.startsWith("image/");
-              return (
-                <li
-                  key={id}
-                  data-id={id}
-                  className={styles.attachment}
-                  data-kind={image ? "image" : "file"}
-                  // `defaultFiles` are there from the first paint; only added files arrive.
-                  data-added={id.startsWith("file-") || undefined}
-                >
-                  {image ? (
-                    <Thumbnail file={file} />
-                  ) : (
-                    <>
-                      <span className={styles.fileIcon} aria-hidden="true">
-                        <Icon name="file" />
-                      </span>
-                      <span className={styles.fileText}>
-                        <span className={styles.fileName} title={file.name}>
-                          {file.name}
-                        </span>
-                        <span className={styles.fileMeta}>
-                          {extension(file.name)} · {formatSize(file.size)}
-                        </span>
-                      </span>
-                    </>
-                  )}
-                  <button
-                    type="button"
-                    className={styles.remove}
-                    data-remove={id}
-                    aria-label={`Remove ${file.name}`}
-                    onClick={() => removeFile(id)}
+        {/* The row's space eases open for the first file and closed after the last, so the field below is never bumped. */}
+        <AnimatedSize>
+          {files.length > 0 && (
+            <ul ref={listRef} className={styles.attachments} aria-label="Attachments">
+              {files.map(({ id, file }) => {
+                const image = file.type.startsWith("image/");
+                return (
+                  <li
+                    key={id}
+                    data-id={id}
+                    className={styles.attachment}
+                    data-kind={image ? "image" : "file"}
+                    // `defaultFiles` are there from the first paint; only added files arrive.
+                    data-added={id.startsWith("file-") || undefined}
                   >
-                    <Icon name="close" />
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        )}
+                    {image ? (
+                      <Thumbnail file={file} />
+                    ) : (
+                      <>
+                        <span className={styles.fileIcon} aria-hidden="true">
+                          <Icon name="file" />
+                        </span>
+                        <span className={styles.fileText}>
+                          <span className={styles.fileName} title={file.name}>
+                            {file.name}
+                          </span>
+                          <span className={styles.fileMeta}>
+                            {extension(file.name)} · {formatSize(file.size)}
+                          </span>
+                        </span>
+                      </>
+                    )}
+                    <button
+                      type="button"
+                      className={styles.remove}
+                      data-remove={id}
+                      aria-label={`Remove ${file.name}`}
+                      onClick={() => removeFile(id)}
+                    >
+                      <Icon name="close" />
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </AnimatedSize>
 
         <textarea
           ref={textareaRef}

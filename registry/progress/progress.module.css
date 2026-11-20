@@ -72,6 +72,27 @@
   translate: calc((1 - var(--progress)) * 100%) 0;
 }
 
+/* An amount that has just become known glides in from the track's start. */
+.fill[data-arriving] {
+  animation: progress-arrive var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+:is([dir="rtl"]) .fill[data-arriving] {
+  animation-name: progress-arrive-rtl;
+}
+
+@keyframes progress-arrive {
+  from {
+    translate: -100% 0;
+  }
+}
+
+@keyframes progress-arrive-rtl {
+  from {
+    translate: 100% 0;
+  }
+}
+
 .fill[data-indeterminate] {
   inset: 0 auto 0 0;
   width: 30%;
@@ -156,6 +177,9 @@
   .segment::after,
   .segment[data-state="done"]::after {
     transition: none;
+  }
+  .fill[data-arriving] {
+    animation: none;
   }
   .fill[data-indeterminate] {
     inset: 0;

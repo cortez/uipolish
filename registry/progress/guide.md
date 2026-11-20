@@ -46,6 +46,7 @@ limit and `--ui-danger` once the work has failed. No accent.
 | What | How |
 |---|---|
 | Fill moves to a new amount | A full-width bar slid back by what's left (its round end stays round), `--ui-dur-glide` on `--ui-ease-glide`: held by the track, it lands on the amount without passing it. Updates mid-way retarget smoothly |
+| Unknown turns known | The fill glides in from the start of the track to the amount, `--ui-dur-glide` on `--ui-ease-glide`, instead of cutting from wherever the sweep was |
 | Unknown amount | A short pill of the fill slides across the track at constant speed (`linear`) and starts again off the other side. The track never moves |
 | A step finishes | Its segment fills from its start edge with `clip-path`, `--ui-dur-base` on `--ui-ease-draw`; going back un-fills a step faster |
 | The step in progress | Its track darkens, and lightens again as it's left, `--ui-dur-instant` on `--ui-ease-color` |

@@ -60,6 +60,10 @@ Override the fade length per instance with `--scroll-area-fade` (default
 - **Every `var()` in the gradient has a fallback**, so a missing token never
   drops the mask and hides the content.
 - Right to left: a horizontal row fades from the right first.
+- **Nothing chosen stays cut.** A press on a control that's partly past an
+  edge (a chip half under the fade), or keyboard focus landing on one,
+  scrolls the area so it sits clear of the fade: smoothly, at once under
+  reduced motion, and only when it fits. The page never scrolls.
 
 ## Motion
 

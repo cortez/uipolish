@@ -71,7 +71,7 @@ open for a user who opened it last time.
 | The label's width glides to the new line; the timer and chevron move with it | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
 | The window follows new text; a new paragraph rises 6px and clears a 2px blur | `--ui-dur-glide` (320ms) scroll; `--ui-dur-base` (200ms) | ease-out; `--ui-ease-enter` |
 | Timer folds away, chevron glides left | `--ui-dur-glide` (320ms); timer fades out in `--ui-dur-instant` (120ms) | `--ui-ease-glide`, `--ui-ease-exit` |
-| Open: height | `--ui-dur-panel` (280ms) | `--ui-ease-expand` |
+| Open: height. While thinking, the window opens with the first line of text, not before: an open, empty panel would jump to its six lines | `--ui-dur-panel` (280ms) | `--ui-ease-expand` |
 | Open: text fades in, 75ms after the height starts | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |
 | Close: height | `--ui-dur-base` (200ms) | `--ui-ease-collapse` |
 | Close: text fades out | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |

@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { flushSync } from "react-dom";
 import { Slider as BaseSlider } from "@base-ui/react/slider";
 import { TextMorph } from "../text-morph/text-morph";
 import styles from "./slider.module.css";
@@ -56,6 +57,32 @@ export function Slider({
   // (Base UI's own data-dragging is on from pointerdown, so it can't tell a click from a drag.)
   const [following, setFollowing] = useState(false);
   const pressRef = useRef<{ x: number; y: number } | null>(null);
+  const railRef = useRef<HTMLSpanElement>(null);
+  // Where the thumb was on screen when a drag took over from a glide.
+  const caughtAt = useRef<number | null>(null);
+
+  // A drag that starts while the thumb is still gliding to the press would
+  // cut the rest of the glide in one frame. The thumb and range go under the
+  // pointer at once, as a drag must, and what was left of the glide plays out
+  // as an offset added on top, so the hand-off is a quick settle, not a jump.
+  useLayoutEffect(() => {
+    const from = caughtAt.current;
+    caughtAt.current = null;
+    const rail = railRef.current;
+    if (!following || from === null || !rail) return;
+    const layer = rail.querySelector<HTMLElement>(`.${styles.knobLayer}`);
+    const range = rail.querySelector<HTMLElement>(`.${styles.range}`);
+    if (!layer || !range || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const left = from - layer.getBoundingClientRect().left;
+    if (Math.abs(left) < 1) return;
+    const style = getComputedStyle(rail);
+    const timing = {
+      duration: ms(style.getPropertyValue("--ui-dur-fast"), 160),
+      easing: style.getPropertyValue("--ui-ease-enter").trim() || "ease-out",
+      composite: "add" as const,
+    };
+    for (const el of [layer, range]) el.animate({ translate: [`${left}px 0`, "0px 0"] }, timing);
+  }, [following]);
 
   // The readout holds the width of its widest value, so dragging never moves the label.
   // Callers pass `format` inline, so the list is rebuilt only when the range or what it shows changes.
@@ -136,7 +163,11 @@ export function Slider({
         if (details.reason === "drag" && !following) {
           const press = pressRef.current;
           const at = pointOf(event);
-          if (!press || !at || Math.hypot(at.x - press.x, at.y - press.y) >= DRAG_SLOP) setFollowing(true);
+          if (!press || !at || Math.hypot(at.x - press.x, at.y - press.y) >= DRAG_SLOP) {
+            caughtAt.current = railRef.current?.querySelector(`.${styles.knobLayer}`)?.getBoundingClientRect().left ?? null;
+            // Committed now, so the measure above and the hand-off are the same frame.
+            flushSync(() => setFollowing(true));
+          }
         } else if (details.reason === "keyboard") {
           setFollowing(event instanceof KeyboardEvent && event.repeat);
         }
@@ -165,7 +196,7 @@ export function Slider({
           setFollowing(false);
         }}
       >
-        <span className={styles.rail} aria-hidden="true">
+        <span ref={railRef} className={styles.rail} aria-hidden="true">
           <span className={styles.track}>
             <span className={styles.range} />
           </span>
@@ -186,6 +217,13 @@ const DIGITS = /(\d+)/;
 /** Equal-width figures on the digits alone: on the whole readout, some fonts widen its spaces too. */
 function figures(text: string): ReactNode {
   return text.split(DIGITS).map((part, i) => (i % 2 ? <span key={i} className={styles.figure}>{part}</span> : part));
+}
+
+/** A CSS time token in ms. Browsers may report "160ms" as ".16s". */
+function ms(value: string, fallback: number) {
+  const n = parseFloat(value);
+  if (Number.isNaN(n)) return fallback;
+  return value.trim().endsWith("ms") ? n : n * 1000;
 }
 
 function pointOf(event: Event) {

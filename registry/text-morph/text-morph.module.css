@@ -37,7 +37,18 @@
   --morph-to: left;
 }
 
+.row {
+  /* The width animates as a content width, whatever the page's box sizing. */
+  box-sizing: content-box;
+}
+
+/* The soft edge sits just past the label's width, in padding the margin
+   gives back: letters inside the width are never dimmed by it (a word that
+   stays at the end would blink on the first frame), and what's still
+   beyond it comes in through the fade. */
 .row[data-morphing] {
+  padding-inline-end: var(--morph-fade);
+  margin-inline-end: calc(-1 * var(--morph-fade));
   mask-image: linear-gradient(to var(--morph-to), #000 calc(100% - var(--morph-fade)), transparent);
 }
 

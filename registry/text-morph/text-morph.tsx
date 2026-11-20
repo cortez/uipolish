@@ -277,7 +277,8 @@ export function TextMorph({ children, className }: { children: string; className
 
     // If a previous morph is still running, start from where it visibly is.
     const running = row.getAnimations();
-    const fromWidth = running.length ? row.getBoundingClientRect().width : last.width;
+    // The computed width, not the box: mid-morph the box also holds the soft edge's padding.
+    const fromWidth = running.length ? parseFloat(getComputedStyle(row).width) || last.width : last.width;
     running.forEach((a) => a.cancel());
     const fade = Math.min(16, Math.abs(width - fromWidth));
     row.dataset.morphing = "";

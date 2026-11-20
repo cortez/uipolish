@@ -10,6 +10,7 @@ import {
   useState,
   type CSSProperties,
 } from "react";
+import { AnimatedSize } from "../animated-size/animated-size";
 import { Button } from "../button/button";
 import { canTokenize, tokenizeLine, type LineState, type Token } from "./tokenize";
 import styles from "./code-block.module.css";
@@ -155,34 +156,37 @@ export function CodeBlock({
         </div>
       </div>
 
-      <div
-        ref={scrollerRef}
-        className={styles.scroller}
-        data-fade-start={overflow.start || undefined}
-        data-fade-end={overflow.end || undefined}
-        style={{ maxHeight }}
-        onScroll={measure}
-        // Focusable only when scrollable, so the keyboard can scroll it.
-        tabIndex={scrollable ? 0 : undefined}
-        role={scrollable ? "region" : undefined}
-        aria-label={scrollable ? `${name} code` : undefined}
-      >
-        <pre className={styles.pre} data-numbers={lineNumbers || undefined} style={{ "--digits": digits } as CSSProperties}>
-          <code className={styles.code}>
-            {lines.map((text, i) => (
-              <Line
-                key={i}
-                text={text}
-                tokens={lineTokens?.[i]}
-                html={lineHtml?.[i]}
-                // Every line, not only the last: a line that finishes keeps its
-                // word spans, so its colored words don't remount and fade in again.
-                live={streaming}
-              />
-            ))}
-          </code>
-        </pre>
-      </div>
+      {/* The body's height eases, so a line landing pushes what's below instead of bumping it. */}
+      <AnimatedSize>
+        <div
+          ref={scrollerRef}
+          className={styles.scroller}
+          data-fade-start={overflow.start || undefined}
+          data-fade-end={overflow.end || undefined}
+          style={{ maxHeight }}
+          onScroll={measure}
+          // Focusable only when scrollable, so the keyboard can scroll it.
+          tabIndex={scrollable ? 0 : undefined}
+          role={scrollable ? "region" : undefined}
+          aria-label={scrollable ? `${name} code` : undefined}
+        >
+          <pre className={styles.pre} data-numbers={lineNumbers || undefined} style={{ "--digits": digits } as CSSProperties}>
+            <code className={styles.code}>
+              {lines.map((text, i) => (
+                <Line
+                  key={i}
+                  text={text}
+                  tokens={lineTokens?.[i]}
+                  html={lineHtml?.[i]}
+                  // Every line, not only the last: a line that finishes keeps its
+                  // word spans, so its colored words don't remount and fade in again.
+                  live={streaming}
+                />
+              ))}
+            </code>
+          </pre>
+        </div>
+      </AnimatedSize>
     </div>
   );
 }

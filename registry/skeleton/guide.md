@@ -102,6 +102,7 @@ indicator that lives outside a group.
 | Content arrives | The skeleton drops out quickly and the content fades in over it, half a beat later, in the same place | `loading` turns false |
 | Arrived before 300ms | The content fades in; no skeleton was ever seen | |
 | Ready on first render | The content, with no fade | `loading` false from the start |
+| Loading again | The content fades out quickly instead of cutting; then the same wait and skeleton as a first load | `loading` turns true with content showing |
 | Reduced motion | The bones, still: no band | `prefers-reduced-motion: reduce` |
 | Forced colors | Each bone outlined in the system gray, since fills are dropped | `forced-colors: active` |
 
@@ -155,6 +156,7 @@ rather than a wiper.
 | Sheen crosses the page, then rests off screen | `--ui-dur-sweep` × 2, looping | `linear` |
 | Skeleton drops out as content arrives | `--ui-dur-instant` | `--ui-ease-color` |
 | Content fades in, `--ui-dur-instant` / 2 later | `--ui-dur-base` | `--ui-ease-enter` |
+| Content fades out when loading starts again | `--ui-dur-instant` | `--ui-ease-exit` |
 
 The sheen is one gradient fixed to the viewport (`background-attachment:
 fixed`), three viewports wide, so it crosses in about two thirds of each

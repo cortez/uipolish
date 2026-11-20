@@ -11,6 +11,7 @@ import {
   useState,
   type CSSProperties,
 } from "react";
+import { AnimatedSize } from "../animated-size/animated-size";
 import { Button } from "../button/button";
 import { useDelayedBusy } from "../button/use-delayed-busy";
 import styles from "./terminal-output.module.css";
@@ -178,6 +179,13 @@ export function TerminalOutput({
 
   // Stop goes away when the command ends; keep focus in the card.
   const showStop = shown === "running" && Boolean(onStop);
+  // Stop stays for its fade when the command ends, then leaves the header.
+  const [stopMounted, setStopMounted] = useState(showStop);
+  if (showStop && !stopMounted) setStopMounted(true);
+  // A status that replaces another fades in; the one a block is first drawn with is simply there.
+  const [firstShown] = useState(shown);
+  const [statusMoved, setStatusMoved] = useState(false);
+  if (!statusMoved && shown !== firstShown) setStatusMoved(true);
   useLayoutEffect(() => {
     if (!showStop && stopFocused.current) {
       stopFocused.current = false;
@@ -240,7 +248,7 @@ export function TerminalOutput({
             {command}
           </span>
           {shown !== "starting" && (
-            <span className={styles.status} data-status={shown}>
+            <span key={shown} className={styles.status} data-status={shown} data-enter={statusMoved || undefined}>
               {shown === "running" ? (
                 <>
                   <svg className={styles.pulse} viewBox="0 0 16 16" aria-hidden="true">
@@ -270,20 +278,29 @@ export function TerminalOutput({
           )}
         </div>
         <div className={styles.actions}>
-          {showStop && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className={styles.action}
-              busy={stopping}
-              busyLabel="Stopping…"
-              onClick={handleStop}
-              onFocus={() => (stopFocused.current = true)}
-              onBlur={() => (stopFocused.current = false)}
-              aria-label={`Stop ${command}`}
+          {stopMounted && (
+            <span
+              className={styles.stop}
+              data-shown={showStop}
+              inert={!showStop}
+              onTransitionEnd={(e) => {
+                if (e.target === e.currentTarget && e.propertyName === "opacity" && !showStop) setStopMounted(false);
+              }}
             >
-              {stopFailed ? "Stop failed" : "Stop"}
-            </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={styles.action}
+                busy={stopping}
+                busyLabel="Stopping…"
+                onClick={handleStop}
+                onFocus={() => (stopFocused.current = true)}
+                onBlur={() => (stopFocused.current = false)}
+                aria-label={`Stop ${command}`}
+              >
+                {stopFailed ? "Stop failed" : "Stop"}
+              </Button>
+            </span>
           )}
           <Button ref={copyRef} variant="ghost" size="sm" className={styles.action} onClick={handleCopy} aria-label={`Copy output of ${command}`}>
             {copy === "copied" ? "Copied" : copy === "failed" ? "Copy failed" : "Copy"}
@@ -305,29 +322,32 @@ export function TerminalOutput({
         </div>
       )}
 
-      <div
-        ref={scrollerRef}
-        id={scrollerId}
-        className={styles.scroller}
-        data-fade-start={overflow.start || undefined}
-        data-fade-end={overflow.end || undefined}
-        style={maxHeight === undefined ? undefined : { maxHeight }}
-        onScroll={measure}
-        // Focusable only when scrollable, so the keyboard can scroll it.
-        tabIndex={scrollable ? 0 : undefined}
-        role={scrollable ? "region" : undefined}
-        aria-label={scrollable ? `Output of ${command}` : undefined}
-      >
-        <pre className={styles.pre}>
-          <code className={styles.output}>
-            {visible.length === 0 ? (
-              <span className={`${styles.line} ${styles.quiet}`}>{running ? "Waiting for output…" : "No output"}</span>
-            ) : (
-              visible.map((line, i) => <Line key={first + i} text={line.text} stderr={Boolean(line.stderr)} />)
-            )}
-          </code>
-        </pre>
-      </div>
+      {/* The body's height eases: a fold opening or a line landing pushes what's below instead of bumping it. */}
+      <AnimatedSize>
+        <div
+          ref={scrollerRef}
+          id={scrollerId}
+          className={styles.scroller}
+          data-fade-start={overflow.start || undefined}
+          data-fade-end={overflow.end || undefined}
+          style={maxHeight === undefined ? undefined : { maxHeight }}
+          onScroll={measure}
+          // Focusable only when scrollable, so the keyboard can scroll it.
+          tabIndex={scrollable ? 0 : undefined}
+          role={scrollable ? "region" : undefined}
+          aria-label={scrollable ? `Output of ${command}` : undefined}
+        >
+          <pre className={styles.pre}>
+            <code className={styles.output}>
+              {visible.length === 0 ? (
+                <span className={`${styles.line} ${styles.quiet}`}>{running ? "Waiting for output…" : "No output"}</span>
+              ) : (
+                visible.map((line, i) => <Line key={first + i} text={line.text} stderr={Boolean(line.stderr)} />)
+              )}
+            </code>
+          </pre>
+        </div>
+      </AnimatedSize>
     </div>
   );
 }

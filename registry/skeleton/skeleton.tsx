@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ComponentProps, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ComponentProps, type CSSProperties, type ReactNode } from "react";
 import styles from "./skeleton.module.css";
 
 type Length = number | string;
@@ -106,6 +106,8 @@ export function useLoadingDelay(loading: boolean, delay = 300) {
 
 // Drops the skeleton anyway in case the entrance animation never runs.
 const ENTER_BACKSTOP = 1000;
+// And the leaving content, in case its fade never does.
+const LEAVE_BACKSTOP = 400;
 
 type SkeletonGroupProps = Omit<ComponentProps<"div">, "children"> & {
   /** While true the skeleton holds the place. */
@@ -140,6 +142,29 @@ export function SkeletonGroup({
     return () => window.clearTimeout(timer);
   }, [swapping]);
 
+  // Loading again: React has just removed the content, which would cut it
+  // off in one frame. The removed node goes back into the cell for one quick
+  // fade, as a layer React never renders into, inert and unread.
+  const fallbackRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  useLayoutEffect(() => {
+    const group = fallbackRef.current?.parentElement;
+    const ghost = contentRef.current;
+    if (!loading || !group || !ghost || ghost.isConnected) return;
+    ghost.className = `${styles.content} ${styles.leaving}`;
+    ghost.removeAttribute("data-enter");
+    ghost.setAttribute("aria-hidden", "true");
+    ghost.inert = true;
+    group.append(ghost);
+    const remove = () => ghost.remove();
+    ghost.addEventListener("animationend", (event) => event.target === ghost && remove());
+    const timer = window.setTimeout(remove, LEAVE_BACKSTOP);
+    return () => {
+      window.clearTimeout(timer);
+      remove();
+    };
+  }, [loading]);
+
   return (
     <>
       <div
@@ -148,12 +173,16 @@ export function SkeletonGroup({
         {...props}
       >
         {kept && (
-          <div className={styles.fallback} aria-hidden="true" data-shown={late || undefined}>
+          <div ref={fallbackRef} className={styles.fallback} aria-hidden="true" data-shown={late || undefined}>
             {fallback}
           </div>
         )}
         {!loading && (
           <div
+            // Kept after React lets go of it, for the fade above.
+            ref={(node) => {
+              if (node) contentRef.current = node;
+            }}
             className={styles.content}
             data-enter={swapping || undefined}
             onAnimationEnd={(event) => {

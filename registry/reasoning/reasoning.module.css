@@ -215,7 +215,7 @@
     opacity var(--ui-dur-instant) var(--ui-ease-exit);
 }
 
-.root[data-open="true"] .panel {
+.panel[data-open="true"] {
   grid-template-rows: 1fr;
   opacity: 1;
   transition:
@@ -305,7 +305,7 @@
   .swap,
   .timer,
   .panel,
-  .root[data-open="true"] .panel {
+  .panel[data-open="true"] {
     transition-property: opacity, color;
   }
 }

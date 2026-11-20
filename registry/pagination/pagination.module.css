@@ -153,6 +153,20 @@
   transition: translate var(--ui-dur-glide) var(--ui-ease-glide);
 }
 
+/* A number or gap that just left its slot, drawn once more to fade out. */
+.ghost {
+  position: absolute;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: var(--pagination-slot);
+  height: var(--pagination-height);
+  color: var(--ui-muted);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  user-select: none;
+}
+
 .root[data-instant] :is(.indicator, .item) {
   transition: none;
 }
@@ -205,6 +219,10 @@
   color: var(--ui-foreground);
   font-weight: var(--ui-weight-medium);
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
+}
+
+.figure {
+  font-variant-numeric: tabular-nums;
 }
 
 .srOnly {

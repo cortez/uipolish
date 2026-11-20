@@ -213,12 +213,15 @@
   background: currentColor;
   opacity: 0;
   transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+  /* Paused, not removed, when the save ends: the dot fades out at the size
+     it had instead of jumping back to full first. */
+  animation: switch-working var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate paused;
 }
 
 .root[data-busy-shown] .thumb::after {
   opacity: 1;
   transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
-  animation: switch-working var(--ui-dur-pulse) var(--ui-ease-pulse) infinite alternate;
+  animation-play-state: running;
 }
 
 @keyframes switch-working {
@@ -273,8 +276,10 @@
     transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
   }
   /* The dot stays, still and a little dimmer, so the meaning does too. */
-  .root[data-busy-shown] .thumb::after {
+  .thumb::after {
     animation: none;
+  }
+  .root[data-busy-shown] .thumb::after {
     opacity: 0.7;
   }
 }

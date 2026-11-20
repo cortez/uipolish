@@ -82,17 +82,19 @@ show seams where they overlap.
 | Thumb and range to a clicked value (a press on the track that moves less than 3px) | `--ui-dur-glide` (320ms) | `--ui-ease-glide`: held by the track, it lands without passing its value or the track's end |
 | Thumb and range to a keyed value: Page Up/Down, Home, End, a single arrow press | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
 | Thumb and range while dragging, or while an arrow key repeats | 0ms | n/a |
+| A drag taking over from a glide: what was left of the glide | `--ui-dur-fast` (160ms), added on top of the follow | `--ui-ease-enter` |
 | Thumb growing on press | `--ui-dur-press` (80ms) | `--ui-ease-snap` |
 | Thumb settling on release | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 | Colors | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
-| Value text | text morph, `--ui-dur-move` | `--ui-ease-move` |
+| Value text | text morph: changed digits roll over `--ui-dur-glide` | `--ui-ease-glide` |
 
 A press that moves 3px or more is a drag and follows exactly; one that
 doesn't (a click, a slightly wobbly one included) is a jump and glides
 there. Base UI's own `data-dragging` is set from pointerdown, so it can't
 tell the two apart; the slider sets `data-follow` itself. A glide that a
-drag interrupts hands over at once: the thumb jumps under the pointer and
-follows it from there. The thumb and range move with `translate` on layers
+drag interrupts hands over without a jump: the thumb and range follow the
+pointer from that frame, and the distance the glide still had to go plays
+out as an offset added on top, gone in 160ms. The thumb and range move with `translate` on layers
 the width of the track, so nothing lays out while they move. Under
 `prefers-reduced-motion: reduce` they jump to their place and the thumb
 doesn't grow; colors still change.

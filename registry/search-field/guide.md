@@ -90,10 +90,12 @@ the magnifier or the shell's padding puts the caret in the text.
 | Clear button fades out, then hides | `--ui-dur-instant` | `--ui-ease-exit` |
 | Key label fades in, out | `--ui-dur-fast`, `--ui-dur-instant` | `--ui-ease-color` |
 | Magnifier breathes, after 300ms | `--ui-dur-pulse` each way, alternating | `--ui-ease-pulse` |
+| Magnifier returns to full when results land | `--ui-dur-fast`, from wherever the breath was | `--ui-ease-color` |
 
 Nothing moves: the clear button and key label only fade, in space the
 field already holds. Loading never turns anything; the magnifier fades in
-and out where it is. Under `prefers-reduced-motion: reduce` it fades three
+and out where it is, and when the results land it eases back to full from
+the opacity it had (the breath is paused, not removed, so it never cuts). Under `prefers-reduced-motion: reduce` it fades three
 times slower, so it still says the field is working.
 
 ## Accessibility

@@ -275,7 +275,9 @@ export function Reasoning({
         <Icon className={styles.chevron} name="chevron-right" data-turn={open ? "open" : ""} />
       </button>
 
-      <div id={panelId} className={styles.panel} inert={!open}>
+      {/* Open only once there is something in it: the first line then eases the
+          window open, where an open, empty panel would jump to its height. */}
+      <div id={panelId} className={styles.panel} data-open={open && content} inert={!open}>
         <div className={styles.clip}>
           {content && (
             <div className={styles.inner}>
