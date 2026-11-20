@@ -269,6 +269,11 @@ export function TextMorph({ children, className }: { children: string; className
     const easeExit = token(row, "--ui-ease-exit", "cubic-bezier(0.4, 0, 1, 1)");
     const easeColor = token(row, "--ui-ease-color", "cubic-bezier(0.2, 0, 0, 1)");
     const duration = ms(token(row, "--ui-dur-glide", "320ms"));
+    // A digit rolling into place lands on the bounce spring: it passes its
+    // line by a hair and settles, like a counter's wheel clicking home. Only
+    // its rise and fall: sideways moves and the width keep the glide.
+    const bounce = token(row, "--ui-ease-bounce", spring);
+    const bounceMs = ms(token(row, "--ui-dur-bounce", "340ms"));
     const exit = ms(token(row, "--ui-dur-instant", "120ms"));
     const fast = ms(token(row, "--ui-dur-fast", "160ms"));
     // Letters arrive on the plain enter curve: a spring would bounce them
@@ -346,7 +351,7 @@ export function TextMorph({ children, className }: { children: string; className
       if (before === undefined) {
         if (roll) {
           // A new place (9 → 10): it rolls in like the digits beside it.
-          el.animate({ transform: [enterFrom, "none"] }, { duration, easing: spring });
+          el.animate({ transform: [enterFrom, "none"] }, { duration: bounceMs, easing: bounce });
           el.animate({ opacity: [0, 1] }, { duration: fast, easing: enter, delay: exit * 0.5, fill: "backwards" });
           continue;
         }
@@ -363,7 +368,9 @@ export function TextMorph({ children, className }: { children: string; className
       // FLIP from where the letter is on screen now.
       const style = getComputedStyle(el);
       const matrix = style.transform && style.transform !== "none" ? new DOMMatrixReadOnly(style.transform) : null;
-      const offset = before + (matrix?.m41 ?? 0) - lefts.get(g.key)!;
+      // Sideways travel runs on `translate`, the roll on `transform`.
+      const across = style.translate && style.translate !== "none" ? parseFloat(style.translate) || 0 : 0;
+      const offset = before + across + (matrix?.m41 ?? 0) - lefts.get(g.key)!;
       const changed = was.get(g.key) !== g.char;
       const y = matrix?.m42 ?? 0;
       const opacity = Number(style.opacity || 1);
@@ -372,12 +379,14 @@ export function TextMorph({ children, className }: { children: string; className
         // visibly is, the new one rolls in, sliding sideways too if the number widened.
         ghost(was.get(g.key)!, before, { y, opacity });
         el.getAnimations().forEach((a) => a.cancel());
-        el.animate({ transform: [`translate(${offset}px, ${lift * dir}em)`, "none"] }, { duration, easing: spring });
+        if (Math.abs(offset) > 0.5) el.animate({ translate: [`${offset}px 0`, "0 0"] }, { duration, easing: spring });
+        el.animate({ transform: [`translateY(${lift * dir}em)`, "none"] }, { duration: roll ? bounceMs : duration, easing: roll ? bounce : spring });
         el.animate({ opacity: [0, 1] }, { duration: fast, easing: enter, delay: exit * 0.5, fill: "backwards" });
       } else if (Math.abs(offset) > 0.5) {
         // Moved: it slides over, carrying on from mid-roll if it was rolling.
         el.getAnimations().forEach((a) => a.cancel());
-        el.animate({ transform: [`translate(${offset}px, ${y}px)`, "none"] }, { duration, easing: spring });
+        el.animate({ translate: [`${offset}px 0`, "0 0"] }, { duration, easing: spring });
+        if (Math.abs(y) > 0.1) el.animate({ transform: [`translateY(${y}px)`, "none"] }, { duration: roll ? bounceMs : duration, easing: roll ? bounce : spring });
         if (opacity < 1) el.animate({ opacity: [opacity, 1] }, { duration: fast, easing: enter });
       }
       // Unmoved and unchanged: a roll still in flight finishes as it was.

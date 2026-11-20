@@ -52,7 +52,9 @@ Button uses it for string labels.
    240", "62%" → "63%"), digits pair by place value (the whole part from the
    right, the fraction from the point) and a digit that changes rolls in
    its place: the old one leaves a full step (0.6em) up and the new one
-   comes from below, the other way when the number drops. While digits
+   comes from below, the other way when the number drops. The new digit
+   lands on the bounce: it passes its line by about a pixel and settles,
+   like a counter's wheel clicking home. While digits
    roll, the row's block padding fades out with a mask, so a digit is whole
    on the line and gone past it, like a wheel behind a window. The digits
    alone are tabular (never the whole label, so letters and spaces keep the
@@ -78,7 +80,8 @@ footer count all render their changing figures through it.
 | Shared letters slide, width follows | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
 | Leaving letters | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |
 | Arriving letters (labels) | 75% of `--ui-dur-glide`, after 40% of the leave time, or 85% when letters are leaving, +15ms per letter | `--ui-ease-enter` |
-| Rolling digit: old and new travel together | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
+| Rolling digit: the old one rolls out | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
+| Rolling digit: the new one rolls in, passing its line by about 12% (a pixel) and settling | `--ui-dur-bounce` (380ms) | `--ui-ease-bounce` |
 | Rolling digit: the old one fades | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Rolling digit: the new one fades in, half a beat later (60ms) | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |
 
