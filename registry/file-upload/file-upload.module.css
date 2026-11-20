@@ -1,7 +1,6 @@
 .root {
   composes: field from "../field/field.module.css";
   --upload-height: 248px;
-  interpolate-size: allow-keywords;
 }
 
 .label {
@@ -132,6 +131,18 @@
   cursor: default;
 }
 
+/* The prompt and the bar are two elements that trade places; the one that
+   arrives fades in rather than cutting. */
+.browse[data-enter] {
+  animation: upload-browse-in var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@keyframes upload-browse-in {
+  from {
+    opacity: 0;
+  }
+}
+
 .mark {
   display: grid;
   place-items: center;
@@ -144,7 +155,6 @@
     color: var(--ui-foreground);
   }
 }
-
 
 .zone[data-has] .mark {
   flex-shrink: 0;
@@ -309,6 +319,11 @@
   color: var(--ui-foreground);
 }
 
+/* The check lands as the wash finishes, rather than cutting in. */
+.badge > svg {
+  animation: upload-browse-in var(--ui-dur-base) var(--ui-ease-enter);
+}
+
 .row:is([data-status="failed"], [data-status="rejected"]) .badge {
   background: var(--ui-danger-tint);
   color: var(--ui-danger-text);
@@ -371,7 +386,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .row,
-  .row[data-leaving] {
+  .row[data-leaving],
+  .browse[data-enter],
+  .badge > svg {
     animation: none;
   }
   .wash {

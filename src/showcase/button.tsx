@@ -14,9 +14,9 @@ export default function Showcase() {
   return (
     <div className={styles.row}>
       <Button busy={sending} busyLabel="Sending…" onClick={() => setSending(true)}>
-        Send invitations
+        Send
       </Button>
-      <Button variant="secondary">Preview menu</Button>
+      <Button variant="secondary">Preview</Button>
       <Button variant="ghost">Cancel</Button>
     </div>
   );

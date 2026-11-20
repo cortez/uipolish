@@ -46,9 +46,9 @@ const models = [
 | Hover | Text darkens, a light fill (`--ui-fill`) appears behind it | `@media (hover: hover)` |
 | Press | Fill darkens a step (`--ui-fill-strong`) at once. The trigger never shrinks: it opens a list, and the list opens from where the trigger really is | `:active` on `::before` |
 | Open | Fill stays, the chevron's tip moves to point up | `aria-expanded` |
-| Highlighted option | One rounded fill under the option; it slides from the last one | pointer and keyboard share it, `data-highlighted` |
+| Highlighted option | One rounded fill under the option; it slides from the last one, and its height eases with the move when the rows differ | pointer and keyboard share it, `data-highlighted` |
 | Selected option | A check at the end of the name's line | `aria-selected` |
-| Disabled option | Name in the subtle color; can be reached, can't be picked. Say why in the description | `disabled`, `data-disabled` |
+| Disabled option | Name in the subtle color; can be reached, can't be picked, and the highlight under it is the soft fill, not the pressable one. Say why in the description | `disabled`, `data-disabled` |
 | Changed model | The name morphs (shared letters slide), and the trigger's width follows on the same spring | measured width, `TextMorph` |
 | Flipped / shifted | Opens the other way near a viewport edge and stays 8px inside it; the list scrolls if it's taller than the room | Base UI `Positioner`, `--available-height` |
 

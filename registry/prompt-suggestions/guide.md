@@ -96,9 +96,12 @@ node. `detail` shows on cards only.
   same height and type as `Chip`, padded half their height so the label ends
   where the round end starts. A long one wraps into a rounded box instead of
   cutting. They wrap with 8px across and down.
-- Leaving closes the group's own height. If the parent puts a gap around
-  it, the gap stays until you drop the component; that's usually when the
-  next message lands anyway.
+- Leaving closes the group's own height. A parent that spaces its
+  children with `gap` would keep that gap until the group is gone and then
+  drop it in one frame, so tell the group what it is:
+  `style={{ "--prompt-suggestions-gap": "16px" }}` (or set the variable on
+  the parent). The group takes the gap back as it closes and what's below
+  glides the whole way. Without the variable it closes its own height only.
 
 ## Motion
 
@@ -109,7 +112,7 @@ node. `detail` shows on cards only.
 | Cards arrive: fade, 4px rise, as one | `--ui-dur-base` | `--ui-ease-enter` |
 | Chips arrive: fade, 4px rise, as one | `--ui-dur-fast` | `--ui-ease-enter` |
 | The set fades out | `--ui-dur-instant` | `--ui-ease-exit` |
-| Then its space closes | `--ui-dur-base`, after `--ui-dur-instant` | `--ui-ease-collapse` |
+| Then its space closes, with the parent's gap when `--prompt-suggestions-gap` is set | `--ui-dur-base`, after `--ui-dur-instant` | `--ui-ease-collapse` |
 
 **No stagger.** Stagger is for things read in order. Starter cards are four
 doors side by side and follow-ups are a row of chips; neither has an order,
@@ -119,8 +122,9 @@ so each set arrives as one.
 the fade starts on the send and only then does the height close, so nothing
 below jumps up under a card that's still visible. The component holds the
 last set on screen while it leaves and renders nothing once it's gone. A
-set that comes back mid-fade (`suggestions` non-empty again) fades straight
-back in.
+set that comes back while leaving (`suggestions` non-empty again) fades
+back in and reopens from wherever it had got to (`--ui-dur-fast` on
+`--ui-ease-enter`; the height on `--ui-dur-panel`, `--ui-ease-expand`).
 
 Under `prefers-reduced-motion: reduce` sets still fade in and out, without
 rising, shrinking on press or closing their space as they go; the space is

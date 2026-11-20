@@ -1,0 +1,13 @@
+{
+  "name": "context-menu",
+  "title": "Context menu",
+  "summary": "Right-click, long-press and menu-key menu that opens from the pointer. It takes the dropdown menu's items, so a row's “…” button and its right click share one list.",
+  "blurb": "A right-click menu that shares its items with the “…” menu.",
+  "version": "0.1.0",
+  "dependencies": [
+    "dropdown-menu"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

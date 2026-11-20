@@ -80,10 +80,11 @@ and below and 16px at the sides, on the lg (16px) radius.
 | Paused | Timers stop while the region is hovered or focused, or the window loses focus | Base UI's Toast viewport |
 | Loading | A dot breathing inside a ring (no spinner), no timer | `toast.loading` or `toast.promise` |
 | Settled | Title morphs letter by letter ("Sending invitations…" → "Invitations sent"), icon changes, timer starts | `TextMorph` |
-| Dragging | Card follows the pointer sideways | `[data-swiping]`, `--toast-swipe-movement-x` on `translate` |
+| Dragging | Card follows the pointer sideways, 1:1 | `[data-swiping]`, `--toast-swipe-movement-x` on the card's `translate` (the root's own drag transform is turned off) |
 | Swiped | Flies off in the direction of travel and fades | `[data-swipe-direction]` with `[data-ending-style]` |
 | Spring back | Not far or fast enough: returns to place | `--ui-ease-snap` |
-| Exit | Fades and drops 4px, then unmounts; the rest move up while it fades | `[data-ending-style]` |
+| Exit | Fades and drops 4px, then unmounts. The rest hold for the first 120ms of the fade, then move up, so no card slides over one still on screen | `[data-ending-style]`, `--toast-leaving` |
+| Replaced | A toast added as another leaves (Retry answering with "Updated") enters 120ms late, so the two are never read on top of each other | `[data-late]` |
 
 **How long.** 5 seconds by default, 6 for errors, 8 when there's an action
 (the user needs time to decide to press it), and no limit while loading. Pass
@@ -102,13 +103,16 @@ that start on a button or link don't swipe; mark anything else with
 | Stack moves (collapse, expand, reflow) | `--ui-dur-move` (380ms) | `--ui-ease-move` |
 | Content fade on the cards behind | `--ui-dur-fast` (160ms) | `--ui-ease-color` |
 | Exit: fade, 4px drop | `--ui-dur-fast` (160ms) | `--ui-ease-exit` |
+| Stack closes up after an exit | waits `--ui-dur-instant` (120ms), then moves as above | `--ui-ease-move` |
 | Swipe away | `--ui-dur-fast` | `linear` |
 | Spring back | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 | Title change | `--ui-dur-move` (380ms) | `--ui-ease-move` (TextMorph) |
 | Loading dot grows and shrinks | `--ui-dur-pulse` (700ms) each way | `--ui-ease-pulse` |
 
 Under `prefers-reduced-motion: reduce` toasts fade in and out, the stack
-changes without moving, swipes don't spring back, and the loading dot holds its size and fades slowly instead.
+changes without moving (after an exit, once the leaving toast has faded),
+swipes don't spring back, and the loading dot holds its size and fades
+slowly instead.
 
 ## Layout
 

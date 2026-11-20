@@ -1,0 +1,301 @@
+/* Rows are 32px, Sidebar's and Tabs' height. A row is laid out from its
+   start: the chevron's 16px slot, the icon, the label. Each level steps in
+   by the slot and its gap, so a child's chevron sits under its folder's
+   icon and every label on a level starts on one line. */
+.tree {
+  --tree-row: var(--ui-control-sm);
+  --tree-pad: var(--ui-pad-row);
+  --tree-twist: var(--ui-icon-md);
+  --tree-indent: calc(var(--tree-twist) + var(--ui-space-1));
+  display: grid;
+  /* Long labels are cut instead of widening the panel. */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 2px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+}
+
+/* A finger gets 40px rows. */
+@media (pointer: coarse) {
+  .tree {
+    --tree-row: var(--ui-control-md);
+  }
+}
+
+.item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  /* The ring is drawn on the row: the item also holds its folder's rows. */
+  outline: none;
+}
+
+/* ---------- Rows ---------- */
+
+.row {
+  --row-fill: transparent;
+  position: relative;
+  /* Keeps the z-index: -1 fill inside the row. */
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  box-sizing: border-box;
+  min-width: 0;
+  height: var(--tree-row);
+  padding-inline: calc(var(--tree-pad) + var(--tree-level, 0) * var(--tree-indent)) var(--tree-pad);
+  border-radius: var(--ui-radius-control);
+  /* Rows rest in the muted text color and come up to the text color on
+     hover, as Sidebar's do: no fill. Only the selected row has one. */
+  color: var(--ui-muted);
+  font: var(--ui-weight-regular) var(--ui-text-md) / 1 var(--ui-font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* The fill is a layer under the text, so a press shrinks only the fill. */
+.row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--row-fill);
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+@media (hover: hover) {
+  .row:hover:not([data-disabled]) {
+    color: var(--ui-foreground);
+  }
+}
+
+/* The selected item: Tabs' flat pill, the same fill, no edge, no shadow. */
+.row[data-selected] {
+  --row-fill: var(--ui-track-pill);
+  color: var(--ui-foreground);
+}
+
+.row:active:not([data-disabled]) {
+  --row-fill: var(--ui-fill-strong);
+  color: var(--ui-foreground);
+}
+
+.row[data-selected]:active:not([data-disabled]) {
+  --row-fill: color-mix(in oklch, var(--ui-foreground) 11%, transparent);
+}
+
+.row:active:not([data-disabled])::before {
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.item:focus-visible > .row {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+  color: var(--ui-foreground);
+}
+
+.row[data-disabled] {
+  cursor: default;
+}
+
+.row[data-disabled] > * {
+  opacity: 0.5;
+}
+
+/* The chevron's slot: kept on a row with no chevron, so icons line up. */
+.twist {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--tree-twist);
+  height: var(--tree-twist);
+  /* 4px to what follows, inside the row's 8px gap. */
+  margin-inline-end: calc(var(--ui-space-1) - var(--ui-space-2));
+}
+
+/* Disclosure chevrons rest muted and come up to the text color with their row. */
+.chevron {
+  color: var(--ui-muted);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  color: var(--ui-muted);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.icon > svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+}
+
+.icon[data-tone="danger"] {
+  color: var(--ui-danger-text);
+}
+
+.row[data-selected] :is(.chevron, .icon:not([data-tone])),
+.row:active:not([data-disabled]) :is(.chevron, .icon:not([data-tone])),
+.item:focus-visible > .row :is(.chevron, .icon:not([data-tone])) {
+  color: var(--ui-foreground);
+}
+
+@media (hover: hover) {
+  .row:hover:not([data-disabled]) :is(.chevron, .icon:not([data-tone])) {
+    color: var(--ui-foreground);
+  }
+}
+
+.label {
+  composes: truncate from "../text/text.module.css";
+  flex: 1;
+}
+
+/* A row's value: a change count, a diff mark. Quiet, and never cut: the
+   label gives way first. */
+.meta {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--ui-space-1);
+  margin-inline-start: auto;
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.meta svg {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+}
+
+/* ---------- Folders ---------- */
+
+.group {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+  margin: 0;
+  /* The rows inside start 2px below the folder's row, as between any two rows. */
+  padding: 2px 0 0;
+  list-style: none;
+}
+
+/* A hairline down the folder, under its chevron: the one line every edge is. */
+.group[data-guides]::before {
+  content: "";
+  position: absolute;
+  inset-block: 2px 0;
+  inset-inline-start: calc(var(--tree-pad) + var(--tree-level, 0) * var(--tree-indent) + (var(--tree-twist) - var(--ui-hairline)) / 2);
+  width: var(--ui-hairline);
+  background: var(--ui-border-strong);
+  pointer-events: none;
+}
+
+/* A line in place of rows: loading, or nothing inside. It starts where the
+   rows' labels would. */
+.note {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: var(--tree-row);
+  padding-inline: calc(var(--tree-pad) + (var(--tree-level, 0) + 1) * var(--tree-indent) + var(--tree-indent)) var(--tree-pad);
+  color: var(--ui-subtle);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  white-space: nowrap;
+}
+
+.sweep {
+  composes: sweep from "../text/text.module.css";
+}
+
+.again {
+  color: var(--ui-foreground);
+}
+
+/* ---------- Folding ---------- */
+
+.fold {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 0fr;
+}
+
+.fold[data-open] {
+  grid-template-rows: 1fr;
+}
+
+.foldInner {
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.fold[data-open] > .foldInner {
+  opacity: 1;
+}
+
+/* Closing: the rows fade while the height eases in, then the space folds. */
+.tree[data-ready] .fold {
+  transition: grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse);
+}
+
+.tree[data-ready] .foldInner {
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.tree[data-ready] .fold[data-open] {
+  transition: grid-template-rows var(--ui-dur-panel) var(--ui-ease-expand);
+}
+
+.tree[data-ready] .fold[data-open] > .foldInner {
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+/* The loading row making way for the rows it stood for closes on their
+   opening's timing, so the two heights trade off and what's below moves once. */
+.tree[data-ready] .fold[data-swap]:not([data-open]) {
+  transition: grid-template-rows var(--ui-dur-panel) var(--ui-ease-expand);
+}
+
+/* Loading turning into the failure, or back on a retry: the new line fades
+   in where the old one was. */
+.tree[data-ready] .fold[data-open] > .foldInner > .group > :only-child:is(.note, .item:has(> .row[data-retry])) {
+  animation: tree-note-in var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+@keyframes tree-note-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row:active:not([data-disabled])::before {
+    scale: none;
+  }
+  .tree[data-ready] .fold,
+  .tree[data-ready] .fold[data-open],
+  .tree[data-ready] .fold[data-swap]:not([data-open]) {
+    transition: none;
+  }
+}

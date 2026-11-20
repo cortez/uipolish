@@ -5,7 +5,7 @@ A panel that slides in from the edge of the screen, built on Base UI's
 and runs the swipe gesture. On wider screens it's a
 full-height side panel against the end edge (the right, or the left in
 right-to-left text). On phones it rises from the bottom as a sheet with a
-grab handle, and can be dragged down to dismiss: past a third of the way, or
+grab handle, and can be dragged down to dismiss: past halfway, or
 with a flick, it carries on off the screen at the speed of your finger;
 released short, it springs back. The body scrolls between a header and a
 footer that stay put.
@@ -173,8 +173,8 @@ where nothing can cover it.
 - Escape and a scrim press close it through `onOpenChange`; the drawer is
   controlled, so `locked` can hold it. A select or popover open inside it
   takes Escape first.
-- Dragging is never the only way out: the close button is always there, 34px,
-  48px on touch screens, with `aria-label="Close"`. The handle is
+- Dragging is never the only way out: the close button is always there, 32px
+  tall, 40px on touch screens, with `aria-label="Close"`. The handle is
   decoration (`aria-hidden`).
 - A drag never starts on a button, so letting go doesn't press one by
   accident.

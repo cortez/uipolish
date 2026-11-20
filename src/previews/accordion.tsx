@@ -39,7 +39,7 @@ export function AccordionPreview() {
               account’s email and the refund reaches your card in 5 to 10 business days.
             </p>
           </AccordionItem>
-          <AccordionItem value="purchase-orders" title="Can my household share one plan?">
+          <AccordionItem value="household" title="Can my household share one plan?">
             <p>
               On the Household plan, up to six people share one bill. Invite them under Billing, then Members, and
               each person keeps their own sign-in.

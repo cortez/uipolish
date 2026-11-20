@@ -140,6 +140,21 @@
   max-height: inherit;
 }
 
+/* The footer rides the panel's bottom edge while the height eases. The
+   content is laid out at its new height at once, so without this a growing
+   panel pushed its buttons below the edge and cut them off until it caught
+   up. Sticking needs a scroll box, so the sizer hides its overflow rather
+   than clipping it (repeated to outrank AnimatedSize's own rule). */
+.sizer.sizer.sizer.sizer {
+  overflow-y: hidden;
+}
+
+.footerCell {
+  position: sticky;
+  bottom: 0;
+  background: var(--ui-surface);
+}
+
 /* The leaving step is out of flow, so the panel measures only the arriving one. */
 .steps {
   position: relative;
@@ -227,6 +242,10 @@
   color: var(--ui-foreground);
   font-size: var(--ui-text-md);
   line-height: var(--ui-leading-md);
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+.header {
   transition: opacity var(--ui-dur-fast) var(--ui-ease-color);
 }
 
@@ -359,7 +378,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .guard,
+  /* The guard still fades in after the footer has faded out: appearing at
+     once, it sat on top of the footer's buttons while they left. */
   .stepIn {
     animation: none;
   }

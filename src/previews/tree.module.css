@@ -1,0 +1,104 @@
+.demo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ui-space-4);
+}
+
+/* A small app window, as in Sidebar: the panel on the canvas, the page on
+   the surface one step up. The change of surface is the edge between them. */
+.frame {
+  display: flex;
+  height: 488px;
+  overflow: hidden;
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-canvas);
+  box-shadow: var(--ui-edge);
+  font-family: var(--ui-font-sans);
+}
+
+.panel {
+  display: flex;
+  flex: 0 0 280px;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.panelTitle {
+  margin: 0;
+  /* Lines up with the rows' chevrons. */
+  padding: var(--ui-space-4) calc(var(--ui-space-2) + var(--ui-pad-row)) var(--ui-space-2);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-regular);
+  line-height: var(--ui-leading-sm);
+}
+
+.scroll {
+  flex: 1;
+  min-height: 0;
+}
+
+.tree {
+  padding: 0 var(--ui-space-2) var(--ui-space-4);
+}
+
+.page {
+  display: grid;
+  flex: 1;
+  align-content: start;
+  gap: var(--ui-space-2);
+  min-width: 0;
+  padding: var(--ui-space-4) var(--ui-space-5);
+  background: var(--ui-surface);
+  color: var(--ui-foreground);
+}
+
+.path {
+  composes: wrap from "../../registry/text/text.module.css";
+  margin: 0;
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.detail {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+/* A panel on its own, the width it ships at. */
+.card {
+  width: 100%;
+  max-width: 320px;
+  padding: var(--ui-space-2);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-canvas);
+  box-shadow: var(--ui-edge);
+}
+
+/* Diff marks: the status hue, on the glyph alone. */
+.added {
+  color: var(--ui-success-text);
+}
+
+.modified {
+  color: var(--ui-warning-text);
+}
+
+.removed {
+  color: var(--ui-danger-text);
+}
+
+/* On a phone the page goes under the panel. */
+@media (max-width: 640px) {
+  .frame {
+    flex-direction: column;
+    height: auto;
+  }
+  .panel {
+    flex: 0 0 320px;
+  }
+}

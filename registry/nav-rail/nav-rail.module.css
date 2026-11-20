@@ -259,23 +259,15 @@
   -webkit-touch-callout: none;
 }
 
-/* The shared tooltip. Base UI places the positioner; once it's on screen it
-   glides to each new item, and the popup's width eases to the new label. */
+/* The shared tooltip. Base UI places the positioner; once it's on screen the
+   component glides it to each new item with a translate (never top or left),
+   and the popup's width eases to the new label. */
 .positioner {
   z-index: 60;
   /* While it resizes, Base UI lifts the popup out of flow; these keep the box. */
   width: var(--positioner-width);
   height: var(--positioner-height);
   max-width: var(--available-width);
-}
-
-.positioner[data-glide] {
-  transition:
-    top var(--ui-dur-glide) var(--ui-ease-glide),
-    left var(--ui-dur-glide) var(--ui-ease-glide),
-    right var(--ui-dur-glide) var(--ui-ease-glide),
-    bottom var(--ui-dur-glide) var(--ui-ease-glide),
-    transform var(--ui-dur-glide) var(--ui-ease-glide);
 }
 
 .tooltip {
@@ -299,15 +291,6 @@
     scale var(--ui-dur-fast) var(--ui-ease-enter),
     filter var(--ui-dur-fast) var(--ui-ease-enter);
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
-}
-
-.positioner[data-glide] .tooltip {
-  transition:
-    opacity var(--ui-dur-fast) var(--ui-ease-enter),
-    scale var(--ui-dur-fast) var(--ui-ease-enter),
-    filter var(--ui-dur-fast) var(--ui-ease-enter),
-    width var(--ui-dur-glide) var(--ui-ease-glide),
-    height var(--ui-dur-glide) var(--ui-ease-glide);
 }
 
 .tooltip[data-starting-style],
@@ -377,10 +360,15 @@
   translate: -4px 0;
 }
 
+/* Always at its own width, never the popup's: while the popup eases to a
+   wider label, the new one is revealed at its edge instead of being squeezed
+   and cut mid-word ("Searc"). A long label still wraps at the popup's cap. */
 .tip {
   display: flex;
   align-items: baseline;
   gap: var(--ui-space-2);
+  width: max-content;
+  max-width: calc(min(280px, 100vw - 16px) - 2 * var(--ui-space-2));
 }
 
 .tipLabel {
@@ -402,8 +390,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .positioner[data-glide],
-  .positioner[data-glide] .tooltip {
+  .tooltip {
     transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
   }
   .tooltip[data-starting-style],

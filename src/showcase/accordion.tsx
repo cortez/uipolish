@@ -7,7 +7,10 @@ import styles from "./showcase.module.css";
 export default function Showcase() {
   const [open, setOpen] = useState<string | null>("bring");
   return (
-    <div className={styles.stack}>
+    // Room for three titles and one open answer, held from the start: the card
+    // centers its content, and without it closing the open question would
+    // slide every title away from the pointer.
+    <div className={styles.stack} style={{ minHeight: 164, alignContent: "start" }}>
       <Accordion value={open} onValueChange={setOpen}>
         <AccordionItem value="bring" title="Should I bring anything?">
           <p>Just yourself. Wine is paired with each course.</p>

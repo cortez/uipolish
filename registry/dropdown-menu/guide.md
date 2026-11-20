@@ -39,6 +39,28 @@ highlight, the held width and the in-place confirmations.
 | `MenuSeparator` | `separator` | Space between groups (8px); no drawn line |
 | `MenuSub` | `menuitem` with `aria-haspopup="menu"` + `menu` | `label`, `icon`; children are the submenu's items |
 
+## Another root
+
+`DropdownMenu` is a button's menu. A menu that opens some other way (the
+context menu, at the pointer) is built from the same two parts it is, so
+its panel, its items and its submenus are these, not copies:
+
+| Part | Notes |
+|---|---|
+| `MenuScope` | Wraps a Base UI menu root. `anchor` is the element the menu opens from: its nearest `[data-theme]` is where panels are portalled, and its direction is the menu's. `close` closes the whole menu; items that confirm in place get it from `onSelect` |
+| `MenuPanel` | The floating panel with the sliding highlight, around the items. `side`, `align`, `sideOffset`, `alignOffset` (left out, Base UI places it), `label`, `finalFocus`, `popupRef`, `className` |
+
+```tsx
+<MenuScope anchor={areaEl} close={close}>
+  <BaseContextMenu.Root actionsRef={actionsRef}>
+    <BaseContextMenu.Trigger ref={setAreaEl} render={area} />
+    <MenuPanel label="Actions for table 4">{items}</MenuPanel>
+  </BaseContextMenu.Root>
+</MenuScope>
+```
+
+An item outside a `MenuScope` throws.
+
 ## Confirming in place
 
 Most actions close the menu: the result shows on the page. Some have no
@@ -66,10 +88,9 @@ keep the menu open and answer in its own row:
 ```
 
 - **Rows are rounded, not pills.** The panel is inset `--ui-inset-menu`
-  (12px) around its rows and each row takes the concentric radius, the
-  panel's 24 less that inset: 12. Row text sits `--ui-pad-row` (12px) in,
-  clear of the row's curve, so it lands 24px from the panel's edge, the
-  same as the command palette's.
+  (4px) around its rows and each row takes the concentric radius, the
+  panel's 16 less that inset: 12. Row text sits `--ui-pad-row` (12px) in,
+  clear of the row's curve, so it lands 16px from the panel's edge.
 - With `closeOnSelect={false}` the menu stays open and the highlight and
   focus stay on the item, so the arrow keys, Enter and typeahead go on
   working. A string label morphs when it changes (`TextMorph`): shared
@@ -129,7 +150,7 @@ learn they exist, but can't be activated.
 
 | State | What you see | How |
 |---|---|---|
-| Highlighted | One rounded fill under the item, 10% of the text color; it slides from the previous item | pointer or keyboard, same state, and focus moves with it |
+| Highlighted | One rounded fill under the item, 8% of the text color (`--ui-fill-strong`); it slides from the previous item | pointer or keyboard, same state, and focus moves with it |
 | Pressed | Fill darkens to 16% in 80ms | `:active` |
 | Danger | Red text and icon; the highlight turns red-tinted | `variant="danger"` |
 | Disabled | 50% opacity, default cursor, optional reason on a second line | `disabled`, `description` → `data-disabled` |
@@ -152,13 +173,15 @@ The menu's edge is the one in `--ui-shadow-floating`: the same outline color as 
 | Close | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |
 | Highlight moving between items | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 | Highlight appearing or leaving | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
-| Press | 0ms, release eases back | |
+| Press: the highlight darkens | `--ui-dur-press` (80ms) | `--ui-ease-color` |
+| Highlight's height, between a one-line and a two-line row | `--ui-dur-glide` | `--ui-ease-glide` |
 | A label that changes in place | `--ui-dur-move` (`TextMorph`) | `--ui-ease-move` |
 | Busy label dims, after 120ms | `--ui-dur-base` | `--ui-ease-color` |
 | Light band across a busy label | `--ui-dur-sweep` per pass | `linear` |
 
-The highlight moves with `translate` only, so it never causes layout. It
-jumps instead of sliding the first time it appears. The trigger skips the
+The highlight moves with `translate`; only its height eases when it lands
+on a row with a second line. It jumps instead of sliding the first time it
+appears. The trigger skips the
 button's press-scale (`[aria-haspopup]`), so the menu opens from where the
 button really is. Under `prefers-reduced-motion: reduce` the menu only
 fades (no scale, no blur), the highlight jumps between items, labels swap without morphing,
@@ -168,6 +191,9 @@ and a busy label dims to 50% and holds still.
 
 - The menu is portalled to `<body>`, or into the nearest `[data-theme]`
   element around the trigger so it keeps that theme's tokens.
+- Right-to-left needs no provider: the menu reads its trigger's direction
+  and hands it to Base UI, so a submenu opens toward the left, its chevron
+  points there, and ArrowLeft and ArrowRight swap.
 - The menu is named by its trigger (`aria-labelledby`). An icon-only trigger
   needs `aria-label` that says what the actions act on: "Actions for 14
   Alder Lane", not "More".
@@ -178,7 +204,7 @@ and a busy label dims to 50% and holds still.
   `keyshortcuts` (for example `"Meta+D"`) so assistive tech can announce it.
 - `description` is linked with `aria-describedby`, so a disabled item says
   why: "Publish menu, dimmed. Needs the host's approval first."
-- Rows are 44px tall on coarse pointers.
+- Rows are 48px tall on coarse pointers.
 - If an action removes the trigger (Delete), move focus somewhere useful
   yourself, such as an Undo button, and announce the result in a
   `role="status"` region.

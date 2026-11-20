@@ -83,7 +83,7 @@ same place and weight as initials would sit.
 The circle is `size` square from the first render, so a photo arriving
 moves nothing. The letters are drawn in a 40-unit SVG, like an icon, so
 they scale with the circle instead of adding type sizes: two letters at
-15 units, one at 19. There's no edge, only
+15 units, one at 16 (more at 20 and 24px, so it never draws under 10px). There's no edge, only
 the flat `--ui-fill-strong-solid` fill.
 
 In a group, each circle overlaps the one before it by a fifth of its

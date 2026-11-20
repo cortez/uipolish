@@ -56,7 +56,7 @@ choose, Space chooses the focused one. Disabled options are skipped.
 | Press | The ring fills a shade at once and gives to `--ui-scale-press` (0.985), springing back on release. Cards: only the card's surface shrinks to 0.985, never its text |
 | Chosen | The ring fills with `--ui-control-on` (the primary button's ink), as a checked checkbox does, and a 6px `--ui-on-control-on` dot grows from its center: `clip-path` opens a circle on `--ui-ease-snap`; it closes a step faster on `--ui-ease-exit`. A chosen card takes the selected edge, `--ui-field-focus` at the hairline, like every edge. Edges are shadows, so nothing moves |
 | Focus | A line inside the circle (list) or inside the card's edge (cards), never animated |
-| Invalid | Empty circles and cards take the danger edge; the error replaces the hint in the reserved line |
+| Invalid | Empty circles lean their mid-gray ring halfway to the danger color (so it reads in dark too) and cards take the soft danger edge; the error replaces the hint in the reserved line |
 | Disabled | 50% opacity, default cursor |
 
 The circle sits centered on the label's capitals (`0.5cap`, or `0.35em` in

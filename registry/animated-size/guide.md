@@ -20,7 +20,9 @@ own.
 - Content that changes size because the user did something: a toggle that
   reveals detail, a filter that changes a short list, a form step that adds a
   field.
-- An inline label or control whose width changes (`axis="width"`).
+- An inline label whose width changes (`axis="width"`). Put it around the
+  label, inside the pill or button that holds it: the box clips while it
+  moves, and a pill clipped from outside loses its round end on the way.
 
 ## When not to
 
@@ -63,6 +65,12 @@ own.
   instantly. Only changes to the content itself animate.
 - **Interruptible.** A new size mid-flight retargets from the size on screen,
   because CSS transitions start from the current value.
+- **Content that eases itself is followed, not eased again.** While
+  something inside is mid-way through a size transition of its own (a
+  `grid-template-rows` panel opening, an accordion, a nested animated size),
+  the box takes each new size as it comes. Easing after it a second time
+  would trail behind the content and clip its end until it caught up. A
+  resize of the box's own that is already under way keeps its transition.
 
 ## Motion
 
@@ -71,6 +79,7 @@ own.
 | Growing | `--ui-dur-panel` (280ms) | `--ui-ease-expand` |
 | Shrinking | `--ui-dur-base` (200ms) | `--ui-ease-collapse`: eases in, folds, stops with no tail |
 | First size, size while hidden, size on the frame it's shown, size after a container resize | 0ms | n/a |
+| Content easing its own size inside | follows it frame by frame | the content's own |
 
 Animating `height` and `width` is an exception to "transform and opacity
 only", the same one the motion rules make for `grid-template-rows` and the

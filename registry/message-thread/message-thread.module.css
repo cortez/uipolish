@@ -17,11 +17,8 @@
   overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: var(--ui-border-strong) transparent;
-  outline: none;
-}
-
-.scroller {
   border-radius: inherit;
+  outline: none;
 }
 
 .scroller:focus-visible {
@@ -129,7 +126,6 @@
   text-wrap: pretty;
 }
 
-
 .prose {
   color: var(--ui-foreground);
   font-size: var(--ui-text-md);
@@ -167,13 +163,14 @@
   padding-inline-start: 2px;
 }
 
+/* No tabular figures: a marker is "1. " with its space, which tabular
+   figures widen in some fonts, and the markers end on one edge anyway. */
 .prose li::marker {
   color: var(--ui-subtle);
-  font-variant-numeric: tabular-nums;
 }
 
 .prose strong {
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-title);
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
@@ -304,7 +301,6 @@
 .fileName {
   composes: wrap from "../text/text.module.css";
 }
-
 
 /* Actions */
 

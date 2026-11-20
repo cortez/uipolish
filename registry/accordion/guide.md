@@ -87,7 +87,7 @@ to wrap. A row with a value is exactly as tall as one without, and the
 title doesn't move.
 
 In a row narrower than 480px (each heading is a size container), the value
-moves under the title and the chevron stays beside the title, so neither is
+moves under the title, 4px below it, and the chevron stays beside the title, so neither is
 squeezed into a column a word wide. The accordion is one column as wide as
 its container: a long title wraps rather than widening it.
 

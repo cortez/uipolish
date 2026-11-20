@@ -9,6 +9,7 @@ export default function Showcase() {
     <EmptyState
       icon="calendar"
       title="No dinners on the calendar"
+      description="Pick a night and a host."
       action={
         <Button>
           <Icon name="plus" />

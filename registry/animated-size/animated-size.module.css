@@ -33,6 +33,12 @@
   transition-timing-function: var(--animated-size-ease, var(--ui-ease-collapse));
 }
 
+/* Content that is easing its own size (a panel opening inside) is followed
+   as it goes, not eased a second time behind it. */
+.root[data-armed][data-following] {
+  transition: none;
+}
+
 .root[data-moving][data-axis="height"] {
   overflow-y: clip;
 }

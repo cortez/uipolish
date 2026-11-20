@@ -54,12 +54,14 @@
 
 /* ---------- Headings ---------- */
 
-/* # is the Title style; ## and ### are the Body style with more room
-   above; #### is a muted label (typography.md: three styles, two weights). */
+/* # is the Title style; ## and ### are the Body size at the title's
+   weight, with more room above; #### is a muted label. The words are an
+   author's, not the interface's, so a heading and **bold** keep the weight
+   they were given: at body weight they read as plain paragraphs. */
 .heading {
   color: var(--ui-foreground);
   font-size: var(--ui-text-md);
-  font-weight: var(--ui-weight-semibold);
+  font-weight: var(--ui-weight-title);
   line-height: var(--ui-leading-md);
   text-wrap: balance;
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
@@ -89,7 +91,7 @@
 /* ---------- Inline ---------- */
 
 .root strong {
-  font-weight: var(--ui-weight-semibold);
+  font-weight: var(--ui-weight-title);
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 

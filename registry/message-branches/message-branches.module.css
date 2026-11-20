@@ -31,6 +31,16 @@
    horizontal scrollbar for a frame. */
 .stage[data-paging] {
   overflow-x: clip;
+  /* The clip edge stands one slide out on the start side, where every line
+     begins: a version arriving from there is never cut through its first
+     letters. (The end side can't do the same: a box past that edge is
+     what gives a scroller its scrollbar.) */
+  margin-inline-start: calc(var(--branches-slide) * -1);
+  padding-inline-start: var(--branches-slide);
+}
+
+.stage[data-paging] .leaving {
+  inset-inline-start: var(--branches-slide);
 }
 
 .version {
@@ -222,6 +232,15 @@
   transition:
     opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
     visibility 0s;
+}
+
+/* A note that arrives with its version (a retry) fades in like any other,
+   instead of standing at full over the one still fading out. Never on first
+   paint: the flag is set by the first step. */
+@starting-style {
+  .notes[data-stepped] .note[data-current] {
+    opacity: 0;
+  }
 }
 
 .srOnly {

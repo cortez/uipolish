@@ -1,0 +1,118 @@
+.cardProse {
+  max-width: 560px;
+  margin: 0;
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+/* A mention is an inline mark: a quiet fill on the smallest radius. */
+.cardMention {
+  padding: 1px 2px;
+  border-radius: var(--ui-radius-xs);
+  background: var(--ui-fill);
+  color: inherit;
+  font-weight: var(--ui-weight-medium);
+  text-decoration: none;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* The mark holds its hover while its card is open, so the card's subject
+   is never in doubt. */
+.cardMention[data-popup-open] {
+  background: var(--ui-fill-strong);
+}
+
+@media (hover: hover) {
+  .cardMention:hover {
+    background: var(--ui-fill-strong);
+  }
+}
+
+.cardLink {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: var(--ui-subtle);
+  text-decoration-thickness: from-font;
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.cardLink[data-popup-open] {
+  text-decoration-color: currentColor;
+}
+
+@media (hover: hover) {
+  .cardLink:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+.cardMention:focus-visible,
+.cardLink:focus-visible {
+  border-radius: var(--ui-radius-xs);
+  outline: var(--ui-ring-focus);
+  outline-offset: 1px;
+}
+
+/* A person: the face, then who they are. */
+.cardPerson {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+}
+
+.cardText {
+  display: grid;
+  min-width: 0;
+}
+
+.cardTitle {
+  font-weight: var(--ui-weight-medium);
+}
+
+.cardMeta {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+/* A file: its title, two lines of what's inside, who touched it last. */
+.cardFile {
+  display: grid;
+  gap: var(--ui-space-2);
+  width: 288px;
+  max-width: 100%;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.cardIcon {
+  flex-shrink: 0;
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+  color: var(--ui-muted);
+}
+
+.cardExcerpt {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+/* The two excerpt lines while they load: each bone centered in its line. */
+.cardBones {
+  display: grid;
+  gap: calc(var(--ui-leading-sm) - 12px);
+  padding-block: calc((var(--ui-leading-sm) - 12px) / 2);
+}

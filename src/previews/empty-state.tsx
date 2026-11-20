@@ -29,7 +29,7 @@ export function EmptyStatePreview() {
         <h2 className={base.label}>Two ways to fill it</h2>
         <EmptyState
           size="page"
-                    title="No guests yet"
+          title="No guests yet"
           description="Import last year’s list, or add people one at a time."
           action={
             <Button>
@@ -69,7 +69,7 @@ export function EmptyStatePreview() {
           <EmptyState
             icon="link"
             title="No RSVPs yet"
-            description="Replies to example.com/d/friday-supper show up here as they come in."
+            description="Replies to the invitation link show up here as they come in."
             action={
               <Button variant="secondary">
                 <Icon name="link" />

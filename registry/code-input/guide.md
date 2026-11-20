@@ -46,6 +46,7 @@ back up with the digits still in them.
 | Prop | What it does |
 |---|---|
 | `label` | Visible label for the whole code. Required. |
+| `hideLabel` | No visible label; screen readers still read it, and it still names the group. Only where the code's purpose is plain from what's around it (a heading that says "Enter the code we sent you"). The boxes take its place: no gap is left. |
 | `length` | Number of boxes, default 6. Every box is the same width and the same gap apart at any length. |
 | `group` | Optional grouping the way the code is read aloud: `3` gives 123 456, `[3, 4]` gives 123 4567. Each group after the first opens with a small dot in a wider gap. Leave it out for one even row. |
 | `value`, `onValueChange` | Controlled mode. `defaultValue` for uncontrolled. |

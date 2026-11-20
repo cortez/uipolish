@@ -60,12 +60,12 @@ say what happened in `hint` ("New link made. The old one stopped working.").
 |---|---|---|
 | Rest | Hairline edge, the value, a copy icon | |
 | Hover on a button | That button's fill and icon darken; the field's edge doesn't change, since the field itself does nothing | `@media (hover: hover)` |
-| Copied | Copy icon turns into a check for 2 seconds; tooltip "Copied"; "Copied" announced | `role="status"` |
+| Copied | Copy icon turns into a check for 2 seconds; its tooltip reads "Copied" if it's pointed at again in that time; "Copied" announced | `role="status"` |
 | Copy failed | The icon turns into an alert in the danger color for 4 seconds. A shown value is selected, so the copy shortcut works on it at once; the hint line, if there is one, says how | |
 | Secret, hidden | 16 dots in the muted color, a Show (eye) button | `secret` |
 | Secret, shown | The value crossfades in where the dots were; the eye gets its slash | the button's `aria-pressed="true"` |
 | Long value | One line; the end fades out over 24px, only when it's cut. The full value is the `title` | `text` truncate |
-| Focus on a button | A line just inside the button's edge | `:focus-visible` |
+| Focus on a button | A line just inside the button's edge. The field doesn't fill the way a focused text field does: nothing in it is typed into | `:focus-visible` |
 
 **Selecting by hand.** The value is real text, selectable with
 `user-select: all`, so one press selects the whole value, including the part

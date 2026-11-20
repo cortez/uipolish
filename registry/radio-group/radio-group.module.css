@@ -258,8 +258,10 @@
 
 /* Invalid: the message under the group carries it. The edges only lean
    toward the danger color, so a row of red rings doesn't shout over it. */
+/* The ring leans from its own mid gray, not from nothing: the see-through
+   danger edge all but vanished on the dark control fill. */
 .options[aria-invalid] .option:not([data-checked]) .radio {
-  --radio-edge: var(--ui-border-danger);
+  --radio-edge: color-mix(in oklch, var(--ui-danger) 50%, var(--ui-border-control));
 }
 
 .group[data-variant="cards"] .options[aria-invalid] .option:not([data-checked])::before {

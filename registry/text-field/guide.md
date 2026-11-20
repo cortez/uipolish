@@ -14,7 +14,7 @@ stack of plain fields keeps the form's own gap.
 
 ## When not to
 
-- Multi-line text: use a textarea with the same label and message slot.
+- Multi-line text: use Textarea, which has the same label and message slot.
 - Picking from known options: use a select or combobox.
 - Search boxes in a toolbar: they usually need no visible label, an icon, and
   a clear button, so use a search field built for that.

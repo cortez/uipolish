@@ -1,4 +1,4 @@
-/* A consumer lays the shell out itself: here the input, then two 34px
+/* A consumer lays the shell out itself: here the input, then two 32px
    inset buttons, the inset from the shell's edge all round. */
 .shell {
   composes: shell from "../../registry/field/field.module.css";

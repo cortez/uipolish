@@ -85,6 +85,8 @@ its answer.
 
 The settled line is a button. It opens what was asked below it: "Copper asked:
 “How should guests RSVP?”", and the agent's pick and reason if it made one.
+A long answer wraps under itself; the check and the chevron stay on its first
+line.
 
 **Answering.** `onAnswer` gets `{ values, other }`. `values` are the chosen
 choices' values in the order they're listed; `other` is set only when

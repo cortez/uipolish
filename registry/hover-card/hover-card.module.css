@@ -1,0 +1,21 @@
+/* Base UI's Positioner places this element; the card inside it animates. */
+.positioner {
+  z-index: 50;
+  max-width: min(320px, calc(100vw - 16px));
+  outline: none;
+}
+
+/* The popover's panel, class for class: its glass, its one edge, its 16px
+   inset and its open and close. A change to the popover's look lands here. */
+.card {
+  composes: panel from "../popover/popover.module.css";
+  width: max-content;
+  max-width: 100%;
+}
+
+/* A neighbour's card is taking this one's place: it goes at once, so two
+   cards are never on screen together. Doubled to outrank the panel's own
+   closing rule in any stylesheet order. */
+.card.card[data-instant] {
+  transition-duration: 0s;
+}

@@ -47,11 +47,10 @@ export function AnimatedSizePreview() {
       <section className={base.group}>
         <h2 className={base.label}>Width follows a label</h2>
         <div className={base.row}>
-          <AnimatedSize axis="width">
-            <Badge tone={current.tone} dot>
-              {current.label}
-            </Badge>
-          </AnimatedSize>
+          {/* Around the label, inside the pill: the pill stays whole as it widens. */}
+          <Badge tone={current.tone} dot>
+            <AnimatedSize axis="width">{current.label}</AnimatedSize>
+          </Badge>
           <Button variant="secondary" onClick={() => setStatus((s) => (s + 1) % STATUSES.length)}>
             Next status
           </Button>

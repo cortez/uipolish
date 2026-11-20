@@ -6,11 +6,11 @@ const COMMON = new Set(["button", "icons", "text", "field", "animated-size", "te
 
 /** Components that do the same kind of job, so one leads to the next. */
 const FAMILIES = [
-  ["text-field", "number-input", "select", "combobox", "date-picker", "search-field", "code-input", "copy-field", "inline-edit", "file-upload"],
+  ["text-field", "textarea", "number-input", "select", "combobox", "date-picker", "search-field", "code-input", "copy-field", "inline-edit", "file-upload"],
   ["checkbox", "radio-group", "switch", "slider", "segmented-control", "chip"],
-  ["dialog", "drawer", "popover", "tooltip", "dropdown-menu", "command-palette"],
+  ["dialog", "drawer", "popover", "tooltip", "hover-card", "dropdown-menu", "context-menu", "command-palette"],
   ["alert", "toast", "progress", "skeleton", "empty-state", "usage-meter"],
-  ["tabs", "breadcrumbs", "pagination", "nav-rail", "sidebar", "accordion"],
+  ["tabs", "breadcrumbs", "pagination", "nav-rail", "sidebar", "tree", "accordion"],
   ["avatar", "badge", "kbd", "list", "data-table", "scroll-area"],
   ["prompt-input", "message-thread", "reasoning", "tool-steps", "response-actions", "model-picker", "markdown", "code-block", "diff-view"],
 ];

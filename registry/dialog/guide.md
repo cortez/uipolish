@@ -50,7 +50,8 @@ The file exports three things:
 | On a phone | Docked at the bottom, 8px off the edges and above the home indicator, in reach of a thumb; it grows upward when its content does | `max-width: 480px` |
 | Open | Panel on a dimmed page; page doesn't scroll | Base UI's modal `Dialog.Root`, which locks scroll |
 | Body overflow | Body scrolls on its own; header and footer stay put | `overflow-y: auto; overscroll-behavior: contain` |
-| Content changes size | The panel eases to the new height and keeps the top edge it opened at, so it grows and shrinks downward and nothing above the change moves; it recenters only if it would no longer fit, or when the window resizes. Docked on a phone, the bottom edge stays | `AnimatedSize` around the panel's layout; the viewport pins `--dialog-top` once open (`data-pinned`) |
+| Content changes size | The panel eases to the new height and keeps the top edge it opened at, so it grows and shrinks downward and nothing above the change moves; it recenters only if it would no longer fit (gliding up on `--ui-dur-panel` / `--ui-ease-expand`, not jumping), or when the window resizes. Docked on a phone, the bottom edge stays | `AnimatedSize` around the panel's layout; the viewport pins `--dialog-top` once open (`data-pinned`) |
+| Footer while the size changes | Rides the panel's bottom edge, so a growing panel never pushes its buttons out of sight on the way | the footer is `position: sticky` in the sizer |
 | Step changes | The old step fades out over the top while the new one fades in, half a beat later, and the panel eases to the new step's height | `step`, with `children` as a function of the step |
 | Size changes | The panel eases to the new width | `size` (`sm` 420, `md` 480, `lg` 640) |
 | Guard | Footer swaps for "Discard changes?" with Keep editing / Discard; body and header dim and go inert; focus on Keep editing | `dirty` is true when the user tries to leave |
@@ -78,7 +79,7 @@ accident.
 The function lets the leaving step be drawn with current values while it
 fades. It's lifted out of the flow, so the panel measures only the arriving
 step and eases straight to its size. If focus was inside the step that left
-(Enter in a field), it moves to the first control of the new step. Keep the
+(Enter in a field), it moves to the new step's first field, or its first control when it has no field: never straight onto a button a second Enter would press. Keep the
 title the same across steps and put the step's own name in its body; say
 "Step 2 of 3" in the footer in an `aria-live="polite"` element. Keep `size`
 the same across steps: a width and a height change at once make the
@@ -92,7 +93,7 @@ when it opens, so a reflexive Enter does nothing harmful.
 
 ## Layout
 
-- **Header.** The title is the Title style (15/22, title weight,
+- **Header.** The title is the display size (20/28, title weight,
   `--ui-tracking-heading`), the description Body in muted, 4px under it.
   The top padding is a step short of the sides (28 against 32), since the
   title's line height already puts air above its capitals.
@@ -118,7 +119,7 @@ The dialog's edge is the one in `--ui-shadow-floating`: the same outline color a
 | Backdrop in | `--ui-dur-fast` | `--ui-ease-enter` |
 | Panel and backdrop out (scale to 0.97) | `--ui-dur-instant` | `--ui-ease-exit` |
 | Footer out when the guard appears | `--ui-dur-instant` | `--ui-ease-color` |
-| Guard in, in the footer's place, 75ms after | `--ui-dur-fast` | `--ui-ease-enter` |
+| Guard in, in the footer's place, 60ms after (half of `--ui-dur-instant`) | `--ui-dur-fast` | `--ui-ease-enter` |
 | Body and header dim behind the guard | `--ui-dur-fast` | `--ui-ease-color` |
 | Close button press release (it's a `Button`) | `--ui-dur-snap` | `--ui-ease-snap` |
 | Panel height to new content (open / close) | `--ui-dur-panel` / `--ui-dur-base` | `--ui-ease-expand` |
@@ -132,7 +133,8 @@ Nothing travels, so nothing springs; the only springs are the ones that
 size it to new content. Opacity finishes first, so the panel is solid
 before it's settled. Under `prefers-reduced-motion: reduce` there is no
 scale (the panel and backdrop fade in `--ui-dur-instant`), sizes
-change at once and steps swap without fading. The backdrop is a plain dim
+change at once, a recentering panel moves at once and steps swap without
+fading. The guard still trades places with the footer by fading. The backdrop is a plain dim
 in `--ui-scrim`, never blurred.
 
 Panel and backdrop are CSS transitions on Base UI's `[data-starting-style]`
@@ -171,10 +173,9 @@ opens and everything behind it shifts. Put that rule in your global CSS.
   backdrop doesn't, so a stray tap can't answer the question.
 - The guard is a labelled group; focus moves to Keep editing, so the
   question is read out with it.
-- The close button is the ghost icon `Button`, a capsule like every other
-  icon button: 32px tall, 40px on touch screens, with `aria-label="Close"`.
-  It's centered on the title's first line, with its X on the content's edge,
-  so it lines up with the text at any padding.
+- The close button is a secondary icon `Button`, the standard 40px capsule,
+  with `aria-label="Close"`. It sits 16px from the panel's top and end
+  edges, and the title wraps clear of it.
 
 ## Before / after
 

@@ -1,8 +1,9 @@
 # Badge
 
 A small static label for a status or a count: "Going", "Card declined", a
-3 beside Replies. It's a pill exactly as tall as the line it sits in, so a
-badge in a sentence or a table row never makes that line taller. A tone
+3 beside Replies. In a sentence it's a pill exactly as tall as the line
+it sits in, so it never makes that line taller; in a row it's 24px, a
+little taller than the text beside it. A tone
 tints it and colors an optional dot; the words always carry the meaning.
 Counts are round for one digit and set in figures of equal width.
 
@@ -56,10 +57,10 @@ The palette is small on purpose (see `foundation/rules/surfaces.md`):
 
 Each tone is the alert tint trio at badge scale: the tone's tint token
 (`--ui-accent-tint`, `-success-tint`, `-warning-tint`, `-danger-tint`;
-`--ui-fill-strong` for neutral), the hue a few percent into transparent, a hairline of it at the edge, and the label in the tone's
+`--ui-fill-strong` for neutral), the hue mixed into transparent, a hairline of it at the edge, and the label in the tone's
 text color (`--ui-success-text`, `--ui-danger-text`, `--ui-accent-text`),
 which holds 4.5:1 on the tint in both themes. Dark surfaces show a hue far
-later than light ones, so dark takes more of it (16% fill against 10%). The edge is the
+later than light ones, so dark takes more of it (26% fill against 16%). The edge is the
 tone's set edge (`--ui-border-accent`, `-success`, `-warning`, `-danger`;
 `--ui-border` for neutral, the line used inside a box). The fill is mixed with transparent, not with the surface, so a
 badge reads the same on the canvas, a card, or a selected row.

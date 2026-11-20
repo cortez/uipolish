@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { AvatarGroup } from "@registry/avatar/avatar";
 
 const GOING = [
@@ -10,5 +11,14 @@ const GOING = [
 ];
 
 export default function Showcase() {
-  return <AvatarGroup people={GOING} label="Going" max={4} size={40} />;
+  // The card sits on the page's canvas, so the ring between faces is cut in that color.
+  return (
+    <AvatarGroup
+      people={GOING}
+      label="Going"
+      max={4}
+      size={40}
+      style={{ "--avatar-ring": "var(--ui-canvas)" } as CSSProperties}
+    />
+  );
 }

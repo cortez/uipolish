@@ -141,6 +141,7 @@ export function NavRail({
       indicator.animate([{ transform: from }, { transform: to }], {
         duration: ms(token(list, "--ui-dur-glide", "320ms")),
         easing: token(list, "--ui-ease-glide", "ease-out"),
+        fill: "backwards",
       });
     },
     [value],
@@ -346,11 +347,73 @@ export function NavRail({
 /** The one tooltip every item shares. */
 function RailTooltip() {
   const rail = useContext(Context)!;
-  // Position and width glide only once it's on screen, so it never slides in from the corner.
+  // It glides and its width eases only once it's on screen, so it never slides in from the corner.
   const [gliding, setGliding] = useState(false);
   const open = useRef(false);
   const frame = useRef(0);
   useEffect(() => () => cancelAnimationFrame(frame.current), []);
+
+  // Base UI places the positioner with top and left, and sizes the popup in
+  // steps. Rather than ease those (layout on every frame, text that steps
+  // from pixel to pixel, and a width that snapped to the last label's when a
+  // sweep changed item mid-resize), let both land at once and play the
+  // difference back: the distance as a translate, the size from the box it
+  // visibly had. A change midway carries on from wherever it is.
+  const [positioner, setPositioner] = useState<HTMLDivElement | null>(null);
+  // The popup's box just before its label changed, taken by <BeforeResize>.
+  const before = useRef<{ width: number; height: number } | null>(null);
+  useEffect(() => {
+    if (!positioner || !gliding) return;
+    const read = () => {
+      const computed = getComputedStyle(positioner);
+      return {
+        x: parseFloat(computed.left) || 0,
+        y: parseFloat(computed.top) || 0,
+        width: parseFloat(positioner.style.getPropertyValue("--positioner-width")) || 0,
+        height: parseFloat(positioner.style.getPropertyValue("--positioner-height")) || 0,
+      };
+    };
+    let last = read();
+    const observer = new MutationObserver(() => {
+      const next = read();
+      const moved = next.x !== last.x || next.y !== last.y;
+      const resized = next.width > 0 && (next.width !== last.width || next.height !== last.height);
+      if (!moved && !resized) return;
+      const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // Filled backwards: a compositor may start an animation a moment after
+      // it's made, and until then it would otherwise show nothing of it (the
+      // tooltip flashed at its destination, and the next move read it there).
+      const timing = {
+        duration: ms(token(positioner, "--ui-dur-glide", "320ms")),
+        easing: token(positioner, "--ui-ease-glide", "ease-out"),
+        fill: "backwards" as const,
+      };
+      if (moved) {
+        // How far a glide still playing holds it from its place: measured on
+        // screen, with the glide and then without it.
+        const flying = positioner.getBoundingClientRect();
+        positioner.getAnimations().forEach((a) => a.id === "glide" && a.cancel());
+        const landed = positioner.getBoundingClientRect();
+        const from = `${last.x - next.x + flying.left - landed.left}px ${last.y - next.y + flying.top - landed.top}px`;
+        if (!still) positioner.animate([{ translate: from }, { translate: "0px 0px" }], { id: "glide", ...timing });
+      }
+      const popup = positioner.firstElementChild;
+      const from = before.current;
+      if (resized) before.current = null;
+      if (resized && from && popup && !still) {
+        popup.animate(
+          [
+            { width: `${from.width}px`, height: `${from.height}px` },
+            { width: `${next.width}px`, height: `${next.height}px` },
+          ],
+          { id: "resize", ...timing },
+        );
+      }
+      last = next;
+    });
+    observer.observe(positioner, { attributes: true, attributeFilter: ["style"] });
+    return () => observer.disconnect();
+  }, [positioner, gliding]);
 
   return (
     <BaseTooltip.Root
@@ -375,6 +438,7 @@ function RailTooltip() {
       {({ payload }) => (
         <BaseTooltip.Portal container={rail.container ?? undefined}>
           <BaseTooltip.Positioner
+            ref={setPositioner}
             className={styles.positioner}
             side={rail.orientation === "vertical" ? "inline-end" : "top"}
             sideOffset={8}
@@ -384,6 +448,7 @@ function RailTooltip() {
             {/* The items carry the names; this is a visual echo of them. */}
             <BaseTooltip.Popup className={styles.tooltip} aria-hidden="true">
               <BaseTooltip.Viewport className={styles.viewport}>
+                <BeforeResize label={payload?.label} shortcut={payload?.shortcut} positioner={positioner} boxRef={before} />
                 {payload && (
                   <span className={styles.tip}>
                     <span className={styles.tipLabel}>{payload.label}</span>
@@ -399,6 +464,40 @@ function RailTooltip() {
       )}
     </BaseTooltip.Root>
   );
+}
+
+/** Boxes already noted in the commit that's running. */
+const taken = new WeakSet<object>();
+
+/**
+ * Renders nothing. A child's layout effect runs before its parent's, so this
+ * one sees the popup before Base UI measures it for the new label: it notes
+ * the box the popup visibly has and stops a resize still playing, so the
+ * measure reads the label's real size and the next resize starts from here.
+ */
+function BeforeResize({
+  label,
+  shortcut,
+  positioner,
+  boxRef,
+}: {
+  label?: string;
+  shortcut?: string;
+  positioner: HTMLElement | null;
+  boxRef: { current: { width: number; height: number } | null };
+}) {
+  useLayoutEffect(() => {
+    const popup = positioner?.firstElementChild;
+    // Base UI renders the label twice during a swap (the one leaving and the
+    // one arriving), so this runs twice in one commit: the first one counts.
+    if (!popup || taken.has(boxRef)) return;
+    taken.add(boxRef);
+    queueMicrotask(() => taken.delete(boxRef));
+    const { width, height } = popup.getBoundingClientRect();
+    boxRef.current = width > 0 ? { width, height } : null;
+    popup.getAnimations().forEach((a) => a.id === "resize" && a.cancel());
+  }, [label, shortcut, positioner, boxRef]);
+  return null;
 }
 
 type NavRailTooltipGroupProps = {

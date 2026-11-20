@@ -12,7 +12,7 @@ small and built in; there's no markdown package to install.
 <Markdown source={reply} streaming={!done} />
 ```
 
-It renders paragraphs, `#` to `####` headings, bold, italic,
+It renders paragraphs, `#` to `####` headings (at the title weight, as bold is: an author's emphasis keeps its weight), bold, italic,
 strikethrough, inline code, links and bare URLs, bulleted, numbered and
 nested lists, task lists, quotes, tables and horizontal rules. Fenced code
 is the kit's code block, with its language label, copy and wrap.

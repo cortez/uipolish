@@ -5,13 +5,17 @@ import {
   use,
   useCallback,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   useId,
+  useSyncExternalStore,
   type ReactElement,
   type ReactNode,
+  type Ref,
 } from "react";
 import { Menu as BaseMenu } from "@base-ui/react/menu";
+import { DirectionProvider, useDirection } from "@base-ui/react/direction-provider";
 import { Icon } from "../icons/icons";
 import { TextMorph } from "../text-morph/text-morph";
 import { Kbd } from "../kbd/kbd";
@@ -33,8 +37,45 @@ const ContainerContext = createContext<HTMLElement | undefined>(undefined);
 
 function useRoot() {
   const ctx = use(RootContext);
-  if (!ctx) throw new Error("Menu items must be inside <DropdownMenu>.");
+  if (!ctx) throw new Error("Menu items must be inside <DropdownMenu> or another <MenuScope>.");
   return ctx;
+}
+
+function subscribeDirection(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["dir"], subtree: true });
+  return () => observer.disconnect();
+}
+
+type MenuScopeProps = {
+  /** What the menu opens from: its theme and its direction are the menu's. */
+  anchor: HTMLElement | null;
+  /** Closes the whole menu; an item that confirms in place gets it from `onSelect`. */
+  close: () => void;
+  children: ReactNode;
+};
+
+/** What every item and panel reads from its root. `DropdownMenu` provides it;
+    another root built on Base UI's menu (the context menu) wraps itself in one
+    and takes this file's items and panels as they are. */
+export function MenuScope({ anchor, close, children }: MenuScopeProps) {
+  const container = anchor?.closest<HTMLElement>("[data-theme]") ?? undefined;
+  // Panels are portalled out of the page, and Base UI doesn't read `dir`:
+  // this hands it the anchor's direction, so a submenu opens toward the
+  // far side and ArrowLeft and ArrowRight swap in right-to-left.
+  const rtl = useSyncExternalStore(
+    subscribeDirection,
+    () => (anchor ? getComputedStyle(anchor).direction === "rtl" : false),
+    () => false,
+  );
+  const api = useMemo(() => ({ close }), [close]);
+  return (
+    <RootContext value={api}>
+      <ContainerContext value={container}>
+        <DirectionProvider direction={rtl ? "rtl" : "ltr"}>{children}</DirectionProvider>
+      </ContainerContext>
+    </RootContext>
+  );
 }
 
 const ITEM = "[data-menu-item]";
@@ -64,28 +105,54 @@ function placeHighlight(popup: HTMLElement, bar: HTMLElement) {
 
 /* ---------- Panel ---------- */
 
-type PanelProps = {
-  side: Side | "inline-end";
-  align: Align;
-  sideOffset: number;
+type MenuPanelProps = {
+  /** Left out, Base UI places it: at the pointer under a context menu. */
+  side?: Side | "inline-end";
+  align?: Align;
+  sideOffset?: number;
   alignOffset?: number;
+  /** Names the menu when no trigger does. */
+  label?: string;
+  /** Where focus goes on close; Base UI's `finalFocus`. */
+  finalFocus?: BaseMenu.Popup.Props["finalFocus"];
+  popupRef?: Ref<HTMLDivElement>;
   className?: string;
   children: ReactNode;
 };
 
-function MenuPanel({ side, align, sideOffset, alignOffset = 0, className, children }: PanelProps) {
+/** The floating panel with its sliding highlight. Inside a Base UI menu root
+    and a `MenuScope`. */
+export function MenuPanel({
+  side,
+  align,
+  sideOffset,
+  alignOffset,
+  label,
+  finalFocus,
+  popupRef,
+  className,
+  children,
+}: MenuPanelProps) {
   const container = use(ContainerContext);
+  // Portalled out of a right-to-left section, the panel would lose its direction.
+  const rtl = useDirection() === "rtl";
   return (
     <BaseMenu.Portal container={container}>
       <BaseMenu.Positioner
         className={styles.positioner}
+        dir={rtl ? "rtl" : undefined}
         side={side}
         align={align}
         sideOffset={sideOffset}
         alignOffset={alignOffset}
         collisionPadding={8}
       >
-        <BaseMenu.Popup className={className ? `${styles.surface} ${className}` : styles.surface}>
+        <BaseMenu.Popup
+          ref={popupRef}
+          className={className ? `${styles.surface} ${className}` : styles.surface}
+          aria-label={label}
+          finalFocus={finalFocus}
+        >
           <Highlight />
           {children}
         </BaseMenu.Popup>
@@ -139,25 +206,22 @@ export function DropdownMenu({
 }: DropdownMenuProps) {
   const actionsRef = useRef<BaseMenu.Root.Actions | null>(null);
   const [triggerEl, setTriggerEl] = useState<HTMLElement | null>(null);
-  const container = triggerEl?.closest<HTMLElement>("[data-theme]") ?? undefined;
   const close = useCallback(() => actionsRef.current?.close(), []);
 
   return (
-    <RootContext value={{ close }}>
-      <ContainerContext value={container}>
-        <BaseMenu.Root
-          open={open}
-          onOpenChange={(next) => onOpenChange?.(next)}
-          actionsRef={actionsRef}
-          modal={false}
-        >
-          <BaseMenu.Trigger ref={setTriggerEl} render={trigger} />
-          <MenuPanel side={side} align={align} sideOffset={6} className={className}>
-            {children}
-          </MenuPanel>
-        </BaseMenu.Root>
-      </ContainerContext>
-    </RootContext>
+    <MenuScope anchor={triggerEl} close={close}>
+      <BaseMenu.Root
+        open={open}
+        onOpenChange={(next) => onOpenChange?.(next)}
+        actionsRef={actionsRef}
+        modal={false}
+      >
+        <BaseMenu.Trigger ref={setTriggerEl} render={trigger} />
+        <MenuPanel side={side} align={align} sideOffset={6} className={className}>
+          {children}
+        </MenuPanel>
+      </BaseMenu.Root>
+    </MenuScope>
   );
 }
 

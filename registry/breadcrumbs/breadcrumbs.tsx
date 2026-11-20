@@ -51,16 +51,37 @@ export function Breadcrumbs({ items, as: Link = "a", max = 4, className, "aria-l
     const animate = justOpened.current && ready && !matchMedia("(prefers-reduced-motion: reduce)").matches;
     const next = new Map<string, [number, number]>();
     const moving: [HTMLElement, number, number][] = [];
+    const revealed: HTMLElement[] = [];
+    // The first crumb after the fold: where it was and where it is now.
+    let lead: { from: number; to: number; top: number } | null = null;
     for (const el of list.querySelectorAll<HTMLElement>(":scope > [data-key]")) {
       const at: [number, number] = [el.offsetLeft, el.offsetTop];
       const was = placed.current.get(el.dataset.key!);
       next.set(el.dataset.key!, at);
-      if (animate && was && (was[0] !== at[0] || was[1] !== at[1])) {
+      if (!animate) continue;
+      if (!was) revealed.push(el);
+      else if (was[0] !== at[0] || was[1] !== at[1]) {
         const [sx = 0, sy = 0] = getComputedStyle(el).translate.split(" ").map((v) => parseFloat(v) || 0);
         moving.push([el, was[0] - at[0] + sx, was[1] - at[1] + sy]);
+        if (!lead && was[1] === at[1]) lead = { from: was[0], to: at[0], top: at[1] };
       }
     }
     placed.current = next;
+    // A revealed crumb on the line the rest slide along is uncovered by them:
+    // clipped at the sliding crumbs' leading edge, on the same curve, so the
+    // two never draw over each other. On another line (the trail wrapped), or
+    // right to left, it fades in instead (the @starting-style in the CSS).
+    const ltr = getComputedStyle(list).direction !== "rtl";
+    const wiped: [HTMLElement, number][] = [];
+    if (lead && ltr) {
+      for (const el of revealed) {
+        if (el.offsetTop !== lead.top) continue;
+        const end = el.offsetLeft + el.offsetWidth;
+        wiped.push([el, end]);
+        el.style.transition = "none";
+        el.style.clipPath = `inset(-8px ${end - lead.from}px -8px -8px)`;
+      }
+    }
     if (moving.length) {
       for (const [el, dx, dy] of moving) {
         el.style.transition = "none";
@@ -71,6 +92,19 @@ export function Breadcrumbs({ items, as: Link = "a", max = 4, className, "aria-l
       for (const [el] of moving) {
         el.style.transition = "";
         el.style.translate = "";
+      }
+      for (const [el, end] of wiped) {
+        el.style.transition = "";
+        // Past its own edge by the end: nothing is clipped once it lands.
+        el.style.clipPath = `inset(-8px ${end - lead!.to}px -8px -8px)`;
+        const clear = (event: TransitionEvent) => {
+          if (event.target !== el || event.propertyName !== "clip-path") return;
+          el.style.clipPath = "";
+          el.removeEventListener("transitionend", clear);
+          el.removeEventListener("transitioncancel", clear);
+        };
+        el.addEventListener("transitionend", clear);
+        el.addEventListener("transitioncancel", clear);
       }
     }
 
@@ -112,20 +146,20 @@ export function Breadcrumbs({ items, as: Link = "a", max = 4, className, "aria-l
   return (
     <nav aria-label={ariaLabel} className={className ? `${styles.root} ${className}` : styles.root} data-ready={ready || undefined} {...props}>
       <ol ref={listRef} className={styles.list}>
-        {folded ? (
-          <>
-            {crumb(items[0], 0)}
-            <li key="more" className={styles.item}>
-              <button type="button" className={styles.more} aria-label={`Show ${hidden} more levels`} onClick={open}>
-                <span aria-hidden="true">…</span>
-              </button>
-              <Icon name="chevron-right" className={styles.separator} />
-            </li>
-            {items.slice(hidden + 1).map((item, i) => crumb(item, hidden + 1 + i))}
-          </>
-        ) : (
-          items.map(crumb)
-        )}
+        {/* One flat list either way, so the crumbs after the fold are the same
+            elements once it opens: they slide, and only the revealed ones fade in. */}
+        {folded
+          ? [
+              crumb(items[0], 0),
+              <li key="more" className={styles.item}>
+                <button type="button" className={styles.more} aria-label={`Show ${hidden} more levels`} onClick={open}>
+                  <span aria-hidden="true">…</span>
+                </button>
+                <Icon name="chevron-right" className={styles.separator} />
+              </li>,
+              ...items.slice(hidden + 1).map((item, i) => crumb(item, hidden + 1 + i)),
+            ]
+          : items.map(crumb)}
       </ol>
     </nav>
   );

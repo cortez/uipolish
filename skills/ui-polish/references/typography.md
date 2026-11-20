@@ -14,7 +14,10 @@ is missing, the scale is wrong, not the component.
 one size and one weight. A
 fourth style is never the answer: pick the nearest of these, or change the
 layout. Hierarchy past three comes from color and space, never another
-size or weight. Bold is not a style: emphasis is color.
+size or weight. Bold is not a style: emphasis is color. (Words an author
+wrote, a model's reply or a document rendered from Markdown, are not
+interface: their `**bold**` and headings take `--ui-weight-title`, or the
+emphasis they were given is lost.)
 
 | Style | Token | Size | Line-height | Weight | Use |
 |---|---|---|---|---|---|

@@ -1,0 +1,10 @@
+/* The area that opens the menu. The menu itself is the dropdown menu's
+   panel; nothing here draws one. A long press would otherwise also select
+   the word under the finger and raise the browser's own callout. */
+@media (pointer: coarse) {
+  .area {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+}

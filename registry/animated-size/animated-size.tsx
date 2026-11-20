@@ -8,6 +8,23 @@ type AnimatedSizeProps = ComponentProps<"div"> & {
   axis?: "height" | "width" | "both";
 };
 
+// A transition on one of these inside the box means the content is easing
+// its own size on that axis.
+const HEIGHT_PROPERTIES = ["height", "block-size", "max-height", "grid-template-rows"];
+const WIDTH_PROPERTIES = ["width", "inline-size", "max-width", "grid-template-columns"];
+
+/** Whether something inside is mid-way through a size transition of its own (a panel opening). */
+function easesItself(inner: HTMLElement, axis: "height" | "width" | "both") {
+  if (typeof inner.getAnimations !== "function" || typeof CSSTransition === "undefined") return false;
+  return inner.getAnimations({ subtree: true }).some(
+    (a) =>
+      a instanceof CSSTransition &&
+      a.playState !== "finished" &&
+      ((axis !== "width" && HEIGHT_PROPERTIES.includes(a.transitionProperty)) ||
+        (axis !== "height" && WIDTH_PROPERTIES.includes(a.transitionProperty))),
+  );
+}
+
 /** A box that eases its height and/or width to whatever its content measures. */
 export function AnimatedSize({ axis = "height", className, children, ...props }: AnimatedSizeProps) {
   const outerRef = useRef<HTMLDivElement>(null);
@@ -47,6 +64,13 @@ export function AnimatedSize({ axis = "height", className, children, ...props }:
       const reflow = axis === "height" && last !== null && last.w !== w;
       if (reflow) disarm();
 
+      // Content that eases its own size (a panel opening inside) is followed
+      // frame by frame: easing after it again would trail behind and clip it.
+      // A resize already under way keeps its transition and retargets.
+      const follow = easesItself(inner, axis) && (outer.dataset.following !== undefined || outer.dataset.moving === undefined);
+      if (follow) outer.dataset.following = "";
+      else delete outer.dataset.following;
+
       const before = last;
       last = { w, h };
       if (before && outer.dataset.armed !== undefined) {
@@ -81,6 +105,7 @@ export function AnimatedSize({ axis = "height", className, children, ...props }:
       outer.style.width = "";
       delete outer.dataset.armed;
       delete outer.dataset.moving;
+      delete outer.dataset.following;
     };
   }, [axis]);
 

@@ -1,0 +1,13 @@
+{
+  "name": "hover-card",
+  "title": "Hover card",
+  "summary": "Preview of where a link or mention goes, shown on hover or keyboard focus. It waits before the first one, opens at once on the next, and stays while the pointer travels into it.",
+  "blurb": "A preview of where a link or mention goes.",
+  "version": "0.1.0",
+  "dependencies": [
+    "popover"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

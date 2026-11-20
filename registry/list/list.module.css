@@ -262,4 +262,11 @@
   .chevron {
     transition: none;
   }
+  /* The hover and focus nudges, in either direction, undone. */
+  .row[data-interactive]:hover .chevron,
+  .row[data-interactive]:has(.primary:focus-visible) .chevron,
+  :is([dir="rtl"]) .row[data-interactive]:hover .chevron,
+  :is([dir="rtl"]) .row[data-interactive]:has(.primary:focus-visible) .chevron {
+    translate: none;
+  }
 }

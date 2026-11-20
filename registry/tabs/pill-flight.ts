@@ -68,5 +68,7 @@ export function flyPill(indicator: HTMLElement, from: PillSpan, to: PillSpan, ve
         : { transform: `translateX(${near}px)`, width: `${far - near}px` },
     );
   }
-  indicator.animate(frames, { duration, easing: "linear" });
+  // Backwards fill: an animation the compositor starts a frame late would
+  // otherwise show the pill at its destination for that frame.
+  indicator.animate(frames, { duration, easing: "linear", fill: "backwards" });
 }

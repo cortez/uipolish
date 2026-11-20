@@ -21,13 +21,18 @@ export default function Showcase() {
         <Segment value="main">Main</Segment>
         <Segment value="dessert">Dessert</Segment>
       </SegmentedControl>
-      <AnimatedSize>
-        <List aria-label="Dishes">
-          {MENU[course].map((dish) => (
-            <ListItem key={dish} title={dish} />
-          ))}
-        </List>
-      </AnimatedSize>
+      {/* Room for the longest list (three rows at touch height), held from the
+          start: the card centers its content, and without it the control
+          would slide away from the pointer each time the list changed height. */}
+      <div style={{ minHeight: 152 }}>
+        <AnimatedSize>
+          <List aria-label="Dishes">
+            {MENU[course].map((dish) => (
+              <ListItem key={dish} title={dish} />
+            ))}
+          </List>
+        </AnimatedSize>
+      </div>
     </div>
   );
 }

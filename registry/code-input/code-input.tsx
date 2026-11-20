@@ -18,6 +18,9 @@ import styles from "./code-input.module.css";
 type CodeInputProps = {
   /** Visible label for the whole code, e.g. "Verification code". */
   label: string;
+  /** Hide the label from sight; screen readers still read it. Use only where
+   *  the code's purpose is plain from what's around it. */
+  hideLabel?: boolean;
   /** Number of boxes, 6 by default. */
   length?: number;
   /** Groups the boxes as the code is read aloud: `3` for 123 456, `[3, 4]` for 123 4567. */
@@ -63,6 +66,7 @@ const defaultLabels = {
 /** A one-time code as N boxes. The value is always contiguous: no box past the first empty one takes focus. */
 export function CodeInput({
   label,
+  hideLabel = false,
   length = 6,
   group,
   value: controlled,
@@ -391,7 +395,7 @@ export function CodeInput({
     >
       <label
         id={labelId}
-        className={styles.label}
+        className={hideLabel ? styles.srOnly : styles.label}
         htmlFor={`${id}-${reachable(length - 1)}`}
       >
         {label}

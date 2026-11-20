@@ -50,9 +50,13 @@
   }
 }
 
-.control:focus-within {
+/* Nothing here is typed into, so focus on one of its buttons doesn't fill
+   the field the way a focused text field fills: the button shows the focus.
+   Doubled so it outranks the composed shell rule in any stylesheet order. */
+.control.control:focus-within {
   --edge: var(--ui-border-strong);
   --edge-width: var(--ui-hairline);
+  background: var(--ui-surface);
 }
 
 /* One line, always: the field keeps its height and the value never wraps

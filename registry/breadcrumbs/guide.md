@@ -79,12 +79,15 @@ targets don't overlap.
 | What | Duration | Easing |
 |---|---|---|
 | Crumbs after the fold slide to their new places as it opens | `--ui-dur-move` | `--ui-ease-move` |
-| Crumbs that open fade in where the "…" was | `--ui-dur-fast` | `--ui-ease-enter` |
+| Crumbs that open are uncovered by the ones sliding off them: clipped at the sliding crumbs' leading edge, on the same curve | `--ui-dur-move` | `--ui-ease-move` |
+| Crumbs that open on another line (the trail wrapped), right to left, or under reduced motion: fade in | `--ui-dur-fast` | `--ui-ease-enter` |
 | Hover and press fills, text color | `--ui-dur-instant` | `--ui-ease-color` |
 
 Opening the fold is the only movement. The crumbs already on screen slide
 (FLIP on `translate`, onto the next line if the trail now wraps) rather
-than jumping to make room. Nothing animates on the first paint. Under
+than jumping to make room. The revealed crumbs sit still and are
+uncovered as the others leave (`clip-path`, following the first sliding
+crumb), so the two never draw over each other on the way. Nothing animates on the first paint. Under
 `prefers-reduced-motion: reduce` nothing slides: the crumbs take their
 places at once and the revealed ones still fade in.
 
