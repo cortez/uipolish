@@ -23,23 +23,26 @@ type Stroke = {
   block?: boolean;
   /** A filled shape with softly rounded corners (play, pause, stop). */
   solid?: boolean;
+  /** A result that is revealed, not reshaped (the check): the icon before
+   *  it tilts away as it erases, and this draws on behind it. */
+  reveal?: boolean;
   /** Nudges 1px while the parent control is hovered or focused. */
   fx?: "lid" | "drop" | "out" | "forward";
 };
 
-/* Copy's front sheet is two strokes that meet end to end. `sheet` is its left
-   edge, bottom-left corner and bottom edge: turned 45° that corner is a check,
-   so copy → check moves those points while `rim` (the rest of the square)
-   and the back sheet fold into it. */
+/* Copy's front sheet is two strokes that meet end to end: `sheet` (left
+   edge, bottom-left corner, bottom edge) and `rim` (the rest), so a change
+   that keeps the sheet (duplicate) can redraw the rim alone. */
 const SHEET = {
   d: "M5.76 5.76 C5.43 6.09 5.25 6.54 5.25 7 L5.25 11.5 C5.25 12.47 6.03 13.25 7 13.25 L11.5 13.25",
 } satisfies Stroke;
 const RIM = {
   d: "M5.76 5.76A1.75 1.75 0 0 1 7 5.25H11.5A1.75 1.75 0 0 1 13.25 7V11.5A1.75 1.75 0 0 1 11.5 13.25",
 } satisfies Stroke;
-// The same commands as SHEET; the corner is a short curve so it can come from the rounded one.
+// Drawn from the short stroke's end to the long one's, as a hand ticks.
 const CHECK = {
-  d: "M3.75 8.25 C3.96 8.46 4.17 8.67 4.38 8.88 L6.4 10.9 C6.75 11.25 6.75 11.25 7.08 10.87 L12.25 5",
+  d: "M3.75 8.25 L6.75 11.25 L12.25 5",
+  reveal: true,
 } satisfies Stroke;
 const BACK_SHEET = "M9.25 2.75H4.5A1.75 1.75 0 0 0 2.75 4.5V9.25";
 const EYE = "M1.75 8C3.1 5.1 5.4 3.5 8 3.5s4.9 1.6 6.25 4.5C12.9 10.9 10.6 12.5 8 12.5S3.1 10.9 1.75 8Z";
@@ -57,7 +60,7 @@ const ICONS = {
   eye: { eye: { d: EYE }, pupil: { d: PUPIL } },
   "eye-off": { eye: { d: EYE }, pupil: { d: PUPIL }, slash: { d: "M2.75 2.75 L13.25 13.25", cut: true } },
   copy: { back: { d: BACK_SHEET }, sheet: SHEET, rim: RIM },
-  check: { sheet: CHECK },
+  check: { tick: CHECK },
   duplicate: { back: { d: BACK_SHEET }, sheet: SHEET, rim: RIM, add: { d: "M9.25 7.5v3.5M7.5 9.25h3.5" } },
   plus: { a: { d: "M3.25 8 L12.75 8" }, b: { d: "M8 12.75 L8 3.25" } },
   close: { a: { d: "M4.75 4.75 L11.25 11.25" }, b: { d: "M4.75 11.25 L11.25 4.75" } },
@@ -301,6 +304,8 @@ type Strand = {
   pts: Pt[];
   /** N points, the same number on each command. */
   seg: Pt[];
+  /** Revealed, not reshaped: see Stroke.reveal. */
+  reveal?: boolean;
   /** Its two ends, when it is a straight line. */
   line?: [Pt, Pt];
   cls: string;
@@ -412,7 +417,7 @@ function strandsOf(key: string, s: Stroke): Strand[] {
     const a = fine[0];
     const b = fine[fine.length - 1];
     const straight = len > 0.5 && Math.abs(len - dist(a, b)) < 0.001;
-    out.push({ key: `${key}#${out.length}`, d, sig, closed, cls, pts: resample(fine, corners.slice(0, -1)), seg, line: straight ? [a, b] : undefined });
+    out.push({ key: `${key}#${out.length}`, d, sig, closed, cls, pts: resample(fine, corners.slice(0, -1)), seg, line: straight ? [a, b] : undefined, reveal: s.reveal });
     segs = [];
     sig = "";
   };
@@ -500,7 +505,9 @@ function align(from: Pt[], to: Pt[], closed: boolean): { pts: Pt[]; cost: number
   const tryOne = (pts: Pt[]) => {
     let sum = 0;
     for (let i = 0; i < N; i += 2) sum += (from[i][0] - pts[i][0]) ** 2 + (from[i][1] - pts[i][1]) ** 2;
-    if (sum < least) {
+    // A near-tie keeps the drawn order: two mirror-image strands (a
+    // chevron's arms) must not break the same tie two different ways.
+    if (sum < least - 1e-6) {
       least = sum;
       best = pts;
     }
@@ -603,9 +610,21 @@ type El = {
   /** A strand with no partner: it draws on along its own line (grow) or
    *  erases back along it (shrink), from the end nearest the other icon's
    *  ink, so it never travels sideways. */
-  trim?: { pts: Pt[]; grow: boolean };
+  trim?: { pts: Pt[]; grow: boolean; delay?: number; span?: number; tilt?: [number, number] };
   still: boolean;
 };
+
+/** How far an icon tilts as it gives way to a revealed result, in degrees. */
+const TILT = -14;
+
+/** A point turned about the icon's center. */
+const spin = (p: Pt, rad: number): Pt => {
+  const cos = Math.cos(rad);
+  const sin = Math.sin(rad);
+  return [8 + (p[0] - 8) * cos - (p[1] - 8) * sin, 8 + (p[0] - 8) * sin + (p[1] - 8) * cos];
+};
+
+const reveals = (name: IconName) => Object.values(table[name]).some((s) => s.reveal);
 
 /** `pts` turned so it starts at the end nearer `ink`. */
 function fromNearEnd(pts: Pt[], ink: Pt[][]): Pt[] {
@@ -688,6 +707,29 @@ function createEngine(host: SVGGElement, start: IconName) {
   /** Sets every strand on its way to `next`. */
   function plan(next: IconName) {
     const want = strands(next);
+    if (reveals(name) || reveals(next)) {
+      // A result revealed, not reshaped: the old icon tilts away as it
+      // erases along its lines, and the new one draws on behind it, a beat
+      // later. Going back, the old result erases and the icon draws on,
+      // tilting upright as it arrives.
+      const toward = reveals(next);
+      for (const el of els) {
+        el.leaving = true;
+        el.quad = undefined;
+        el.still = false;
+        const own = el.strand.reveal;
+        // A tick erases back toward where it began, last drawn first.
+        el.trim = { pts: own ? [...el.now].reverse() : fromNearEnd(el.now, want.map((s) => s.pts)).reverse(), grow: false, span: 0.75, tilt: toward ? [0, TILT] : undefined };
+        el.node.setAttribute("class", styles.strand + (el.strand.cls.includes(styles.solid) ? " " + styles.solid : ""));
+      }
+      for (const strand of want) {
+        const el = make(strand, Array.from({ length: N }, () => strand.pts[0]));
+        el.trim = { pts: strand.reveal ? [...strand.pts] : fromNearEnd(strand.pts, els.map((e) => e.now)), grow: true, delay: 0.12, tilt: toward ? undefined : [TILT, 0] };
+        el.still = false;
+        els.push(el);
+      }
+      return;
+    }
     if (halves(name, next)) {
       // Caught mid-way between two of them, the halves turn round from where
       // they are; from rest, two halves take the place of whatever drew the
@@ -738,7 +780,7 @@ function createEngine(host: SVGGElement, start: IconName) {
     for (const el of [...free]) {
       if (el.leaving) continue;
       const same = [...open].find((s) => s.key === el.strand.key && (s.d === el.strand.d || s.sig === el.strand.sig));
-      if (same) move(el, same, el.still && same.d !== el.strand.d && !same.line ? same.seg : null);
+      if (same) move(el, same, el.still && same.d !== el.strand.d ? same.seg : null);
     }
 
     // 2. The rest pair off by how little ink has to travel.
@@ -780,9 +822,13 @@ function createEngine(host: SVGGElement, start: IconName) {
         // Ink that leaves is gone in the first 60% of the move, so it never
         // lingers beside the new shape; the last stub fades rather than
         // shrinking to the round cap's dot.
-        const { pts, grow } = el.trim;
-        const f = grow ? k : Math.max(0, 1 - k / 0.6);
-        const part = grow ? head(pts, f) : head([...pts].reverse(), f).reverse();
+        const { pts, grow, delay = 0, span = 0.6, tilt } = el.trim;
+        const f = grow ? Math.max(0, (k - delay) / (1 - delay)) : Math.max(0, 1 - k / span);
+        let part = grow ? head(pts, f) : head([...pts].reverse(), f).reverse();
+        if (tilt) {
+          const deg = tilt[0] + (tilt[1] - tilt[0]) * (grow ? f : Math.min(1, k / span));
+          part = part.map((p) => spin(p, (deg * Math.PI) / 180));
+        }
         el.now = resample(part);
         el.node.setAttribute("d", poly(part));
         el.node.style.opacity = f >= 0.25 ? "" : String(f / 0.25);

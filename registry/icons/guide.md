@@ -39,10 +39,10 @@ in a tile. Every chevron in the same role is the same size.
 | Name | Strokes (keys) | What a change looks like |
 |---|---|---|
 | `eye`, `eye-off` | eye, pupil (+ slash) | The slash is a strike: it draws across and cuts its own gap in the eye, and retracts the way it came. |
-| `copy`, `check`, `duplicate` | back, sheet, rim (+ add) | The front sheet is two strokes meeting end to end: `sheet` (left edge, bottom-left corner, bottom edge) and `rim` (the rest). `sheet` and the check have the same commands, so copy → check hinges the sheet's bottom edge up into the check's long stroke while the rim and the back sheet erase along their own lines; nothing else moves. Back to copy, the rim draws round again and the back sheet draws in. `duplicate` is copy with a plus that draws in. |
+| `copy`, `check`, `duplicate` | back, sheet, rim (+ add); tick | The check is a result, so it's revealed rather than reshaped (`reveal` on its stroke): copy tilts 14° away as its sheets erase along their own lines, and the check draws on behind them, short stroke first, starting a beat later so the two overlap. Back to copy, the check erases back toward where it began and the sheets draw on, tilting upright as they arrive. `duplicate` is copy with a plus that draws in. |
 | `plus`, `close`, `minus`, `menu` | a, b (+ m) | Every end moves straight to its new place. Plus to close: the ends swing in to the cross. Menu to close: the top and bottom bars meet in the cross and the middle folds into it. Minus to plus: the upright grows out of the bar's middle. |
 | `arrow-up`/`down`/`left`/`right`, `send` | s, h1, h2 | The shaft and the two sides of the head move straight to their new places. `send` is `arrow-up`. |
-| `chevron-up`/`down`/`left`/`right` | a, b | Two arms that meet at the point. A flip moves the point straight across and the arms follow, so it never turns. |
+| `chevron-up`/`down`/`left`/`right` | a, b | Two arms that meet at the point. A flip slides the point straight across while the ends move the other way, both arms mirrored the whole way, so it never turns or twists. |
 | `play`, `pause`, `stop` | a (+ b) | Solid, not stroked. Between the three they reshape in place, with nothing turning: each is two halves, left and right. Play's triangle is cut down its middle, so play to pause squares each half off into the bar beside it, and play to stop flattens the point into the square's edge. Every corner travels a short straight line. |
 | `mic`, `send` → `stop` | | A line opens into the square's outline, the rest erases along itself, and the fill arrives once the outline has closed. |
 | `info`, `alert`, `check-circle` | ring, stem, dot (tick) | One ring that stays still; the stem and dot change ends between `info` and `alert`, and reshape into the tick for `check-circle`. `warning` is its own triangle. |
@@ -58,7 +58,7 @@ in a tile. Every chevron in the same role is the same size.
   markup, as the server sent it. On its first name change a small engine
   takes the strands over and moves their points itself, a frame at a time.
 - **Every strand finds a partner.** A strand both icons name and draw with
-  the same commands (copy's `sheet` and the check) moves command by command,
+  the same commands (a chevron's arms) moves command by command,
   so a drawn correspondence holds. The rest pair off by how little ink has to
   travel: each strand's points are sampled evenly along its length (corners
   kept), and it goes to the strand of the new icon nearest it, turned
@@ -100,7 +100,8 @@ in a tile. Every chevron in the same role is the same size.
 
 | What | Duration | Easing |
 |---|---|---|
-| One icon becomes another: every strand moves, draws on or erases (erasing ends at 60%) | `--ui-dur-glide` (320ms) | `--ui-ease-glide` (read from the page, so a changed token is followed) |
+| One icon becomes another: every strand moves, draws on or erases (erasing ends at 60%) |
+| Copy ↔ check (a revealed result): the old icon tilts 14° and erases by 75%; the new one draws on from 12% | `--ui-dur-glide` (320ms) | `--ui-ease-glide` | `--ui-dur-glide` (320ms) | `--ui-ease-glide` (read from the page, so a changed token is followed) |
 | Play ↔ pause ↔ stop: the halves reshape in place | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
 | A line fills into a solid | 40% of the glide, after 35% of it | `--ui-ease-color` |
 | A solid empties into a line | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
