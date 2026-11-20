@@ -2,6 +2,6 @@
   "name": "icons",
   "title": "Icons",
   "summary": "16px stroke icons behind one <Icon name> component. When the name changes, the ink of one icon reshapes into the other: nothing fades out and nothing is redrawn.",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "dependencies": []
 }

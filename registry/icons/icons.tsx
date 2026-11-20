@@ -621,6 +621,20 @@ const TURN_FROM: [Pt, Pt, Pt] = [[5.25, 7], [5.25, 13.25], [11.5, 13.25]];
 const TURN_TO: [Pt, Pt, Pt] = [[3.75, 8.25], [6.75, 11.25], [12.75, 5.25]];
 const turnsIntoCheck = (a: IconName, b: IconName) => (a === "copy" && b === "check") || (a === "check" && b === "copy");
 
+/** CSS cubic-bezier(x1, y1, x2, y2) at time `t`. */
+function bezier(x1: number, y1: number, x2: number, y2: number, t: number) {
+  const at = (a: number, b: number, u: number) => 3 * a * u * (1 - u) ** 2 + 3 * b * u * u * (1 - u) + u ** 3;
+  let lo = 0;
+  let hi = 1;
+  let u = t;
+  for (let i = 0; i < 24; i++) {
+    u = (lo + hi) / 2;
+    if (at(x1, x2, u) < t) lo = u;
+    else hi = u;
+  }
+  return at(y1, y2, u);
+}
+
 /** A point turned by `rad` about `about`. */
 const spin = (p: Pt, rad: number, about: Pt): Pt => {
   const cos = Math.cos(rad);
@@ -706,6 +720,17 @@ function createEngine(host: SVGGElement, start: IconName) {
           }
         : (t: number) => 1 - (1 + 9.2 * t) * Math.exp(-9.2 * t);
     return { ms, ease };
+  };
+
+  /** The turn's timing: the draw curve over the move duration. A turn on the
+   *  glide does most of its turning in the first frames and then creeps;
+   *  easing in and out keeps the tilt even, so it reads as one motion. */
+  const turnTiming = () => {
+    const css = getComputedStyle(host);
+    const raw = css.getPropertyValue("--ui-dur-move").trim();
+    const ms = parseFloat(raw) * (/\ds$/.test(raw) && !raw.endsWith("ms") ? 1000 : 1) || 380;
+    const [x1, y1, x2, y2] = (/cubic-bezier\(([^)]+)\)/.exec(css.getPropertyValue("--ui-ease-draw"))?.[1].split(",").map(parseFloat) ?? [0.35, 0, 0.15, 1]);
+    return { ms, ease: (t: number) => bezier(x1, y1, x2, y2, t) };
   };
 
   /** Sets every strand on its way to `next`. */
@@ -851,16 +876,17 @@ function createEngine(host: SVGGElement, start: IconName) {
     const at = (dir: Pt, len: number): Pt => [corner[0] + dir[0] * len, corner[1] + dir[1] * len];
     const p = (q: Pt) => `${r2(q[0])} ${r2(q[1])}`;
     t.sheet.setAttribute("d", `M${p(at(up, short))}L${p(at(up, r))}Q${p(corner)} ${p(at(along, r))}L${p(at(along, long))}`);
-    // The rest of the copy is carried round the same corner as it erases,
-    // so the whole icon is seen to tilt; gone by 80% of the way.
-    const f = Math.max(0, 1 - k / 0.8);
+    // The rest of the copy is carried round the same corner, fading out
+    // evenly over the first half: a whole shape dimming, never a stub.
+    const o = Math.max(0, 1 - k / 0.5);
     for (const { node, pts } of t.rest) {
-      const part = head(pts, f).map((q) => {
+      const part = pts.map((q) => {
         const turned = spin(q, angle, TURN_FROM[1]);
         return [turned[0] + corner[0] - TURN_FROM[1][0], turned[1] + corner[1] - TURN_FROM[1][1]] as Pt;
       });
       node.setAttribute("d", poly(part));
-      node.style.opacity = f >= 0.25 ? "" : String(f / 0.25);
+      node.style.opacity = String(o * o * (3 - 2 * o));
+      node.style.visibility = o > 0 ? "" : "hidden";
     }
   }
 
@@ -882,19 +908,24 @@ function createEngine(host: SVGGElement, start: IconName) {
       turning = {
         k: from,
         sheet: node(sheet.cls),
-        // Each erases back into the end it shares with the sheet's left edge.
-        rest: copy
-          .filter((s) => s !== sheet)
-          .map((s) => ({ node: node(s.cls), pts: fromNearEnd(s.pts, [[TURN_FROM[0]]]) })),
+        // The rim, the back sheet, and the sheet's own top-left half-corner
+        // (the turn draws the sheet from the top of its left edge), so the
+        // first frame is the copy exactly as it rests.
+        rest: [
+          ...copy.filter((s) => s !== sheet).map((s) => ({ node: node(s.cls), pts: s.pts })),
+          { node: node(sheet.cls), pts: sheet.pts.slice(0, sheet.pts.findIndex((q) => q[1] >= TURN_FROM[0][1]) + 1) },
+        ],
       };
       drawTurn(from);
     }
     name = next;
     const start = turning.k;
-    const { ms, ease } = timing();
+    const { ms, ease } = turnTiming();
+    // Turning back mid-way takes only the time the distance left needs.
+    const span = ms * Math.max(0.35, Math.abs(target - start));
     const began = performance.now();
     const step = (now: number) => {
-      const t = Math.min(1, Math.max(0, (now - began) / ms));
+      const t = Math.min(1, Math.max(0, (now - began) / span));
       drawTurn(start + (target - start) * ease(t));
       if (t === 1) {
         frame = 0;
