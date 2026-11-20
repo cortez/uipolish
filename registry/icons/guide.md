@@ -39,12 +39,12 @@ in a tile. Every chevron in the same role is the same size.
 | Name | Strokes (keys) | What a change looks like |
 |---|---|---|
 | `eye`, `eye-off` | eye, pupil (+ slash) | The slash is a strike: it draws across and cuts its own gap in the eye, and retracts the way it came. |
-| `copy`, `check`, `duplicate` | back, sheet, rim (+ add) | The front sheet is two strokes meeting end to end: `sheet` (left edge, bottom-left corner, bottom edge) and `rim` (the rest). `sheet` and the check have the same commands, so copy → check turns the sheet's corner 45° into the check's while the rim and the back sheet fold into it. `duplicate` is copy with a plus that grows out of the sheet. |
+| `copy`, `check`, `duplicate` | back, sheet, rim (+ add) | The front sheet is two strokes meeting end to end: `sheet` (left edge, bottom-left corner, bottom edge) and `rim` (the rest). `sheet` and the check have the same commands, so copy → check hinges the sheet's bottom edge up into the check's long stroke while the rim and the back sheet erase along their own lines; nothing else moves. Back to copy, the rim draws round again and the back sheet draws in. `duplicate` is copy with a plus that draws in. |
 | `plus`, `close`, `minus`, `menu` | a, b (+ m) | Every end moves straight to its new place. Plus to close: the ends swing in to the cross. Menu to close: the top and bottom bars meet in the cross and the middle folds into it. Minus to plus: the upright grows out of the bar's middle. |
 | `arrow-up`/`down`/`left`/`right`, `send` | s, h1, h2 | The shaft and the two sides of the head move straight to their new places. `send` is `arrow-up`. |
 | `chevron-up`/`down`/`left`/`right` | a, b | Two arms that meet at the point. A flip moves the point straight across and the arms follow, so it never turns. |
 | `play`, `pause`, `stop` | a (+ b) | Solid, not stroked. Between the three they reshape in place, with nothing turning: each is two halves, left and right. Play's triangle is cut down its middle, so play to pause squares each half off into the bar beside it, and play to stop flattens the point into the square's edge. Every corner travels a short straight line. |
-| `mic`, `send` → `stop` | | A line opens into the square's outline, the rest folds into it, and the fill arrives once the outline has closed. |
+| `mic`, `send` → `stop` | | A line opens into the square's outline, the rest erases along itself, and the fill arrives once the outline has closed. |
 | `info`, `alert`, `check-circle` | ring, stem, dot (tick) | One ring that stays still; the stem and dot change ends between `info` and `alert`, and reshape into the tick for `check-circle`. `warning` is its own triangle. |
 | `thumbs-up`, `thumbs-down`, `pin` | hand, cuff; head, point | Down is up turned half round, so a flip turns the hand over. A pressed rating fills: set `--icon-fill: 1` on the icon or its control. |
 | `diff-added`, `diff-modified`, `diff-removed`, `diff-renamed` | frame, bar (+ stem, dot, head) | One rounded square that stays still; the mark inside reshapes. |
@@ -63,10 +63,13 @@ in a tile. Every chevron in the same role is the same size.
   travel: each strand's points are sampled evenly along its length (corners
   kept), and it goes to the strand of the new icon nearest it, turned
   whichever way moves it least.
-- **Ink is never dropped or redrawn.** A new strand with no partner grows
-  out of the nearest ink on screen; an old one with none folds into the
-  nearest new ink and is removed when it lands. So an icon with two strokes
-  becomes one with five without a fade.
+- **Nothing flies in or out.** A new strand with no partner draws on along
+  its own line, from the end nearest the ink already there; an old one with
+  none erases back along its own line, into the end nearest the new icon,
+  and is gone within the first 60% of the move so it never lingers beside
+  the new shape. Its last stub fades rather than leaving the round cap's
+  dot. So an icon with two strokes becomes one with five, and nothing
+  travels sideways to get there.
 - **Least movement.** Every point travels a straight line to its place, so
   nothing spins or pivots on the way: an icon changes shape where it
   stands.
@@ -76,7 +79,7 @@ in a tile. Every chevron in the same role is the same size.
   the icon's own path again, so a morphed icon is pixel-identical to one
   that never moved.
 - **Interruptible.** A change mid-way starts from where the ink is: every
-  strand on screen, the ones folding away included, is paired afresh.
+  strand on screen, the ones erasing included, is paired afresh.
 - **Strikes.** A stroke marked `cut` (the eye's slash) isn't ink to
   reshape: it draws on and retracts along its own length with a CSS dash,
   and is drawn again in an SVG mask, black and three strokes wide, so the
@@ -97,7 +100,7 @@ in a tile. Every chevron in the same role is the same size.
 
 | What | Duration | Easing |
 |---|---|---|
-| One icon becomes another: every strand moves, grows or folds | `--ui-dur-glide` (320ms) | `--ui-ease-glide` (read from the page, so a changed token is followed) |
+| One icon becomes another: every strand moves, draws on or erases (erasing ends at 60%) | `--ui-dur-glide` (320ms) | `--ui-ease-glide` (read from the page, so a changed token is followed) |
 | Play ↔ pause ↔ stop: the halves reshape in place | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
 | A line fills into a solid | 40% of the glide, after 35% of it | `--ui-ease-color` |
 | A solid empties into a line | `--ui-dur-instant` (120ms) | `--ui-ease-color` |

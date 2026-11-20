@@ -598,10 +598,34 @@ type El = {
   now: Pt[];
   from: Pt[];
   to: Pt[];
-  /** A half of play, pause or stop on its quarter turn. */
+  /** A half of play, pause or stop reshaping in place. */
   quad?: { from: Quad; to: Quad; now: Quad };
+  /** A strand with no partner: it draws on along its own line (grow) or
+   *  erases back along it (shrink), from the end nearest the other icon's
+   *  ink, so it never travels sideways. */
+  trim?: { pts: Pt[]; grow: boolean };
   still: boolean;
 };
+
+/** `pts` turned so it starts at the end nearer `ink`. */
+function fromNearEnd(pts: Pt[], ink: Pt[][]): Pt[] {
+  const near = (p: Pt) => dist(p, nearest([p], ink));
+  return near(pts[0]) <= near(pts[pts.length - 1]) ? [...pts] : [...pts].reverse();
+}
+
+/** The first `f` (0–1) of a line of points, ending exactly at the cut. */
+function head(pts: Pt[], f: number): Pt[] {
+  const at = Math.max(0, Math.min(1, f)) * (pts.length - 1);
+  const whole = Math.floor(at);
+  const out = pts.slice(0, whole + 1);
+  if (whole < pts.length - 1) {
+    const a = pts[whole];
+    const b = pts[whole + 1];
+    const t = at - whole;
+    out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]);
+  }
+  return out.length > 1 ? out : [out[0], out[0]];
+}
 
 const poly = (pts: Pt[]) => "M" + pts.map((p) => `${r2(p[0])} ${r2(p[1])}`).join("L");
 
@@ -619,7 +643,8 @@ function createEngine(host: SVGGElement, start: IconName) {
   const rest = (el: El) => {
     el.node.setAttribute("d", el.strand.d);
     el.now = el.strand.pts;
-    el.quad = undefined;
+    el.quad = el.trim = undefined;
+    el.node.style.opacity = "";
     el.still = true;
   };
   /** The icon as it rests, on fresh strands. */
@@ -691,7 +716,8 @@ function createEngine(host: SVGGElement, start: IconName) {
       const resting = el.still;
       const was = el.strand;
       el.leaving = false;
-      el.quad = undefined;
+      el.quad = el.trim = undefined;
+      el.node.style.opacity = "";
       el.strand = strand;
       el.node.setAttribute("class", strand.cls);
       if (resting && was.d === strand.d) return;
@@ -724,24 +750,24 @@ function createEngine(host: SVGGElement, start: IconName) {
       else assign(news.map((_, c) => olds.map((_, r) => cost[r][c]))).forEach((r, c) => move(olds[r], news[c], null));
     }
 
-    // 3. New strands with no partner bud from the nearest ink.
+    // 3. New strands with no partner draw on along their own line, from
+    //    the end nearest the ink already there.
     const ink = els.map((el) => el.now);
     for (const strand of open) {
-      const seed = nearest(strand.pts, ink);
-      const el = make(strand, Array.from({ length: N }, () => seed));
-      el.to = strand.pts;
+      const el = make(strand, Array.from({ length: N }, () => strand.pts[0]));
+      el.trim = { pts: fromNearEnd(strand.pts, ink), grow: true };
       el.still = false;
       els.push(el);
     }
 
-    // 4. Old strands with no partner fold into the nearest new ink.
+    // 4. Old strands with no partner erase back along their own line, into
+    //    the end nearest the new icon's ink.
+    const wanted = want.map((s) => s.pts);
     for (const el of free) {
-      const into = nearest(el.now, want.map((s) => s.pts));
       el.leaving = true;
       el.quad = undefined;
       el.still = false;
-      el.from = el.now;
-      el.to = Array.from({ length: N }, () => into);
+      el.trim = { pts: fromNearEnd(el.now, wanted).reverse(), grow: false };
       el.node.setAttribute("class", styles.strand + (el.strand.cls.includes(styles.solid) ? " " + styles.solid : ""));
     }
   }
@@ -749,7 +775,18 @@ function createEngine(host: SVGGElement, start: IconName) {
   function draw(k: number) {
     for (const el of els) {
       if (el.still) continue;
-      if (el.quad) {
+      if (el.trim) {
+        // The part of the line from its anchored end, a fraction long.
+        // Ink that leaves is gone in the first 60% of the move, so it never
+        // lingers beside the new shape; the last stub fades rather than
+        // shrinking to the round cap's dot.
+        const { pts, grow } = el.trim;
+        const f = grow ? k : Math.max(0, 1 - k / 0.6);
+        const part = grow ? head(pts, f) : head([...pts].reverse(), f).reverse();
+        el.now = resample(part);
+        el.node.setAttribute("d", poly(part));
+        el.node.style.opacity = f >= 0.25 ? "" : String(f / 0.25);
+      } else if (el.quad) {
         const q = el.quad.from.map((p, i) => {
           const g = el.quad!.to[i];
           return [p[0] + (g[0] - p[0]) * k, p[1] + (g[1] - p[1]) * k] as Pt;
