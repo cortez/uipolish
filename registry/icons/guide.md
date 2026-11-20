@@ -40,10 +40,10 @@ in a tile. Every chevron in the same role is the same size.
 |---|---|---|
 | `eye`, `eye-off` | eye, pupil (+ slash) | The slash is a strike: it draws across and cuts its own gap in the eye, and retracts the way it came. |
 | `copy`, `check`, `duplicate` | back, sheet, rim (+ add) | The front sheet is two strokes meeting end to end: `sheet` (left edge, bottom-left corner, bottom edge) and `rim` (the rest). `sheet` and the check have the same commands, so copy → check turns the sheet's corner 45° into the check's while the rim and the back sheet fold into it. `duplicate` is copy with a plus that grows out of the sheet. |
-| `plus`, `close`, `minus`, `menu` | a, b (+ m) | Straight lines turn rigidly, keeping their length. Plus to close: both lines turn 45°. Menu to close: the top and bottom bars swing into the cross and the middle folds into it. Minus to plus: the upright grows out of the bar's middle. |
-| `arrow-up`/`down`/`left`/`right`, `send` | s, h1, h2 | The shaft and the two sides of the head turn to their new places. `send` is `arrow-up`. |
-| `chevron-up`/`down`/`left`/`right` | a, b | Two arms that meet at the point. A flip turns each arm about its own middle, through level, so the chevron keeps its size and stays centered. |
-| `play`, `pause`, `stop` | a (+ b) | Solid, not stroked. Play ↔ pause (and play ↔ stop) is its own move, a quarter turn: play's triangle is split along its axis into a top and a bottom half, and as the icon turns clockwise each half opens into a bar, so the bars arrive upright and the halves never cross. Pause back to play turns on the same way. Pause ↔ stop: one bar widens into the square and the other folds into it. |
+| `plus`, `close`, `minus`, `menu` | a, b (+ m) | Every end moves straight to its new place. Plus to close: the ends swing in to the cross. Menu to close: the top and bottom bars meet in the cross and the middle folds into it. Minus to plus: the upright grows out of the bar's middle. |
+| `arrow-up`/`down`/`left`/`right`, `send` | s, h1, h2 | The shaft and the two sides of the head move straight to their new places. `send` is `arrow-up`. |
+| `chevron-up`/`down`/`left`/`right` | a, b | Two arms that meet at the point. A flip moves the point straight across and the arms follow, so it never turns. |
+| `play`, `pause`, `stop` | a (+ b) | Solid, not stroked. Between the three they reshape in place, with nothing turning: each is two halves, left and right. Play's triangle is cut down its middle, so play to pause squares each half off into the bar beside it, and play to stop flattens the point into the square's edge. Every corner travels a short straight line. |
 | `mic`, `send` → `stop` | | A line opens into the square's outline, the rest folds into it, and the fill arrives once the outline has closed. |
 | `info`, `alert`, `check-circle` | ring, stem, dot (tick) | One ring that stays still; the stem and dot change ends between `info` and `alert`, and reshape into the tick for `check-circle`. `warning` is its own triangle. |
 | `thumbs-up`, `thumbs-down`, `pin` | hand, cuff; head, point | Down is up turned half round, so a flip turns the hand over. A pressed rating fills: set `--icon-fill: 1` on the icon or its control. |
@@ -67,9 +67,9 @@ in a tile. Every chevron in the same role is the same size.
   out of the nearest ink on screen; an old one with none folds into the
   nearest new ink and is removed when it lands. So an icon with two strokes
   becomes one with five without a fade.
-- **Lines stay lines.** A straight line going to a straight line turns
-  rigidly (its middle, length and angle each ease), the short way round, so
-  a plus becomes a cross without its arms shrinking on the way.
+- **Least movement.** Every point travels a straight line to its place, so
+  nothing spins or pivots on the way: an icon changes shape where it
+  stands.
 - **Solids.** A solid strand is filled. A line becoming a solid fills once
   its outline has closed; a solid becoming a line empties first.
 - **Crisp at rest.** Mid-way a strand is a 49-point line; when it lands it is
@@ -98,7 +98,7 @@ in a tile. Every chevron in the same role is the same size.
 | What | Duration | Easing |
 |---|---|---|
 | One icon becomes another: every strand moves, grows or folds | `--ui-dur-glide` (320ms) | `--ui-ease-glide` (read from the page, so a changed token is followed) |
-| Play ↔ pause or stop: a quarter turn while the halves open | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
+| Play ↔ pause ↔ stop: the halves reshape in place | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
 | A line fills into a solid | 40% of the glide, after 35% of it | `--ui-ease-color` |
 | A solid empties into a line | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | The strike draws on / retracts | `--ui-dur-base` (200ms) / `--ui-dur-fast` (160ms) | `--ui-ease-draw` / `--ui-ease-exit` |

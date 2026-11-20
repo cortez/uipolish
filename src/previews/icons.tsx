@@ -92,7 +92,7 @@ export function IconsPreview() {
       <section className={styles.group}>
         <h2 className={styles.heading}>State is a name change</h2>
         <p className={styles.note}>
-          Only what differs moves. Play and pause have their own move, a quarter turn. Press a tile to flip it;
+          Only what differs moves, by the shortest path: nothing spins. Press a tile to flip it;
           press again halfway through and it turns back from where it is.
         </p>
         <div className={local.iconsGrid}>

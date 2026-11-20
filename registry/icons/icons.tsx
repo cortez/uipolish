@@ -10,7 +10,8 @@ import styles from "./icons.module.css";
  * fades out and nothing is redrawn. A stroke with no partner grows out of
  * the ink beside it, or shrinks into it. Strokes that keep their key and
  * their command list (copy's sheet and the check) move command by command,
- * so a drawn correspondence holds. Straight lines turn rigidly.
+ * so a drawn correspondence holds. Every point travels a straight line to its
+ * place, so nothing spins or pivots: the least movement that gets there.
  */
 
 type Stroke = {
@@ -89,8 +90,8 @@ const ICONS = {
   "chevron-down": { a: { d: "M3.75 5.875 L8 10.125" }, b: { d: "M8 10.125 L12.25 5.875" } },
   "chevron-left": { a: { d: "M10.12 3.75 L5.88 8" }, b: { d: "M5.88 8 L10.12 12.25" } },
   "chevron-right": { a: { d: "M5.88 3.75 L10.12 8" }, b: { d: "M10.12 8 L5.88 12.25" } },
-  // Play, pause and stop are solid. Play to pause or stop is its own move,
-  // a quarter turn (see QUADS); to any other icon they move like the rest.
+  // Play, pause and stop are solid. Between the three they reshape in place
+  // as two halves (see QUADS); to any other icon they move like the rest.
   stop: { a: { d: "M4.5 4.5 L11.5 4.5 L11.5 11.5 L4.5 11.5 Z", solid: true } },
   mic: {
     capsule: { d: "M8 2.25a2.25 2.25 0 0 0-2.25 2.25v3.25a2.25 2.25 0 0 0 4.5 0V4.5A2.25 2.25 0 0 0 8 2.25Z" },
@@ -562,22 +563,17 @@ function nearest(of: Pt[], among: Pt[][]): Pt {
   return best;
 }
 
-const turn = (p: Pt, rad: number): Pt => {
-  const cos = Math.cos(rad);
-  const sin = Math.sin(rad);
-  return [8 + (p[0] - 8) * cos - (p[1] - 8) * sin, 8 + (p[0] - 8) * sin + (p[1] - 8) * cos];
-};
-
-/* Play ↔ pause (and play ↔ stop) is its own move: a quarter turn. Play's
-   triangle is split along its axis into a top and a bottom half; as the icon
-   turns clockwise each half opens into a bar, so the bars arrive upright
-   with no moment where the halves cross. Pause to play turns on the same
-   way. Each shape is its four corners. */
+/* Play, pause and stop reshape in place, with the least movement: each is
+   two four-corner halves, left and right, corners in the same order (top
+   left, top right, bottom right, bottom left). Play's triangle is cut down
+   its middle, so going to pause each half squares off into the bar beside
+   it and every corner travels a short straight line. Nothing turns, and
+   nothing crosses. */
 type Quad = [Pt, Pt, Pt, Pt];
 const QUADS: Partial<Record<IconName, [Quad, Quad]>> = {
   play: [
-    [[4.75, 3], [12.75, 8], [12.75, 8], [4.75, 8]],
-    [[4.75, 8], [12.75, 8], [12.75, 8], [4.75, 13]],
+    [[4.75, 3], [8.75, 5.5], [8.75, 10.5], [4.75, 13]],
+    [[8.75, 5.5], [12.75, 8], [12.75, 8], [8.75, 10.5]],
   ],
   pause: [
     [[4.25, 3.5], [6, 3.5], [6, 12.5], [4.25, 12.5]],
@@ -588,24 +584,7 @@ const QUADS: Partial<Record<IconName, [Quad, Quad]>> = {
     [[8, 4.5], [11.5, 4.5], [11.5, 11.5], [8, 11.5]],
   ],
 };
-const twists = (from: IconName, to: IconName) => (from === "play") !== (to === "play") && QUADS[from] !== undefined && QUADS[to] !== undefined;
-
-/** `to`'s corners in the order that moves `from`'s least. */
-function alignQuad(from: Quad, to: Quad): Quad {
-  let best = to;
-  let least = Infinity;
-  for (const base of [to, [...to].reverse() as Quad]) {
-    for (let by = 0; by < 4; by++) {
-      const q = [0, 1, 2, 3].map((i) => base[(i + by) % 4]) as Quad;
-      const sum = q.reduce((n, p, i) => n + dist(p, from[i]) ** 2, 0);
-      if (sum < least) {
-        least = sum;
-        best = q;
-      }
-    }
-  }
-  return best;
-}
+const halves = (from: IconName, to: IconName) => from !== to && QUADS[from] !== undefined && QUADS[to] !== undefined;
 
 /* ---------- The engine: owns the strands once an icon has changed ---------- */
 
@@ -619,24 +598,12 @@ type El = {
   now: Pt[];
   from: Pt[];
   to: Pt[];
-  /** A straight line turning to a straight line: mid-point, half-length, angle. */
-  rigid?: { from: [Pt, number, number]; to: [Pt, number, number] };
   /** A half of play, pause or stop on its quarter turn. */
-  quad?: { from: Quad; to: Quad };
+  quad?: { from: Quad; to: Quad; now: Quad };
   still: boolean;
 };
 
 const poly = (pts: Pt[]) => "M" + pts.map((p) => `${r2(p[0])} ${r2(p[1])}`).join("L");
-const polar = (a: Pt, b: Pt): [Pt, number, number] => [[(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], dist(a, b) / 2, Math.atan2(b[1] - a[1], b[0] - a[0])];
-const ends = ([mid, half, angle]: [Pt, number, number]): [Pt, Pt] => {
-  const dx = Math.cos(angle) * half;
-  const dy = Math.sin(angle) * half;
-  return [
-    [mid[0] - dx, mid[1] - dy],
-    [mid[0] + dx, mid[1] + dy],
-  ];
-};
-const along = (a: Pt, b: Pt): Pt[] => Array.from({ length: N }, (_, i) => [a[0] + ((b[0] - a[0]) * i) / (N - 1), a[1] + ((b[1] - a[1]) * i) / (N - 1)] as Pt);
 
 function createEngine(host: SVGGElement, start: IconName) {
   let name = start;
@@ -652,7 +619,7 @@ function createEngine(host: SVGGElement, start: IconName) {
   const rest = (el: El) => {
     el.node.setAttribute("d", el.strand.d);
     el.now = el.strand.pts;
-    el.rigid = el.quad = undefined;
+    el.quad = undefined;
     el.still = true;
   };
   /** The icon as it rests, on fresh strands. */
@@ -693,27 +660,27 @@ function createEngine(host: SVGGElement, start: IconName) {
     return { ms, ease };
   };
 
-  /** Sets every strand on its way to `next`. True when it's the quarter turn. */
-  function plan(next: IconName, moving: boolean): boolean {
+  /** Sets every strand on its way to `next`. */
+  function plan(next: IconName) {
     const want = strands(next);
-    // A quarter turn only from rest: caught mid-way, the halves go straight
-    // to where they're headed.
-    if (!moving && twists(name, next)) {
-      const from = QUADS[name]!;
+    if (halves(name, next)) {
+      // Caught mid-way between two of them, the halves turn round from where
+      // they are; from rest, two halves take the place of whatever drew the
+      // icon (play and stop are one shape): together they look the same.
+      const mid = els.length === 2 && els.every((el) => el.quad) ? els.map((el) => el.quad!.now) : null;
+      if (!mid) for (const el of els) el.node.remove();
+      const from = mid ?? QUADS[name]!;
       const to = QUADS[next]!;
-      // Two halves take the place of whatever drew the icon at rest (play
-      // and stop are one shape): together they look the same.
-      for (const el of els) el.node.remove();
       els = from.map((quad, i) => {
-        // Play's top half lands as the right bar, its bottom as the left;
-        // coming back, the left bar becomes the top half.
-        const target = to[name === "play" ? 1 - i : i].map((p) => turn(p, -Math.PI / 2)) as Quad;
-        const el = make(want[0], []);
-        el.quad = { from: quad, to: alignQuad(quad, target) };
+        const el = mid ? els[i] : make(want[0], []);
+        el.strand = want[0];
+        el.node.setAttribute("class", el.strand.cls);
+        el.quad = { from: quad, to: to[i], now: quad };
+        el.leaving = false;
         el.still = false;
         return el;
       });
-      return true;
+      return;
     }
 
     const free = new Set(els);
@@ -731,24 +698,12 @@ function createEngine(host: SVGGElement, start: IconName) {
       el.still = false;
       if (to) {
         // The same commands under the same key: command by command.
-        el.rigid = undefined;
         el.from = resting ? was.seg : el.now;
         el.to = to;
         return;
       }
-      const line = resting ? was.line : el.rigid && ([el.now[0], el.now[N - 1]] as [Pt, Pt]);
-      if (line && strand.line) {
-        const a = polar(line[0], line[1]);
-        let b = polar(strand.line[0], strand.line[1]);
-        // A line has no direction: turn it the short way round.
-        let by = b[2] - a[2];
-        while (by > Math.PI / 2) by -= Math.PI;
-        while (by < -Math.PI / 2) by += Math.PI;
-        b = [b[0], b[1], a[2] + by];
-        el.rigid = { from: a, to: b };
-        return;
-      }
-      el.rigid = undefined;
+      // Every point goes straight to its place: the least movement there is.
+      // Nothing pivots or turns on the way.
       el.from = resting ? was.pts : el.now;
       el.to = align(el.from, strand.pts, strand.closed).pts;
     };
@@ -783,34 +738,25 @@ function createEngine(host: SVGGElement, start: IconName) {
     for (const el of free) {
       const into = nearest(el.now, want.map((s) => s.pts));
       el.leaving = true;
-      el.rigid = el.quad = undefined;
+      el.quad = undefined;
       el.still = false;
       el.from = el.now;
       el.to = Array.from({ length: N }, () => into);
       el.node.setAttribute("class", styles.strand + (el.strand.cls.includes(styles.solid) ? " " + styles.solid : ""));
     }
-    return false;
   }
 
-  function draw(k: number, quarter: number) {
+  function draw(k: number) {
     for (const el of els) {
       if (el.still) continue;
       if (el.quad) {
         const q = el.quad.from.map((p, i) => {
           const g = el.quad!.to[i];
-          return turn([p[0] + (g[0] - p[0]) * k, p[1] + (g[1] - p[1]) * k], quarter);
-        });
+          return [p[0] + (g[0] - p[0]) * k, p[1] + (g[1] - p[1]) * k] as Pt;
+        }) as Quad;
+        el.quad.now = q;
         el.now = resample([...q, q[0]], []);
         el.node.setAttribute("d", poly(q) + "Z");
-      } else if (el.rigid) {
-        const { from, to } = el.rigid;
-        const [a, b] = ends([
-          [from[0][0] + (to[0][0] - from[0][0]) * k, from[0][1] + (to[0][1] - from[0][1]) * k],
-          from[1] + (to[1] - from[1]) * k,
-          from[2] + (to[2] - from[2]) * k,
-        ]);
-        el.now = along(a, b);
-        el.node.setAttribute("d", poly([a, b]));
       } else {
         el.now = el.from.map((p, i) => [p[0] + (el.to[i][0] - p[0]) * k, p[1] + (el.to[i][1] - p[1]) * k] as Pt);
         el.node.setAttribute("d", poly(el.now));
@@ -821,7 +767,6 @@ function createEngine(host: SVGGElement, start: IconName) {
   return {
     to(next: IconName) {
       if (next === name) return;
-      const moving = frame !== 0;
       cancelAnimationFrame(frame);
       frame = 0;
       if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -829,11 +774,11 @@ function createEngine(host: SVGGElement, start: IconName) {
         lay(next);
         return;
       }
-      const quarter = plan(next, moving);
+      plan(next);
       name = next;
       const { ms, ease } = timing();
       const began = performance.now();
-      draw(0, 0);
+      draw(0);
       const step = (now: number) => {
         // A frame's time can sit a hair before the moment the move began.
         const t = Math.min(1, Math.max(0, (now - began) / ms));
@@ -843,7 +788,7 @@ function createEngine(host: SVGGElement, start: IconName) {
           return;
         }
         const k = ease(t);
-        draw(k, quarter ? (k * Math.PI) / 2 : 0);
+        draw(k);
         frame = requestAnimationFrame(step);
       };
       frame = requestAnimationFrame(step);

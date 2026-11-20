@@ -343,8 +343,8 @@ glide spring, no overshoot, while everything else fades.
   becomes the new one: its strokes reshape into the new icon's, on
   `--ui-ease-glide` over `--ui-dur-glide`. Never two icons stacked and
   crossfaded, never one fading out before the next draws in. Render one
-  `<Icon name={…} />` and change its name. Play and pause are the one pair
-  with a move of their own, a quarter turn.
+  `<Icon name={…} />` and change its name. Each point takes the shortest
+  path to its place: an icon never spins or pivots on the way.
 - **Underline that doesn't shift layout**: a `scaleX(0 → 1)` pseudo-element
   with `transform-origin: left`, `--ui-dur-base` on `--ui-ease-enter` — not
   `text-decoration` toggling.
