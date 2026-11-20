@@ -39,7 +39,7 @@ in a tile. Every chevron in the same role is the same size.
 | Name | Strokes (keys) | What a change looks like |
 |---|---|---|
 | `eye`, `eye-off` | eye, pupil (+ slash) | The slash is a strike: it draws across and cuts its own gap in the eye, and retracts the way it came. |
-| `copy`, `check`, `duplicate` | back, sheet, rim (+ add); tick | The check is a result, so it's revealed rather than reshaped (`reveal` on its stroke): copy tilts 14° away as its sheets erase along their own lines, and the check draws on behind them, short stroke first, starting a beat later so the two overlap. Back to copy, the check erases back toward where it began and the sheets draw on, tilting upright as they arrive. `duplicate` is copy with a plus that draws in. |
+| `copy`, `check`, `duplicate` | back, sheet, rim (+ add); tick | Copy turns into the check: the front sheet's bottom-left corner, turned an eighth of a turn anticlockwise, is a check. So the whole icon tilts 45° about that corner while the left edge shortens into the short stroke, the bottom edge lengthens into the long one and the rounded corner sharpens to the check's point; the rest of the front sheet and the back sheet are carried round with it as they erase. Check to copy is the same move in reverse, and a change of mind mid-way turns back from where it is. `duplicate` is copy with a plus that draws in. |
 | `plus`, `close`, `minus`, `menu` | a, b (+ m) | Every end moves straight to its new place. Plus to close: the ends swing in to the cross. Menu to close: the top and bottom bars meet in the cross and the middle folds into it. Minus to plus: the upright grows out of the bar's middle. |
 | `arrow-up`/`down`/`left`/`right`, `send` | s, h1, h2 | The shaft and the two sides of the head move straight to their new places. `send` is `arrow-up`. |
 | `chevron-up`/`down`/`left`/`right` | a, b | Two arms that meet at the point. A flip slides the point straight across while the ends move the other way, both arms mirrored the whole way, so it never turns or twists. |
@@ -72,7 +72,8 @@ in a tile. Every chevron in the same role is the same size.
   travels sideways to get there.
 - **Least movement.** Every point travels a straight line to its place, so
   nothing spins or pivots on the way: an icon changes shape where it
-  stands.
+  stands. Copy to check is the one deliberate turn: its corner *is* the
+  check, turned 45°, so the tilt is the change itself.
 - **Solids.** A solid strand is filled. A line becoming a solid fills once
   its outline has closed; a solid becoming a line empties first.
 - **Crisp at rest.** Mid-way a strand is a 49-point line; when it lands it is
@@ -100,8 +101,8 @@ in a tile. Every chevron in the same role is the same size.
 
 | What | Duration | Easing |
 |---|---|---|
-| One icon becomes another: every strand moves, draws on or erases (erasing ends at 60%) |
-| Copy ↔ check (a revealed result): the old icon tilts 14° and erases by 75%; the new one draws on from 12% | `--ui-dur-glide` (320ms) | `--ui-ease-glide` | `--ui-dur-glide` (320ms) | `--ui-ease-glide` (read from the page, so a changed token is followed) |
+| One icon becomes another: every strand moves, draws on or erases (erasing ends at 60%) | `--ui-dur-glide` (320ms) | `--ui-ease-glide` (read from the page, so a changed token is followed) |
+| Copy ↔ check: the icon tilts 45° about the front corner as it reshapes; the rest erases by 80% | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
 | Play ↔ pause ↔ stop: the halves reshape in place | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
 | A line fills into a solid | 40% of the glide, after 35% of it | `--ui-ease-color` |
 | A solid empties into a line | `--ui-dur-instant` (120ms) | `--ui-ease-color` |

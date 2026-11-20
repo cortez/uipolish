@@ -349,7 +349,9 @@ glide spring, no overshoot, while everything else fades.
   `--ui-ease-glide` over `--ui-dur-glide`. Never two icons stacked and
   crossfaded, never one fading out before the next draws in. Render one
   `<Icon name={…} />` and change its name. Each point takes the shortest
-  path to its place: an icon never spins or pivots on the way.
+  path to its place: an icon never spins or pivots on the way. The one
+  exception is a turn that is the change itself: copy's front corner,
+  tilted 45°, is the check, so copy tilts into it.
 - **Underline that doesn't shift layout**: a `scaleX(0 → 1)` pseudo-element
   with `transform-origin: left`, `--ui-dur-base` on `--ui-ease-enter` — not
   `text-decoration` toggling.

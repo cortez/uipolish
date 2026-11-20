@@ -23,9 +23,6 @@ type Stroke = {
   block?: boolean;
   /** A filled shape with softly rounded corners (play, pause, stop). */
   solid?: boolean;
-  /** A result that is revealed, not reshaped (the check): the icon before
-   *  it tilts away as it erases, and this draws on behind it. */
-  reveal?: boolean;
   /** Nudges 1px while the parent control is hovered or focused. */
   fx?: "lid" | "drop" | "out" | "forward";
 };
@@ -39,10 +36,10 @@ const SHEET = {
 const RIM = {
   d: "M5.76 5.76A1.75 1.75 0 0 1 7 5.25H11.5A1.75 1.75 0 0 1 13.25 7V11.5A1.75 1.75 0 0 1 11.5 13.25",
 } satisfies Stroke;
-// Drawn from the short stroke's end to the long one's, as a hand ticks.
+// Both strokes at 45°: the copy's front corner, turned an eighth of a turn
+// (see TURN_INTO_CHECK).
 const CHECK = {
-  d: "M3.75 8.25 L6.75 11.25 L12.25 5",
-  reveal: true,
+  d: "M3.75 8.25 L6.75 11.25 L12.75 5.25",
 } satisfies Stroke;
 const BACK_SHEET = "M9.25 2.75H4.5A1.75 1.75 0 0 0 2.75 4.5V9.25";
 const EYE = "M1.75 8C3.1 5.1 5.4 3.5 8 3.5s4.9 1.6 6.25 4.5C12.9 10.9 10.6 12.5 8 12.5S3.1 10.9 1.75 8Z";
@@ -304,8 +301,6 @@ type Strand = {
   pts: Pt[];
   /** N points, the same number on each command. */
   seg: Pt[];
-  /** Revealed, not reshaped: see Stroke.reveal. */
-  reveal?: boolean;
   /** Its two ends, when it is a straight line. */
   line?: [Pt, Pt];
   cls: string;
@@ -417,7 +412,7 @@ function strandsOf(key: string, s: Stroke): Strand[] {
     const a = fine[0];
     const b = fine[fine.length - 1];
     const straight = len > 0.5 && Math.abs(len - dist(a, b)) < 0.001;
-    out.push({ key: `${key}#${out.length}`, d, sig, closed, cls, pts: resample(fine, corners.slice(0, -1)), seg, line: straight ? [a, b] : undefined, reveal: s.reveal });
+    out.push({ key: `${key}#${out.length}`, d, sig, closed, cls, pts: resample(fine, corners.slice(0, -1)), seg, line: straight ? [a, b] : undefined });
     segs = [];
     sig = "";
   };
@@ -610,21 +605,30 @@ type El = {
   /** A strand with no partner: it draws on along its own line (grow) or
    *  erases back along it (shrink), from the end nearest the other icon's
    *  ink, so it never travels sideways. */
-  trim?: { pts: Pt[]; grow: boolean; delay?: number; span?: number; tilt?: [number, number] };
+  trim?: { pts: Pt[]; grow: boolean };
   still: boolean;
 };
 
-/** How far an icon tilts as it gives way to a revealed result, in degrees. */
-const TILT = -14;
+/* Copy turns into the check. The front sheet's bottom-left corner, turned
+   an eighth of a turn anticlockwise, is a check: its left edge becomes the
+   short stroke and its bottom edge the long one. So the whole icon tilts
+   45° about that corner while the corner slides to the check's point, the
+   left edge shortens, the bottom edge lengthens and the rounded corner
+   sharpens; the rest of the front sheet and the back sheet tilt with it
+   as they erase. Check back to copy is the same move in reverse. Each is
+   [top of the left edge or short stroke, corner, end of the long stroke]. */
+const TURN_FROM: [Pt, Pt, Pt] = [[5.25, 7], [5.25, 13.25], [11.5, 13.25]];
+const TURN_TO: [Pt, Pt, Pt] = [[3.75, 8.25], [6.75, 11.25], [12.75, 5.25]];
+const turnsIntoCheck = (a: IconName, b: IconName) => (a === "copy" && b === "check") || (a === "check" && b === "copy");
 
-/** A point turned about the icon's center. */
-const spin = (p: Pt, rad: number): Pt => {
+/** A point turned by `rad` about `about`. */
+const spin = (p: Pt, rad: number, about: Pt): Pt => {
   const cos = Math.cos(rad);
   const sin = Math.sin(rad);
-  return [8 + (p[0] - 8) * cos - (p[1] - 8) * sin, 8 + (p[0] - 8) * sin + (p[1] - 8) * cos];
+  const x = p[0] - about[0];
+  const y = p[1] - about[1];
+  return [about[0] + x * cos - y * sin, about[1] + x * sin + y * cos];
 };
-
-const reveals = (name: IconName) => Object.values(table[name]).some((s) => s.reveal);
 
 /** `pts` turned so it starts at the end nearer `ink`. */
 function fromNearEnd(pts: Pt[], ink: Pt[][]): Pt[] {
@@ -707,29 +711,6 @@ function createEngine(host: SVGGElement, start: IconName) {
   /** Sets every strand on its way to `next`. */
   function plan(next: IconName) {
     const want = strands(next);
-    if (reveals(name) || reveals(next)) {
-      // A result revealed, not reshaped: the old icon tilts away as it
-      // erases along its lines, and the new one draws on behind it, a beat
-      // later. Going back, the old result erases and the icon draws on,
-      // tilting upright as it arrives.
-      const toward = reveals(next);
-      for (const el of els) {
-        el.leaving = true;
-        el.quad = undefined;
-        el.still = false;
-        const own = el.strand.reveal;
-        // A tick erases back toward where it began, last drawn first.
-        el.trim = { pts: own ? [...el.now].reverse() : fromNearEnd(el.now, want.map((s) => s.pts)).reverse(), grow: false, span: 0.75, tilt: toward ? [0, TILT] : undefined };
-        el.node.setAttribute("class", styles.strand + (el.strand.cls.includes(styles.solid) ? " " + styles.solid : ""));
-      }
-      for (const strand of want) {
-        const el = make(strand, Array.from({ length: N }, () => strand.pts[0]));
-        el.trim = { pts: strand.reveal ? [...strand.pts] : fromNearEnd(strand.pts, els.map((e) => e.now)), grow: true, delay: 0.12, tilt: toward ? undefined : [TILT, 0] };
-        el.still = false;
-        els.push(el);
-      }
-      return;
-    }
     if (halves(name, next)) {
       // Caught mid-way between two of them, the halves turn round from where
       // they are; from rest, two halves take the place of whatever drew the
@@ -822,13 +803,9 @@ function createEngine(host: SVGGElement, start: IconName) {
         // Ink that leaves is gone in the first 60% of the move, so it never
         // lingers beside the new shape; the last stub fades rather than
         // shrinking to the round cap's dot.
-        const { pts, grow, delay = 0, span = 0.6, tilt } = el.trim;
-        const f = grow ? Math.max(0, (k - delay) / (1 - delay)) : Math.max(0, 1 - k / span);
-        let part = grow ? head(pts, f) : head([...pts].reverse(), f).reverse();
-        if (tilt) {
-          const deg = tilt[0] + (tilt[1] - tilt[0]) * (grow ? f : Math.min(1, k / span));
-          part = part.map((p) => spin(p, (deg * Math.PI) / 180));
-        }
+        const { pts, grow } = el.trim;
+        const f = grow ? k : Math.max(0, 1 - k / 0.6);
+        const part = grow ? head(pts, f) : head([...pts].reverse(), f).reverse();
         el.now = resample(part);
         el.node.setAttribute("d", poly(part));
         el.node.style.opacity = f >= 0.25 ? "" : String(f / 0.25);
@@ -847,15 +824,107 @@ function createEngine(host: SVGGElement, start: IconName) {
     }
   }
 
+  /* ---------- Copy ↔ check: the turn (see TURN_FROM) ---------- */
+
+  let turning: { k: number; sheet: SVGPathElement; rest: { node: SVGPathElement; pts: Pt[] }[] } | null = null;
+
+  const endTurn = () => {
+    if (!turning) return;
+    turning.sheet.remove();
+    for (const r of turning.rest) r.node.remove();
+    turning = null;
+  };
+
+  /** The turn at `k`: 0 is copy, 1 the check. */
+  function drawTurn(k: number) {
+    const t = turning!;
+    t.k = k;
+    const lerp = (a: Pt, b: Pt): Pt => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
+    const angle = (-Math.PI / 4) * k;
+    const corner = lerp(TURN_FROM[1], TURN_TO[1]);
+    const up = spin([0, -1], angle, [0, 0]);
+    const along = spin([1, 0], angle, [0, 0]);
+    const short = dist(TURN_FROM[0], TURN_FROM[1]) + (dist(TURN_TO[0], TURN_TO[1]) - dist(TURN_FROM[0], TURN_FROM[1])) * k;
+    const long = dist(TURN_FROM[1], TURN_FROM[2]) + (dist(TURN_TO[1], TURN_TO[2]) - dist(TURN_FROM[1], TURN_FROM[2])) * k;
+    // The sheet's rounded corner sharpens into the check's point.
+    const r = 1.75 * (1 - k);
+    const at = (dir: Pt, len: number): Pt => [corner[0] + dir[0] * len, corner[1] + dir[1] * len];
+    const p = (q: Pt) => `${r2(q[0])} ${r2(q[1])}`;
+    t.sheet.setAttribute("d", `M${p(at(up, short))}L${p(at(up, r))}Q${p(corner)} ${p(at(along, r))}L${p(at(along, long))}`);
+    // The rest of the copy is carried round the same corner as it erases,
+    // so the whole icon is seen to tilt; gone by 80% of the way.
+    const f = Math.max(0, 1 - k / 0.8);
+    for (const { node, pts } of t.rest) {
+      const part = head(pts, f).map((q) => {
+        const turned = spin(q, angle, TURN_FROM[1]);
+        return [turned[0] + corner[0] - TURN_FROM[1][0], turned[1] + corner[1] - TURN_FROM[1][1]] as Pt;
+      });
+      node.setAttribute("d", poly(part));
+      node.style.opacity = f >= 0.25 ? "" : String(f / 0.25);
+    }
+  }
+
+  function startTurn(next: IconName) {
+    const target = next === "check" ? 1 : 0;
+    if (!turning) {
+      // From rest: the turn's own strokes take the place of the icon's.
+      const from = name === "check" ? 1 : 0;
+      for (const el of els) el.node.remove();
+      els = [];
+      const copy = strands("copy");
+      const sheet = copy.find((s) => s.key === "sheet#0")!;
+      const node = (cls: string) => {
+        const n = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        n.setAttribute("class", cls);
+        host.appendChild(n);
+        return n;
+      };
+      turning = {
+        k: from,
+        sheet: node(sheet.cls),
+        // Each erases back into the end it shares with the sheet's left edge.
+        rest: copy
+          .filter((s) => s !== sheet)
+          .map((s) => ({ node: node(s.cls), pts: fromNearEnd(s.pts, [[TURN_FROM[0]]]) })),
+      };
+      drawTurn(from);
+    }
+    name = next;
+    const start = turning.k;
+    const { ms, ease } = timing();
+    const began = performance.now();
+    const step = (now: number) => {
+      const t = Math.min(1, Math.max(0, (now - began) / ms));
+      drawTurn(start + (target - start) * ease(t));
+      if (t === 1) {
+        frame = 0;
+        endTurn();
+        lay(name);
+        return;
+      }
+      frame = requestAnimationFrame(step);
+    };
+    frame = requestAnimationFrame(step);
+  }
+
   return {
     to(next: IconName) {
       if (next === name) return;
       cancelAnimationFrame(frame);
       frame = 0;
       if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        endTurn();
         name = next;
         lay(next);
         return;
+      }
+      if (turnsIntoCheck(name, next)) return startTurn(next);
+      // Anything else interrupts the turn where it lands nearest.
+      if (turning) {
+        name = turning.k >= 0.5 ? "check" : "copy";
+        endTurn();
+        lay(name);
+        if (next === name) return;
       }
       plan(next);
       name = next;
@@ -880,7 +949,10 @@ function createEngine(host: SVGGElement, start: IconName) {
       if (!frame) return;
       cancelAnimationFrame(frame);
       frame = 0;
-      settle();
+      if (turning) {
+        endTurn();
+        lay(name);
+      } else settle();
     },
   };
 }
