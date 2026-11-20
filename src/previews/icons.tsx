@@ -83,8 +83,8 @@ export function IconsPreview() {
       <section className={styles.group}>
         <h2 className={styles.heading}>One icon, any name</h2>
         <p className={styles.note}>
-          Pick a name and the large icon becomes it. Strokes both icons share stay put or move into place, the rest
-          draw in or retract. Press another mid-way and it heads there from where it is.
+          Pick a name and the large icon becomes it: its ink reshapes into the new icon, with nothing faded out or
+          redrawn. Press another mid-way and it heads there from where it is.
         </p>
         <Sequencer />
       </section>
@@ -92,8 +92,8 @@ export function IconsPreview() {
       <section className={styles.group}>
         <h2 className={styles.heading}>State is a name change</h2>
         <p className={styles.note}>
-          Each pair shares strokes, so only what differs moves. Press a tile to flip it; press again halfway through
-          and it turns back from where it is.
+          Only what differs moves. Play and pause have their own move, a quarter turn. Press a tile to flip it;
+          press again halfway through and it turns back from where it is.
         </p>
         <div className={local.iconsGrid}>
           {PAIRS.map((pair) => {

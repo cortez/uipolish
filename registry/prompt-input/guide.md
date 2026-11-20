@@ -74,7 +74,7 @@ the height is set from `scrollHeight` in a layout effect, before paint.
 |---|---|---|
 | Fill back from focus | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Focus fill | 0ms, never animated; the edge never changes | n/a |
-| Arrow retracts into its tip, stop block sweeps in (`Icon` send → stop) | see the icon set's guide | |
+| The arrow reshapes into the stop square: a line opens into its outline, then it fills (`Icon` send → stop) | see the icon set's guide | |
 | "Stop" label and pill width | `--ui-dur-move` (380ms) via TextMorph | `--ui-ease-move` |
 | Chip in (an added file; `defaultFiles` are there from the first paint) | `--ui-dur-fast` (160ms), fade, scale from 0.97 | `--ui-ease-enter` |
 | Chip out | `--ui-dur-instant` (120ms), fade, scale to 0.97 | `--ui-ease-exit` |

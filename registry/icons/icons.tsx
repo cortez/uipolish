@@ -1,32 +1,27 @@
 "use client";
 
-import { useId, useLayoutEffect, useRef, useState, type ComponentProps, type CSSProperties } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ComponentProps } from "react";
 import styles from "./icons.module.css";
 
 /*
- * Each icon is a few keyed strokes on a 16px grid. When `name` changes, a key
- * in both icons morphs (`d` only interpolates when the commands match); old-only
- * keys retract, new-only keys draw in. Give pairs shared keys so little ink moves.
- * Strokes use pathLength 1; a window f/t must touch a path end so it can retract.
+ * Each icon is a few keyed strokes on a 16px grid. When `name` changes, the
+ * ink on screen becomes the new icon: every stroke is paired with the stroke
+ * of the new icon it is nearest to and its points travel there, so nothing
+ * fades out and nothing is redrawn. A stroke with no partner grows out of
+ * the ink beside it, or shrinks into it. Strokes that keep their key and
+ * their command list (copy's sheet and the check) move command by command,
+ * so a drawn correspondence holds. Straight lines turn rigidly.
  */
 
 type Stroke = {
   d: string;
-  /** Visible window along the path, 0–1. One end must touch the path's end. */
-  f?: number;
-  t?: number;
-  /** Cut a gap in the other strokes along this line. */
+  /** A strike drawn across the icon (the eye's slash): it draws on and
+   *  retracts along its own length, and cuts a gap in the strokes under it. */
   cut?: boolean;
   /** Draw as a solid rounded block. */
   block?: boolean;
-  /** A filled shape with softly rounded corners (play, pause, stop). Solid
-   *  shapes morph point to point, and fade and scale in and out. */
+  /** A filled shape with softly rounded corners (play, pause, stop). */
   solid?: boolean;
-  /** Degrees, about its own midpoint. */
-  rot?: number;
-  /** Meets another stroke end to end at rest: morphs without overshoot and
-   *  erases in place (no fade or shrink) so the seam never shows. */
-  seam?: boolean;
   /** Nudges 1px while the parent control is hovered or focused. */
   fx?: "lid" | "drop" | "out" | "forward";
 };
@@ -34,28 +29,22 @@ type Stroke = {
 /* Copy's front sheet is two strokes that meet end to end. `sheet` is its left
    edge, bottom-left corner and bottom edge: turned 45° that corner is a check,
    so copy → check moves those points while `rim` (the rest of the square)
-   erases from the bottom-right corner round to the top-left. */
+   and the back sheet fold into it. */
 const SHEET = {
   d: "M5.76 5.76 C5.43 6.09 5.25 6.54 5.25 7 L5.25 11.5 C5.25 12.47 6.03 13.25 7 13.25 L11.5 13.25",
-  seam: true,
 } satisfies Stroke;
 const RIM = {
   d: "M5.76 5.76A1.75 1.75 0 0 1 7 5.25H11.5A1.75 1.75 0 0 1 13.25 7V11.5A1.75 1.75 0 0 1 11.5 13.25",
-  seam: true,
 } satisfies Stroke;
 // The same commands as SHEET; the corner is a short curve so it can come from the rounded one.
 const CHECK = {
   d: "M3.75 8.25 C3.96 8.46 4.17 8.67 4.38 8.88 L6.4 10.9 C6.75 11.25 6.75 11.25 7.08 10.87 L12.25 5",
-  seam: true,
 } satisfies Stroke;
 const BACK_SHEET = "M9.25 2.75H4.5A1.75 1.75 0 0 0 2.75 4.5V9.25";
 const EYE = "M1.75 8C3.1 5.1 5.4 3.5 8 3.5s4.9 1.6 6.25 4.5C12.9 10.9 10.6 12.5 8 12.5S3.1 10.9 1.75 8Z";
 const PUPIL = "M6 8a2 2 0 1 0 4 0a2 2 0 1 0-4 0";
 const RING = "M14.25 8a6.25 6.25 0 1 1-12.5 0a6.25 6.25 0 1 1 12.5 0";
 const CHANGE_FRAME = "M2.75 5.75a3 3 0 0 1 3-3h4.5a3 3 0 0 1 3 3v4.5a3 3 0 0 1-3 3h-4.5a3 3 0 0 1-3-3Z";
-
-const CHEVRON_V = ["M2.87 8 L8.88 8", "M7.12 8 L13.13 8"] as const;
-const CHEVRON_H = ["M5 5.875 L11 5.875", "M5 10.125 L11 10.125"] as const;
 
 const ARROW_UP = {
   s: { d: "M8 3.25 L8 12.75" },
@@ -94,28 +83,21 @@ const ICONS = {
     h1: { d: "M12.75 8 L8.5 3.75", fx: "forward" },
     h2: { d: "M12.75 8 L8.5 12.25", fx: "forward" },
   },
-  "chevron-up": { a: { d: CHEVRON_V[0], rot: -45 }, b: { d: CHEVRON_V[1], rot: 45 } },
-  "chevron-down": { a: { d: CHEVRON_V[0], rot: 45 }, b: { d: CHEVRON_V[1], rot: -45 } },
-  "chevron-left": { a: { d: CHEVRON_H[0], rot: -45 }, b: { d: CHEVRON_H[1], rot: 45 } },
-  "chevron-right": { a: { d: CHEVRON_H[0], rot: 45 }, b: { d: CHEVRON_H[1], rot: -45 } },
-  // Play, pause and stop are solid, and each is two four-point shapes with
-  // the corners in the same order (top-left, top-right, bottom-right,
-  // bottom-left): play is its triangle split down the middle, pause its two
-  // bars, stop its square split in half. So any one morphs into any other
-  // point to point, with nothing drawn in or erased.
-  stop: {
-    a: { d: "M4.5 4.5 L8 4.5 L8 11.5 L4.5 11.5 Z", solid: true },
-    b: { d: "M8 4.5 L11.5 4.5 L11.5 11.5 L8 11.5 Z", solid: true },
-  },
+  // Two arms that meet at the point. A flip turns each arm about its own
+  // middle, through level, so the chevron keeps its size and stays centered.
+  "chevron-up": { a: { d: "M3.75 10.125 L8 5.875" }, b: { d: "M8 5.875 L12.25 10.125" } },
+  "chevron-down": { a: { d: "M3.75 5.875 L8 10.125" }, b: { d: "M8 10.125 L12.25 5.875" } },
+  "chevron-left": { a: { d: "M10.12 3.75 L5.88 8" }, b: { d: "M5.88 8 L10.12 12.25" } },
+  "chevron-right": { a: { d: "M5.88 3.75 L10.12 8" }, b: { d: "M10.12 8 L5.88 12.25" } },
+  // Play, pause and stop are solid. Play to pause or stop is its own move,
+  // a quarter turn (see QUADS); to any other icon they move like the rest.
+  stop: { a: { d: "M4.5 4.5 L11.5 4.5 L11.5 11.5 L4.5 11.5 Z", solid: true } },
   mic: {
     capsule: { d: "M8 2.25a2.25 2.25 0 0 0-2.25 2.25v3.25a2.25 2.25 0 0 0 4.5 0V4.5A2.25 2.25 0 0 0 8 2.25Z" },
     cradle: { d: "M3.75 7.5a4.25 4.25 0 0 0 8.5 0" },
     stand: { d: "M8 11.75v2" },
   },
-  play: {
-    a: { d: "M4.75 3 L9.25 5.81 L9.25 10.19 L4.75 13 Z", solid: true },
-    b: { d: "M8.5 5.34 L12.75 8 L12.75 8 L8.5 10.66 Z", solid: true },
-  },
+  play: { a: { d: "M4.75 3 L12.75 8 L4.75 13 Z", solid: true } },
   pause: {
     a: { d: "M4.25 3.5 L6 3.5 L6 12.5 L4.25 12.5 Z", solid: true },
     b: { d: "M10 3.5 L11.75 3.5 L11.75 12.5 L10 12.5 Z", solid: true },
@@ -298,133 +280,645 @@ export type IconName = keyof typeof ICONS;
 /** Every name in the set, in table order. */
 export const ICON_NAMES = Object.keys(ICONS) as IconName[];
 
-type Live = { id: string; key: string; s: Stroke; on: boolean; enter: boolean };
-type State = { name: IconName; gen: number; live: Live[] };
-
 const table = ICONS as Record<IconName, Record<string, Stroke>>;
 
-/** Command letters and argument counts: `d` interpolates only when these match. */
-const shape = (d: string) =>
-  (d.match(/[a-zA-Z][^a-zA-Z]*/g) ?? []).map((c) => c[0] + ((c.slice(1).match(/-?[\d.]+(?:e-?\d+)?/g) ?? []).length)).join();
+/* ---------- Geometry ---------- */
 
-let morphD: boolean | undefined;
-const canMorphD = () => (morphD ??= typeof CSS !== "undefined" && CSS.supports("d", 'path("M0 0")'));
+type Pt = readonly [number, number];
+type Seg = (t: number) => Pt;
 
-function morphs(from: Stroke, to: Stroke) {
-  if (Boolean(from.block) !== Boolean(to.block) || Boolean(from.cut) !== Boolean(to.cut) || Boolean(from.solid) !== Boolean(to.solid)) return false;
-  return from.d === to.d || shape(from.d) === shape(to.d);
-}
+/** One unbroken line of an icon: a subpath of a stroke. */
+type Strand = {
+  /** Stroke key and subpath index: the same strand in another icon. */
+  key: string;
+  /** The subpath on its own, as drawn at rest. */
+  d: string;
+  /** Command list: two strands with the same one move command by command. */
+  sig: string;
+  closed: boolean;
+  /** N points evenly along its length, corners kept. */
+  pts: Pt[];
+  /** N points, the same number on each command. */
+  seg: Pt[];
+  /** Its two ends, when it is a straight line. */
+  line?: [Pt, Pt];
+  cls: string;
+};
 
-function initial(name: IconName): State {
-  return {
-    name,
-    gen: 0,
-    live: Object.entries(table[name]).map(([key, s]) => ({ id: `${key}.0`, key, s, on: true, enter: false })),
+/** Points per strand. One more than a number many command counts divide. */
+const N = 49;
+const NUM = /-?(?:\d+\.\d+|\.\d+|\d+)(?:e-?\d+)?/g;
+const ARITY: Record<string, number> = { M: 2, L: 2, H: 1, V: 1, C: 6, S: 4, Q: 4, A: 7, Z: 0 };
+
+const lineSeg = (x0: number, y0: number, x1: number, y1: number): Seg => (t) => [x0 + (x1 - x0) * t, y0 + (y1 - y0) * t];
+
+const cubicSeg = (p: number[]): Seg => (t) => {
+  const u = 1 - t;
+  const a = u * u * u;
+  const b = 3 * u * u * t;
+  const c = 3 * u * t * t;
+  const e = t * t * t;
+  return [a * p[0] + b * p[2] + c * p[4] + e * p[6], a * p[1] + b * p[3] + c * p[5] + e * p[7]];
+};
+
+/** An SVG arc from its end points (the spec's conversion to a center). */
+function arcSeg(x0: number, y0: number, rx: number, ry: number, deg: number, large: number, sweep: number, x1: number, y1: number): Seg {
+  if (!rx || !ry) return lineSeg(x0, y0, x1, y1);
+  const phi = (deg * Math.PI) / 180;
+  const sin = Math.sin(phi);
+  const cos = Math.cos(phi);
+  const dx = (x0 - x1) / 2;
+  const dy = (y0 - y1) / 2;
+  const px = cos * dx + sin * dy;
+  const py = -sin * dx + cos * dy;
+  rx = Math.abs(rx);
+  ry = Math.abs(ry);
+  const grow = Math.sqrt((px * px) / (rx * rx) + (py * py) / (ry * ry));
+  if (grow > 1) {
+    rx *= grow;
+    ry *= grow;
+  }
+  const den = rx * rx * py * py + ry * ry * px * px;
+  const k = (large === sweep ? -1 : 1) * Math.sqrt(Math.max(0, (rx * rx * ry * ry - den) / den));
+  const cxp = (k * rx * py) / ry;
+  const cyp = (-k * ry * px) / rx;
+  const cx = cos * cxp - sin * cyp + (x0 + x1) / 2;
+  const cy = sin * cxp + cos * cyp + (y0 + y1) / 2;
+  const a0 = Math.atan2((py - cyp) / ry, (px - cxp) / rx);
+  let da = Math.atan2((-py - cyp) / ry, (-px - cxp) / rx) - a0;
+  if (sweep && da < 0) da += 2 * Math.PI;
+  if (!sweep && da > 0) da -= 2 * Math.PI;
+  return (t) => {
+    const a = a0 + da * t;
+    const ex = rx * Math.cos(a);
+    const ey = ry * Math.sin(a);
+    return [cx + cos * ex - sin * ey, cy + sin * ex + cos * ey];
   };
 }
 
-function next(prev: State, name: IconName): State {
-  const want = table[name];
-  const gen = prev.gen + 1;
-  const taken = new Set<string>();
-  const live: Live[] = [];
-  for (const l of [...prev.live].sort((a, b) => Number(b.on) - Number(a.on))) {
-    const s = want[l.key];
-    if (s && !taken.has(l.key) && morphs(l.s, s)) {
-      taken.add(l.key);
-      live.push({ ...l, s, on: true, enter: !l.on });
-    } else {
-      live.push({ ...l, on: false, enter: false });
+const dist = (a: Pt, b: Pt) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+const r2 = (n: number) => Math.round(n * 100) / 100;
+
+/** N points along a polyline, evenly by length. `keep` are lengths (corners)
+ *  the nearest point snaps to, so a sharp corner stays sharp. */
+function resample(line: Pt[], keep: number[] = []): Pt[] {
+  const at = [0];
+  for (let i = 1; i < line.length; i++) at.push(at[i - 1] + dist(line[i - 1], line[i]));
+  const total = at[at.length - 1];
+  if (total === 0) return Array.from({ length: N }, () => line[0]);
+  const point = (len: number): Pt => {
+    let i = 1;
+    while (i < at.length - 1 && at[i] < len) i++;
+    const span = at[i] - at[i - 1] || 1;
+    const t = (len - at[i - 1]) / span;
+    return [line[i - 1][0] + (line[i][0] - line[i - 1][0]) * t, line[i - 1][1] + (line[i][1] - line[i - 1][1]) * t];
+  };
+  const out = Array.from({ length: N }, (_, i) => point((total * i) / (N - 1)));
+  for (const len of keep) out[Math.round((len / total) * (N - 1))] = point(len);
+  return out;
+}
+
+function strandsOf(key: string, s: Stroke): Strand[] {
+  const out: Strand[] = [];
+  const cls = [styles.strand, s.solid && styles.solid, s.block && styles.block, s.fx && styles[s.fx]].filter(Boolean).join(" ");
+  let segs: Seg[] = [];
+  let sig = "";
+  let d = "";
+  let x = 0;
+  let y = 0;
+  let sx = 0;
+  let sy = 0;
+  let cx = 0;
+  let cy = 0;
+  const finish = (closed: boolean) => {
+    if (!segs.length) return;
+    const fine: Pt[] = [];
+    const corners: number[] = [];
+    let len = 0;
+    for (const seg of segs) {
+      for (let i = fine.length ? 1 : 0; i <= 16; i++) {
+        const p = seg(i / 16);
+        if (fine.length) len += dist(fine[fine.length - 1], p);
+        fine.push(p);
+      }
+      corners.push(len);
+    }
+    const per = Math.floor((N - 1) / segs.length);
+    const seg: Pt[] = [];
+    for (const one of segs) for (let i = 0; i < per; i++) seg.push(one(i / per));
+    const last = segs[segs.length - 1](1);
+    while (seg.length < N) seg.push(last);
+    const a = fine[0];
+    const b = fine[fine.length - 1];
+    const straight = len > 0.5 && Math.abs(len - dist(a, b)) < 0.001;
+    out.push({ key: `${key}#${out.length}`, d, sig, closed, cls, pts: resample(fine, corners.slice(0, -1)), seg, line: straight ? [a, b] : undefined });
+    segs = [];
+    sig = "";
+  };
+  for (const cmd of s.d.match(/[a-zA-Z][^a-zA-Z]*/g) ?? []) {
+    const c = cmd[0];
+    const up = c.toUpperCase();
+    const rel = c !== up;
+    const n = (cmd.slice(1).match(NUM) ?? []).map(Number);
+    const arity = ARITY[up] ?? 0;
+    if (up === "Z") {
+      if (dist([x, y], [sx, sy]) > 0.001) {
+        segs.push(lineSeg(x, y, sx, sy));
+        sig += "L";
+      }
+      d += "Z";
+      finish(true);
+      x = sx;
+      y = sy;
+      continue;
+    }
+    for (let i = 0; i + arity <= n.length; i += arity) {
+      const a = n.slice(i, i + arity);
+      const ox = rel ? x : 0;
+      const oy = rel ? y : 0;
+      if (up === "M" && i === 0) {
+        finish(false);
+        x = sx = a[0] + ox;
+        y = sy = a[1] + oy;
+        d = `M${r2(x)} ${r2(y)}`;
+        continue;
+      }
+      // Coordinates after the first pair of an M are lines.
+      const as = up === "M" ? "L" : up;
+      const word = up === "M" ? (rel ? "l" : "L") : c;
+      if (!d) d = `M${r2(x)} ${r2(y)}`;
+      d += word + a.join(" ");
+      let nx = x;
+      let ny = y;
+      if (as === "L") [nx, ny] = [a[0] + ox, a[1] + oy];
+      else if (as === "H") nx = a[0] + ox;
+      else if (as === "V") ny = a[0] + oy;
+      else [nx, ny] = [a[arity - 2] + ox, a[arity - 1] + oy];
+      if (as === "C") {
+        segs.push(cubicSeg([x, y, a[0] + ox, a[1] + oy, a[2] + ox, a[3] + oy, nx, ny]));
+        [cx, cy] = [a[2] + ox, a[3] + oy];
+      } else if (as === "S") {
+        const prev = sig.endsWith("C");
+        segs.push(cubicSeg([x, y, prev ? 2 * x - cx : x, prev ? 2 * y - cy : y, a[0] + ox, a[1] + oy, nx, ny]));
+        [cx, cy] = [a[0] + ox, a[1] + oy];
+      } else if (as === "Q") {
+        const qx = a[0] + ox;
+        const qy = a[1] + oy;
+        segs.push(cubicSeg([x, y, x + ((qx - x) * 2) / 3, y + ((qy - y) * 2) / 3, nx + ((qx - nx) * 2) / 3, ny + ((qy - ny) * 2) / 3, nx, ny]));
+      } else if (as === "A") {
+        segs.push(arcSeg(x, y, a[0], a[1], a[2], a[3], a[4], nx, ny));
+      } else {
+        segs.push(lineSeg(x, y, nx, ny));
+      }
+      sig += as === "S" || as === "Q" ? "C" : as === "A" ? "A" : as === "C" ? "C" : "L";
+      x = nx;
+      y = ny;
     }
   }
-  for (const [key, s] of Object.entries(want)) {
-    if (!taken.has(key)) live.push({ id: `${key}.${gen}`, key, s, on: true, enter: true });
+  finish(false);
+  return out;
+}
+
+const cache = new Map<IconName, Strand[]>();
+
+/** The strands of an icon, without its strikes (those are drawn by CSS). */
+function strands(name: IconName): Strand[] {
+  let all = cache.get(name);
+  if (!all) {
+    all = Object.entries(table[name]).flatMap(([key, s]) => (s.cut ? [] : strandsOf(key, s)));
+    cache.set(name, all);
   }
-  const gone = live.filter((l) => !l.on);
-  const drop = new Set(gone.slice(0, Math.max(0, gone.length - 8)).map((l) => l.id));
-  return { name, gen, live: live.filter((l) => !drop.has(l.id)) };
+  return all;
 }
 
-const HIDE = 0.3;
+/** `to`, turned the way that moves `from` least: an open line may run from
+ *  either end, a closed one may also start anywhere round its loop. */
+function align(from: Pt[], to: Pt[], closed: boolean): { pts: Pt[]; cost: number } {
+  let best = to;
+  let least = Infinity;
+  const tryOne = (pts: Pt[]) => {
+    let sum = 0;
+    for (let i = 0; i < N; i += 2) sum += (from[i][0] - pts[i][0]) ** 2 + (from[i][1] - pts[i][1]) ** 2;
+    if (sum < least) {
+      least = sum;
+      best = pts;
+    }
+  };
+  const turned = (pts: Pt[], by: number) => {
+    const ring = pts.slice(0, N - 1);
+    const out = ring.slice(by).concat(ring.slice(0, by));
+    out.push(out[0]);
+    return out;
+  };
+  for (const pts of [to, [...to].reverse()]) {
+    tryOne(pts);
+    if (closed) for (let by = 3; by < N - 1; by += 3) tryOne(turned(pts, by));
+  }
+  return { pts: best, cost: Math.sqrt(least / Math.ceil(N / 2)) };
+}
 
-const nums = (d: string) => (d.match(/-?[\d.]+(?:e-?\d+)?/g) ?? []).map(Number);
+/** The cheapest way to give every row its own column (rows ≤ columns). */
+function assign(cost: number[][]): number[] {
+  const rows = cost.length;
+  const cols = cost[0]?.length ?? 0;
+  let best: number[] = [];
+  let least = Infinity;
+  const pick: number[] = [];
+  const used = new Array<boolean>(cols).fill(false);
+  const walk = (row: number, sum: number) => {
+    if (sum >= least) return;
+    if (row === rows) {
+      least = sum;
+      best = [...pick];
+      return;
+    }
+    for (let c = 0; c < cols; c++) {
+      if (used[c]) continue;
+      used[c] = true;
+      pick[row] = c;
+      walk(row + 1, sum + cost[row][c]);
+      used[c] = false;
+    }
+  };
+  walk(0, 0);
+  return best;
+}
 
-/** The draw curve, close enough: eases in and out, so the middle of a
- *  morph is on screen long enough to see. */
-const inOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+/** The two closest points of two sets: where new ink buds from old, or old folds into new. */
+function nearest(of: Pt[], among: Pt[][]): Pt {
+  let best = among[0]?.[0] ?? of[0];
+  let least = Infinity;
+  for (const pts of among) {
+    for (let i = 0; i < pts.length; i += 2) {
+      for (let j = 0; j < of.length; j += 4) {
+        const far = (pts[i][0] - of[j][0]) ** 2 + (pts[i][1] - of[j][1]) ** 2;
+        if (far < least) {
+          least = far;
+          best = pts[i];
+        }
+      }
+    }
+  }
+  return best;
+}
 
-/**
- * A stroke whose `d` morphs. Where CSS can transition `d`, the stylesheet
- * does it; elsewhere this tweens the attribute itself, number by number,
- * over --ui-dur-move, so a morph is a morph in every browser.
- */
-function MorphPath({ d, ...props }: ComponentProps<"path"> & { d: string }) {
-  const ref = useRef<SVGPathElement>(null);
-  const shown = useRef(d);
-  useLayoutEffect(() => {
-    const el = ref.current;
-    const from = shown.current;
-    shown.current = d;
-    if (!el || from === d || canMorphD() || shape(from) !== shape(d)) return;
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const a = nums(from);
-    const b = nums(d);
-    const parts = d.split(/-?[\d.]+(?:e-?\d+)?/);
-    const ms = parseFloat(getComputedStyle(el).getPropertyValue("--ui-dur-move")) || 380;
-    const start = performance.now();
-    let frame = 0;
-    const step = (now: number) => {
-      const k = inOut(Math.min(1, (now - start) / ms));
-      el.setAttribute("d", parts.map((s, i) => (i < a.length ? s + (a[i] + (b[i] - a[i]) * k).toFixed(3) : s)).join(""));
-      if (k < 1) frame = requestAnimationFrame(step);
+const turn = (p: Pt, rad: number): Pt => {
+  const cos = Math.cos(rad);
+  const sin = Math.sin(rad);
+  return [8 + (p[0] - 8) * cos - (p[1] - 8) * sin, 8 + (p[0] - 8) * sin + (p[1] - 8) * cos];
+};
+
+/* Play ↔ pause (and play ↔ stop) is its own move: a quarter turn. Play's
+   triangle is split along its axis into a top and a bottom half; as the icon
+   turns clockwise each half opens into a bar, so the bars arrive upright
+   with no moment where the halves cross. Pause to play turns on the same
+   way. Each shape is its four corners. */
+type Quad = [Pt, Pt, Pt, Pt];
+const QUADS: Partial<Record<IconName, [Quad, Quad]>> = {
+  play: [
+    [[4.75, 3], [12.75, 8], [12.75, 8], [4.75, 8]],
+    [[4.75, 8], [12.75, 8], [12.75, 8], [4.75, 13]],
+  ],
+  pause: [
+    [[4.25, 3.5], [6, 3.5], [6, 12.5], [4.25, 12.5]],
+    [[10, 3.5], [11.75, 3.5], [11.75, 12.5], [10, 12.5]],
+  ],
+  stop: [
+    [[4.5, 4.5], [8, 4.5], [8, 11.5], [4.5, 11.5]],
+    [[8, 4.5], [11.5, 4.5], [11.5, 11.5], [8, 11.5]],
+  ],
+};
+const twists = (from: IconName, to: IconName) => (from === "play") !== (to === "play") && QUADS[from] !== undefined && QUADS[to] !== undefined;
+
+/** `to`'s corners in the order that moves `from`'s least. */
+function alignQuad(from: Quad, to: Quad): Quad {
+  let best = to;
+  let least = Infinity;
+  for (const base of [to, [...to].reverse() as Quad]) {
+    for (let by = 0; by < 4; by++) {
+      const q = [0, 1, 2, 3].map((i) => base[(i + by) % 4]) as Quad;
+      const sum = q.reduce((n, p, i) => n + dist(p, from[i]) ** 2, 0);
+      if (sum < least) {
+        least = sum;
+        best = q;
+      }
+    }
+  }
+  return best;
+}
+
+/* ---------- The engine: owns the strands once an icon has changed ---------- */
+
+type El = {
+  node: SVGPathElement;
+  /** What it is becoming (or, for one that is leaving, what it was). */
+  strand: Strand;
+  /** Folding into the new ink; removed when it lands. */
+  leaving: boolean;
+  /** Where its points are now. */
+  now: Pt[];
+  from: Pt[];
+  to: Pt[];
+  /** A straight line turning to a straight line: mid-point, half-length, angle. */
+  rigid?: { from: [Pt, number, number]; to: [Pt, number, number] };
+  /** A half of play, pause or stop on its quarter turn. */
+  quad?: { from: Quad; to: Quad };
+  still: boolean;
+};
+
+const poly = (pts: Pt[]) => "M" + pts.map((p) => `${r2(p[0])} ${r2(p[1])}`).join("L");
+const polar = (a: Pt, b: Pt): [Pt, number, number] => [[(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], dist(a, b) / 2, Math.atan2(b[1] - a[1], b[0] - a[0])];
+const ends = ([mid, half, angle]: [Pt, number, number]): [Pt, Pt] => {
+  const dx = Math.cos(angle) * half;
+  const dy = Math.sin(angle) * half;
+  return [
+    [mid[0] - dx, mid[1] - dy],
+    [mid[0] + dx, mid[1] + dy],
+  ];
+};
+const along = (a: Pt, b: Pt): Pt[] => Array.from({ length: N }, (_, i) => [a[0] + ((b[0] - a[0]) * i) / (N - 1), a[1] + ((b[1] - a[1]) * i) / (N - 1)] as Pt);
+
+function createEngine(host: SVGGElement, start: IconName) {
+  let name = start;
+  let frame = 0;
+  let els: El[] = [];
+
+  const make = (strand: Strand, at: Pt[]): El => {
+    const node = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    node.setAttribute("class", strand.cls);
+    host.appendChild(node);
+    return { node, strand, leaving: false, now: at, from: at, to: at, still: true };
+  };
+  const rest = (el: El) => {
+    el.node.setAttribute("d", el.strand.d);
+    el.now = el.strand.pts;
+    el.rigid = el.quad = undefined;
+    el.still = true;
+  };
+  /** The icon as it rests, on fresh strands. */
+  const lay = (icon: IconName) => {
+    for (const el of els) el.node.remove();
+    els = strands(icon).map((strand) => {
+      const el = make(strand, strand.pts);
+      rest(el);
+      return el;
+    });
+  };
+  const settle = () => {
+    // The halves of a quarter turn give way to the icon's own strands.
+    if (els.some((el) => el.quad)) return lay(name);
+    for (const el of els) {
+      if (el.leaving) el.node.remove();
+      else rest(el);
+    }
+    els = els.filter((el) => !el.leaving);
+  };
+
+  lay(start);
+
+  /** The glide token, read from the page: its curve and its length. */
+  const timing = () => {
+    const css = getComputedStyle(host);
+    const stops = /linear\(([^)]+)\)/.exec(css.getPropertyValue("--ui-ease-glide"))?.[1].split(",").map(parseFloat) ?? [];
+    const raw = css.getPropertyValue("--ui-dur-glide").trim();
+    const ms = parseFloat(raw) * (/\ds$/.test(raw) && !raw.endsWith("ms") ? 1000 : 1) || 320;
+    const ease =
+      stops.length > 1 && !stops.some(Number.isNaN)
+        ? (t: number) => {
+            const u = t * (stops.length - 1);
+            const i = Math.min(stops.length - 2, Math.floor(u));
+            return stops[i] + (stops[i + 1] - stops[i]) * (u - i);
+          }
+        : (t: number) => 1 - (1 + 9.2 * t) * Math.exp(-9.2 * t);
+    return { ms, ease };
+  };
+
+  /** Sets every strand on its way to `next`. True when it's the quarter turn. */
+  function plan(next: IconName, moving: boolean): boolean {
+    const want = strands(next);
+    // A quarter turn only from rest: caught mid-way, the halves go straight
+    // to where they're headed.
+    if (!moving && twists(name, next)) {
+      const from = QUADS[name]!;
+      const to = QUADS[next]!;
+      // Two halves take the place of whatever drew the icon at rest (play
+      // and stop are one shape): together they look the same.
+      for (const el of els) el.node.remove();
+      els = from.map((quad, i) => {
+        // Play's top half lands as the right bar, its bottom as the left;
+        // coming back, the left bar becomes the top half.
+        const target = to[name === "play" ? 1 - i : i].map((p) => turn(p, -Math.PI / 2)) as Quad;
+        const el = make(want[0], []);
+        el.quad = { from: quad, to: alignQuad(quad, target) };
+        el.still = false;
+        return el;
+      });
+      return true;
+    }
+
+    const free = new Set(els);
+    const open = new Set(want);
+    const move = (el: El, strand: Strand, to: Pt[] | null) => {
+      free.delete(el);
+      open.delete(strand);
+      const resting = el.still;
+      const was = el.strand;
+      el.leaving = false;
+      el.quad = undefined;
+      el.strand = strand;
+      el.node.setAttribute("class", strand.cls);
+      if (resting && was.d === strand.d) return;
+      el.still = false;
+      if (to) {
+        // The same commands under the same key: command by command.
+        el.rigid = undefined;
+        el.from = resting ? was.seg : el.now;
+        el.to = to;
+        return;
+      }
+      const line = resting ? was.line : el.rigid && ([el.now[0], el.now[N - 1]] as [Pt, Pt]);
+      if (line && strand.line) {
+        const a = polar(line[0], line[1]);
+        let b = polar(strand.line[0], strand.line[1]);
+        // A line has no direction: turn it the short way round.
+        let by = b[2] - a[2];
+        while (by > Math.PI / 2) by -= Math.PI;
+        while (by < -Math.PI / 2) by += Math.PI;
+        b = [b[0], b[1], a[2] + by];
+        el.rigid = { from: a, to: b };
+        return;
+      }
+      el.rigid = undefined;
+      el.from = resting ? was.pts : el.now;
+      el.to = align(el.from, strand.pts, strand.closed).pts;
     };
-    el.setAttribute("d", from);
-    frame = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(frame);
-  }, [d]);
-  return <path ref={ref} d={d} {...props} />;
+
+    // 1. A strand both icons name and draw with the same commands.
+    for (const el of [...free]) {
+      if (el.leaving) continue;
+      const same = [...open].find((s) => s.key === el.strand.key && (s.d === el.strand.d || s.sig === el.strand.sig));
+      if (same) move(el, same, el.still && same.d !== el.strand.d && !same.line ? same.seg : null);
+    }
+
+    // 2. The rest pair off by how little ink has to travel.
+    const olds = [...free];
+    const news = [...open];
+    if (olds.length && news.length) {
+      const cost = olds.map((el) => news.map((s) => align(el.now, s.pts, s.closed).cost + (el.strand.cls === s.cls ? 0 : 1)));
+      if (olds.length <= news.length) assign(cost).forEach((c, r) => move(olds[r], news[c], null));
+      else assign(news.map((_, c) => olds.map((_, r) => cost[r][c]))).forEach((r, c) => move(olds[r], news[c], null));
+    }
+
+    // 3. New strands with no partner bud from the nearest ink.
+    const ink = els.map((el) => el.now);
+    for (const strand of open) {
+      const seed = nearest(strand.pts, ink);
+      const el = make(strand, Array.from({ length: N }, () => seed));
+      el.to = strand.pts;
+      el.still = false;
+      els.push(el);
+    }
+
+    // 4. Old strands with no partner fold into the nearest new ink.
+    for (const el of free) {
+      const into = nearest(el.now, want.map((s) => s.pts));
+      el.leaving = true;
+      el.rigid = el.quad = undefined;
+      el.still = false;
+      el.from = el.now;
+      el.to = Array.from({ length: N }, () => into);
+      el.node.setAttribute("class", styles.strand + (el.strand.cls.includes(styles.solid) ? " " + styles.solid : ""));
+    }
+    return false;
+  }
+
+  function draw(k: number, quarter: number) {
+    for (const el of els) {
+      if (el.still) continue;
+      if (el.quad) {
+        const q = el.quad.from.map((p, i) => {
+          const g = el.quad!.to[i];
+          return turn([p[0] + (g[0] - p[0]) * k, p[1] + (g[1] - p[1]) * k], quarter);
+        });
+        el.now = resample([...q, q[0]], []);
+        el.node.setAttribute("d", poly(q) + "Z");
+      } else if (el.rigid) {
+        const { from, to } = el.rigid;
+        const [a, b] = ends([
+          [from[0][0] + (to[0][0] - from[0][0]) * k, from[0][1] + (to[0][1] - from[0][1]) * k],
+          from[1] + (to[1] - from[1]) * k,
+          from[2] + (to[2] - from[2]) * k,
+        ]);
+        el.now = along(a, b);
+        el.node.setAttribute("d", poly([a, b]));
+      } else {
+        el.now = el.from.map((p, i) => [p[0] + (el.to[i][0] - p[0]) * k, p[1] + (el.to[i][1] - p[1]) * k] as Pt);
+        el.node.setAttribute("d", poly(el.now));
+      }
+    }
+  }
+
+  return {
+    to(next: IconName) {
+      if (next === name) return;
+      const moving = frame !== 0;
+      cancelAnimationFrame(frame);
+      frame = 0;
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        name = next;
+        lay(next);
+        return;
+      }
+      const quarter = plan(next, moving);
+      name = next;
+      const { ms, ease } = timing();
+      const began = performance.now();
+      draw(0, 0);
+      const step = (now: number) => {
+        // A frame's time can sit a hair before the moment the move began.
+        const t = Math.min(1, Math.max(0, (now - began) / ms));
+        if (t === 1) {
+          frame = 0;
+          settle();
+          return;
+        }
+        const k = ease(t);
+        draw(k, quarter ? (k * Math.PI) / 2 : 0);
+        frame = requestAnimationFrame(step);
+      };
+      frame = requestAnimationFrame(step);
+    },
+    stop() {
+      if (!frame) return;
+      cancelAnimationFrame(frame);
+      frame = 0;
+      settle();
+    },
+  };
 }
 
-// CSS `d` is set only after the first change; until then the attribute draws.
-function dash(l: Live, morphing: boolean): CSSProperties | undefined {
-  const f = l.s.f ?? 0;
-  const t = l.s.t ?? 1;
-  const len = t - f;
-  const off = f === 0 ? len + HIDE : -(1 + HIDE);
-  const style = {
-    d: morphing ? `path("${l.s.d}")` : undefined,
-    rotate: l.s.rot ? `${l.s.rot}deg` : undefined,
-    "--len": len === 1 ? undefined : len,
-    "--on": f === 0 ? undefined : -f,
-    "--off": off === 1 + HIDE ? undefined : off,
-  } as CSSProperties;
-  return Object.values(style).some((v) => v !== undefined) ? style : undefined;
+/* ---------- Strikes: drawn on and retracted by CSS ---------- */
+
+type Cut = { id: string; key: string; s: Stroke; on: boolean; enter: boolean };
+
+const cutsOf = (name: IconName) => Object.entries(table[name]).filter(([, s]) => s.cut);
+
+function nextCuts(prev: Cut[], name: IconName, gen: number): Cut[] {
+  const want = new Map(cutsOf(name));
+  const out: Cut[] = [];
+  for (const c of prev) {
+    if (want.has(c.key) && c.on) {
+      want.delete(c.key);
+      out.push(c);
+    } else if (want.has(c.key)) {
+      want.delete(c.key);
+      out.push({ ...c, on: true, enter: true });
+    } else {
+      out.push({ ...c, on: false, enter: false });
+    }
+  }
+  for (const [key, s] of want) out.push({ id: `${key}.${gen}`, key, s, on: true, enter: true });
+  return out;
 }
 
 export type IconProps = Omit<ComponentProps<"svg">, "children"> & { name: IconName };
 
 export function Icon({ name, className, ...props }: IconProps) {
-  const [state, setState] = useState(() => initial(name));
-  const mask = `icon-cut-${useId()}`;
-  if (state.name !== name) setState(next(state, name));
+  const [state, setState] = useState(() => ({
+    name,
+    /** The icon it showed before it first changed: where the engine starts. */
+    first: name,
+    gen: 0,
+    cuts: cutsOf(name).map(([key, s]): Cut => ({ id: `${key}.0`, key, s, on: true, enter: false })),
+  }));
+  if (state.name !== name) setState({ name, first: state.first, gen: state.gen + 1, cuts: nextCuts(state.cuts, name, state.gen + 1) });
 
-  const cuts = state.live.filter((l) => l.s.cut);
-  const path = (l: Live, extra?: string) => (
-    <MorphPath
-      key={l.id + (extra ?? "")}
-      d={l.s.d}
+  const mask = `icon-cut-${useId()}`;
+  const host = useRef<SVGGElement>(null);
+  const engine = useRef<ReturnType<typeof createEngine> | null>(null);
+
+  // Before paint: the engine takes the strands over on the first change, and
+  // heads for the new icon from wherever the ink is.
+  useLayoutEffect(() => {
+    if (state.gen === 0 || !host.current) return;
+    engine.current ??= createEngine(host.current, state.first);
+    engine.current.to(state.name);
+  }, [state.gen, state.name, state.first]);
+  useEffect(() => () => engine.current?.stop(), []);
+
+  const cut = (c: Cut, extra?: string) => (
+    <path
+      key={c.id + (extra ?? "")}
+      d={c.s.d}
       pathLength={1}
-      className={[styles.stroke, l.s.block && styles.block, l.s.solid && styles.solid, l.s.seam && styles.seam, l.s.fx && styles[l.s.fx], extra].filter(Boolean).join(" ")}
-      data-off={l.on ? undefined : ""}
-      data-enter={l.enter ? "" : undefined}
-      style={dash(l, state.gen > 0)}
+      className={extra ? `${styles.stroke} ${extra}` : styles.stroke}
+      data-off={c.on ? undefined : ""}
+      data-enter={c.enter ? "" : undefined}
       onTransitionEnd={
-        l.on || extra
+        c.on || extra
           ? undefined
           : (e) => {
-              if (e.propertyName === "stroke-dashoffset") {
-                setState((s) => ({ ...s, live: s.live.filter((x) => x.id !== l.id || x.on) }));
-              }
+              if (e.propertyName === "stroke-dashoffset") setState((s) => ({ ...s, cuts: s.cuts.filter((x) => x.id !== c.id || x.on) }));
             }
       }
     />
@@ -442,14 +936,27 @@ export function Icon({ name, className, ...props }: IconProps) {
       className={className ? `${styles.icon} ${className}` : styles.icon}
       {...props}
     >
-      {cuts.length > 0 && (
+      {state.cuts.length > 0 && (
         <mask id={mask} maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">
           <rect width="16" height="16" fill="white" stroke="none" />
-          {cuts.map((l) => path(l, styles.cut))}
+          {state.cuts.map((c) => cut(c, styles.cut))}
         </mask>
       )}
-      <g mask={cuts.length > 0 ? `url(#${mask})` : undefined}>{state.live.filter((l) => !l.s.cut).map((l) => path(l))}</g>
-      {cuts.map((l) => path(l))}
+      <g mask={state.cuts.length > 0 ? `url(#${mask})` : undefined}>
+        {/* Until the first change the strokes are plain markup, as the server sent them. */}
+        {state.gen === 0 &&
+          Object.entries(table[name]).map(([key, s]) =>
+            s.cut ? null : (
+              <path
+                key={key}
+                d={s.d}
+                className={[styles.strand, s.solid && styles.solid, s.block && styles.block, s.fx && styles[s.fx]].filter(Boolean).join(" ")}
+              />
+            ),
+          )}
+        <g ref={host} />
+      </g>
+      {state.cuts.map((c) => cut(c))}
     </svg>
   );
 }

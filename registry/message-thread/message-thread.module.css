@@ -362,12 +362,8 @@
 }
 
 /* A pressed thumb fills in. */
-.action svg {
-  transition: fill var(--ui-dur-instant) var(--ui-ease-color);
-}
-
 .action[aria-pressed="true"] svg {
-  fill: currentColor;
+  --icon-fill: 1;
 }
 
 /* Copy carries its result as a word, so it isn't an icon-only capsule: at

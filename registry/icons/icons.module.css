@@ -48,110 +48,53 @@
   }
 }
 
-/* The gap (3) must exceed any path plus margins so the dash never repeats. */
-.stroke {
-  stroke-dasharray: var(--len, 1) 3;
-  stroke-dashoffset: var(--on, 0);
-  transform-box: fill-box;
-  transform-origin: center;
-  /* --icon-morph-ease: set to --ui-ease-glide where a morph should land
-     without overshoot (a result, not a toggle). */
+/* A strand: one unbroken line of an icon. The engine moves its points; the
+   stylesheet only eases what a strand is made of when it becomes another
+   kind (a line filling into a solid, a block thinning to a line). */
+.strand {
+  /* --icon-fill: 1 on the icon (or a parent) fills its outlines: a pressed
+     rating, a chosen star. */
+  fill: currentColor;
+  fill-opacity: var(--icon-fill, 0);
+  /* A solid thinning to a line empties at once, before its outline opens. */
   transition:
-    d var(--ui-dur-move) var(--icon-morph-ease, var(--ui-ease-move)),
-    stroke-dasharray var(--ui-dur-move) var(--icon-morph-ease, var(--ui-ease-move)),
-    stroke-dashoffset var(--ui-dur-move) var(--icon-morph-ease, var(--ui-ease-move)),
-    rotate var(--ui-dur-move) var(--icon-morph-ease, var(--ui-ease-move)),
+    fill-opacity var(--ui-dur-instant) var(--ui-ease-color),
+    stroke-width var(--ui-dur-glide) var(--ui-ease-glide),
     translate var(--ui-dur-snap) var(--ui-ease-snap);
-}
-
-/* A stroke that leaves (copy's sheets as the check arrives) gets out of
-   the way: it erases, fades and draws in slightly, all quickly, so the two
-   shapes never tangle in the same spot. */
-.stroke[data-off] {
-  stroke-dashoffset: var(--off, 1.3);
-  opacity: 0;
-  scale: 0.85;
-  transition:
-    stroke-dashoffset var(--ui-dur-fast) var(--ui-ease-exit),
-    opacity var(--ui-dur-instant) var(--ui-ease-exit),
-    scale var(--ui-dur-fast) var(--ui-ease-exit),
-    translate var(--ui-dur-snap) var(--ui-ease-snap);
-}
-
-/* A stroke that arrives waits a beat for the old one to clear, then draws
-   on in one clean pass. */
-.stroke[data-enter] {
-  transition:
-    stroke-dashoffset var(--ui-dur-base) var(--ui-ease-draw) calc(var(--ui-dur-instant) * 0.6),
-    translate var(--ui-dur-snap) var(--ui-ease-snap);
-}
-
-/* Two strokes that meet end to end at rest (copy's sheet and rim): the
-   moving one lands without overshoot, so the seam never opens, and the
-   other erases in place along its path instead of fading and shrinking, so
-   copy → check reads as one line opening at its corner. */
-.stroke.seam:not([data-enter]) {
-  transition:
-    d var(--ui-dur-glide) var(--ui-ease-glide),
-    stroke-dasharray var(--ui-dur-glide) var(--ui-ease-glide),
-    stroke-dashoffset var(--ui-dur-glide) var(--ui-ease-glide),
-    translate var(--ui-dur-snap) var(--ui-ease-snap);
-}
-
-.stroke.seam[data-off] {
-  opacity: 1;
-  scale: none;
-  transition:
-    stroke-dashoffset var(--ui-dur-instant) var(--ui-ease-draw),
-    translate var(--ui-dur-snap) var(--ui-ease-snap);
-}
-
-@starting-style {
-  .icon[data-ready] .stroke[data-enter] {
-    stroke-dashoffset: var(--off, 1.3);
-  }
 }
 
 .block {
   stroke-width: 4;
 }
 
-/* Solid: filled, with a thin stroke in the same color rounding its
-   corners. No dash, so it's whole at rest. It morphs over --ui-dur-move on
-   the draw curve, which eases in and out, so the change of shape is on
-   screen long enough to see (and with no overshoot the halves never part);
-   it leaves and arrives by fading and scaling about its own center. */
+/* Solid: filled, with a thin stroke in the same color rounding its corners. */
+/* A line becoming a solid fills in the second half of the move, once its
+   outline has closed: filled sooner, an open outline shows as a gray wedge. */
 .solid {
-  fill: currentColor;
+  fill-opacity: 1;
   stroke-width: var(--ui-icon-stroke-medium);
-  stroke-dasharray: none;
-  stroke-dashoffset: 0;
   transition:
-    d var(--ui-dur-move) var(--ui-ease-draw),
-    opacity var(--ui-dur-fast) var(--ui-ease-enter),
-    scale var(--ui-dur-glide) var(--ui-ease-glide);
+    fill-opacity calc(var(--ui-dur-glide) * 0.4) var(--ui-ease-color) calc(var(--ui-dur-glide) * 0.35),
+    stroke-width var(--ui-dur-glide) var(--ui-ease-glide),
+    translate var(--ui-dur-snap) var(--ui-ease-snap);
 }
 
-.solid[data-off] {
+/* A strike (the eye's slash) draws on and retracts along its own length.
+   The gap (3) must exceed the path plus margins so the dash never repeats. */
+.stroke {
+  stroke-dasharray: 1 3;
   stroke-dashoffset: 0;
-  opacity: 0;
-  scale: 0.6;
-  transition:
-    opacity var(--ui-dur-instant) var(--ui-ease-exit),
-    scale var(--ui-dur-fast) var(--ui-ease-exit);
+  transition: stroke-dashoffset var(--ui-dur-base) var(--ui-ease-draw);
 }
 
-.solid[data-enter] {
-  transition:
-    opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) * 0.6),
-    scale var(--ui-dur-base) var(--ui-ease-enter) calc(var(--ui-dur-instant) * 0.6);
+.stroke[data-off] {
+  stroke-dashoffset: 1.3;
+  transition: stroke-dashoffset var(--ui-dur-fast) var(--ui-ease-exit);
 }
 
 @starting-style {
-  .icon[data-ready] .solid[data-enter] {
-    stroke-dashoffset: 0;
-    opacity: 0;
-    scale: 0.6;
+  .icon[data-ready] .stroke[data-enter] {
+    stroke-dashoffset: 1.3;
   }
 }
 
@@ -195,11 +138,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .strand,
   .stroke,
-  .stroke[data-off],
-  .stroke[data-enter],
-  .stroke.seam:not([data-enter]),
-  .stroke.seam[data-off] {
+  .stroke[data-off] {
     transition: none;
   }
 }

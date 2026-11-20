@@ -38,12 +38,8 @@
 }
 
 /* A pressed thumb fills in. */
-.thumb {
-  transition: fill var(--ui-dur-instant) var(--ui-ease-color);
-}
-
 .action[aria-pressed="true"] .thumb {
-  fill: currentColor;
+  --icon-fill: 1;
 }
 
 /* ---------- Note ---------- */

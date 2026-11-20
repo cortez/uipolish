@@ -339,6 +339,12 @@ glide spring, no overshoot, while everything else fades.
   the open state can change between mount and first paint (opened by the
   URL), remount the icon after first paint (`key={String(ready)}`) so it
   shows the open shape instead of moving into it.
+- **An icon that changes** (copy to check, send to stop, menu to close)
+  becomes the new one: its strokes reshape into the new icon's, on
+  `--ui-ease-glide` over `--ui-dur-glide`. Never two icons stacked and
+  crossfaded, never one fading out before the next draws in. Render one
+  `<Icon name={…} />` and change its name. Play and pause are the one pair
+  with a move of their own, a quarter turn.
 - **Underline that doesn't shift layout**: a `scaleX(0 → 1)` pseudo-element
   with `transform-origin: left`, `--ui-dur-base` on `--ui-ease-enter` — not
   `text-decoration` toggling.
