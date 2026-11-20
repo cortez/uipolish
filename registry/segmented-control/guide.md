@@ -35,7 +35,7 @@ supply arrow keys, Tab, disabled options and form submission.
 | `aria-label` / `aria-labelledby` | `SegmentedControl` | Names the choice ("Date range") |
 | `value`, `onValueChange` | `SegmentedControl` | Controlled |
 | `defaultValue` | `SegmentedControl` | Uncontrolled starting value |
-| `widths` | `SegmentedControl` | `equal` (default): each option as wide as the widest. `content`: each as wide as its label |
+| `widths` | `SegmentedControl` | `equal` (default): each option as wide as the widest. `content`: each as wide as its label. Either way a label never shrinks: when the control is narrower than its options, they scroll inside the track |
 | `name` | `SegmentedControl` | Form field name; the checked value submits |
 | `disabled` | both | The whole group, or one option |
 | `aria-label` | `Segment` | Needed when the option is an icon only |

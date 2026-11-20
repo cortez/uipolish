@@ -36,8 +36,10 @@
   font-size: var(--ui-text-sm);
 }
 
+/* Each as wide as its label, never narrower: `auto` let a column shrink
+   under its label when the control was squeezed, so options overlapped. */
 .root[data-widths="content"] {
-  grid-auto-columns: auto;
+  grid-auto-columns: max-content;
 }
 
 .indicator {
