@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type ReactNode, type TransitionEvent } from "react";
+import { useId, useLayoutEffect, useRef, useState, type ReactNode, type TransitionEvent } from "react";
 import { AnimatedSize } from "../animated-size/animated-size";
 import { Icon, type IconName } from "../icons/icons";
 import { TextMorph } from "../text-morph/text-morph";
@@ -35,6 +35,48 @@ type AlertProps = {
 };
 
 const reduced = () => typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/**
+ * The title morphs when it changes, and a morphing label is one line. So it
+ * morphs only while it fits on one: a title too long for a narrow alert is
+ * plain text, which wraps. Plain until measured, so it is never cut off.
+ */
+function Title({ id, children }: { id?: string; children: string }) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const [wraps, setWraps] = useState(true);
+  // The width at which the one-line label last overflowed: no going back to
+  // it until there is more room, so the two modes can't trade places forever.
+  const tooNarrow = useRef({ title: children, width: 0 });
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    if (tooNarrow.current.title !== children) tooNarrow.current = { title: children, width: 0 };
+    const check = () => {
+      // Hidden (display: none above): nothing to measure.
+      if (el.clientWidth === 0) return;
+      if (wraps) {
+        const oneLine = el.offsetHeight < parseFloat(getComputedStyle(el).lineHeight) * 1.5;
+        if (oneLine && el.clientWidth > tooNarrow.current.width) setWraps(false);
+      } else if (el.scrollWidth > el.clientWidth) {
+        tooNarrow.current.width = el.clientWidth;
+        setWraps(true);
+      }
+    };
+    check();
+    const observer = new ResizeObserver(check);
+    observer.observe(el);
+    // The label's own width eases as it morphs; look again as it lands.
+    if (el.firstElementChild) observer.observe(el.firstElementChild);
+    return () => observer.disconnect();
+  }, [children, wraps]);
+
+  return (
+    <p ref={ref} id={id} className={styles.title}>
+      {wraps ? children : <TextMorph>{children}</TextMorph>}
+    </p>
+  );
+}
 
 /** An inline status banner. Later errors and warnings use role="alert", info and success role="status". */
 export function Alert({
@@ -85,9 +127,7 @@ export function Alert({
           title morphs letter by letter, and new text and actions fade in. */}
       <AnimatedSize className={styles.bodySize}>
         <div className={styles.body}>
-          <p id={live ? titleId : undefined} className={styles.title}>
-            <TextMorph>{title}</TextMorph>
-          </p>
+          <Title id={live ? titleId : undefined}>{title}</Title>
           {children && (
             <div key={`text:${title}`} className={styles.text}>
               {children}

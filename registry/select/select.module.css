@@ -257,14 +257,23 @@
   background: var(--ui-fill-strong);
   opacity: 0;
   pointer-events: none;
+  /* Height rides the same spring as the move, so between rows of different
+     heights the bar never stands a row too tall over its neighbour. */
   transition:
     translate var(--ui-dur-snap) var(--ui-ease-snap),
+    height var(--ui-dur-snap) var(--ui-ease-snap),
     opacity var(--ui-dur-instant) var(--ui-ease-color),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
 .highlight[data-visible] {
   opacity: 1;
+}
+
+/* On a row that can't be chosen the bar only marks the place (the keyboard
+   still needs to see where it is): the soft fill, not the pressable one. */
+.list:has(.option[data-disabled][data-highlighted]) > .highlight {
+  background: var(--ui-fill);
 }
 
 .highlight[data-jump] {

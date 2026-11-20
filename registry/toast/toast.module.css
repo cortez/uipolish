@@ -22,6 +22,9 @@
   --toast-inset: var(--ui-space-3);
   --toast-side: var(--ui-space-4);
   --toast-radius: var(--ui-radius-lg);
+  /* While a toast fades out (--toast-leaving is 1), the rest hold still for
+     the first beat of its fade, so none slides over a card still on screen. */
+  --toast-wait: calc(var(--toast-leaving, 0) * var(--ui-dur-instant));
   position: absolute;
   right: 0;
   bottom: 0;
@@ -31,8 +34,8 @@
   translate: 0 var(--toast-y, 0);
   scale: var(--toast-scale, 1);
   transition:
-    translate var(--ui-dur-move) var(--ui-ease-move),
-    scale var(--ui-dur-move) var(--ui-ease-move),
+    translate var(--ui-dur-move) var(--ui-ease-move) var(--toast-wait),
+    scale var(--ui-dur-move) var(--ui-ease-move) var(--toast-wait),
     opacity var(--ui-dur-fast) var(--ui-ease-color);
 }
 
@@ -73,9 +76,15 @@
   /* Base UI sets the swipe offset; released short of dismissing, it snaps back. */
   translate: var(--toast-swipe-movement-x, 0px) 0;
   transition:
-    clip-path var(--ui-dur-move) var(--ui-ease-move),
+    clip-path var(--ui-dur-move) var(--ui-ease-move) var(--toast-wait),
     translate var(--ui-dur-snap) var(--ui-ease-snap);
   animation: toast-in var(--ui-dur-base) var(--ui-ease-enter);
+}
+
+/* Arriving as another leaves: it waits out the first beat of that fade. */
+.card[data-late] {
+  animation-delay: var(--ui-dur-instant);
+  animation-fill-mode: backwards;
 }
 
 /* With an action the card ends in a button, not text: the button sits
@@ -87,11 +96,11 @@
 /* A toast stacked behind the front one shows only its edge. */
 .card > * {
   opacity: var(--toast-content, 1);
-  transition: opacity var(--ui-dur-fast) var(--ui-ease-color);
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-color) var(--toast-wait);
 }
 
 .item[data-swiping] .card {
-  transition: clip-path var(--ui-dur-move) var(--ui-ease-move);
+  transition: clip-path var(--ui-dur-move) var(--ui-ease-move) var(--toast-wait);
 }
 
 .item[data-ending-style] .card {
@@ -306,8 +315,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Nothing travels: the stack steps to its new places once a leaving
+     toast has faded. */
   .item {
-    transition: opacity var(--ui-dur-fast) var(--ui-ease-color);
+    --toast-wait: calc(var(--toast-leaving, 0) * var(--ui-dur-fast));
+    transition:
+      translate 0s var(--toast-wait),
+      scale 0s var(--toast-wait),
+      opacity var(--ui-dur-fast) var(--ui-ease-color);
   }
   .item[data-ending-style] .card,
   .item[data-ending-style][data-swipe-direction] .card {
@@ -315,9 +330,12 @@
     translate: none;
   }
   .card {
-    transition: none;
+    transition: clip-path 0s var(--toast-wait);
     animation-name: toast-fade;
     animation-duration: var(--ui-dur-fast);
+  }
+  .card[data-late] {
+    animation-delay: var(--ui-dur-fast);
   }
   .close:active {
     scale: none;

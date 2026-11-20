@@ -165,7 +165,7 @@ export function MessageBranches({
           </div>
           {versions.some((v) => v.note) && (
             // Every note in one cell: the current one shows, the others wait faded out.
-            <span className={styles.notes}>
+            <span className={styles.notes} data-stepped={dir !== 0 || undefined}>
               {versions.map((v, i) => (
                 <span key={v.id} className={styles.note} data-current={i === current || undefined} aria-hidden={i !== current || undefined}>
                   {v.note}

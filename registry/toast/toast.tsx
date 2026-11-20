@@ -109,12 +109,15 @@ type Item = BaseToast.Root.ToastObject<ToastData>;
 /** Where each live toast sits, collapsed and fanned out, plus the stack's height in both. */
 function stack(toasts: Item[], max: number) {
   const live = toasts.filter((t) => t.transitionStatus !== "ending");
+  // While one is fading out, the rest hold still for the first beat of its
+  // fade, so nothing slides over a card that can still be read.
+  const leaving = live.length < toasts.length ? 1 : 0;
   const frontHeight = live[0]?.height ?? 0;
   const places: Record<string, Place> = {};
   let offset = 0;
   live.forEach((t, index) => {
     const h = t.height ?? frontHeight;
-    const shared = { opacity: index < max ? 1 : 0, zIndex: live.length - index };
+    const shared = { opacity: index < max ? 1 : 0, zIndex: live.length - index, "--toast-leaving": leaving };
     const clipTop = index > 0 && h > frontHeight ? h - frontHeight : -1;
     places[t.id] = {
       collapsed: {
@@ -142,7 +145,7 @@ function stack(toasts: Item[], max: number) {
     collapsed: frontHeight + Math.max(0, shown.length - 1) * PEEK,
     expanded: shown.reduce((sum, t) => sum + (t.height ?? 0) + GAP, 0),
   };
-  return { places, height };
+  return { places, height, leaving: leaving === 1 };
 }
 
 /* ---------- Toaster ---------- */
@@ -174,7 +177,7 @@ export function Toaster({ position = "bottom-right", max = 3, label = "Notificat
 
 function Stack({ position, max, label }: Required<ToasterProps>) {
   const { toasts } = BaseToast.useToastManager<ToastData>();
-  const { places, height } = stack(toasts, max);
+  const { places, height, leaving } = stack(toasts, max);
 
   return (
     <BaseToast.Viewport
@@ -184,7 +187,7 @@ function Stack({ position, max, label }: Required<ToasterProps>) {
       style={(state) => ({ height: state.expanded ? height.expanded : height.collapsed })}
     >
       {toasts.map((t) => (
-        <ToastItem key={t.id} toast={t} place={places[t.id]} />
+        <ToastItem key={t.id} toast={t} place={places[t.id]} leaving={leaving} />
       ))}
     </BaseToast.Viewport>
   );
@@ -192,10 +195,13 @@ function Stack({ position, max, label }: Required<ToasterProps>) {
 
 /* ---------- One toast ---------- */
 
-function ToastItem({ toast: item, place }: { toast: Item; place?: Place }) {
+function ToastItem({ toast: item, place, leaving }: { toast: Item; place?: Place; leaving: boolean }) {
   const { id, title, description, data } = item;
   const type = (item.type ?? "default") as ToastType;
   const closing = item.transitionStatus === "ending";
+  // Born while another fades out (an action that answers with a new toast):
+  // it enters a beat late, so the two are never read on top of each other.
+  const [late] = useState(leaving);
 
   // A leaving toast keeps its last position while the rest move up.
   const key = JSON.stringify(place ?? null);
@@ -211,10 +217,14 @@ function ToastItem({ toast: item, place }: { toast: Item; place?: Place }) {
       style={(state) => {
         const vars = state.expanded ? applied?.expanded : applied?.collapsed;
         // The fade lives on the root: Base UI waits for the root's own transitions before removing it.
-        return state.transitionStatus === "ending" ? { ...vars, opacity: 0 } : vars;
+        if (state.transitionStatus === "ending") return { ...vars, opacity: 0 };
+        // Base UI also moves the root by the drag while swiping. The card already follows
+        // --toast-swipe-movement-x, so both together moved it twice as far as the finger
+        // and it jumped back on release.
+        return state.swiping ? { ...vars, transform: "none", transition: undefined } : vars;
       }}
     >
-      <div className={styles.card} data-action={data?.action ? "" : undefined}>
+      <div className={styles.card} data-action={data?.action ? "" : undefined} data-late={late ? "" : undefined}>
         {type !== "default" && (
           <span className={styles.icon} aria-hidden="true">
             {type === "loading" ? <span className={styles.pulse} /> : <Icon name={ICONS[type]} />}

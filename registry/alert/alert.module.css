@@ -122,6 +122,14 @@
    length of the opening, so no line ever sweeps across a solid box. */
 .root[data-mode="expand"] .layer {
   transform-origin: top center;
+  /* Dismissed or closed while still opening: the blur and scale ease out
+     with the fade instead of snapping off under it. */
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    translate var(--ui-dur-instant) var(--ui-ease-exit),
+    filter var(--ui-dur-instant) var(--ui-ease-exit),
+    scale var(--ui-dur-instant) var(--ui-ease-exit),
+    visibility 0s linear var(--ui-dur-instant);
 }
 
 .root[data-mode="expand"] .layer[data-on] {
@@ -218,7 +226,12 @@
 }
 
 .title {
+  /* A grid item: without this a one-line title would widen the column
+     instead of reporting that it no longer fits. */
+  min-width: 0;
   margin: 0;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
   line-height: var(--ui-leading-md);
@@ -270,7 +283,8 @@
   .root {
     transition: none;
   }
-  .layer {
+  .layer,
+  .root[data-mode="expand"] .layer {
     translate: none;
     transition:
       opacity var(--ui-dur-instant) var(--ui-ease-color),

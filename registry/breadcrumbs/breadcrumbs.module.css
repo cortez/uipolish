@@ -19,7 +19,8 @@
   list-style: none;
 }
 
-/* translate is set by the component's FLIP when the fold opens. */
+/* translate and clip-path are set by the component when the fold opens:
+   the crumbs after it slide (FLIP), and uncover the revealed ones. */
 .item {
   display: flex;
   align-items: center;
@@ -27,6 +28,7 @@
   min-width: 0;
   transition:
     translate var(--ui-dur-move) var(--ui-ease-move),
+    clip-path var(--ui-dur-move) var(--ui-ease-move),
     opacity var(--ui-dur-fast) var(--ui-ease-enter);
 }
 
@@ -96,9 +98,8 @@ a.crumb:focus-visible {
   mask-image: linear-gradient(to right, transparent, #000 24px);
 }
 
+/* Sized by the icon itself: every chevron is --ui-icon-chevron. */
 .item .separator {
-  width: 14px;
-  height: 14px;
   color: var(--ui-subtle);
 }
 

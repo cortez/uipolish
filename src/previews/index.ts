@@ -15,6 +15,7 @@ export const PREVIEWS: Record<string, ComponentType> = {
   "toast": dynamic(() => import("@/previews/toast").then((m) => m.ToastPreview)),
   "dialog": dynamic(() => import("@/previews/dialog").then((m) => m.DialogPreview)),
   "dropdown-menu": dynamic(() => import("@/previews/dropdown-menu").then((m) => m.DropdownMenuPreview)),
+  "context-menu": dynamic(() => import("@/previews/context-menu").then((m) => m.ContextMenuPreview)),
   "popover": dynamic(() => import("@/previews/popover").then((m) => m.PopoverPreview)),
   "tabs": dynamic(() => import("@/previews/tabs").then((m) => m.TabsPreview)),
   "command-palette": dynamic(() => import("@/previews/command-palette").then((m) => m.CommandPalettePreview)),
@@ -70,4 +71,5 @@ export const PREVIEWS: Record<string, ComponentType> = {
   "message-branches": dynamic(() => import("@/previews/message-branches").then((m) => m.MessageBranchesPreview)),
   "prompt-suggestions": dynamic(() => import("@/previews/prompt-suggestions").then((m) => m.PromptSuggestionsPreview)),
   "terminal-output": dynamic(() => import("@/previews/terminal-output").then((m) => m.TerminalOutputPreview)),
+  "textarea": dynamic(() => import("@/previews/textarea").then((m) => m.TextareaPreview)),
 };

@@ -248,7 +248,7 @@
   width: var(--close-width);
   height: var(--close-size);
   margin-block-start: calc(var(--ui-space-1) + var(--ui-leading-2xl) / 2 - var(--close-size) / 2);
-  margin-inline-end: calc((16px - var(--close-width)) / 2);
+  margin-inline-end: calc((var(--ui-icon-md) - var(--close-width)) / 2);
   padding: 0;
   border: 0;
   border-radius: var(--ui-radius-control);

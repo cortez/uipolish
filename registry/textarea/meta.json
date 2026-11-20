@@ -1,0 +1,11 @@
+{
+  "name": "textarea",
+  "title": "Textarea",
+  "summary": "Labeled multi-line field that grows with its text from a minimum to a maximum number of rows, then scrolls with faded edges. Validates like Text field, with an optional character count that holds its width.",
+  "blurb": "A multi-line field that grows as you write.",
+  "version": "0.1.0",
+  "dependencies": [
+    "field",
+    "text"
+  ]
+}

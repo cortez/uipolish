@@ -34,7 +34,7 @@
   line-height: var(--ui-leading-sm);
 }
 
-/* Tab labels at 13px / 500 with a small count beside each. */
+/* Tab labels in muted 12px with a small count beside each. */
 .tabs {
   display: flex;
   flex-wrap: wrap;

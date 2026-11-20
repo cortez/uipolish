@@ -98,6 +98,8 @@
 
 .button[data-variant="secondary"] {
   --button-bg: var(--ui-surface);
+  /* Opaque like its rest fill, so a press never shows what's behind it. */
+  --button-bg-press: var(--ui-fill-strong-solid);
   --button-edge: var(--ui-border-strong);
   --button-depth: var(--ui-shadow-control);
 }
@@ -119,7 +121,9 @@
   }
 }
 
-.button:active:not(:disabled, [aria-busy])::before {
+/* Doubled so it outranks the secondary's hover fill: the pointer is always
+   over a button it presses, and the press must still read a step darker. */
+.button.button:active:not(:disabled, [aria-busy])::before {
   --button-depth: 0 0 transparent;
   background: var(--button-bg-press);
   transition-duration: var(--ui-dur-press);

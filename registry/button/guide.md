@@ -69,7 +69,7 @@ page, not in a tooltip.
 | Press release (scale) | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 | Label dims for busy, once shown (after 300ms of work) | `--ui-dur-base` (200ms); back at once | `--ui-ease-color` |
 | Light band across the busy label | `--ui-dur-sweep` (2.4s) per sweep | `linear` |
-| Text morph | `--ui-dur-move` (380ms), letters out in 120ms | `--ui-ease-move` |
+| Text morph | `--ui-dur-glide` (320ms), letters out in 120ms | `--ui-ease-glide` |
 
 Under `prefers-reduced-motion: reduce` the press doesn't scale, the label
 swaps without morphing, and a busy label dims to 50% and holds still.

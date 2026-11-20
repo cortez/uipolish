@@ -1,0 +1,237 @@
+.field {
+  composes: field from "../field/field.module.css";
+}
+
+.label {
+  composes: label from "../field/field.module.css";
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+/* How far the edge is mixed toward danger: registered, so it can ease on
+   its own while the focus fill lands at once. */
+@property --textarea-danger {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+/* Registered so the edge alphas of the scroll fade can transition. */
+@property --textarea-start {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+@property --textarea-end {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+/* The box: Text field's edge, corner and fill, drawn around the textarea
+   instead of on it, so the box can ease its height while the text inside
+   is already laid out at its new one. */
+.control {
+  --field-height: var(--ui-control-md);
+  --line: var(--ui-leading-md);
+  /* One row is exactly a text field: the line centered in the control height. */
+  --pad-block: calc((var(--field-height) - var(--line)) / 2);
+  --rows-min: calc(var(--textarea-min, 3) * var(--line) + var(--pad-block) * 2);
+  --rows-max: calc(var(--textarea-max, 8) * var(--line) + var(--pad-block) * 2);
+  position: relative;
+  min-height: var(--rows-min);
+  /* Clips the rows still on their way in while the height eases. */
+  overflow: clip;
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) color-mix(in oklch, var(--ui-border-strong), var(--ui-danger) var(--textarea-danger));
+  cursor: text;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    --textarea-danger var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+.field[data-size="lg"] .control {
+  --field-height: var(--ui-control-lg);
+}
+
+/* A height that retargets as you type: the short spring. Armed a frame
+   after the first measurement, so nothing eases on mount or on a rewrap. */
+.control[data-armed] {
+  transition:
+    height var(--ui-dur-snap) var(--ui-ease-snap),
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    --textarea-danger var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+/* Focus fills the field, at once; the edge stays as it rests. */
+.control:focus-within {
+  background: var(--ui-field-focus-fill);
+  transition:
+    background-color 0s,
+    --textarea-danger var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+.control[data-armed]:focus-within {
+  transition:
+    height var(--ui-dur-snap) var(--ui-ease-snap),
+    background-color 0s,
+    --textarea-danger var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+.control:has(.input[aria-invalid]) {
+  --textarea-danger: 100%;
+}
+
+.control:has(.input:disabled) {
+  opacity: 0.5;
+  cursor: default;
+  transition: none;
+}
+
+.input {
+  --textarea-fade: var(--ui-space-5);
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--rows-min);
+  max-height: var(--rows-max);
+  margin: 0;
+  /* 14px in, the same as a text field's, so stacked fields line up. */
+  padding: var(--pad-block) calc((var(--field-height) - var(--ui-control-sm)) / 2 + 10px);
+  border: 0;
+  /* Its own corner too, so the scrollbar follows the box's curve. */
+  border-radius: inherit;
+  background: transparent;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--line) var(--ui-font-sans);
+  resize: none;
+  outline: none;
+  overflow-y: auto;
+  /* The line being typed stays clear of the faded edges. */
+  scroll-padding-block: var(--textarea-fade);
+  /* Before the script measures, and without it: the content's own height. */
+  field-sizing: content;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+  /* Text that scrolls past the top or bottom fades out, as in Scroll area. */
+  mask-image: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / var(--textarea-start, 1)),
+    black var(--textarea-fade),
+    black calc(100% - var(--textarea-fade)),
+    rgb(0 0 0 / var(--textarea-end, 1))
+  );
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+}
+
+@supports (animation-timeline: scroll()) {
+  .input {
+    animation:
+      textarea-start linear both,
+      textarea-end linear both;
+    animation-timeline: scroll(self block), scroll(self block);
+    animation-range:
+      0 var(--textarea-fade),
+      calc(100% - var(--textarea-fade)) 100%;
+  }
+
+  /* Chromium keeps an animation's last value once its timeline goes
+     inactive; the script sets data-fits so stale fades clear. */
+  .input[data-fits] {
+    animation: none;
+  }
+}
+
+@keyframes textarea-start {
+  from {
+    --textarea-start: 1;
+  }
+  to {
+    --textarea-start: 0;
+  }
+}
+
+@keyframes textarea-end {
+  from {
+    --textarea-end: 0;
+  }
+  to {
+    --textarea-end: 1;
+  }
+}
+
+/* Script fallback: the two edges ease in and out as the text reaches them. */
+@supports not (animation-timeline: scroll()) {
+  .input {
+    transition:
+      --textarea-start var(--ui-dur-fast) var(--ui-ease-color),
+      --textarea-end var(--ui-dur-fast) var(--ui-ease-color);
+  }
+}
+
+.input::placeholder {
+  color: var(--ui-subtle);
+}
+
+.input:disabled {
+  cursor: default;
+}
+
+/* The hint or error at the start, the count at the end, on one line. */
+.below {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+  min-width: 0;
+}
+
+.below > :first-child:not(.count) {
+  flex: 1;
+  min-width: 0;
+}
+
+.count {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-md);
+  white-space: nowrap;
+  transition: color var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+.count[data-over] {
+  color: var(--ui-danger-text);
+}
+
+/* Tabular on the digits alone: the "/" and its spaces keep their own
+   width. The typed figure holds the limit's width, so the count never
+   moves as it gains a digit. */
+.figure {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+/* iOS zooms the page into any field under 16px. */
+@media (pointer: coarse) {
+  .input {
+    font-size: var(--ui-text-touch);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .control[data-armed],
+  .control[data-armed]:focus-within {
+    transition:
+      background-color var(--ui-dur-instant) var(--ui-ease-color),
+      --textarea-danger var(--ui-dur-fast) var(--ui-ease-color);
+  }
+  .control[data-armed]:focus-within {
+    transition-duration: 0s, var(--ui-dur-fast);
+  }
+}

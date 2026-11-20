@@ -19,6 +19,7 @@ export const SHOWCASES: Record<string, ComponentType> = {
   "code-input": dynamic(() => import("./code-input")),
   "combobox": dynamic(() => import("./combobox")),
   "command-palette": dynamic(() => import("./command-palette")),
+  "context-menu": dynamic(() => import("./context-menu")),
   "copy-field": dynamic(() => import("./copy-field")),
   "data-table": dynamic(() => import("./data-table")),
   "date-picker": dynamic(() => import("./date-picker")),
@@ -66,6 +67,7 @@ export const SHOWCASES: Record<string, ComponentType> = {
   "message-branches": dynamic(() => import("./message-branches")),
   "prompt-suggestions": dynamic(() => import("./prompt-suggestions")),
   "terminal-output": dynamic(() => import("./terminal-output")),
+  "textarea": dynamic(() => import("./textarea")),
 };
 
 /** Components that are already a box of their own: on the home page they

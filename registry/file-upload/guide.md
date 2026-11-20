@@ -22,8 +22,8 @@ A drop from the desktop isn't input to the browser, so anything it moves
 counts as layout shift. The zone has a fixed height (`--upload-height`,
 248px) and the list scrolls inside it, so the page never moves. Inside,
 every row is one height in every state, and the empty prompt and the
-"Add more files" bar are two elements: one leaves and the other appears,
-rather than one moving.
+"Add more files" bar are two elements: one leaves and the other fades in
+(`--ui-dur-fast`), rather than one moving.
 
 ## Props
 
@@ -40,7 +40,7 @@ rather than one moving.
 | Row | What you see |
 |---|---|
 | Uploading | The extension on a badge, "42% of 240 KB", a wash filling the row on the move spring |
-| Done | A check on the badge, "Uploaded, 240 KB", the wash finishing its run, then fading |
+| Done | A check fading in on the badge (`--ui-dur-base`), "Uploaded, 240 KB", the wash finishing its run, then fading |
 | Failed | The badge and reason in the danger color, the wash stopped where it failed, a retry button |
 | Turned away | The badge and reason in the danger color, the whole row tinted |
 
@@ -52,7 +52,7 @@ rather than one moving.
 | Hover, empty | The well's edge darkens a step, as a field's does, and the icon comes up to the text color |
 | Hover, "Add more files" | The text and plus come up to the text color, like a row |
 | Press | Nothing of its own: the system picker opening is the answer, and a well this size shrinking on press reads as the page moving |
-| File held over the zone | The one state meant to read from across the screen: the well takes the accent's tint and edge, and the icon and prompt come up to the text color; the prompt comes up to the text color and says "Drop to add" |
+| File held over the zone | The one state meant to read from across the screen: the well takes the accent's tint and edge, and the icon and prompt come up to the text color; the prompt says "Drop to add" |
 | Focus | A line just inside the well, instantly |
 
 Every change is color only, on `--ui-dur-instant`, in both directions. Removing a row fades it, then closes its
@@ -68,4 +68,5 @@ failures and turned-away files are announced in a polite live region.
 Long names and reasons stay on one line and fade where they're cut, with
 the full text in a tooltip. Removing a row from the keyboard moves focus
 to "Add more files" (or the prompt, after the last one).
-Under `prefers-reduced-motion` rows appear and go at once.
+Under `prefers-reduced-motion` rows, the prompt and the bar appear and go
+at once.

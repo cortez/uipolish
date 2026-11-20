@@ -66,10 +66,9 @@ keep the menu open and answer in its own row:
 ```
 
 - **Rows are rounded, not pills.** The panel is inset `--ui-inset-menu`
-  (12px) around its rows and each row takes the concentric radius, the
-  panel's 24 less that inset: 12. Row text sits `--ui-pad-row` (12px) in,
-  clear of the row's curve, so it lands 24px from the panel's edge, the
-  same as the command palette's.
+  (4px) around its rows and each row takes the concentric radius, the
+  panel's 16 less that inset: 12. Row text sits `--ui-pad-row` (12px) in,
+  clear of the row's curve, so it lands 16px from the panel's edge.
 - With `closeOnSelect={false}` the menu stays open and the highlight and
   focus stay on the item, so the arrow keys, Enter and typeahead go on
   working. A string label morphs when it changes (`TextMorph`): shared
@@ -129,7 +128,7 @@ learn they exist, but can't be activated.
 
 | State | What you see | How |
 |---|---|---|
-| Highlighted | One rounded fill under the item, 10% of the text color; it slides from the previous item | pointer or keyboard, same state, and focus moves with it |
+| Highlighted | One rounded fill under the item, 8% of the text color (`--ui-fill-strong`); it slides from the previous item | pointer or keyboard, same state, and focus moves with it |
 | Pressed | Fill darkens to 16% in 80ms | `:active` |
 | Danger | Red text and icon; the highlight turns red-tinted | `variant="danger"` |
 | Disabled | 50% opacity, default cursor, optional reason on a second line | `disabled`, `description` → `data-disabled` |
@@ -152,13 +151,15 @@ The menu's edge is the one in `--ui-shadow-floating`: the same outline color as 
 | Close | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |
 | Highlight moving between items | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 | Highlight appearing or leaving | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
-| Press | 0ms, release eases back | |
+| Press: the highlight darkens | `--ui-dur-press` (80ms) | `--ui-ease-color` |
+| Highlight's height, between a one-line and a two-line row | `--ui-dur-glide` | `--ui-ease-glide` |
 | A label that changes in place | `--ui-dur-move` (`TextMorph`) | `--ui-ease-move` |
 | Busy label dims, after 120ms | `--ui-dur-base` | `--ui-ease-color` |
 | Light band across a busy label | `--ui-dur-sweep` per pass | `linear` |
 
-The highlight moves with `translate` only, so it never causes layout. It
-jumps instead of sliding the first time it appears. The trigger skips the
+The highlight moves with `translate`; only its height eases when it lands
+on a row with a second line. It jumps instead of sliding the first time it
+appears. The trigger skips the
 button's press-scale (`[aria-haspopup]`), so the menu opens from where the
 button really is. Under `prefers-reduced-motion: reduce` the menu only
 fades (no scale, no blur), the highlight jumps between items, labels swap without morphing,
@@ -178,7 +179,7 @@ and a busy label dims to 50% and holds still.
   `keyshortcuts` (for example `"Meta+D"`) so assistive tech can announce it.
 - `description` is linked with `aria-describedby`, so a disabled item says
   why: "Publish menu, dimmed. Needs the host's approval first."
-- Rows are 44px tall on coarse pointers.
+- Rows are 48px tall on coarse pointers.
 - If an action removes the trigger (Delete), move focus somewhere useful
   yourself, such as an Undo button, and announce the result in a
   `role="status"` region.

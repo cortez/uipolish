@@ -140,7 +140,7 @@ seven items on a 375px phone.
 |---|---|---|
 | Tooltip opens: fade, unblur, scale 0.97 → 1 | `--ui-dur-fast` | `--ui-ease-enter` |
 | Tooltip closes | `--ui-dur-instant` | `--ui-ease-exit` |
-| Tooltip moves to the next item, and its width to the new label | `--ui-dur-glide` | `--ui-ease-glide` |
+| Tooltip moves to the next item (`translate`), and its width to the new label | `--ui-dur-glide` | `--ui-ease-glide` |
 | Old label fades out | `--ui-dur-instant` | `--ui-ease-color` |
 | New label fades in, 60ms later | `--ui-dur-fast` | `--ui-ease-enter` |
 | Both labels shift 4px the way the tooltip travels | `--ui-dur-glide` | `--ui-ease-glide` |
@@ -152,8 +152,13 @@ overshoot past the item, and a change mid-move starts from where they are.
 The tooltip only glides once it has been on screen for a frame, so it never
 slides in from where it was last time, and it keeps gliding until it has
 fully closed: if the pointer crosses empty rail and reaches the next item
-while the tooltip is still fading out, it glides there. Its width eases
-inside a clipped box, so the label grows into it. The capsule is placed
+while the tooltip is still fading out, it glides there. Base UI places it
+with `top` and `left`; the component lets that land at once and plays the
+distance back as a `translate`, so the move never animates a layout
+property. Its width eases inside a clipped box (the one sanctioned width
+animation: one small box, and the alternative is a jump), and the label
+keeps its own width while it does, so the new name is revealed at the
+box's edge and is never squeezed or cut mid-word. The capsule is placed
 before first paint, re-placed without animating on resize, and moves by
 `transform` only.
 

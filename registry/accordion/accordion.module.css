@@ -88,6 +88,9 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     column-gap: var(--ui-space-4);
+    /* Two lines of one thing: the value stays with its title, not halfway
+       to the next row. */
+    row-gap: var(--ui-gap-tight);
   }
   .trigger[data-meta] .title {
     max-width: none;
@@ -201,7 +204,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .root[data-ready] .panel,
-  .root[data-ready] .item[data-open] > .panel {
+  .root[data-ready] .item[data-open] > .panel,
+  .root[data-ready][data-type="single"]:has(> .item[data-open]) .item:not([data-open]) > .panel {
     transition: none;
   }
 }

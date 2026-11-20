@@ -2,6 +2,7 @@
 
 import { useId, useState, type FormEvent } from "react";
 import { Button } from "@registry/button/button";
+import { Icon } from "@registry/icons/icons";
 import { Popover } from "@registry/popover/popover";
 import { TextField } from "@registry/text-field/text-field";
 import styles from "./preview.module.css";
@@ -117,11 +118,7 @@ export function PopoverPreview() {
                 arrow
                 trigger={
                   <Button variant="ghost" size="sm" className={local.popoverInfo} aria-label="About the card processing fee">
-                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" style={{ strokeWidth: "var(--ui-icon-stroke)" }} strokeLinecap="round" aria-hidden="true">
-                      <circle cx="8" cy="8" r="6.25" />
-                      <path d="M8 7.25v3.5" />
-                      <circle cx="8" cy="5" r="0.4" fill="currentColor" />
-                    </svg>
+                    <Icon name="info" />
                   </Button>
                 }
               >

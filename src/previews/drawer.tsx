@@ -178,7 +178,7 @@ export function DrawerPreview() {
             <section className={styles.section}>
               <h3 className={base.label}>RSVP</h3>
               <SegmentedControl
-            size="sm"
+                size="sm"
                 aria-label="RSVP"
                 widths="equal"
                 value={guest.rsvp}

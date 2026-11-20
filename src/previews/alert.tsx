@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Alert } from "@registry/alert/alert";
 import { Button } from "@registry/button/button";
 import base from "./preview.module.css";
@@ -10,6 +10,16 @@ export function AlertPreview() {
   const [offline, setOffline] = useState(false);
   const [sent, setSent] = useState(false);
   const [tipOpen, setTipOpen] = useState(true);
+  const showAgain = useRef<HTMLButtonElement>(null);
+
+  // The dismiss button is gone once the alert closes; if it had focus, the
+  // button that takes its place gets it, so a keyboard keeps its place.
+  function dismissTip() {
+    setTipOpen(false);
+    requestAnimationFrame(() => {
+      if (document.activeElement === document.body) showAgain.current?.focus();
+    });
+  }
 
   return (
     <div className={base.stack}>
@@ -33,12 +43,12 @@ export function AlertPreview() {
             the button is already in place when it appears. */}
         <div className={styles.slot}>
           {tipOpen && (
-            <Alert tone="success" title="Menu shared with 8 guests" onDismiss={() => setTipOpen(false)}>
+            <Alert tone="success" title="Menu shared with 8 guests" onDismiss={dismissTip}>
               They can leave allergy notes until Friday.
             </Alert>
           )}
           <div className={base.row} data-hidden={tipOpen || undefined} inert={tipOpen || undefined}>
-            <Button variant="ghost" onClick={() => setTipOpen(true)}>
+            <Button ref={showAgain} variant="ghost" onClick={() => setTipOpen(true)}>
               Show the dismissed alert
             </Button>
           </div>

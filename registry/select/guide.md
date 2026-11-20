@@ -84,7 +84,7 @@ Disabled options are skipped by the keys and can't be chosen.
 | Focus | `md`: the field focus fill, at once; the edge stays. `sm`: a line just inside the pill | `:focus-visible`, never animated |
 | Invalid | Danger edge, error with an icon in the hint's place | `aria-invalid` |
 | Disabled | 50% opacity, default cursor | `disabled`, `[data-disabled]` |
-| Highlighted option | One rounded fill under the option, sliding between options | `[data-highlighted]`, pointer or keyboard |
+| Highlighted option | One rounded fill under the option, sliding between options (its height eases with the move when rows differ); under a disabled option it is the soft fill | `[data-highlighted]`, pointer or keyboard |
 | Chosen option | A check at the end of its row | `[data-selected]` |
 
 ## Layout

@@ -44,6 +44,12 @@ function themeRoot(el: Element | null) {
   return root && root !== document.documentElement ? root : undefined;
 }
 
+/** A CSS time ("280ms", "0.28s") in milliseconds. */
+function ms(value: string) {
+  const n = parseFloat(value);
+  return Number.isFinite(n) ? (/\d\s*s$/.test(value.trim()) && !value.trim().endsWith("ms") ? n * 1000 : n) : 0;
+}
+
 /* ---------- Modal ---------- */
 
 type FocusTarget = RefObject<HTMLElement | null> | (() => HTMLElement | null);
@@ -92,7 +98,6 @@ export function Modal({
     setTrigger(triggerRef?.current ?? (active instanceof HTMLElement && active !== document.body ? active : null));
   }, [open, triggerRef]);
 
-
   // Centered as it opens; from then on its top edge stays where it opened,
   // so content that grows or shrinks moves only what's below it (the height
   // eases in AnimatedSize). It recenters only when it would no longer fit,
@@ -117,7 +122,21 @@ export function Modal({
     const fit = () => {
       if (docked() || !viewport.hasAttribute("data-pinned")) return;
       const top = parseFloat(viewport.style.getPropertyValue("--dialog-top")) || 0;
-      if (top + popup.offsetHeight > room()) pin(centered());
+      if (top + popup.offsetHeight <= room()) return;
+      const next = Math.round(centered());
+      pin(next);
+      // It glides up from where it was instead of jumping there. Added on top
+      // of any glide still running, since the height may keep easing.
+      if (top - next < 1 || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const cs = getComputedStyle(popup);
+      popup.animate(
+        { translate: [`0 ${top - next}px`, "0 0"] },
+        {
+          duration: ms(cs.getPropertyValue("--ui-dur-panel")),
+          easing: cs.getPropertyValue("--ui-ease-expand").trim() || "ease-out",
+          composite: "add",
+        },
+      );
     };
     const observer = new ResizeObserver(fit);
     observer.observe(popup);

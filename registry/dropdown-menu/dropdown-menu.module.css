@@ -58,8 +58,11 @@
   background: var(--ui-fill-strong);
   opacity: 0;
   pointer-events: none;
+  /* The height eases too: a row with a second line is taller, and a bar that
+     slid there but snapped to the new height read as a jump. */
   transition:
     translate var(--ui-dur-snap) var(--ui-ease-snap),
+    height var(--ui-dur-glide) var(--ui-ease-glide),
     opacity var(--ui-dur-instant) var(--ui-ease-color),
     background-color var(--ui-dur-instant) var(--ui-ease-color);
 }

@@ -86,8 +86,11 @@ The glide spring lands without passing its place, so a version never
 swings past the edge. Stepped again mid-slide, the version leaves from
 where it visibly is. The content is clipped sideways only while it slides,
 so focus rings and shadows inside it aren't cut at rest and a scrolling
-thread never shows a horizontal scrollbar for a frame. Nothing animates on
-mount. Under `prefers-reduced-motion: reduce` the versions crossfade in
+thread never shows a horizontal scrollbar for a frame. On the start side,
+where every line begins, the clip edge stands one slide (16px) out, so a
+version arriving from there is never cut through its first letters. A note
+that arrives with a new version (a retry) fades in like the others.
+Nothing animates on mount. Under `prefers-reduced-motion: reduce` the versions crossfade in
 place, the height changes at once and the number swaps.
 
 ## Layout

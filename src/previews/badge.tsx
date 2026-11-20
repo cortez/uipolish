@@ -79,7 +79,7 @@ export function BadgePreview() {
         <p className={styles.prose}>
           The tasting menu is <Badge tone="positive">Confirmed</Badge> for eight guests, and the wine pairing is
           still a <Badge>Draft</Badge> until Priya hears back from the shop. Allergy notes close on Friday, and
-          two are still <Badge tone="warning">Missing</Badge>.
+          two are still <Badge tone="warning">Missing</Badge> from the list.
         </p>
       </section>
 

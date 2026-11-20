@@ -259,7 +259,9 @@
   .row[data-interactive]:has(.primary:active)::before {
     scale: none;
   }
-  .chevron {
+  /* Doubled to outrank the hover and focus nudges above, in either direction. */
+  .chevron.chevron.chevron {
+    translate: none;
     transition: none;
   }
 }

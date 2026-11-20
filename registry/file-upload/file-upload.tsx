@@ -88,6 +88,9 @@ export function FileUpload({
   const [leaving, setLeaving] = useState<Set<string>>(() => new Set());
   const [dragging, setDragging] = useState(false);
   const [announcement, setAnnouncement] = useState("");
+  // Set once files have been added: from then on the prompt and the bar fade
+  // in as they trade places. Never on the first paint.
+  const [swaps, setSwaps] = useState(false);
 
   // Report changes after they're committed, never while rendering.
   const reported = useRef(items);
@@ -149,6 +152,7 @@ export function FileUpload({
     }
     if (next.length === 0) return;
     refocus.current = document.activeElement === browseRef.current;
+    setSwaps(true);
     setItems((list) => [...list, ...next]);
     const rejected = next.filter((n) => n.error);
     if (rejected.length) setAnnouncement(rejected.map((r) => `${r.file.name}: ${r.error}`).join(". "));
@@ -213,6 +217,7 @@ export function FileUpload({
       ref={browseRef}
       type="button"
       className={styles.browse}
+      data-enter={swaps || undefined}
       disabled={disabled}
       aria-describedby={`${baseId}-constraints`}
       aria-labelledby={`${baseId}-label ${baseId}-action`}

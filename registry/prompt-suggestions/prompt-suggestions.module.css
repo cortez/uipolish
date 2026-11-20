@@ -7,15 +7,27 @@
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: 1fr;
   container: prompt-suggestions / inline-size;
+  /* Only runs when a set comes back while it was leaving: it fades and
+     opens again from wherever it had got to, instead of popping to full. */
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    grid-template-rows var(--ui-dur-panel) var(--ui-ease-expand),
+    margin-block-end var(--ui-dur-panel) var(--ui-ease-expand);
 }
 
+/* A parent that spaces its children with `gap` keeps that gap around the
+   group until it's gone, and then drops it in one frame. Given the gap
+   (--prompt-suggestions-gap), the group takes it back as it closes, so
+   what's below glides the whole way and nothing jumps at the end. */
 .root[data-leaving] {
   opacity: 0;
   grid-template-rows: 0fr;
+  margin-block-end: calc(var(--prompt-suggestions-gap, 0px) * -1);
   pointer-events: none;
   transition:
     opacity var(--ui-dur-instant) var(--ui-ease-exit),
-    grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse) var(--ui-dur-instant);
+    grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse) var(--ui-dur-instant),
+    margin-block-end var(--ui-dur-base) var(--ui-ease-collapse) var(--ui-dur-instant);
 }
 
 .list {
@@ -213,8 +225,12 @@
   .list {
     animation-name: prompt-suggestions-fade;
   }
+  .root {
+    transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
+  }
   .root[data-leaving] {
     grid-template-rows: 1fr;
+    margin-block-end: 0;
     transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
   }
   .card:active:not(:disabled),

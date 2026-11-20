@@ -346,11 +346,41 @@ export function NavRail({
 /** The one tooltip every item shares. */
 function RailTooltip() {
   const rail = useContext(Context)!;
-  // Position and width glide only once it's on screen, so it never slides in from the corner.
+  // It glides and its width eases only once it's on screen, so it never slides in from the corner.
   const [gliding, setGliding] = useState(false);
   const open = useRef(false);
   const frame = useRef(0);
   useEffect(() => () => cancelAnimationFrame(frame.current), []);
+
+  // Base UI places the positioner with top and left. Rather than ease those
+  // (layout on every frame, and text that steps from pixel to pixel), let it
+  // land at once and play the distance back as a translate, starting from
+  // wherever it visibly is, so a move interrupted midway carries on from there.
+  const [positioner, setPositioner] = useState<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!positioner || !gliding) return;
+    const read = () => {
+      const computed = getComputedStyle(positioner);
+      const [tx, ty] = computed.translate.split(" ").map((v) => parseFloat(v) || 0);
+      return { x: parseFloat(computed.left) || 0, y: parseFloat(computed.top) || 0, tx: tx ?? 0, ty: ty ?? 0 };
+    };
+    let last = read();
+    const observer = new MutationObserver(() => {
+      const next = read();
+      if (next.x === last.x && next.y === last.y) return;
+      const from = `${last.x - next.x + next.tx}px ${last.y - next.y + next.ty}px`;
+      last = next;
+      positioner.getAnimations().forEach((a) => a.id === "glide" && a.cancel());
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      positioner.animate([{ translate: from }, { translate: "0px 0px" }], {
+        id: "glide",
+        duration: ms(token(positioner, "--ui-dur-glide", "320ms")),
+        easing: token(positioner, "--ui-ease-glide", "ease-out"),
+      });
+    });
+    observer.observe(positioner, { attributes: true, attributeFilter: ["style"] });
+    return () => observer.disconnect();
+  }, [positioner, gliding]);
 
   return (
     <BaseTooltip.Root
@@ -375,6 +405,7 @@ function RailTooltip() {
       {({ payload }) => (
         <BaseTooltip.Portal container={rail.container ?? undefined}>
           <BaseTooltip.Positioner
+            ref={setPositioner}
             className={styles.positioner}
             side={rail.orientation === "vertical" ? "inline-end" : "top"}
             sideOffset={8}

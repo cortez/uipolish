@@ -1,0 +1,47 @@
+/* The dropdown menu's panel and rows, class for class: a change to its look
+   or motion lands here too. Nothing below draws a menu of its own. */
+.positioner {
+  composes: positioner from "../dropdown-menu/dropdown-menu.module.css";
+}
+
+.surface {
+  composes: surface from "../dropdown-menu/dropdown-menu.module.css";
+}
+
+.highlight {
+  composes: highlight from "../dropdown-menu/dropdown-menu.module.css";
+}
+
+.item {
+  composes: item from "../dropdown-menu/dropdown-menu.module.css";
+}
+
+.leading {
+  composes: leading from "../dropdown-menu/dropdown-menu.module.css";
+}
+
+.text {
+  composes: text from "../dropdown-menu/dropdown-menu.module.css";
+}
+
+.label {
+  composes: label from "../dropdown-menu/dropdown-menu.module.css";
+}
+
+.description {
+  composes: description from "../dropdown-menu/dropdown-menu.module.css";
+}
+
+.shortcut {
+  composes: shortcut from "../dropdown-menu/dropdown-menu.module.css";
+}
+
+/* The area that opens the menu. A long press would otherwise also select
+   the word under the finger and raise the browser's own callout. */
+@media (pointer: coarse) {
+  .area {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+}

@@ -34,7 +34,7 @@ collapses the alert: that answers a press, so it's allowed to move things.
 | Prop | What it does |
 |---|---|
 | `tone` | `info` (default), `success`, `warning`, `error` |
-| `title`, `children`, `actions` | One line, a sentence or two, buttons or links |
+| `title`, `children`, `actions` | One line, a sentence or two, buttons or links. A title too long for a narrow alert wraps; it morphs on change only while it fits on one line |
 | `open`, `arrive` | See the rule above. Leave `open` out for a static alert |
 | `onDismiss`, `dismissLabel` | Shows the dismiss button; called after it has closed |
 
@@ -51,7 +51,8 @@ radius less its inset and `--alert-pad` to match its padding, so the
 corners stay concentric and the text lines up.
 
 Arriving: fade and a 2px drop, `--ui-dur-fast` on `--ui-ease-enter`.
-Leaving: a step faster on the color curve.
+Leaving: a step faster on the color curve. An `expand` alert closed
+while it is still opening eases its blur and scale out with the fade.
 
 Content that changes in place animates instead of swapping: change `tone`,
 `title`, the text or the actions on the same alert and the title morphs
@@ -71,3 +72,8 @@ DOM: `role="alert"` for errors and warnings, `role="status"` otherwise, so
 it's announced when it opens, and again each time it reopens. A static
 alert isn't announced. Each opening remounts the content, so a repeated
 failure is announced again.
+
+Dismissing removes the button that was pressed. If the keyboard was on it,
+move focus somewhere sensible in `onDismiss` (the control that brings the
+alert back, or the content it sat above), or the next Tab starts from the
+top of the page.
