@@ -57,10 +57,9 @@ mode for free.
     `--ui-border-accent`, `-success`, `-warning`, `-danger`, or a hue (a
     phase, a brand) mixed at `--ui-border-tint`.
   - `--ui-border-control` over `--ui-fill-control`: an empty checkbox or
-    radio. A clear mid gray (oklch 0.8 light, 0.4 dark) over a soft flat
-    fill: a 16px box drawn with a frame's faint line can't be found at a
-    glance. It marks a thing to tick, not a frame, so it's the one neutral
-    edge that isn't the shared one; its label is always part of the target.
+    radio. The same edge as every field and button (it is
+    `--ui-border-strong`), over a soft flat fill, so the box is found by
+    its shape and shade together; its label is always part of the target.
 
   Nothing else at rest: a button and a card rest on the one edge. No
   hand-picked alphas, no other `color-mix` of the text color for an edge,
@@ -74,11 +73,12 @@ mode for free.
   Two rings stack into a heavier line, and an inset ring plus an outer one
   draws a double edge. Pick a real `border` or a ring
   `box-shadow` per box, never both.
-- **"On" is ink, like the primary button.** A ticked checkbox, a chosen
-  radio, a switch that's on and a slider's range fill with
-  `--ui-control-on` (the ink), with marks in `--ui-on-control-on`; a
-  pressed chip or a selected row takes the neutral selected fill. The
-  accent is for links, focus and status, not for "on".
+- **"On" is the one accent.** A ticked checkbox, a chosen radio, a switch
+  that's on, a slider's range and a chosen day fill with `--ui-control-on`
+  (the accent), with marks in `--ui-on-control-on`. One vivid color means
+  "on" everywhere; black reads as disabled or as a button. A pressed chip
+  or a selected row takes the neutral selected fill. Empty boxes and rings
+  take the one edge every field and button has.
 - **What floats is glass.** Menus, popovers, lists under a field and
   hover cards fill with `--ui-surface-glass` and set
   `backdrop-filter: blur(var(--ui-glass-blur))`: the surface at 96% over a
@@ -311,9 +311,9 @@ for real-looking services read as fake.
   - Ink (`--ui-ink`, the text color as a fill) is for the strongest action:
     primary buttons, send, tooltips.
   - Accent (`--ui-accent`) is a real accent: used sparingly, for links,
-    focus and information that isn't a status. "On" is ink, not accent
-    (section 1): a switch that's on, a checked box or radio and a slider's
-    range fill with `--ui-control-on`. Progress bars, meters, borders and
+    focus, information that isn't a status, and "on" (section 1): a switch
+    that's on, a checked box or radio and a slider's range fill with
+    `--ui-control-on`. It is the only hue that means "on". Progress bars, meters, borders and
     bands stay neutral. A knob (a switch or slider thumb) is the raised
     surface in light and a light gray in dark: a knob the color of the
     surface reads as a hole in a dark track. If two accented things compete

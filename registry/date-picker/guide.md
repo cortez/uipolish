@@ -51,7 +51,7 @@ The calendar follows the WAI-ARIA date picker dialog.
 - Always six weeks, so the panel's height never changes between months.
 - Days are 36px, 40px on touch screens. Today has a short line under the
   number.
-- A chosen day fills with `--ui-control-on`, the ink a ticked checkbox
+- A chosen day fills with `--ui-control-on`, the accent a ticked checkbox
   takes; point that token at `--ui-accent` for a colored one.
 - A range is a band behind the days that rounds off at each week's edge.
 

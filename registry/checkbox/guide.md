@@ -66,9 +66,9 @@ under the parent's label.
 
 | State | What you see | How |
 |---|---|---|
-| Empty | A soft flat fill (`--ui-fill-control`) under a clear mid-gray hairline edge (`--ui-border-control`, darker than a field's so a 16px box is found at a glance), found by shape and shade, not a hard line | |
-| Checked | Ink fill (`--ui-control-on`), tick in the color that reads on it | `data-state="on"` |
-| Mixed | Ink fill, dash | `indeterminate` → `data-state="mixed"` |
+| Empty | A soft flat fill (`--ui-fill-control`) under the same hairline edge as a field or an outline button (`--ui-border-control`), found by shape and shade together, not a hard line | |
+| Checked | Accent fill (`--ui-control-on`, the one accent), white tick | `data-state="on"` |
+| Mixed | Accent fill, dash | `indeterminate` → `data-state="mixed"` |
 | Hover | Edge one step darker; a filled box one step lighter | `@media (hover: hover)`, anywhere on the row |
 | Press | Fill one step further, in 80ms | `:active` |
 | Focus | A line just inside the box's edge, instantly | `:focus-visible` |

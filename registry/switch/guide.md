@@ -5,7 +5,7 @@ built on Base UI's `<Switch>`: a `role="switch"` element with a hidden
 checkbox beside it, so it submits with a form, Space toggles it, and screen
 readers say "on" and "off". It's the segmented control in miniature: a
 sunken track with a raised capsule in it that glides across, and on, the
-track takes `--ui-control-on`, the primary button's ink, like a checked box and a slider's range. The whole
+track takes `--ui-control-on`, the one accent, like a checked box and a slider's range. The whole
 row, label and description included, is the hit area.
 
 ```tsx
@@ -60,7 +60,7 @@ runs, and flip it back with a message if the save fails.
 | Hover | Track one step darker (on: one step lighter, as a checked box) | `@media (hover: hover)`, anywhere on the row |
 | Press | Track another step, in 80ms; the thumb reaches 3px toward its new side | `:active` on the row |
 | Focus | A line just inside the track's edge, in a color that reads on it, instantly | `:focus-visible` |
-| Busy | Presses ignored; after 300ms a 6px dot breathes in the thumb (muted off, ink on) | `busy` |
+| Busy | Presses ignored; after 300ms a 6px dot breathes in the thumb (muted off, accent on) | `busy` |
 | Disabled | Switch and label at 50%; the description stays readable to say why | `disabled` |
 
 On and off differ in position as well as color, so the state never rests on

@@ -237,11 +237,9 @@
      Colored ones mix a hue at --ui-border-tint: the status edges below, or
      a component's own hue (a phase, a brand) at the same strength. */
   --ui-border-strong: light-dark(oklch(0.954 0 0), oklch(0.26 0 0));
-  /* An empty checkbox or radio: a 16px box with a frame's faint line
-     could not be found at a glance, so its edge is a clear mid gray over
-     the soft fill. The one exception to the single edge: it marks a thing
-     to tick, not a frame around content. */
-  --ui-border-control: light-dark(oklch(0.8 0 0), oklch(0.4 0 0));
+  /* An empty checkbox or radio: the same edge as a field or an outline
+     button, over the soft fill, so every outline on a form is one line. */
+  --ui-border-control: var(--ui-border-strong);
   --ui-fill-control: var(--ui-fill-solid);
   --ui-border: var(--ui-border-strong);
   --ui-border-subtle: var(--ui-border);
@@ -263,11 +261,10 @@
   /* Secondary text on ink (a shortcut in a tooltip): the muted step. */
   --ui-on-ink-muted: color-mix(in oklch, var(--ui-on-ink) 60%, var(--ui-ink));
   /* A control that's on (a ticked checkbox, a chosen radio, a switch, a
-     slider's range) fills with the primary button's ink, so the controls
-     read as one set with buttons and fields. Point it at --ui-accent for a
-     colored "on". */
-  --ui-control-on: var(--ui-ink);
-  --ui-on-control-on: var(--ui-on-ink);
+     slider's range, the chosen day) fills with the one accent, so "on" is
+     the same vivid color everywhere and never reads as a disabled black. */
+  --ui-control-on: var(--ui-accent);
+  --ui-on-control-on: var(--ui-on-accent);
   /* Vivid hues: red, blue, green and orange near the most saturated a
      screen shows, tuned per theme; fills and icons hold 3:1, text 4.5:1. */
   --ui-accent: light-dark(oklch(0.56 0.245 263), oklch(0.56 0.23 262));

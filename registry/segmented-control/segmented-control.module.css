@@ -103,10 +103,9 @@
   }
 }
 
-/* Pressing another option answers at once, before the pill arrives: its
-   label comes up and a faint fill marks where the pill will land. */
+/* Pressing another option brings its label up at once; no fill behind
+   it, which flashed under the pill as it arrived. */
 .root[data-ready] .option:active:not([data-checked], [data-disabled]) {
-  background: var(--ui-fill);
   color: var(--ui-foreground);
   transition-duration: var(--ui-dur-press);
 }

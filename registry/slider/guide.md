@@ -2,7 +2,7 @@
 
 A slider in the family's shapes: a label row with the value at its end, over
 a sunken track like the segmented control's and a raised capsule thumb like
-its pill. The range from the start to the thumb is `--ui-control-on`, the primary button's ink, the same as
+its pill. The range from the start to the thumb is `--ui-control-on`, the one accent, the same as
 a switch that's on and a checked box. The behavior is built on Base UI's
 `<Slider>`: its control is the whole 32px row under the label, and its
 thumb holds a real `<input type="range">`, so the keyboard, pointer, touch
