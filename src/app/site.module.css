@@ -53,6 +53,13 @@
   scroll-margin-top: var(--ui-space-6);
 }
 
+/* A line of text and the one thing it introduces (a command under "ask
+   your agent:"): close together, so each pair reads as one group. */
+.pair {
+  display: grid;
+  gap: var(--ui-space-3);
+}
+
 /* A section of component cards: the whole column, not the text measure. */
 .wide {
   max-width: none;
@@ -151,13 +158,11 @@
   white-space: normal;
 }
 
-/* On a phone a row's label takes only its own width, so the value gets
-   the rest rather than pushing the table sideways. */
-@media (max-width: 480px) {
-  .table th[scope="row"] {
-    width: 0;
-    min-width: 0;
-  }
+/* A row's label ("Brings in") takes only its own width, so the value
+   sits right after it instead of half the table away. */
+.table th[scope="row"] {
+  width: 0;
+  min-width: 0;
 }
 
 /* A line between rows, never above the first: the box's own edge is there.

@@ -14,7 +14,7 @@ export const infoMetadata = (page: InfoPage): Metadata =>
 export function InfoPageView({ page }: { page: InfoPage }) {
   return (
     <SiteLayout>
-      <header className={site.intro}>
+      <header className={`${site.intro} ${styles.head}`}>
         <h1 className={site.title}>{page.heading}</h1>
       </header>
       <article className={`${prose.prose} ${styles.body}`}>

@@ -6,7 +6,8 @@
   display: flex;
   align-items: center;
   gap: var(--ui-space-3);
-  width: min(560px, 100%);
+  /* The column it sits in, so it lines up with the table and text around it. */
+  width: 100%;
   padding: var(--pad);
   border-radius: var(--ui-radius-lg);
   background: var(--ui-surface);

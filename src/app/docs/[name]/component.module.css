@@ -17,13 +17,15 @@
   margin-bottom: 0;
 }
 
-/* Guide headings at every level are the site's heading style: body size
-   in medium. The space above them, not their size, tells the levels apart. */
+/* Guide headings at every level: body size at the title's weight, in the
+   text color. At body weight they read as one more paragraph; the space
+   above them, not their size, tells the levels apart. */
 .prose :is(h2, h3, h4) {
   margin: var(--ui-space-7) 0 var(--ui-space-3);
+  color: var(--ui-foreground);
   font-size: var(--ui-text-md);
   line-height: var(--ui-leading-md);
-  font-weight: var(--ui-weight-medium);
+  font-weight: var(--ui-weight-title);
   letter-spacing: normal;
 }
 

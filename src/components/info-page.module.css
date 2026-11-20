@@ -4,3 +4,13 @@
 .body.body {
   padding-top: 0;
 }
+
+/* A short page: the title's lede distance to the first line, and sections
+   a subsection apart rather than a long guide's full section gap. */
+.head.head {
+  padding-bottom: var(--ui-space-4);
+}
+
+.body.body h2 {
+  margin-top: var(--ui-space-7);
+}

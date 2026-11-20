@@ -85,25 +85,20 @@ export default async function ComponentPage({
         <h2 id="setup" className={site.heading}>
           Installation
         </h2>
-        <p className={site.text}>
-          With UI Polish <Link href="/#get-started">connected</Link>, ask your agent:
-        </p>
-        <div className={site.actions}>
+        <div className={site.pair}>
+          <p className={site.text}>
+            With UI Polish <Link href="/#get-started">connected</Link>, ask your agent:
+          </p>
           <InstallCommand
             command={`Add the UI Polish ${meta.title.toLowerCase()} to this project.`}
             label="Prompt"
           />
         </div>
-        <p className={site.text}>
-          Or with <Link href="/#get-started">the shadcn CLI</Link>:
-        </p>
-        <div className={site.actions}>
-          <InstallCommand
-            command={
-              `npx shadcn@latest add https://uipolish.com/r/${meta.name}.json`
-            }
-            label="shadcn command"
-          />
+        <div className={site.pair}>
+          <p className={site.text}>
+            Or with <Link href="/#get-started">the shadcn CLI</Link>:
+          </p>
+          <InstallCommand command={`npx shadcn@latest add https://uipolish.com/r/${meta.name}.json`} label="shadcn command" />
         </div>
         {/* Nothing to list for a component that stands alone: no empty box. */}
         {(packages.length > 0 || deps.length > 0) && (
