@@ -1,4 +1,4 @@
-// Pulls the paid screens (cortez/uipolish-pro, private) into ./pro before a
+// Pulls the paid screens (uipolish/uipolish-pro, private) into ./pro before a
 // build, so uipolish.com can render their live previews and serve them to
 // licensed MCP requests. ./pro is git-ignored: nothing paid is ever
 // committed to this public repo.
@@ -17,7 +17,7 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const out = join(root, "pro");
 const local = resolve(root, process.env.PRO_DIR ?? "../uipolish-pro");
-const repo = process.env.PRO_REPO ?? "cortez/uipolish-pro";
+const repo = process.env.PRO_REPO ?? "uipolish/uipolish-pro";
 const token = process.env.SCREENS_GITHUB_TOKEN?.trim();
 
 rmSync(out, { recursive: true, force: true });
