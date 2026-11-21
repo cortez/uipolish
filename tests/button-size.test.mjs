@@ -23,7 +23,6 @@ const ALLOW = [
   { file: "src/previews/switch.tsx", match: '<Button variant="secondary" size="sm">', reason: "Demo of the small switch beside the small button it pairs with." },
   { file: "src/components/install-command.tsx", match: "className={styles.copy}", reason: "The copy button inside the install command's pill." },
   { file: "src/components/site-search.tsx", match: 'aria-label="Search components"', reason: "Search, an icon in the top bar beside the 32px theme toggle and GitHub." },
-  { file: "src/components/site-head.tsx", match: "href={DONATE_URL}", reason: "Support, a quiet text link beside the 32px theme toggle in the page header." },
   { file: "src/components/site-head.tsx", match: 'aria-label="UI Polish on GitHub"', reason: "GitHub, an icon beside the 32px theme toggle in the page header." },
   { file: "registry/sidebar/sidebar.tsx", match: "aria-label={label}", reason: "The sidebar toggle: an icon button in the sidebar's 32px header strip." },
   { file: "registry/response-actions/response-actions.tsx", match: "className={styles.action}", reason: "Copy, thumbs, Retry and Skip: icon capsules in the compact action row under a reply." },

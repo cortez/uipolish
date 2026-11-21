@@ -176,11 +176,6 @@ In a browser with a built-in agent (`document.modelContext`), every page of
 uipolish.com offers `list_components`, `get_component` and `get_rules`, the
 same read-only tools as the MCP server.
 
-## Support
-
-UI Polish is free and open source. If it saves you time, you can
-[support it](https://buy.polar.sh/polar_cl_Ne3B69dlezuutkrSoXOkzyIERxDUwm34SFCyX02eXVx).
-
 ## License
 
 MIT. See [LICENSE](LICENSE). The site's fonts (DM Sans and DM Mono) are under
