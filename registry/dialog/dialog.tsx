@@ -38,6 +38,9 @@ function firstFocusable(root: Element | null) {
   return null;
 }
 
+/** How far above center a shrunk dialog may sit before it glides down. */
+const SHRINK_SLACK = 48;
+
 /** The nearest themed subtree, so the portaled panel keeps its tokens. */
 function themeRoot(el: Element | null) {
   const root = el?.closest<HTMLElement>("[data-theme]");
@@ -100,9 +103,10 @@ export function Modal({
 
   // Centered as it opens; from then on its top edge stays where it opened,
   // so content that grows or shrinks moves only what's below it (the height
-  // eases in AnimatedSize). It recenters only when it would no longer fit,
-  // or when the window resizes. Docked at the bottom on a phone, the bottom
-  // edge stays put already.
+  // eases in AnimatedSize). It recenters when it would no longer fit, when a
+  // shrink has settled and left it well above center, or when the window
+  // resizes. Docked at the bottom on a phone, the bottom edge stays put
+  // already.
   const pinRef = useCallback((popup: HTMLDivElement | null) => {
     const viewport = popup?.parentElement;
     if (!popup || !viewport) return;
@@ -119,15 +123,11 @@ export function Modal({
     let frame = requestAnimationFrame(() => {
       if (!docked()) pin(centered());
     });
-    const fit = () => {
-      if (docked() || !viewport.hasAttribute("data-pinned")) return;
-      const top = parseFloat(viewport.style.getPropertyValue("--dialog-top")) || 0;
-      if (top + popup.offsetHeight <= room()) return;
-      const next = Math.round(centered());
+    /** Moves the pinned top to `next`, gliding from where it was (added on
+     *  top of any glide still running, since the height may keep easing). */
+    const glideTo = (top: number, next: number) => {
       pin(next);
-      // It glides up from where it was instead of jumping there. Added on top
-      // of any glide still running, since the height may keep easing.
-      if (top - next < 1 || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (Math.abs(top - next) < 1 || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const cs = getComputedStyle(popup);
       popup.animate(
         { translate: [`0 ${top - next}px`, "0 0"] },
@@ -137,6 +137,33 @@ export function Modal({
           composite: "add",
         },
       );
+    };
+    let lastHeight = popup.offsetHeight;
+    let shrank = false;
+    let settle = 0;
+    const fit = () => {
+      if (docked() || !viewport.hasAttribute("data-pinned")) return;
+      const top = parseFloat(viewport.style.getPropertyValue("--dialog-top")) || 0;
+      const height = popup.offsetHeight;
+      if (height < lastHeight) shrank = true;
+      lastHeight = height;
+      // Grown past the window: up, at once, so nothing is cut off.
+      if (top + height > room()) {
+        shrank = false;
+        glideTo(top, Math.round(centered()));
+        return;
+      }
+      // Shrunk: once the height has stopped easing, a panel left well above
+      // center (it opened tall, a loading state collapsed, a step is shorter)
+      // glides down to center. Growing never moves it.
+      window.clearTimeout(settle);
+      if (!shrank) return;
+      settle = window.setTimeout(() => {
+        shrank = false;
+        const now = parseFloat(viewport.style.getPropertyValue("--dialog-top")) || 0;
+        const next = Math.round(centered());
+        if (next - now > SHRINK_SLACK) glideTo(now, next);
+      }, 120);
     };
     const observer = new ResizeObserver(fit);
     observer.observe(popup);
@@ -150,6 +177,7 @@ export function Modal({
     addEventListener("resize", onResize);
     return () => {
       cancelAnimationFrame(frame);
+      window.clearTimeout(settle);
       observer.disconnect();
       removeEventListener("resize", onResize);
     };
