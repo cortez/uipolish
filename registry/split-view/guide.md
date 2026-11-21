@@ -80,7 +80,7 @@ container inside, with `height: 100%`.
 | Dragging | Line in the hover edge, grip in ink; the resize cursor stays even off the divider | Content takes no pointer, so an iframe or a selection can't steal the drag |
 | Focused (keyboard) | As dragging, with the focus ring around the grip | |
 | At the view's edge (the pane past it is closed) | The hit area and grip move inside the edge, where they can be reached | Closed: hidden and `inert` |
-| Narrow (`switch`) | Hidden | One pane, with a segmented control above to switch |
+| Narrow (`switch`) | Hidden | One pane, with a segmented control above to switch. It follows the view's own width wherever it sits, with no size container needed around it |
 
 ## Layout
 

@@ -52,7 +52,7 @@ moves. Every row is one height in every state.
 | `leading` | An avatar, icon or thumbnail. Decorative: the title names the row |
 | `title` | The row's name. It wraps when it runs long, and a long unbroken word breaks inside itself. On a link or button row it's the accessible name |
 | `description` | Smaller text under the title; wraps like the title. Read as the row's description. For a disabled row, say why here |
-| `trailing` | A value, badge or control after the text. Plain text here is read after the description |
+| `trailing` | A value, badge or control after the text. Plain text here is read after the description. A control here takes its own clicks over a row link: its outermost element is lifted above the link, so a switch, menu or button keeps its own layout inside |
 | `actions` | Secondary actions, usually `ListAction`s. Shown on hover and focus, always on touch |
 | `chevron` | A chevron at the end, for rows that open something deeper. Nudges 2px on hover and focus |
 | `href`, `target`, `rel`, `as` | Makes the row a link. `as` takes your router's link component |

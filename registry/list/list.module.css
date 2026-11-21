@@ -145,8 +145,11 @@
   white-space: nowrap;
 }
 
-/* Controls sit above the stretched link so they take their own clicks. */
-.trailing :is(a, button, input, select, textarea, label, [tabindex]),
+/* Controls sit above the stretched link so they take their own clicks.
+   Only the outermost element of each control is lifted, which carries the
+   rest with it: lifting the parts inside one (a switch's absolutely placed
+   track) would pull them out of their own layout. */
+.trailing > :is(a, button, input, select, textarea, label, [tabindex], :has(a, button, input, select, textarea, [tabindex])),
 .actions > * {
   position: relative;
   z-index: 2;

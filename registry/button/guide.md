@@ -50,10 +50,11 @@ applies to it too:
 The same timing is exported as `useDelayedBusy(busy)` for busy text outside a
 button.
 
-**Icon buttons are capsules.** A button whose only child is one element
-(an icon) and that has an `aria-label` is drawn 1.375 times as wide as it is
+**Icon buttons are capsules.** A button whose only child is one icon (an
+`<svg>` or a component such as `Icon`) and that has an `aria-label` is drawn 1.375 times as wide as it is
 tall (`--ui-capsule`), not as a circle, so every button shares one shape. A
-button with an icon and text is an ordinary button.
+button with an icon and text is an ordinary button, and so is one whose
+only child is a text element (`<code>`, `<span>`), whatever its label.
 
 **Busy vs disabled.** Busy means "working on it": the button keeps focus,
 stays in the tab order and ignores presses. Disabled means "you can't do this
