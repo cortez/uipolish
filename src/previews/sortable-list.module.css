@@ -1,0 +1,12 @@
+/* A short window onto a long list, so its edges scroll while a row is held.
+   The rows sit 4px in from its edge, their corners concentric with it. */
+.scroll {
+  height: 296px;
+  border-radius: var(--ui-radius-lg);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+}
+
+.scroll .inner.inner {
+  margin: 0;
+  padding: var(--ui-space-1);
+}

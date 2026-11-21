@@ -72,14 +72,15 @@ One folder per component in `registry/`: the React component, its CSS module
 (tokens only), and a guide covering when to use it, when not to, every state,
 motion specs, accessibility and before/after code.
 
-**Components (47):** Accordion, Alert, Avatar, Badge, Breadcrumbs, Button,
-Checkbox, Chip, Code input, Combobox, Command palette, Context menu, Copy
-field, Data table, Date picker, Dialog, Drawer, Dropdown menu, Empty state,
-File upload, Hover card, Inline edit, Kbd, List, Nav rail, Number input,
-Pagination, Popover, Progress, Prompt input, Radio group, Response actions,
-Scroll area, Search field, Segmented control, Select, Sidebar, Skeleton,
-Slider, Switch, Tabs, Text field, Textarea, Theme toggle, Toast, Tooltip and
-Tree.
+**Components (55):** Accordion, Alert, Avatar, Badge, Breadcrumbs, Button,
+Calendar, Checkbox, Chip, Code input, Combobox, Command palette, Context
+menu, Copy field, Data table, Date picker, Dialog, Drawer, Dropdown menu,
+Empty state, File upload, Filter bar, Hover card, Inline edit, Kanban board,
+Kbd, List, Nav rail, Number input, Pagination, Popover, Progress, Prompt
+input, Radio group, Response actions, Scroll area, Search field, Segmented
+control, Select, Sidebar, Skeleton, Slider, Sortable list, Split view,
+Stepper, Switch, Tabs, Tag input, Text field, Textarea, Theme toggle,
+Timeline, Toast, Tooltip and Tree.
 
 **Agent kit (12):** components for AI products, grouped in the docs by
 `"kit": "agent"` in `meta.json`: Agent question, Code block, Diff view,

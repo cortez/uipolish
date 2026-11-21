@@ -1,3 +1,4 @@
+import { SCREENS } from "@pro/index";
 import { AI_COMPONENTS, sortComponents } from "@/components/component-index";
 import { getFaq } from "@/lib/faq";
 import { getComponentGuide, getRule, listComponents, listRuleTopics } from "@/lib/content";
@@ -53,6 +54,7 @@ export async function llmsText(full: boolean): Promise<string> {
     `- Design rules: the rules as one file: a Claude Code skill (${abs("/skill.md")}) or for AGENTS.md (${abs("/rules.md")})`,
     `- shadcn/ui: install with \`npx shadcn add\` (registry at ${abs("/r/registry.json")})`,
     `- [OpenAPI spec](${abs("/openapi.json")}): the REST API, for agents without MCP`,
+    ...(SCREENS.copper ? [`- [Example app](${abs("/example")}): Copper, an AI assistant for a caterer, built only from these components`] : []),
     `- [Contact](${abs("/contact")})`,
   );
 

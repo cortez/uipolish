@@ -1,0 +1,493 @@
+.root {
+  --stepper-mark: 24px;
+  /* From a mark's edge to the line beside it, at both ends. */
+  --stepper-reach: var(--ui-space-2);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  min-width: 0;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+/* ---------- The full stepper ---------- */
+
+.list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  position: relative;
+  min-width: 0;
+}
+
+.list[data-orientation="vertical"] .step {
+  padding-bottom: var(--ui-space-5);
+}
+
+.list[data-orientation="vertical"] .step:last-child {
+  padding-bottom: 0;
+}
+
+.head {
+  position: relative;
+  display: grid;
+  gap: var(--ui-space-2);
+  justify-items: start;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  padding-inline-end: var(--ui-space-3);
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+}
+
+.list[data-orientation="vertical"] .head {
+  grid-template-columns: var(--stepper-mark) minmax(0, 1fr);
+  column-gap: var(--ui-space-3);
+  align-items: start;
+}
+
+.text {
+  display: grid;
+  gap: var(--ui-gap-tight);
+  min-width: 0;
+}
+
+/* Beside the mark, the title's first line sits on the mark's center. */
+.list[data-orientation="vertical"] .text {
+  padding-top: calc((var(--stepper-mark) - var(--ui-leading-md)) / 2);
+}
+
+.title {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-regular);
+  line-height: var(--ui-leading-md);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.step:is([data-status="complete"], [data-status="current"], [data-status="error"]) .title {
+  color: var(--ui-foreground);
+}
+
+.step[data-status="current"] .title,
+.head[aria-current="step"] .title {
+  font-weight: var(--ui-weight-title);
+}
+
+.step[data-status="error"] .title {
+  color: var(--ui-danger-text);
+}
+
+.step[data-status="skipped"] .title {
+  color: var(--ui-subtle);
+}
+
+.description {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.step[data-status="error"] .description {
+  color: var(--ui-danger-text);
+}
+
+/* ---------- Going back ---------- */
+
+button.head {
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+@media (hover: hover) {
+  button.head:hover .title {
+    color: var(--ui-muted);
+  }
+}
+
+button.head:active {
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+button.head:focus {
+  outline: none;
+}
+
+/* The ring goes around the mark, the part that reads as the control; a
+   box around the whole step would cross the line beside it. */
+button.head:focus-visible .mark {
+  outline: var(--ui-ring-focus);
+  /* The ring's color comes from the step's text, not the mark's ink. */
+  outline-color: color-mix(in oklch, var(--ui-foreground) 45%, transparent);
+  outline-offset: 2px;
+}
+
+/* ---------- The mark ---------- */
+
+.mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--stepper-mark);
+  height: var(--stepper-mark);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill-control);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-control);
+  color: var(--ui-muted);
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color),
+    color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.mark[data-status="current"] {
+  background: var(--ui-surface);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-foreground);
+  color: var(--ui-foreground);
+}
+
+.mark[data-status="complete"] {
+  background: var(--ui-ink);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-ink);
+  color: var(--ui-on-ink);
+}
+
+.mark[data-status="error"] {
+  background: var(--ui-danger);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-danger);
+  color: var(--ui-on-danger);
+}
+
+.mark[data-status="skipped"] {
+  color: var(--ui-subtle);
+}
+
+/* Forward, the line fills first and the next mark lights as it arrives. */
+.root[data-direction="forward"] .mark[data-status="current"] {
+  transition-delay: calc(var(--ui-dur-glide) / 2);
+}
+
+/* The number, check, "!" and dash share one cell and trade places, so the
+   mark never changes size. */
+.mark > * {
+  grid-area: 1 / 1;
+  opacity: 0;
+  scale: 0.97;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.mark[data-status="upcoming"] > [data-layer="number"],
+.mark[data-status="current"] > [data-layer="number"],
+.mark[data-status="complete"] > [data-layer="check"],
+.mark[data-status="error"] > [data-layer="error"],
+.mark[data-status="skipped"] > [data-layer="skipped"] {
+  opacity: 1;
+  scale: 1;
+  transition:
+    opacity var(--ui-dur-fast) var(--ui-ease-enter),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+/* A figure on its own: equal widths so 1 and 4 sit alike in the circle. */
+.layer {
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-title);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.check,
+.glyph {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  /* The line of a 16px icon, kept at 14px. */
+  --ui-icon-stroke: calc(var(--ui-icon-stroke-medium) * 16 / 14);
+}
+
+.glyph {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ui-icon-stroke);
+  stroke-linecap: round;
+}
+
+/* The icon set's check, drawn on along its length (12.73 units) and
+   erased quickly when the step is reopened. */
+.check path {
+  stroke-dasharray: 12.73 13;
+  stroke-dashoffset: 12.73;
+  transition: stroke-dashoffset var(--ui-dur-instant) var(--ui-ease-exit);
+}
+
+.mark[data-status="complete"] .check path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--ui-dur-base) var(--ui-ease-draw) calc(var(--ui-dur-instant) / 2);
+}
+
+/* ---------- The line between marks ---------- */
+
+.connector {
+  position: absolute;
+  overflow: hidden;
+  background: var(--ui-border-strong);
+  pointer-events: none;
+}
+
+.list[data-orientation="horizontal"] .connector {
+  top: calc(var(--stepper-mark) / 2);
+  inset-inline: calc(var(--stepper-mark) + var(--stepper-reach)) var(--stepper-reach);
+  height: var(--ui-hairline);
+}
+
+.list[data-orientation="vertical"] .connector {
+  top: calc(var(--stepper-mark) + var(--stepper-reach));
+  bottom: var(--stepper-reach);
+  inset-inline-start: calc(var(--stepper-mark) / 2 - var(--ui-hairline) / 2);
+  width: var(--ui-hairline);
+}
+
+/* Scaled from the step it leaves: the line reads as travel toward the next. */
+.fill {
+  position: absolute;
+  inset: 0;
+  background: var(--ui-foreground);
+  transform-origin: left center;
+  scale: 0 1;
+  transition: scale var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+:is([dir="rtl"]) .fill {
+  transform-origin: right center;
+}
+
+.list[data-orientation="vertical"] .fill {
+  transform-origin: center top;
+  scale: 1 0;
+}
+
+.step[data-filled] .fill {
+  scale: 1;
+}
+
+/* ---------- Compact: dots and a count ---------- */
+
+.compact {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  min-width: 0;
+}
+
+.track {
+  --stepper-slot: 20px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.dots {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slot {
+  display: grid;
+  place-items: center;
+  width: var(--stepper-slot);
+  height: var(--ui-control-sm);
+}
+
+.dot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--stepper-slot);
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.dot::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill-strong);
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.slot[data-filled] .dot::before {
+  background: var(--ui-foreground);
+}
+
+.slot[data-status="error"] .dot::before {
+  background: var(--ui-danger);
+}
+
+.slot[data-status="skipped"] .dot::before {
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-subtle);
+}
+
+button.dot {
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: var(--ui-radius-full);
+}
+
+@media (hover: hover) {
+  button.dot:hover::before {
+    background: var(--ui-muted);
+  }
+}
+
+button.dot:active::before {
+  scale: 0.97;
+  transition-duration: var(--ui-dur-press);
+}
+
+button.dot:focus {
+  outline: none;
+}
+
+button.dot:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+@media (pointer: coarse) {
+  button.dot::after {
+    content: "";
+    position: absolute;
+    inset: calc((var(--ui-control-md) - 100%) / -2) 0;
+  }
+}
+
+/* Glides along the track, the way a tab's pill does: no overshoot, so it
+   never swings past the last dot. */
+.indicator {
+  position: absolute;
+  top: calc(50% - 3px);
+  inset-inline-start: 2px;
+  width: calc(var(--stepper-slot) - 4px);
+  height: 6px;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-foreground);
+  translate: calc(var(--at) * var(--stepper-slot)) 0;
+  pointer-events: none;
+  transition:
+    translate var(--ui-dur-glide) var(--ui-ease-glide),
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+:is([dir="rtl"]) .indicator {
+  translate: calc(var(--at) * var(--stepper-slot) * -1) 0;
+}
+
+.indicator[data-status="error"] {
+  background: var(--ui-danger);
+}
+
+/* Every step done: the pill settles into the last dot. */
+.indicator[data-done] {
+  opacity: 0;
+}
+
+.count {
+  min-width: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+}
+
+/* ---------- Which form shows ---------- */
+
+.root[data-variant="auto"][data-orientation="horizontal"] {
+  container-type: inline-size;
+}
+
+.root[data-variant="auto"] > .compact {
+  display: none;
+}
+
+/* Under 128px a step, titles would wrap a word to a line: the row becomes
+   dots and a count. Container widths can't read a variable, so one rule
+   per count. */
+@container (width < 256px) {
+  .root[data-variant="auto"][data-orientation="horizontal"][data-count="2"] > .list { display: none; }
+  .root[data-variant="auto"][data-orientation="horizontal"][data-count="2"] > .compact { display: flex; }
+}
+@container (width < 384px) {
+  .root[data-variant="auto"][data-orientation="horizontal"][data-count="3"] > .list { display: none; }
+  .root[data-variant="auto"][data-orientation="horizontal"][data-count="3"] > .compact { display: flex; }
+}
+@container (width < 512px) {
+  .root[data-variant="auto"][data-orientation="horizontal"][data-count="4"] > .list { display: none; }
+  .root[data-variant="auto"][data-orientation="horizontal"][data-count="4"] > .compact { display: flex; }
+}
+@container (width < 640px) {
+  .root[data-variant="auto"][data-orientation="horizontal"][data-count="5"] > .list { display: none; }
+  .root[data-variant="auto"][data-orientation="horizontal"][data-count="5"] > .compact { display: flex; }
+}
+@container (width < 768px) {
+  .root[data-variant="auto"][data-orientation="horizontal"][data-count="6"] > .list { display: none; }
+  .root[data-variant="auto"][data-orientation="horizontal"][data-count="6"] > .compact { display: flex; }
+}
+@container (width < 896px) {
+  .root[data-variant="auto"][data-orientation="horizontal"][data-count="7"] > .list { display: none; }
+  .root[data-variant="auto"][data-orientation="horizontal"][data-count="7"] > .compact { display: flex; }
+}
+@container (width < 1024px) {
+  .root[data-variant="auto"][data-orientation="horizontal"][data-count="8"] > .list { display: none; }
+  .root[data-variant="auto"][data-orientation="horizontal"][data-count="8"] > .compact { display: flex; }
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill,
+  .indicator {
+    transition-property: background-color, opacity;
+  }
+  .mark > *,
+  .root[data-direction="forward"] .mark[data-status="current"] {
+    transition-delay: 0s;
+  }
+  .mark > * {
+    transition-property: opacity;
+  }
+  .check path,
+  .mark[data-status="complete"] .check path {
+    transition: none;
+  }
+  button.head,
+  .dot::before {
+    transition-property: background-color, box-shadow;
+  }
+}

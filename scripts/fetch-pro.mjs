@@ -9,7 +9,7 @@
 //   repo, set in Vercel), the default branch's tarball is downloaded.
 // - Otherwise ./pro is left empty and the site builds without screens.
 import { execFileSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -41,3 +41,24 @@ if (existsSync(join(local, "screens"))) {
   console.log("pro: no local checkout and no SCREENS_GITHUB_TOKEN; building without screens");
 }
 mkdirSync(join(out, "screens"), { recursive: true });
+
+// An index the site imports from (@pro/index): every screen whose folder
+// holds <name>.tsx, by name. Empty when there are none, so the site still
+// builds and its screen pages simply aren't there.
+const names = readdirSync(join(out, "screens"), { withFileTypes: true })
+  .filter((d) => d.isDirectory() && existsSync(join(out, "screens", d.name, `${d.name}.tsx`)))
+  .map((d) => d.name)
+  .sort();
+const ident = (n) => "S_" + n.replace(/[^a-z0-9]/gi, "_");
+writeFileSync(
+  join(out, "index.ts"),
+  [
+    "// Written by scripts/fetch-pro.mjs. Do not edit.",
+    'import type { ComponentType } from "react";',
+    ...names.map((n) => `import ${ident(n)} from "./screens/${n}/${n}";`),
+    "",
+    `export const SCREENS: Record<string, ComponentType> = { ${names.map((n) => `${JSON.stringify(n)}: ${ident(n)}`).join(", ")} };`,
+    "",
+  ].join("\n"),
+);
+console.log(`pro: ${names.length} screen${names.length === 1 ? "" : "s"}${names.length ? ": " + names.join(", ") : ""}`);

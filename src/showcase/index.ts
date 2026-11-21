@@ -13,6 +13,7 @@ export const SHOWCASES: Record<string, ComponentType> = {
   "badge": dynamic(() => import("./badge")),
   "breadcrumbs": dynamic(() => import("./breadcrumbs")),
   "button": dynamic(() => import("./button")),
+  "calendar": dynamic(() => import("./calendar")),
   "checkbox": dynamic(() => import("./checkbox")),
   "chip": dynamic(() => import("./chip")),
   "code-block": dynamic(() => import("./code-block")),
@@ -60,6 +61,7 @@ export const SHOWCASES: Record<string, ComponentType> = {
   "text-field": dynamic(() => import("./text-field")),
   "text-morph": dynamic(() => import("./text-morph")),
   "theme-toggle": dynamic(() => import("./theme-toggle")),
+  "timeline": dynamic(() => import("./timeline")),
   "toast": dynamic(() => import("./toast")),
   "tool-steps": dynamic(() => import("./tool-steps")),
   "tooltip": dynamic(() => import("./tooltip")),
@@ -70,6 +72,12 @@ export const SHOWCASES: Record<string, ComponentType> = {
   "terminal-output": dynamic(() => import("./terminal-output")),
   "textarea": dynamic(() => import("./textarea")),
   "tree": dynamic(() => import("./tree")),
+  "tag-input": dynamic(() => import("./tag-input")),
+  "filter-bar": dynamic(() => import("./filter-bar")),
+  "kanban": dynamic(() => import("./kanban")),
+  "sortable-list": dynamic(() => import("./sortable-list")),
+  "split-view": dynamic(() => import("./split-view")),
+  "stepper": dynamic(() => import("./stepper")),
 };
 
 /** Components that are already a box of their own: on the home page they

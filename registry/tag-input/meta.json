@@ -1,0 +1,17 @@
+{
+  "name": "tag-input",
+  "title": "Tag input",
+  "summary": "Many values in one field: type and press Enter or a comma, or paste a whole list. Tags wrap onto new rows as the field grows, arrive with a quick fade, and the rest slide over when one leaves.",
+  "blurb": "Many values in one field: recipients, labels, guests.",
+  "version": "0.1.0",
+  "dependencies": [
+    "field",
+    "icons",
+    "listbox",
+    "text",
+    "text-morph"
+  ],
+  "packages": [
+    "@base-ui/react@^1.9.0"
+  ]
+}

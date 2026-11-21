@@ -1,0 +1,141 @@
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+/* A small app window: the split fills it, and each pane draws its own surface. */
+.frame {
+  height: 520px;
+  overflow: clip;
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-edge);
+}
+
+.doc {
+  height: 100%;
+  padding: var(--ui-space-5) var(--ui-space-6);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--ui-canvas);
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+  outline: none;
+}
+
+.doc:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.list {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  height: 100%;
+  margin: 0;
+  padding: var(--ui-space-2);
+  overflow-y: auto;
+  list-style: none;
+  background: var(--ui-canvas);
+}
+
+.row {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  padding: var(--ui-space-2) var(--ui-pad-row);
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  background: transparent;
+  color: var(--ui-foreground);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .row:hover {
+    background: var(--ui-fill);
+  }
+}
+
+.row[aria-current] {
+  background: var(--ui-fill-strong);
+}
+
+.row:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.rowTitle {
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.rowMeta {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.detail {
+  display: grid;
+  align-content: start;
+  gap: var(--ui-space-3);
+  height: 100%;
+  padding: var(--ui-space-5);
+  overflow-y: auto;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-title);
+  line-height: var(--ui-leading-md);
+}
+
+.facts {
+  display: grid;
+  gap: var(--ui-space-2);
+  margin: 0;
+}
+
+.facts > div {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: var(--ui-space-3);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+}
+
+.facts dt {
+  color: var(--ui-muted);
+}
+
+.facts dd {
+  margin: 0;
+}
+
+.log {
+  display: grid;
+  gap: var(--ui-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+/* On a phone the switch above the panes does this job. */
+@media (max-width: 640px) {
+  .hide {
+    display: none;
+  }
+}

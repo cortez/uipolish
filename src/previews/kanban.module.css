@@ -1,0 +1,23 @@
+.board {
+  height: 520px;
+}
+
+/* The date and the owner lead; the status sits at the far end. */
+.status {
+  margin-inline-start: auto;
+}
+
+.date {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+}
+
+.date > svg {
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+}
+
+.figure {
+  font-variant-numeric: tabular-nums;
+}

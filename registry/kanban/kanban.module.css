@@ -1,0 +1,413 @@
+/* A board of lanes. Each lane is a soft fill with a header and a column of
+   cards that scrolls on its own; the board scrolls sideways. Cards sit
+   the lane's padding in from its edge, their corners concentric with it. */
+.root {
+  --kanban-column: 272px;
+  --kanban-pad: var(--ui-space-2);
+  --kanban-gap: var(--ui-space-2);
+  --card-pad: var(--ui-space-3);
+  --card-radius: calc(var(--ui-radius-lg) - var(--kanban-pad));
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  min-width: 0;
+  /* Set your own height; the lanes fill it and scroll inside. */
+  height: 560px;
+  container-type: inline-size;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+}
+
+/* Registered so the edge fades can follow the scroll. */
+@property --board-start {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+@property --board-end {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+.board {
+  --board-fade: var(--ui-space-6);
+  display: flex;
+  gap: var(--ui-space-3);
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+  /* The side with more lanes past it fades; a side at its end is crisp. */
+  mask-image: linear-gradient(
+    var(--board-direction, to right),
+    rgb(0 0 0 / var(--board-start)),
+    black var(--board-fade),
+    black calc(100% - var(--board-fade)),
+    rgb(0 0 0 / var(--board-end))
+  );
+}
+
+:is([dir="rtl"]) .board {
+  --board-direction: to left;
+}
+
+@supports (animation-timeline: scroll()) {
+  .board {
+    animation:
+      board-start linear both,
+      board-end linear both;
+    animation-timeline: scroll(self inline), scroll(self inline);
+    animation-range:
+      0 var(--board-fade),
+      calc(100% - var(--board-fade)) 100%;
+  }
+}
+
+@keyframes board-start {
+  from {
+    --board-start: 1;
+  }
+  to {
+    --board-start: 0;
+  }
+}
+
+@keyframes board-end {
+  from {
+    --board-end: 0;
+  }
+  to {
+    --board-end: 1;
+  }
+}
+
+.column {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  width: var(--kanban-column);
+  min-height: 0;
+  border-radius: var(--ui-radius-lg);
+  /* In dark the lane is the page itself, so its cards (the surface) stand
+     a step above it; a fill there would sit level with them. */
+  background-color: light-dark(var(--ui-fill), transparent);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* The lane something is held over steps up a shade. */
+.column:has(.cards[data-drag-over]) {
+  background-color: light-dark(var(--ui-fill-strong), var(--ui-fill));
+}
+
+/* ---------- Header ---------- */
+
+/* The title lines up with the text on the cards below it. */
+.header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-height: var(--ui-control-sm);
+  padding: var(--kanban-pad) var(--kanban-pad) 0 calc(var(--kanban-pad) + var(--card-pad));
+}
+
+.title {
+  composes: wrap from "../text/text.module.css";
+  margin: 0;
+  font: var(--ui-weight-title) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  letter-spacing: var(--ui-tracking-title);
+}
+
+.count {
+  flex: none;
+  color: var(--ui-muted);
+}
+
+.add {
+  flex: none;
+  margin-inline-start: auto;
+}
+
+/* ---------- Cards ---------- */
+
+.scroll {
+  flex: 1;
+  border-radius: 0 0 var(--ui-radius-lg) var(--ui-radius-lg);
+}
+
+/* The cards' offset parent, which the drag reads their layout from. An
+   empty one is a drop zone a card tall. */
+.cards {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--kanban-gap);
+  min-height: var(--ui-control-lg);
+  margin: 0;
+  padding: var(--kanban-pad);
+  list-style: none;
+}
+
+.empty {
+  position: absolute;
+  inset: var(--kanban-pad) var(--kanban-pad) auto;
+  display: grid;
+  place-items: center;
+  height: var(--ui-control-lg);
+  margin: 0;
+  border-radius: var(--card-radius);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  color: var(--ui-subtle);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  pointer-events: none;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    box-shadow var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* Held over: the words step aside for the card about to land. */
+.column:has(.cards[data-drag-over]) .empty {
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-field-focus);
+  color: transparent;
+}
+
+/* Registered so the edge can ease to its hover color. */
+@property --card-edge {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.card {
+  --card-edge: var(--ui-border-strong);
+  position: relative;
+  /* Keeps the stretched target and the lift shadow inside the card. */
+  isolation: isolate;
+  display: grid;
+  gap: var(--ui-space-1);
+  min-width: 0;
+  padding: var(--card-pad);
+  border-radius: var(--card-radius);
+  background-color: var(--ui-surface);
+  box-shadow: 0 0 0 var(--ui-hairline) var(--card-edge);
+  cursor: grab;
+  /* A card is dragged, not selected; a long press lifts it, not a menu. */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    --card-edge var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.card[data-opens] {
+  cursor: pointer;
+}
+
+/* The lift's depth, waiting: a finger's hold brings it in. */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow:
+    0 0 0 var(--ui-hairline) var(--ui-field-focus),
+    var(--ui-shadow-raised);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .card[data-opens]:hover {
+    --card-edge: var(--ui-field-focus);
+  }
+}
+
+/* The title's button or link, stretched over the card: one target, one tab stop. */
+.grip {
+  display: block;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  text-decoration: none;
+  cursor: inherit;
+  outline: none;
+  touch-action: manipulation;
+}
+
+.grip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--card-radius);
+}
+
+.cardTitle {
+  composes: wrap from "../text/text.module.css";
+  display: block;
+  font-weight: var(--ui-weight-medium);
+}
+
+.card:has(.grip:focus-visible) {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.card[data-opens]:has(.grip:active) {
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.detail {
+  display: grid;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.content {
+  composes: wrap from "../text/text.module.css";
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+/* Avatar, badge and date in one row, wrapping when the card is narrow. */
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-width: 0;
+  margin-top: var(--ui-space-1);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+/* ---------- Holding ---------- */
+
+/* A finger holding a card: it presses down under the finger and its lift
+   starts to show, so the hold reads before the card comes up. */
+.card[data-drag-pending] {
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.card[data-drag-pending]::after {
+  opacity: 1;
+  transition: opacity var(--ui-dur-base) var(--ui-ease-color) var(--ui-dur-press);
+}
+
+/* The place it left holds its size, empty: the copy above is the card. */
+.card[data-drag-source] {
+  opacity: 0;
+}
+
+/* The others make room on the move spring and take no hover. */
+.board[data-dragging] {
+  scroll-snap-type: none;
+}
+
+.board[data-dragging] .card {
+  pointer-events: none;
+  transition:
+    --card-edge var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap),
+    translate var(--ui-dur-move) var(--ui-ease-move);
+}
+
+/* ---------- The lifted copy ---------- */
+
+/* It rides above the page, out of the lanes' scroll, with the board's
+   context, which it left behind. */
+.layer {
+  --kanban-pad: var(--ui-space-2);
+  --card-pad: var(--ui-space-3);
+  --card-radius: calc(var(--ui-radius-lg) - var(--kanban-pad));
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  pointer-events: none;
+  list-style: none;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+}
+
+.card[data-drag-clone] {
+  scale: var(--drag-scale, 1.02);
+}
+
+.card[data-drag-clone]::after {
+  opacity: 1;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+@starting-style {
+  .card[data-drag-clone] {
+    scale: var(--drag-from, 1);
+  }
+  .card[data-drag-clone]::after {
+    opacity: var(--drag-cue, 0);
+  }
+}
+
+.layer[data-keyboard] .card[data-drag-clone] {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+/* Settling: it comes down as it lands, so the last frame is the card itself. */
+.card[data-drag-clone][data-settling] {
+  scale: 1;
+  outline-color: transparent;
+}
+
+.card[data-drag-clone][data-settling]::after {
+  opacity: 0;
+  transition-duration: var(--ui-dur-snap);
+}
+
+/* ---------- A phone ---------- */
+
+/* One lane at a time, the next peeking in, snapping as it scrolls. */
+@container (max-width: 639px) {
+  .board {
+    scroll-snap-type: x mandatory;
+  }
+  .column {
+    width: calc(100cqi - var(--ui-space-7));
+    scroll-snap-align: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .board[data-dragging] .card {
+    transition: --card-edge var(--ui-dur-instant) var(--ui-ease-color);
+  }
+  .card[data-opens]:has(.grip:active),
+  .card[data-drag-pending],
+  .card[data-drag-clone] {
+    scale: none;
+  }
+}

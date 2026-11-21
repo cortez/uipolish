@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { ButtonLink } from "@registry/button/button-link";
 import { Catalog, type CatalogItem } from "@/components/catalog";
 import { GetStarted } from "@/components/get-started";
+import Link from "@/components/link";
+import { SCREENS } from "@pro/index";
 import { SKILL_INSTALLS } from "@/lib/skill";
 import { CopyPrompt } from "@/components/copy-prompt";
 import { SiteLayout } from "@/components/site-layout";
@@ -25,6 +28,11 @@ export default async function Home() {
         <div className={site.actions}>
           <CopyPrompt prompt={AGENT_PROMPT} label="Copy agent instructions" />
           <GetStarted installs={SKILL_INSTALLS} />
+          {SCREENS.copper && (
+            <ButtonLink as={Link} href="/example" variant="secondary">
+              See it in an app
+            </ButtonLink>
+          )}
         </div>
       </header>
 

@@ -1,0 +1,60 @@
+/* A booking card: the stepper on top, the step's words, then its buttons. */
+.card {
+  display: grid;
+  gap: var(--ui-space-5);
+  padding: var(--ui-space-5);
+  border-radius: var(--ui-radius-lg);
+  box-shadow: var(--ui-edge);
+}
+
+.body {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-wrap: pretty;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+.buttons {
+  display: flex;
+  gap: var(--ui-space-2);
+  margin-inline-start: auto;
+}
+
+.plan {
+  composes: measure from "./preview.module.css";
+}
+
+.narrow {
+  max-width: 360px;
+}
+
+/* In a dialog's footer the stepper takes the room the buttons leave. */
+.footerSteps {
+  flex: 1 1 auto;
+  margin-inline-end: auto;
+}
+
+.form {
+  display: grid;
+  gap: var(--ui-space-3);
+}
+
+.stepTitle {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--ui-leading-md);
+}
+
+.long {
+  max-width: 440px;
+}

@@ -1,0 +1,242 @@
+/* Rows are List's rows: the same box, padding, type and separators. What's
+   added is the handle, the lift and the room the others make. */
+
+.list {
+  composes: list from "../list/list.module.css";
+  /* The rows' offset parent: the drag reads their layout from here. */
+  position: relative;
+}
+
+.row {
+  composes: row from "../list/list.module.css";
+}
+
+.leading {
+  composes: leading from "../list/list.module.css";
+}
+
+.main {
+  composes: main from "../list/list.module.css";
+}
+
+.text {
+  composes: text from "../list/list.module.css";
+}
+
+.primary {
+  composes: primary from "../list/list.module.css";
+}
+
+.title {
+  composes: title from "../list/list.module.css";
+}
+
+.description {
+  composes: description from "../list/list.module.css";
+}
+
+.trailing {
+  composes: trailing from "../list/list.module.css";
+}
+
+.actions {
+  composes: actions from "../list/list.module.css";
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+/* ---------- The handle ---------- */
+
+/* A 16px grip in a 24 by 32 target, its glyph on the row's padding line. */
+.handle {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: calc(var(--ui-icon-md) + var(--ui-space-2));
+  height: var(--ui-control-sm);
+  margin: 0;
+  margin-inline-start: calc(var(--ui-space-1) * -1);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-control);
+  background: none;
+  color: var(--ui-subtle);
+  cursor: grab;
+  /* The handle drags; it never scrolls the page or selects text. */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.handle > svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+}
+
+@media (hover: hover) {
+  .handle:not(:disabled):hover {
+    color: var(--ui-foreground);
+  }
+}
+
+.handle:focus-visible {
+  color: var(--ui-foreground);
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.handle:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+/* A finger gets a 40px target that reaches the row's edge. */
+@media (pointer: coarse) {
+  .handle {
+    width: var(--ui-control-md);
+    height: var(--ui-control-md);
+    margin-inline: calc(var(--ui-space-3) * -1) calc(var(--ui-space-1) * -1);
+  }
+}
+
+/* ---------- The whole row as the grip ---------- */
+
+/* Stretched over the row, like a List row's link: one target, one tab stop. */
+.grab::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--row-radius);
+}
+
+.row[data-drag-grab="row"] {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.row.row[data-drag-grab="row"] .grab {
+  cursor: grab;
+}
+
+.row[data-disabled] .grab {
+  cursor: default;
+}
+
+/* A finger holding a row: it presses down while the hold runs, then lifts. */
+.row[data-drag-pending]::before {
+  --row-fill: color-mix(in oklch, var(--ui-foreground) 11%, transparent);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+/* ---------- While something is held ---------- */
+
+/* The place it left holds its size, empty: the copy above is the row. */
+.row[data-drag-source] {
+  opacity: 0;
+}
+
+/* The others make room on the move spring and take no hover. */
+.list[data-dragging] > .row {
+  transition: translate var(--ui-dur-move) var(--ui-ease-move);
+  pointer-events: none;
+}
+
+/* Separators step aside, so the gap reads as one clean space. */
+.list.list[data-dragging] .main {
+  --list-separator: transparent;
+}
+
+/* ---------- The lifted copy ---------- */
+
+/* It rides above the page, out of any scroll box, with the list's own
+   context, which it left behind. */
+.layer {
+  --list-pad: var(--ui-space-1);
+  --row-pad: var(--ui-space-3);
+  --row-radius: calc(var(--ui-radius-lg) - var(--list-pad));
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+}
+
+.layer .row[data-variant="plain"] {
+  --row-radius: var(--ui-radius-md);
+}
+
+/* Raised: a step lighter in dark, where there are no shadows. */
+.row[data-drag-clone] {
+  background-color: light-dark(var(--ui-surface), var(--ui-fill-strong-solid));
+  scale: var(--drag-scale, 1.02);
+  transition:
+    scale var(--ui-dur-snap) var(--ui-ease-snap),
+    background-color var(--ui-dur-snap) var(--ui-ease-color);
+}
+
+.row[data-drag-clone]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--ui-edge), var(--ui-shadow-raised);
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+@starting-style {
+  .row[data-drag-clone] {
+    scale: 1;
+    background-color: transparent;
+  }
+  .row[data-drag-clone]::after {
+    opacity: var(--drag-cue, 0);
+  }
+}
+
+/* Picked up from the keyboard: the copy carries the focus ring. */
+.layer[data-keyboard] .row[data-drag-clone] {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+/* Settling: it comes down as it lands, so the last frame is the row itself. */
+.row[data-drag-clone][data-settling] {
+  scale: 1;
+  background-color: transparent;
+  outline-color: transparent;
+}
+
+.row[data-drag-clone][data-settling]::after {
+  opacity: 0;
+  transition-duration: var(--ui-dur-snap);
+}
+
+@media (pointer: coarse) {
+  .main {
+    min-height: var(--ui-control-lg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list[data-dragging] > .row {
+    transition: none;
+  }
+  .row[data-drag-clone],
+  .row[data-drag-pending]::before {
+    scale: none;
+  }
+}

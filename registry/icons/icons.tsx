@@ -161,6 +161,11 @@ const ICONS = {
     dot: { d: "M8 8 L8.01 8" },
     b: { d: "M12.25 8 L12.26 8" },
   },
+  /* Six dots in two columns: a handle to drag something by. */
+  grip: {
+    a: { d: "M6 3.75 L6.01 3.75 M6 8 L6.01 8 M6 12.25 L6.01 12.25" },
+    b: { d: "M10 3.75 L10.01 3.75 M10 8 L10.01 8 M10 12.25 L10.01 12.25" },
+  },
   /* Rating a reply. Down is up turned half round, point for point, so the
      two share keys and a flip morphs. Fill the icon (fill: currentColor on
      the svg) to show the rating is pressed. */

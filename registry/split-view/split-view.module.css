@@ -1,0 +1,382 @@
+/* A size container, so the narrow form follows the view's own width, not
+   the window's: a split inside a pane of another split narrows with it. */
+.root {
+  container-type: inline-size;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+.frame {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+}
+
+.root[data-orientation="horizontal"] > .frame {
+  grid-template-columns: var(--split-template);
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.root[data-orientation="vertical"] > .frame {
+  grid-template-rows: var(--split-template);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Changes that aren't a drag (a collapse, a key, a reset) move on a spring;
+   a drag follows the pointer with no transition at all. Snap for a pane
+   closing or a step, glide for a reset across the view. */
+.root[data-motion="snap"] > .frame {
+  transition:
+    grid-template-columns var(--ui-dur-snap) var(--ui-ease-snap),
+    grid-template-rows var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.root[data-motion="glide"] > .frame {
+  transition:
+    grid-template-columns var(--ui-dur-glide) var(--ui-ease-glide),
+    grid-template-rows var(--ui-dur-glide) var(--ui-ease-glide);
+}
+
+/* ---------- Panes ---------- */
+
+.pane {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  overflow: clip;
+}
+
+.root[data-orientation="vertical"] > .frame > .pane {
+  flex-direction: column;
+}
+
+.pane[data-anchor="end"] {
+  justify-content: flex-end;
+}
+
+/* Fills its pane; while the pane opens or closes it keeps the width it has
+   open (--split-held), so nothing inside rewraps as the edge passes. */
+.content {
+  display: grid;
+  flex: 1 0 0;
+  grid-template-rows: minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  opacity: 1;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+}
+
+.root[data-orientation="horizontal"] > .frame > .pane[data-held] > .content {
+  min-width: var(--split-held);
+}
+
+.root[data-orientation="vertical"] > .frame > .pane[data-held] > .content {
+  min-height: var(--split-held);
+}
+
+.pane[data-collapsed] > .content {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-exit),
+    visibility 0s linear var(--ui-dur-instant);
+}
+
+/* While dragging, a pane's content (an iframe, a text selection) never
+   takes the pointer from the divider. */
+.root[data-dragging] > .frame > .pane {
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---------- The divider ---------- */
+
+/* A zero-width track: the hairline sits on the first pixel of the pane
+   after it, and the hit area reaches 4px into each pane. */
+.divider {
+  position: relative;
+  z-index: 1;
+  outline: none;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.divider::before {
+  content: "";
+  position: absolute;
+  cursor: col-resize;
+}
+
+.root[data-orientation="horizontal"] > .frame > .divider::before {
+  inset-block: 0;
+  inset-inline-start: calc(var(--ui-space-1) * -1);
+  width: calc(var(--ui-space-2) + var(--ui-hairline));
+}
+
+.root[data-orientation="vertical"] > .frame > .divider::before {
+  inset-inline: 0;
+  top: calc(var(--ui-space-1) * -1);
+  height: calc(var(--ui-space-2) + var(--ui-hairline));
+  cursor: row-resize;
+}
+
+.line {
+  position: absolute;
+  background: var(--ui-border-strong);
+  pointer-events: none;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.root[data-orientation="horizontal"] > .frame > .divider > .line {
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: var(--ui-hairline);
+}
+
+.root[data-orientation="vertical"] > .frame > .divider > .line {
+  inset-inline: 0;
+  top: 0;
+  height: var(--ui-hairline);
+}
+
+/* A grip on the line's middle: quiet until the pointer or focus is on the
+   divider, then it grows along the line. Its 24px box is the mouse target. */
+.handle {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  cursor: col-resize;
+}
+
+.root[data-orientation="horizontal"] > .frame > .divider > .handle {
+  top: calc(50% - var(--ui-control-md) / 2);
+  inset-inline-start: calc(var(--ui-space-5) / -2 + var(--ui-hairline) / 2);
+  width: var(--ui-space-5);
+  height: var(--ui-control-md);
+}
+
+.root[data-orientation="vertical"] > .frame > .divider > .handle {
+  inset-inline-start: calc(50% - var(--ui-control-md) / 2);
+  top: calc(var(--ui-space-5) / -2 + var(--ui-hairline) / 2);
+  width: var(--ui-control-md);
+  height: var(--ui-space-5);
+  cursor: row-resize;
+}
+
+.handle::before {
+  content: "";
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-field-focus);
+  opacity: 0;
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.root[data-orientation="horizontal"] > .frame > .divider > .handle::before {
+  width: var(--ui-space-1);
+  height: var(--ui-space-5);
+  scale: 1 0.5;
+}
+
+.root[data-orientation="vertical"] > .frame > .divider > .handle::before {
+  width: var(--ui-space-5);
+  height: var(--ui-space-1);
+  scale: 0.5 1;
+}
+
+/* Hover answers after a beat, so a pointer passing over the line on its
+   way somewhere doesn't light it. */
+@media (hover: hover) {
+  .divider:hover .line {
+    background: var(--ui-field-focus);
+    transition-delay: var(--ui-dur-instant);
+  }
+  .divider:hover .handle::before {
+    opacity: 1;
+    scale: 1;
+    transition-delay: var(--ui-dur-instant);
+  }
+}
+
+.divider[data-dragging] .line,
+.divider:focus-visible .line {
+  background: var(--ui-field-focus);
+  transition-delay: 0s;
+}
+
+.divider[data-dragging] .handle::before,
+.divider:focus-visible .handle::before {
+  opacity: 1;
+  scale: 1;
+  background: var(--ui-foreground);
+  transition-delay: 0s;
+}
+
+/* The ring goes around the grip, the part that looks like a control. */
+.divider:focus-visible .handle {
+  border-radius: var(--ui-radius-full);
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+/* Against the view's edge, the hit area and grip lie wholly inside it. */
+.root[data-orientation="horizontal"] > .frame > .divider[data-edge="end"]::before {
+  inset-inline-start: calc((var(--ui-space-2) + var(--ui-hairline)) * -1);
+}
+.root[data-orientation="horizontal"] > .frame > .divider[data-edge="start"]::before {
+  inset-inline-start: 0;
+}
+.root[data-orientation="horizontal"] > .frame > .divider[data-edge="end"] .handle {
+  inset-inline-start: calc(var(--ui-space-5) * -1);
+}
+.root[data-orientation="horizontal"] > .frame > .divider[data-edge="start"] .handle {
+  inset-inline-start: 0;
+}
+.root[data-orientation="vertical"] > .frame > .divider[data-edge="end"]::before {
+  top: calc((var(--ui-space-2) + var(--ui-hairline)) * -1);
+}
+.root[data-orientation="vertical"] > .frame > .divider[data-edge="start"]::before {
+  top: 0;
+}
+.root[data-orientation="vertical"] > .frame > .divider[data-edge="end"] .handle {
+  top: calc(var(--ui-space-5) * -1);
+}
+.root[data-orientation="vertical"] > .frame > .divider[data-edge="start"] .handle {
+  top: 0;
+}
+
+/* A finger needs 40px: the strip widens to 24px and the grip to 40. */
+@media (pointer: coarse) {
+  .root[data-orientation="horizontal"] > .frame > .divider::before {
+    inset-inline-start: calc(var(--ui-space-3) * -1);
+    width: calc(var(--ui-space-5) + var(--ui-hairline));
+  }
+  .root[data-orientation="vertical"] > .frame > .divider::before {
+    top: calc(var(--ui-space-3) * -1);
+    height: calc(var(--ui-space-5) + var(--ui-hairline));
+  }
+  .root[data-orientation="horizontal"] > .frame > .divider > .handle {
+    inset-inline-start: calc(var(--ui-control-md) / -2 + var(--ui-hairline) / 2);
+    width: var(--ui-control-md);
+  }
+  .root[data-orientation="vertical"] > .frame > .divider > .handle {
+    top: calc(var(--ui-control-md) / -2 + var(--ui-hairline) / 2);
+    height: var(--ui-control-md);
+  }
+  .handle::before {
+    opacity: 1;
+    scale: 1;
+  }
+  .root[data-orientation="horizontal"] > .frame > .divider[data-edge="end"]::before {
+    inset-inline-start: calc((var(--ui-space-5) + var(--ui-hairline)) * -1);
+  }
+  .root[data-orientation="horizontal"] > .frame > .divider[data-edge="start"]::before,
+  .root[data-orientation="horizontal"] > .frame > .divider[data-edge="start"] .handle {
+    inset-inline-start: 0;
+  }
+  .root[data-orientation="horizontal"] > .frame > .divider[data-edge="end"] .handle {
+    inset-inline-start: calc(var(--ui-control-md) * -1);
+  }
+  .root[data-orientation="vertical"] > .frame > .divider[data-edge="end"]::before {
+    top: calc((var(--ui-space-5) + var(--ui-hairline)) * -1);
+  }
+  .root[data-orientation="vertical"] > .frame > .divider[data-edge="start"]::before,
+  .root[data-orientation="vertical"] > .frame > .divider[data-edge="start"] .handle {
+    top: 0;
+  }
+  .root[data-orientation="vertical"] > .frame > .divider[data-edge="end"] .handle {
+    top: calc(var(--ui-control-md) * -1);
+  }
+}
+
+/* ---------- Narrow: one pane at a time ---------- */
+
+.switch {
+  display: none;
+}
+
+.root {
+  --split-shift: var(--ui-space-4);
+}
+
+:is([dir="rtl"]) .root {
+  --split-shift: calc(var(--ui-space-4) * -1);
+}
+
+/* 560px: keep in sync with NARROW in the script. */
+@container (width < 560px) {
+  .root[data-narrow="switch"] {
+    grid-template-rows: auto minmax(0, 1fr);
+    row-gap: var(--ui-space-3);
+    overflow: clip;
+  }
+
+  .root[data-narrow="switch"] > .switch {
+    display: grid;
+    padding: var(--ui-space-3) var(--ui-space-3) 0;
+  }
+
+  .root[data-narrow="switch"] > .frame {
+    grid-template-columns: minmax(0, 1fr);
+    transition: none;
+  }
+
+  .root[data-narrow="switch"] > .frame > .divider {
+    display: none;
+  }
+
+  /* Every pane in one cell; the one shown fades in just after the one
+     leaving has gone, slid a little from the side it lies on. */
+  .root[data-narrow="switch"] > .frame > .pane {
+    grid-area: 1 / 1;
+    opacity: 0;
+    visibility: hidden;
+    translate: var(--split-shift) 0;
+    transition:
+      opacity var(--ui-dur-instant) var(--ui-ease-color),
+      translate var(--ui-dur-glide) var(--ui-ease-glide),
+      visibility 0s linear var(--ui-dur-instant);
+  }
+
+  .root[data-narrow="switch"] > .frame > .pane[data-side="before"] {
+    translate: calc(var(--split-shift) * -1) 0;
+  }
+
+  .root[data-narrow="switch"] > .frame > .pane[data-active] {
+    opacity: 1;
+    visibility: visible;
+    translate: 0 0;
+    transition:
+      opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2),
+      translate var(--ui-dur-glide) var(--ui-ease-glide),
+      visibility 0s;
+  }
+
+  /* Collapsing is a wide-screen idea: here every pane can be shown. */
+  .root[data-narrow="switch"] > .frame > .pane > .content {
+    min-width: 0;
+    opacity: 1;
+    visibility: inherit;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root[data-motion] > .frame {
+    transition: none;
+  }
+  .handle::before {
+    transition-property: opacity, background-color;
+  }
+  .root[data-narrow="switch"] > .frame > .pane,
+  .root[data-narrow="switch"] > .frame > .pane[data-active] {
+    transition-property: opacity, visibility;
+  }
+}

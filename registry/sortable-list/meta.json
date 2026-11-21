@@ -1,0 +1,12 @@
+{
+  "name": "sortable-list",
+  "title": "Sortable list",
+  "summary": "Rows put in order by dragging a handle or the whole row, or from the keyboard: Space picks up, the arrows move, Space drops, each step read aloud. The lifted row follows the pointer exactly, the others make room on a spring, and a list in a scroll box scrolls at its edges.",
+  "blurb": "Rows put in order by drag or keyboard, each step read aloud.",
+  "version": "0.1.1",
+  "dependencies": [
+    "icons",
+    "list",
+    "text"
+  ]
+}

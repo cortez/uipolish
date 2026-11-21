@@ -74,4 +74,12 @@ export const PREVIEWS: Record<string, ComponentType> = {
   "terminal-output": dynamic(() => import("@/previews/terminal-output").then((m) => m.TerminalOutputPreview)),
   "textarea": dynamic(() => import("@/previews/textarea").then((m) => m.TextareaPreview)),
   "tree": dynamic(() => import("@/previews/tree").then((m) => m.TreePreview)),
+  "stepper": dynamic(() => import("@/previews/stepper").then((m) => m.StepperPreview)),
+  "split-view": dynamic(() => import("@/previews/split-view").then((m) => m.SplitViewPreview)),
+  "tag-input": dynamic(() => import("@/previews/tag-input").then((m) => m.TagInputPreview)),
+  "calendar": dynamic(() => import("@/previews/calendar").then((m) => m.CalendarPreview)),
+  "sortable-list": dynamic(() => import("@/previews/sortable-list").then((m) => m.SortableListPreview)),
+  "filter-bar": dynamic(() => import("@/previews/filter-bar").then((m) => m.FilterBarPreview)),
+  "kanban": dynamic(() => import("@/previews/kanban").then((m) => m.KanbanPreview)),
+  "timeline": dynamic(() => import("@/previews/timeline").then((m) => m.TimelinePreview)),
 };

@@ -1,5 +1,6 @@
 "use client";
 
+import { DAY, addDays, addMonths, toIso, toTime } from "./dates";
 import {
   useId,
   useLayoutEffect,
@@ -69,12 +70,6 @@ type Ymd = { y: number; m: number };
 /** A month on its way out, starting from where the live one visibly was. */
 type Leaving = { view: Ymd; dir: 1 | -1; key: number; opacity: number; x: number };
 
-const DAY = 86_400_000;
-const toTime = (iso: string) => {
-  const [y, m, d] = iso.split("-").map(Number);
-  return Date.UTC(y, m - 1, d);
-};
-const toIso = (t: number) => new Date(t).toISOString().slice(0, 10);
 const isIso = (s: unknown): s is string => typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s);
 const viewOf = (iso: string): Ymd => {
   const d = new Date(toTime(iso));
@@ -83,15 +78,6 @@ const viewOf = (iso: string): Ymd => {
 const sameView = (a: Ymd, b: Ymd) => a.y === b.y && a.m === b.m;
 const viewIndex = (v: Ymd) => v.y * 12 + v.m;
 
-function addMonths(iso: string, by: number) {
-  const d = new Date(toTime(iso));
-  const target = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + by, 1));
-  const last = new Date(Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0)).getUTCDate();
-  target.setUTCDate(Math.min(d.getUTCDate(), last));
-  return toIso(target.getTime());
-}
-
-const addDays = (iso: string, by: number) => toIso(toTime(iso) + by * DAY);
 
 function todayIso() {
   const now = new Date();

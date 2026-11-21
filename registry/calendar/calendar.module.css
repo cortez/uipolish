@@ -1,0 +1,1105 @@
+/* The calendar folds below 560px of its own width (a container, not the
+   viewport): the month trades its chips for dots and a day list, the week
+   shows three days. The JS reads the same width (COMPACT). */
+.root {
+  --calendar-height: 640px;
+  --calendar-hour: 48px;
+  --weekday-h: var(--ui-control-sm);
+  --cell-pad: 6px;
+  --chip-h: 20px;
+  --chip-gap: 2px;
+  --compact-row: 56px;
+  --gutter: 56px;
+  --head-h: 56px;
+  --allday-h: calc(var(--chip-h) * 2 + var(--chip-gap) + var(--ui-space-2));
+  --slide: 20px;
+  container: calendar / inline-size;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ui-gap-stack);
+  min-width: 0;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+}
+
+@media (pointer: coarse) {
+  .root {
+    --chip-h: 24px;
+  }
+}
+
+/* ---------- Header ---------- */
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-gap-stack) var(--ui-gap-group);
+  min-width: 0;
+}
+
+.title {
+  display: grid;
+  justify-items: start;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-title);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-title);
+  white-space: nowrap;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-gap-inline);
+  min-width: 0;
+}
+
+/* The two arrows sit as one pair. */
+.nav {
+  display: flex;
+}
+
+/* Previous points back along the line of reading: left, or right in RTL. */
+:is([dir="rtl"]) .navIcon {
+  scale: -1 1;
+}
+
+/* ---------- Box ---------- */
+
+.box {
+  position: relative;
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  height: var(--calendar-height);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-resting);
+  overflow: clip;
+  isolation: isolate;
+}
+
+.view {
+  grid-area: 1 / 1;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Switching between month and week: an offset crossfade in place, the old
+   view gone on the instant step before the new one is more than faint. */
+.view[data-entering] {
+  animation: calendar-in-fade var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+}
+
+.viewLeaving {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  pointer-events: none;
+  animation: calendar-out-fade var(--ui-dur-instant) var(--ui-ease-color) forwards;
+}
+
+/* ---------- Month ---------- */
+
+.month {
+  display: grid;
+  grid-template-rows: var(--weekday-h) minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  align-items: center;
+  box-shadow: inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+}
+
+/* Starts where the day number's figure starts. */
+.weekday {
+  min-width: 0;
+  padding-inline: calc(var(--cell-pad) + var(--ui-space-2));
+  overflow: hidden;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+}
+
+.weekday abbr {
+  text-decoration: none;
+}
+
+.stage {
+  position: relative;
+  min-height: 0;
+}
+
+/* The lines hold still while the days slide over them: one hairline above
+   each week but the first, and one at the end of each day but the last. */
+.lines {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template: repeat(6, minmax(0, 1fr)) / repeat(7, minmax(0, 1fr));
+  pointer-events: none;
+}
+
+.lines > span {
+  --line-end: inset calc(var(--ui-hairline) * -1) 0 0 var(--ui-border);
+  --line-top: inset 0 var(--ui-hairline) 0 var(--ui-border);
+}
+
+:is([dir="rtl"]) .lines > span {
+  --line-end: inset var(--ui-hairline) 0 0 var(--ui-border);
+}
+
+.lines > span:not(:nth-child(7n)) {
+  box-shadow: var(--line-end);
+}
+
+.lines > span:nth-child(n + 8) {
+  box-shadow: var(--line-top);
+}
+
+.lines > span:nth-child(n + 8):not(:nth-child(7n)) {
+  box-shadow: var(--line-end), var(--line-top);
+}
+
+/* Days slide under the box's edge, which is already a line, so the clip
+   needs no fade. */
+.clip {
+  position: relative;
+  height: 100%;
+  overflow: clip;
+}
+
+.monthGrid {
+  display: grid;
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+  height: 100%;
+}
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  min-height: 0;
+}
+
+.cell {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: start;
+  gap: var(--chip-gap);
+  min-width: 0;
+  min-height: 0;
+  padding: var(--cell-pad);
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.cell[data-clickable] {
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .cell[data-clickable]:hover:not(:has(.chip:hover, .more:hover)) {
+    background: var(--ui-fill);
+  }
+}
+
+/* ---------- Day number ---------- */
+
+.dayNumber {
+  position: relative;
+  justify-self: start;
+  display: grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 var(--ui-space-1);
+  border: 0;
+  border-radius: var(--ui-radius-full);
+  background: transparent;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-sm) / 1 var(--ui-font-sans);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.cell[data-outside] .dayNumber {
+  color: var(--ui-subtle);
+}
+
+/* The day in focus: the day list follows it, and the arrow keys start from it. */
+.dayNumber[data-focused] {
+  background: var(--ui-fill-strong);
+}
+
+/* Today is a control that's on: the one accent. */
+.dayNumber[data-today] {
+  background: var(--ui-control-on);
+  color: var(--ui-on-control-on);
+}
+
+@media (hover: hover) {
+  .dayNumber:hover:not([data-today], [data-focused]) {
+    background: var(--ui-fill);
+  }
+}
+
+.dayNumber:active {
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.dayNumber:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+@media (pointer: coarse) {
+  .dayNumber::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+  }
+}
+
+/* ---------- Chips ---------- */
+
+:is(.chip, .event, .dot, .agendaDot)[data-tone="neutral"] {
+  --tone-fill: var(--ui-fill-strong);
+  --tone-text: var(--ui-foreground);
+  --tone-time: var(--ui-muted);
+  --tone-edge: var(--ui-border);
+  --tone-dot: var(--ui-muted);
+}
+
+:is(.chip, .event, .dot, .agendaDot)[data-tone="accent"] {
+  --tone-fill: var(--ui-accent-tint);
+  --tone-text: var(--ui-accent-text);
+  --tone-time: var(--ui-accent-text);
+  --tone-edge: var(--ui-border-accent);
+  --tone-dot: var(--ui-accent);
+}
+
+:is(.chip, .event, .dot, .agendaDot)[data-tone="success"] {
+  --tone-fill: var(--ui-success-tint);
+  --tone-text: var(--ui-success-text);
+  --tone-time: var(--ui-success-text);
+  --tone-edge: var(--ui-border-success);
+  --tone-dot: var(--ui-success);
+}
+
+:is(.chip, .event, .dot, .agendaDot)[data-tone="warning"] {
+  --tone-fill: var(--ui-warning-tint);
+  --tone-text: var(--ui-warning-text);
+  --tone-time: var(--ui-warning-text);
+  --tone-edge: var(--ui-border-warning);
+  --tone-dot: var(--ui-warning);
+}
+
+:is(.chip, .event, .dot, .agendaDot)[data-tone="danger"] {
+  --tone-fill: var(--ui-danger-tint);
+  --tone-text: var(--ui-danger-text);
+  --tone-time: var(--ui-danger-text);
+  --tone-edge: var(--ui-border-danger);
+  --tone-dot: var(--ui-danger);
+}
+
+.chips {
+  display: grid;
+  grid-auto-rows: var(--chip-h);
+  align-content: start;
+  row-gap: var(--chip-gap);
+  min-width: 0;
+  min-height: 0;
+  overflow: clip;
+}
+
+/* A timed event is its time and title on the bare day, with a dot in its
+   tone; an all-day or multi-day one is a bar filled with its tone, so the
+   two kinds read apart at a glance. */
+.chip {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  min-width: 0;
+  height: var(--chip-h);
+  padding-inline: var(--ui-space-1) 6px;
+  border: 0;
+  border-radius: var(--ui-radius-xs);
+  background: transparent;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
+  text-align: start;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.chip::before {
+  content: "";
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  margin-inline-end: 2px;
+  border-radius: var(--ui-radius-full);
+  background: var(--tone-dot);
+}
+
+.chip[data-banner] {
+  padding-inline: 6px;
+  background: var(--tone-fill);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--tone-edge);
+  color: var(--tone-text);
+}
+
+.chip[data-banner]::before {
+  display: none;
+}
+
+.chipTime {
+  flex-shrink: 0;
+  color: var(--ui-muted);
+}
+
+.chip[data-banner] .chipTime {
+  color: var(--tone-time);
+}
+
+.chipTitle {
+  composes: truncate from "../text/text.module.css";
+  flex: 1;
+}
+
+button.chip {
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  button.chip:hover {
+    background: var(--ui-fill-strong);
+  }
+  button.chip[data-banner]:hover {
+    background: linear-gradient(var(--ui-fill), var(--ui-fill)), var(--tone-fill);
+  }
+}
+
+button.chip:active {
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+:is(.chip, .more, .event, .agendaRow):focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.more {
+  justify-self: start;
+  height: var(--chip-h);
+  padding-inline: 6px;
+  border: 0;
+  border-radius: var(--ui-radius-xs);
+  background: transparent;
+  color: var(--ui-muted);
+  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+button.more {
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  button.more:hover {
+    background: var(--ui-fill-strong);
+    color: var(--ui-foreground);
+  }
+}
+
+/* Open: held as pressed, the popover hangs from it. No scale: it anchors a popup. */
+button.more[data-popup-open] {
+  background: var(--ui-fill-strong);
+  color: var(--ui-foreground);
+}
+
+.dots {
+  display: none;
+}
+
+/* ---------- Day list and popover ---------- */
+
+.dayPopover {
+  width: 300px;
+  max-width: 100%;
+}
+
+.popoverBody {
+  display: grid;
+  gap: var(--ui-space-2);
+}
+
+.popoverTitle {
+  margin: 0;
+  font-weight: var(--ui-weight-title);
+}
+
+.dayPopover .agenda {
+  margin-inline: calc(var(--ui-space-3) * -1);
+  margin-block-end: calc(var(--ui-space-3) * -1);
+}
+
+.agenda {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.agendaRow {
+  position: relative;
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: var(--ui-space-3);
+  width: 100%;
+  min-height: var(--ui-control-md);
+  padding: 10px var(--ui-pad-row);
+  border: 0;
+  border-radius: var(--ui-radius-md);
+  background: transparent;
+  color: var(--ui-foreground);
+  font: inherit;
+  text-align: start;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+button.agendaRow {
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  button.agendaRow:hover {
+    background: var(--ui-fill);
+  }
+}
+
+button.agendaRow:active {
+  background: var(--ui-fill-strong);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.agendaDot {
+  align-self: center;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--ui-radius-full);
+  background: var(--tone-dot);
+}
+
+.agendaTitle {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.agendaTime {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+}
+
+.agendaEmpty {
+  margin: 0;
+  padding-block: 10px;
+  color: var(--ui-muted);
+}
+
+/* Only below 560px: the month's dots need the list to say what they are. */
+.dayFold {
+  display: none;
+}
+
+.dayList {
+  min-width: 0;
+}
+
+.dayListStack {
+  display: grid;
+}
+
+.dayListPage,
+.dayListLeaving {
+  grid-area: 1 / 1;
+  display: grid;
+  align-content: start;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.dayListPage[data-entering] {
+  animation: calendar-in-fade var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+}
+
+.dayListLeaving {
+  pointer-events: none;
+  animation: calendar-out-fade var(--ui-dur-instant) var(--ui-ease-color) forwards;
+}
+
+.dayListTitle {
+  margin: 0;
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-title);
+  line-height: var(--ui-leading-md);
+}
+
+/* Rows reach past the text by their padding, so the text lines up with the box above. */
+.dayList .agenda {
+  margin-inline: calc(var(--ui-pad-row) * -1);
+}
+
+/* ---------- Week ---------- */
+
+.weekScroll {
+  --head-total: var(--head-h);
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.weekScroll[data-banners] {
+  --head-total: calc(var(--head-h) + var(--allday-h));
+}
+
+.weekGrid {
+  display: grid;
+  grid-template-columns: var(--gutter) minmax(0, 1fr);
+  grid-template-rows: var(--head-total) auto;
+}
+
+.gutterHead {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  grid-area: 1 / 1;
+  display: grid;
+  align-items: start;
+  padding-block-start: var(--head-h);
+  background: var(--ui-surface);
+  box-shadow: inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+}
+
+.allDayLabel {
+  padding-block-start: 6px;
+  padding-inline-end: var(--ui-space-2);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-align: end;
+  white-space: nowrap;
+}
+
+.hours {
+  position: relative;
+  grid-area: 2 / 1;
+  height: calc(var(--calendar-hour) * 24);
+}
+
+/* Times read left to right inside a right-to-left page: "8 AM", not "AM 8". */
+:is(.hour, .chipTime, .eventTime, .agendaTime, .slot) {
+  unicode-bidi: plaintext;
+}
+
+.hour {
+  position: absolute;
+  inset-inline-end: var(--ui-space-2);
+  top: calc(var(--start) * var(--calendar-hour) / 60);
+  translate: 0 -50%;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+}
+
+.weekStage {
+  position: relative;
+  grid-area: 1 / 2 / 3 / 3;
+  min-width: 0;
+}
+
+/* Day and hour lines, under the head; the head itself has none, so nothing
+   in it needs to hold still while its days slide. */
+.weekLines {
+  position: absolute;
+  inset: var(--head-total) 0 0;
+  display: grid;
+  grid-template-columns: repeat(var(--days), minmax(0, 1fr));
+  pointer-events: none;
+}
+
+.weekLines > span {
+  box-shadow: inset var(--ui-hairline) 0 0 var(--ui-border);
+}
+
+:is([dir="rtl"]) .weekLines > span {
+  box-shadow: inset calc(var(--ui-hairline) * -1) 0 0 var(--ui-border);
+}
+
+.weekLines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 calc(var(--calendar-hour) - var(--ui-hairline)),
+    var(--ui-border) calc(var(--calendar-hour) - var(--ui-hairline)) var(--calendar-hour)
+  );
+}
+
+/* The days slide under the gutter's line and the box's edge, both lines
+   already, so the clip needs no fade. `clip` keeps the head sticky. */
+.weekClip {
+  position: relative;
+  overflow-x: clip;
+}
+
+.weekDays {
+  display: grid;
+  grid-template-rows: var(--head-total) calc(var(--calendar-hour) * 24);
+  min-width: 0;
+}
+
+.weekHead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-rows: var(--head-h);
+  grid-auto-rows: var(--allday-h);
+}
+
+/* The head's fill and its bottom line run a slide's length past each end:
+   the clip hides that at rest, and mid-slide no strip opens beside it. */
+.weekHead::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline: calc(var(--slide) * -1);
+  z-index: -1;
+  background: var(--ui-surface);
+  box-shadow: inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+}
+
+.headRow,
+.allDayRow,
+.columns {
+  display: grid;
+  grid-template-columns: repeat(var(--days), minmax(0, 1fr));
+  min-width: 0;
+}
+
+.dayHead {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.dayHeadName {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.dayHead .dayNumber {
+  justify-self: center;
+  min-width: 28px;
+  height: 28px;
+  font-size: var(--ui-text-md);
+}
+
+/* The line over the all-day row, drawn as wide as the fill. */
+.weekScroll[data-banners] .weekHead::after {
+  content: "";
+  position: absolute;
+  inset-block-start: var(--head-h);
+  inset-inline: calc(var(--slide) * -1);
+  z-index: -1;
+  height: var(--ui-hairline);
+  background: var(--ui-border);
+}
+
+.allDayCell {
+  display: grid;
+  grid-auto-rows: var(--chip-h);
+  align-content: start;
+  row-gap: var(--chip-gap);
+  min-width: 0;
+  padding: var(--ui-space-1);
+}
+
+.column {
+  position: relative;
+  min-width: 0;
+}
+
+.column[data-slots] {
+  cursor: pointer;
+}
+
+/* Where a click would start a new event: the half hour under the pointer. */
+.slot {
+  position: absolute;
+  inset-inline: var(--ui-space-1);
+  top: calc(var(--start) * var(--calendar-hour) / 60 + 1px);
+  display: flex;
+  align-items: center;
+  height: calc(var(--calendar-hour) / 2 - 2px);
+  padding-inline: 6px;
+  border-radius: var(--ui-radius-xs);
+  background: var(--ui-fill);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  pointer-events: none;
+  animation: calendar-in-fade var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+/* An event fills its time, side by side with the ones it overlaps, 4px in
+   from its day's edges. Its fill is the tint laid over the surface, so the
+   hour lines don't show through it, and a ring of the surface cuts it out
+   of an event it sits over. */
+.event {
+  --inner: calc(100% - var(--ui-space-2));
+  position: absolute;
+  top: calc(var(--start) * var(--calendar-hour) / 60 + 1px);
+  inset-inline-start: calc(var(--left) * var(--inner) + var(--ui-space-1));
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: calc(var(--width) * var(--inner));
+  height: max(calc(var(--length) * var(--calendar-hour) / 60 - 2px), 20px);
+  padding: 3px 6px;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--ui-radius-xs);
+  background: linear-gradient(var(--tone-fill), var(--tone-fill)), var(--ui-surface);
+  box-shadow:
+    inset 0 0 0 var(--ui-hairline) var(--tone-edge),
+    0 0 0 var(--ui-knockout) var(--ui-surface);
+  color: var(--tone-text);
+  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--ui-leading-sm) var(--ui-font-sans);
+  text-align: start;
+  container: event / inline-size;
+  -webkit-tap-highlight-color: transparent;
+  transition: scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+/* Squeezed beside others: the title keeps the room, the time goes. */
+@container event (max-width: 72px) {
+  .eventTime {
+    display: none;
+  }
+  .eventTitle {
+    overflow: hidden;
+    white-space: nowrap;
+    mask-image: linear-gradient(to var(--fade-to, right), #000 calc(100% - 8px), transparent);
+  }
+}
+
+:is([dir="rtl"]) .event {
+  --fade-to: left;
+}
+
+.event[data-short] {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--ui-space-1);
+  padding-block: 0;
+  white-space: nowrap;
+}
+
+.event::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: transparent;
+  pointer-events: none;
+  transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+button.event {
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  button.event:hover::after {
+    background: var(--ui-fill);
+  }
+}
+
+button.event:active {
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+.event:focus-visible {
+  z-index: 9;
+}
+
+.eventTitle {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+/* A short event keeps its title to one line, faded where it's cut. */
+.oneLine {
+  composes: truncate from "../text/text.module.css";
+  flex: 0 1 auto;
+}
+
+.eventTime {
+  flex-shrink: 0;
+  color: var(--tone-time);
+}
+
+/* Now: a line across today in the accent, with a dot where it starts. */
+.now {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(var(--start) * var(--calendar-hour) / 60 - 1px);
+  z-index: 10;
+  height: 2px;
+  background: var(--ui-control-on);
+  pointer-events: none;
+}
+
+.now::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-control-on);
+}
+
+/* ---------- Narrow ---------- */
+
+@container calendar (max-width: 559px) {
+  /* Title and arrows, then Today and the views: four controls don't fit
+     beside a title on a phone, and two rows keep each one whole. */
+  .header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: var(--ui-gap-stack);
+  }
+
+  .controls {
+    display: contents;
+  }
+
+  .title {
+    grid-area: 1 / 1;
+  }
+
+  .nav {
+    grid-area: 1 / 2;
+  }
+
+  .views {
+    grid-area: 2 / 2;
+  }
+
+  .controls > :first-child {
+    grid-area: 2 / 1;
+    justify-self: start;
+  }
+
+  .box {
+    --calendar-height: calc(var(--weekday-h) + var(--compact-row) * 6);
+  }
+
+  .weekday {
+    padding-inline: 0;
+    text-align: center;
+  }
+
+  .cell {
+    grid-template-rows: auto auto;
+    align-content: center;
+    justify-items: center;
+    gap: 2px;
+    padding: 2px;
+  }
+
+  /* 32px in the default 56px row; a shorter --compact-row shrinks it to 24. */
+  .cell .dayNumber {
+    --size: clamp(24px, var(--compact-row) - 24px, 32px);
+    justify-self: center;
+    min-width: var(--size);
+    height: var(--size);
+    font-size: var(--ui-text-md);
+  }
+
+  .chips {
+    display: none;
+  }
+
+  .dots {
+    display: flex;
+    justify-content: center;
+    gap: 3px;
+    height: 4px;
+  }
+
+  .dot {
+    width: 4px;
+    height: 4px;
+    border-radius: var(--ui-radius-full);
+    background: var(--tone-dot);
+  }
+
+  .root {
+    --gutter: 48px;
+  }
+
+  .dayFold {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition:
+      grid-template-rows var(--ui-dur-panel) var(--ui-ease-expand),
+      opacity var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2);
+  }
+
+  .dayFold[data-folded] {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows var(--ui-dur-base) var(--ui-ease-collapse),
+      opacity var(--ui-dur-instant) var(--ui-ease-exit);
+  }
+
+  .dayFold > * {
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
+/* ---------- Paging ---------- */
+
+/* The new page comes from the side you moved toward and the old one leaves
+   the other way: both slide 20px on the glide spring, so neither swings
+   past its place. The old one is gone on the instant step before the new
+   one is more than faint, so the two never read on top of each other. The
+   weekday row, the lines and the hours hold still; the title morphs. */
+.monthGrid[data-dir],
+.weekDays[data-dir] {
+  animation:
+    calendar-in-x var(--ui-dur-glide) var(--ui-ease-glide),
+    calendar-in-fade var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+}
+
+.leaving {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  pointer-events: none;
+  animation:
+    calendar-out-fade var(--ui-dur-instant) var(--ui-ease-color) forwards,
+    calendar-out-x var(--ui-dur-glide) var(--ui-ease-glide) forwards;
+}
+
+.monthGrid.leaving {
+  inset: 0;
+}
+
+.root [data-dir="-1"],
+.root [data-leaving="-1"] {
+  --dir: -1;
+}
+
+:is([dir="rtl"]) .root {
+  --flip: -1;
+}
+
+@keyframes calendar-in-x {
+  from {
+    translate: calc(var(--dir, 1) * var(--flip, 1) * var(--slide)) 0;
+  }
+}
+
+@keyframes calendar-in-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes calendar-out-x {
+  from {
+    translate: var(--from-x, 0px) 0;
+  }
+  to {
+    translate: calc(var(--dir, 1) * var(--flip, 1) * var(--slide) * -1) 0;
+  }
+}
+
+@keyframes calendar-out-fade {
+  from {
+    opacity: var(--from-opacity, 1);
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Reduced motion: pages crossfade in place, presses don't shrink, the day
+   list swaps height at once (AnimatedSize) and folds without moving. */
+@media (prefers-reduced-motion: reduce) {
+  .monthGrid[data-dir],
+  .weekDays[data-dir] {
+    animation: calendar-in-fade var(--ui-dur-fast) var(--ui-ease-enter) calc(var(--ui-dur-instant) / 2) backwards;
+  }
+  .leaving {
+    animation: calendar-out-fade var(--ui-dur-instant) var(--ui-ease-color) forwards;
+  }
+  .dayNumber:active,
+  button.chip:active,
+  button.agendaRow:active,
+  button.event:active {
+    scale: none;
+  }
+  .dayFold,
+  .dayFold[data-folded] {
+    transition-property: opacity;
+  }
+}

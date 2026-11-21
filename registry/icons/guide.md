@@ -48,7 +48,7 @@ in a tile. Every chevron in the same role is the same size.
 | `info`, `alert`, `check-circle` | ring, stem, dot (tick) | One ring that stays still; the stem and dot change ends between `info` and `alert`, and reshape into the tick for `check-circle`. `warning` is its own triangle. |
 | `thumbs-up`, `thumbs-down`, `pin` | hand, cuff; head, point | Down is up turned half round, so a flip turns the hand over. A pressed rating fills: set `--icon-fill: 1` on the icon or its control. |
 | `diff-added`, `diff-modified`, `diff-removed`, `diff-renamed` | frame, bar (+ stem, dot, head) | One rounded square that stays still; the mark inside reshapes. |
-| `more`, `pencil`, `sidebar`, `panel`, `search`, `link`, `download`, `upload`, `trash`, `external`, `file`, `retry`, `calendar`, `home`, `compose`, `settings`, `help`, `clock`, `share`, `folder`, `paperclip`, `at`, `list`, `terminal`, `branch`, `gauge` | | Everyday and app-frame icons. Each still turns into any other when its name changes. `trash`, `download`, `upload`, `share`, `external` and `arrow-right` move 1px while the control around them is hovered or keyboard-focused. |
+| `more`, `grip`, `pencil`, `sidebar`, `panel`, `search`, `link`, `download`, `upload`, `trash`, `external`, `file`, `retry`, `calendar`, `home`, `compose`, `settings`, `help`, `clock`, `share`, `folder`, `paperclip`, `at`, `list`, `terminal`, `branch`, `gauge` | | Everyday and app-frame icons. Each still turns into any other when its name changes. `trash`, `download`, `upload`, `share`, `external` and `arrow-right` move 1px while the control around them is hovered or keyboard-focused. |
 
 ## How it works
 

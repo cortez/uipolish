@@ -1,0 +1,302 @@
+/* An item is a marker on the rail and its text beside it. The rail between
+   two markers stops --rail-gap short of each, the same at both ends. */
+.root {
+  --marker: 32px;
+  --marker-gap: var(--ui-space-3);
+  --rail-gap: var(--ui-space-1);
+  --item-gap: var(--ui-space-5);
+  display: grid;
+  gap: var(--ui-gap-stack);
+  min-width: 0;
+  color: var(--ui-foreground);
+  font: var(--ui-weight-regular) var(--ui-text-md) / var(--ui-leading-md) var(--ui-font-sans);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
+}
+
+.root[data-variant="compact"] {
+  --marker: 20px;
+  --marker-gap: var(--ui-space-2);
+  --item-gap: var(--ui-space-4);
+}
+
+.feed {
+  display: grid;
+  min-width: 0;
+}
+
+.group {
+  display: grid;
+  min-width: 0;
+}
+
+.group + .group {
+  padding-block-start: var(--ui-space-2);
+}
+
+.heading {
+  margin: 0;
+  padding-block-end: var(--ui-space-3);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-title);
+  line-height: var(--ui-leading-sm);
+}
+
+/* ---------- Item ---------- */
+
+.item {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--marker) minmax(0, 1fr);
+  column-gap: var(--marker-gap);
+  padding-block-end: var(--item-gap);
+  border-radius: var(--ui-radius-md);
+  outline: none;
+}
+
+.item::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(var(--marker) / 2 - var(--ui-hairline) / 2);
+  top: calc(var(--marker) + var(--rail-gap));
+  bottom: var(--rail-gap);
+  width: var(--ui-hairline);
+  background: var(--ui-border-strong);
+}
+
+/* The last of a day ends the rail; the next day's heading starts it again. */
+.item:last-child::before {
+  display: none;
+}
+
+.item:last-child {
+  padding-block-end: var(--ui-space-2);
+}
+
+.group:last-child .item:last-child {
+  padding-block-end: 0;
+}
+
+/* ARIA feed items take focus (PageUp / PageDown); the ring sits clear of
+   the avatar and text. */
+.item:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-space-1);
+}
+
+.marker {
+  display: grid;
+  align-self: start;
+  width: var(--marker);
+  height: var(--marker);
+}
+
+/* A system event: its icon in a quiet dot, in its tone. */
+.dot {
+  display: grid;
+  place-items: center;
+  width: var(--marker);
+  height: var(--marker);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-fill-strong-solid);
+  color: var(--ui-muted);
+}
+
+.dot svg {
+  width: var(--ui-icon-md);
+  height: var(--ui-icon-md);
+}
+
+.root[data-variant="compact"] .dot svg {
+  width: var(--ui-icon-xs);
+  height: var(--ui-icon-xs);
+  --ui-icon-stroke: calc(var(--ui-icon-stroke-regular) * 16 / 12);
+}
+
+.dot[data-tone="accent"] {
+  background: linear-gradient(var(--ui-accent-tint), var(--ui-accent-tint)), var(--ui-surface);
+  color: var(--ui-accent-text);
+}
+
+.dot[data-tone="success"] {
+  background: linear-gradient(var(--ui-success-tint), var(--ui-success-tint)), var(--ui-surface);
+  color: var(--ui-success-text);
+}
+
+.dot[data-tone="warning"] {
+  background: linear-gradient(var(--ui-warning-tint), var(--ui-warning-tint)), var(--ui-surface);
+  color: var(--ui-warning-text);
+}
+
+.dot[data-tone="danger"] {
+  background: linear-gradient(var(--ui-danger-tint), var(--ui-danger-tint)), var(--ui-surface);
+  color: var(--ui-danger-text);
+}
+
+.content {
+  display: grid;
+  align-content: start;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+/* The sentence's first line sits on the marker's middle. */
+.line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: var(--ui-space-3);
+  padding-block-start: max(0px, calc((var(--marker) - var(--ui-leading-md)) / 2));
+}
+
+.text {
+  margin: 0;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+/* Who and what in the text color; the verb between them recedes. */
+.action {
+  color: var(--ui-muted);
+}
+
+.time {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+  cursor: default;
+}
+
+/* ---------- Body ---------- */
+
+.quote {
+  margin: 0;
+  padding: var(--ui-space-2) var(--ui-space-3);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-fill);
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+  text-wrap: pretty;
+}
+
+.change {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px var(--ui-space-2);
+  margin: 0;
+}
+
+.field,
+.from {
+  color: var(--ui-muted);
+}
+
+.from del {
+  text-decoration-thickness: var(--ui-hairline);
+}
+
+.arrow {
+  flex-shrink: 0;
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  color: var(--ui-subtle);
+}
+
+:is([dir="rtl"]) .arrow {
+  scale: -1 1;
+}
+
+.attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.attachments > li {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.file {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  max-width: 100%;
+  height: var(--ui-control-sm);
+  padding-inline: 10px var(--ui-space-3);
+  border-radius: var(--ui-radius-sm);
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--ui-dur-instant) var(--ui-ease-color),
+    scale var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+.fileIcon {
+  flex-shrink: 0;
+  width: var(--ui-icon-sm);
+  height: var(--ui-icon-sm);
+  color: var(--ui-muted);
+}
+
+.fileName {
+  composes: truncate from "../text/text.module.css";
+}
+
+.fileSize {
+  flex-shrink: 0;
+  color: var(--ui-muted);
+}
+
+@media (hover: hover) {
+  a.file:hover {
+    background: var(--ui-fill);
+  }
+}
+
+a.file:active {
+  background: var(--ui-fill-strong);
+  scale: var(--ui-scale-press);
+  transition-duration: var(--ui-dur-press);
+}
+
+a.file:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+/* A small link is 32px to see and 40px to touch. */
+@media (pointer: coarse) {
+  a.file::after {
+    content: "";
+    position: absolute;
+    inset: -4px 0;
+  }
+}
+
+/* ---------- Load earlier ---------- */
+
+/* Starts where the text does. */
+.more {
+  padding-inline-start: calc(var(--marker) + var(--marker-gap));
+}
+
+.srOnly {
+  composes: srOnly from "../text/text.module.css";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a.file:active {
+    scale: none;
+  }
+}

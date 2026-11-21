@@ -1,0 +1,58 @@
+/* A small window in the card: the split fills it. */
+.window {
+  width: 100%;
+  height: 216px;
+  overflow: clip;
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-edge);
+}
+
+.list {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  height: 100%;
+  margin: 0;
+  padding: var(--ui-space-1);
+  list-style: none;
+  background: var(--ui-canvas);
+}
+
+.item {
+  overflow: hidden;
+  padding: 6px var(--ui-space-2);
+  border-radius: var(--ui-radius-md);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.item[data-current] {
+  background: var(--ui-fill-strong);
+  color: var(--ui-foreground);
+}
+
+.note {
+  display: grid;
+  align-content: start;
+  gap: var(--ui-space-1);
+  padding: var(--ui-space-3);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-title);
+  line-height: var(--ui-leading-sm);
+}
+
+.text {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}

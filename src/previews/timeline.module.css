@@ -1,0 +1,13 @@
+/* The feed at a side panel's width beside the full one, from 900px. */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ui-space-7);
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 560px) minmax(0, 300px);
+    justify-content: space-between;
+  }
+}

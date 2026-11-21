@@ -19,6 +19,7 @@ const ALLOW = [
   { file: "registry/terminal-output/terminal-output.tsx", match: "busyLabel=\"Stopping…\"", reason: "Stop, plain text in the terminal card's header strip beside Copy." },
   { file: "registry/message-branches/message-branches.tsx", match: "className={styles.step}", reason: "Previous and next version, 32px capsules in the row under a reply beside 13px meta text, as Response actions'." },
   { file: "registry/code-block/code-block.tsx", match: "onClick={handleCopy}", reason: "Copy, inside the code block's header strip." },
+  { file: "registry/kanban/kanban.tsx", match: "className={styles.add}", reason: "Add a card, an icon in the column's 32px header strip, as Sidebar's toggle." },
   { file: "registry/toast/toast.tsx", match: "data.action!.onClick()", reason: "The toast's action, inside the compact toast card." },
   { file: "src/previews/switch.tsx", match: '<Button variant="secondary" size="sm">', reason: "Demo of the small switch beside the small button it pairs with." },
   { file: "src/components/install-command.tsx", match: "className={styles.copy}", reason: "The copy button inside the install command's pill." },
