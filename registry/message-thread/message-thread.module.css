@@ -35,6 +35,11 @@
   padding: var(--ui-space-5) var(--ui-space-4) var(--ui-space-6);
 }
 
+/* Sized by the scroll hook; never shrinks under flex. */
+.spacer {
+  flex: none;
+}
+
 .empty {
   display: grid;
   flex: 1;

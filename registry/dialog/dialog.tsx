@@ -40,6 +40,8 @@ function firstFocusable(root: Element | null) {
 
 /** How far above center a shrunk dialog may sit before it glides down. */
 const SHRINK_SLACK = 48;
+/** How far down the window a top-placed dialog's top edge sits, as a share of the room. */
+const TOP_PLACEMENT = 0.12;
 
 /** The nearest themed subtree, so the portaled panel keeps its tokens. */
 function themeRoot(el: Element | null) {
@@ -70,6 +72,11 @@ export type ModalProps = {
   /** Where focus goes on close when the trigger is gone (a deleted row, say). */
   finalFocus?: RefObject<HTMLElement | null>;
   role?: "dialog" | "alertdialog";
+  /** "center" (default) opens centered and settles back to center after a
+   *  shrink. "top" holds its top edge a fixed distance down the window, for
+   *  a panel whose height changes as you type (a command palette): results
+   *  grow and shrink below the field, and the field never moves. */
+  placement?: "center" | "top";
   className?: string;
   children: ReactNode;
   "aria-label"?: string;
@@ -87,6 +94,7 @@ export function Modal({
   triggerRef,
   finalFocus,
   role = "dialog",
+  placement = "center",
   className,
   children,
   ...aria
@@ -115,7 +123,8 @@ export function Modal({
       const cs = getComputedStyle(viewport);
       return viewport.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
     };
-    const centered = () => Math.max(0, (room() - popup.offsetHeight) / 2);
+    const centered = () =>
+      placement === "top" ? Math.min(Math.round(room() * TOP_PLACEMENT), Math.max(0, room() - popup.offsetHeight)) : Math.max(0, (room() - popup.offsetHeight) / 2);
     const pin = (top: number) => {
       viewport.style.setProperty("--dialog-top", `${Math.round(top)}px`);
       viewport.setAttribute("data-pinned", "");
@@ -157,7 +166,7 @@ export function Modal({
       // center (it opened tall, a loading state collapsed, a step is shorter)
       // glides down to center. Growing never moves it.
       window.clearTimeout(settle);
-      if (!shrank) return;
+      if (!shrank || placement === "top") return;
       settle = window.setTimeout(() => {
         shrank = false;
         const now = parseFloat(viewport.style.getPropertyValue("--dialog-top")) || 0;
@@ -181,7 +190,7 @@ export function Modal({
       observer.disconnect();
       removeEventListener("resize", onResize);
     };
-  }, []);
+  }, [placement]);
 
   const Root = role === "alertdialog" ? BaseAlertDialog.Root : BaseDialog.Root;
 

@@ -2,8 +2,9 @@
 
 A chat transcript. User messages are soft bubbles on the right; assistant
 replies are plain full-width text. While a reply streams, only the words that
-just arrived fade in, and the thread follows the bottom until the user scrolls
-up to read. Each finished reply gets Copy, Retry and a thumbs up or down, and
+just arrived fade in. A message the user sends rises to the top of the view
+and the reply grows into the room below it, so nothing on screen moves while
+it streams. Each finished reply gets Copy, Retry and a thumbs up or down, and
 screen readers hear it once, when it's done.
 
 ```tsx
@@ -90,24 +91,32 @@ push anything down.
 
 ## How the scroll works
 
-- **Stuck is a ref.** It changes on every wheel tick and shouldn't render.
-- **Following growth.** A `ResizeObserver` on the content pins `scrollTop`
-  to the bottom. Its callback runs after layout and before paint, so no
-  frame is drawn at the old position, and there's no smooth scroll chasing a
-  moving target. That's why it doesn't jitter as lines arrive.
-- **Letting go.** The intent is caught at the input, before the scroll
-  happens: wheel up, a finger dragging down, ArrowUp / PageUp / Home /
-  Shift+Space. Any other scroll that moves up (dragging the scrollbar,
-  find-in-page) also releases. Distance from the bottom alone doesn't:
-  content can grow and fire a scroll before the next pin, and that must not
-  read as the reader leaving.
-- **Sticking again.** Scrolling to within 8px of the bottom, pressing End,
-  sending a message, or the pill. The pill smooth-scrolls, and on `scrollend`
-  finishes any distance the reply grew during the scroll instantly.
-- **`overflow-anchor` stays `auto`.** Scroll anchoring isn't used to follow
-  the bottom (Safari doesn't support it, and it can't be told to let go). It
-  stays on because it's what keeps the paragraph the user is reading still
-  when something above it changes height after they've scrolled up.
+- **Loaded: the latest.** On mount the thread shows its end, and a
+  `ResizeObserver` on the content pins `scrollTop` to the bottom as it grows,
+  in the callback (after layout, before paint) so no frame is drawn at the
+  old position. Wheel up, a finger dragging down, ArrowUp / PageUp / Home /
+  Shift+Space or a scroll that moves up lets go; scrolling back to within
+  8px of the bottom sticks again.
+- **Sent: the message rises.** When a message with `from="user"` is added,
+  it glides to the top of the view (instantly with reduced motion) and the
+  reply grows into the room below it. A spacer after the last message holds
+  exactly that room: it shrinks as the reply grows and grows back when
+  something in the reply collapses (reasoning folding away, a loading row
+  ending), so the scroll height never changes and the message and the reply
+  never move. Pinning to the bottom instead moves everything on screen with
+  every line and every collapse.
+- **Clamps are undone before paint.** A collapse can shorten the page for a
+  moment before the spacer makes it up, and the browser clamps the scroll in
+  between. A move up at the very bottom with no wheel, touch, key or press
+  behind it is that clamp: the room is remade and the message put back
+  before the frame is drawn.
+- **Longer than the view.** Once the reply outgrows the room, the spacer is
+  gone and nothing scrolls on its own: the reader reads from the top of the
+  reply. "Jump to latest" appears when its end is more than 64px below the
+  view; it smooth-scrolls there and follows the bottom from then on.
+- **`overflow-anchor` stays `auto`.** It keeps the paragraph the user is
+  reading still when something above it changes height after they've
+  scrolled up.
 
 ## Motion
 
@@ -152,8 +161,8 @@ rise and "Jump to latest" scrolls instantly.
 ## Before / after
 
 Before: the reply is re-rendered on every token, so the whole message
-flickers, the window jumps to the bottom even while you're reading, and a
-screen reader reads every token as it lands.
+flickers, the window jumps with every line and every collapse, and a screen
+reader reads every token as it lands.
 
 ```tsx
 <div aria-live="polite">
@@ -162,8 +171,9 @@ screen reader reads every token as it lands.
 useEffect(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), [messages]);
 ```
 
-After: only new words fade in, the thread follows the bottom until you scroll
-up, and the reply is announced once.
+After: only new words fade in, the sent message rises to the top and the
+reply grows below it without moving anything, and the reply is announced
+once.
 
 ```tsx
 <MessageThread label="Dinner planning conversation">

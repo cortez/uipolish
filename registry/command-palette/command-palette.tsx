@@ -363,6 +363,7 @@ export function CommandPalette({
       onDismiss={() => onOpenChange(false)}
       initialFocus={inputRef}
       triggerRef={triggerRef}
+      placement="top"
       className={styles.palette}
       aria-label={label}
     >

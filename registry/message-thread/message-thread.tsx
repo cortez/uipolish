@@ -36,7 +36,8 @@ type MessageThreadProps = Omit<ComponentProps<"div">, "children"> & {
 export function MessageThread({ children, label = "Conversation", empty, className, ...props }: MessageThreadProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const { showJump, jumpToLatest } = useStickToBottom(scrollRef, contentRef);
+  const spacerRef = useRef<HTMLDivElement>(null);
+  const { showJump, jumpToLatest } = useStickToBottom(scrollRef, contentRef, spacerRef);
   const [ready, setReady] = useState(false);
   // `{cond && list}` passes false; only real children count.
   const isEmpty = Children.toArray(children).length === 0;
@@ -60,6 +61,8 @@ export function MessageThread({ children, label = "Conversation", empty, classNa
       >
         <div ref={contentRef} className={styles.content} data-empty={isEmpty || undefined}>
           <ReadyContext value={ready}>{isEmpty ? <div className={styles.empty}>{empty}</div> : children}</ReadyContext>
+          {/* The reply's room below a just-sent message (see use-stick-to-bottom). */}
+          <div ref={spacerRef} className={styles.spacer} aria-hidden="true" />
         </div>
       </div>
       <Button

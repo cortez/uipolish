@@ -1,9 +1,9 @@
 {
   "name": "message-thread",
   "title": "Message thread",
-  "summary": "Chat transcript that fades in only the newly streamed words. It stays pinned to the bottom until you scroll up and announces each reply once it ends.",
+  "summary": "Chat transcript that fades in only the newly streamed words. A sent message rises to the top and the reply grows into the room below it, so nothing moves while it streams; it announces each reply once it ends.",
   "kit": "agent",
-  "version": "0.3.6",
+  "version": "0.4.0",
   "dependencies": [
     "button",
     "icons",

@@ -118,6 +118,7 @@ Light glass, like the menus: `--ui-surface-glass` over a
 
 | What | Duration | Easing |
 |---|---|---|
+| Position | Top edge 12% down the window (Dialog's `placement="top"`); results grow and shrink below the field as you type and the field never moves | |
 | Open, close | as Dialog: fades and scales from 0.97 around its center over `--ui-dur-base`; out in `--ui-dur-instant` | `--ui-ease-enter`, `--ui-ease-exit` |
 | Height following the results | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
 | Active row background and Enter key | instant on, `--ui-dur-instant` off | `--ui-ease-color` |
