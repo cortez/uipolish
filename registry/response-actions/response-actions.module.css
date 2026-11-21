@@ -9,7 +9,7 @@
    evenly. The first button is pulled back by its own inset (half the
    square less the icon), so the copy glyph starts on the reply's text edge. */
 .row {
-  --row-spill: calc((var(--ui-control-sm) - var(--ui-icon-md)) / 2);
+  --row-spill: calc((var(--ui-control-sm) * var(--ui-icon-button) - var(--ui-icon-md)) / 2);
   position: relative;
   z-index: 1;
   display: flex;

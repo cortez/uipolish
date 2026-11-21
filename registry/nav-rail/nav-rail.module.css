@@ -2,7 +2,7 @@
    from every edge. */
 .rail {
   --nav-rail-item-h: var(--ui-control-md);
-  --nav-rail-item-w: calc(var(--nav-rail-item-h));
+  --nav-rail-item-w: calc(var(--nav-rail-item-h) * var(--ui-icon-button));
   --nav-rail-pad: 4px;
   --nav-rail-gap: 4px;
   /* Opaque, the same as --ui-fill over the canvas, so a badge can cut out of it. */
@@ -18,7 +18,7 @@
   gap: var(--nav-rail-gap);
   box-sizing: border-box;
   padding: var(--nav-rail-pad);
-  border-radius: calc(var(--ui-radius-control) + var(--nav-rail-pad));
+  border-radius: calc(min(var(--ui-radius-control), var(--nav-rail-item-h) / 2) + var(--nav-rail-pad));
   background: var(--nav-rail-bg);
   box-shadow: var(--ui-track-edge);
   font-family: var(--ui-font-sans);

@@ -18,7 +18,7 @@
      same height, wider only when the longest page number needs it. The
      highlight is one number slot, placed past one arrow: plain arithmetic on these
      two widths, so it always lands exactly on its number. */
-  --pagination-arrow: calc(var(--pagination-height));
+  --pagination-arrow: calc(var(--pagination-height) * var(--ui-icon-button));
   --pagination-slot: max(var(--pagination-height), calc(var(--pagination-digits, 1) * 1ch + var(--ui-space-3)));
   --pagination-dir: 1;
 
@@ -142,7 +142,7 @@
   inset-inline-start: 0;
   width: var(--pagination-slot);
   height: var(--pagination-height);
-  border-radius: var(--ui-radius-sm);
+  border-radius: var(--ui-radius-control-sm);
   background: var(--ui-fill-strong);
   translate: calc(
       var(--pagination-dir) *

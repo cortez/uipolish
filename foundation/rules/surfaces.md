@@ -304,6 +304,14 @@ for real-looking services read as fake.
   holds buttons follows the concentric rule: its radius is the button's
   radius plus the gap (a small button's 8 plus a 4px inset is the field's
   12).
+- **A product that wants pill controls sets three tokens in its theme**,
+  never per component: `--ui-radius-control` and `--ui-radius-control-sm`
+  to `var(--ui-radius-pill)`, and `--ui-icon-button` (icon buttons' width
+  over their height, 1 by default) to `var(--ui-capsule)`. Every button,
+  chip, tab, segment, row and icon button follows, and wrappers that add a
+  control's radius to their padding (a dialog's corner, the composer, the
+  nav rail) cap it at half the control's height, so they stay concentric
+  instead of turning into ovals.
 
 ## 5. Color tokens & states
 

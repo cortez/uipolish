@@ -85,7 +85,7 @@
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
     gap: 0 var(--ui-space-3);
-    border-radius: calc(var(--ui-radius-sm) + var(--pad));
+    border-radius: calc(min(var(--ui-radius-control-sm), var(--ui-control-sm) / 2) + var(--pad));
   }
 
   /* With a picker: picker and Copy share the top row, the command runs

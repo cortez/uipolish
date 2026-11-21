@@ -84,6 +84,8 @@
   --ui-radius-lg: calc(var(--ui-radius) * 4);
   --ui-radius-full: 9999px;
   --ui-radius-control: var(--ui-radius-md);
+  /* Small (32px) buttons and chips: at sm the control radius reads as a pill. */
+  --ui-radius-control-sm: var(--ui-radius-sm);
   --ui-radius-pill: var(--ui-radius-full);
 
   /* Control heights */
@@ -92,6 +94,14 @@
   --ui-control-lg: 48px;
   /* A switch's thumb and a slider's knob are this much wider than tall. */
   --ui-capsule: 1.375;
+  /* Icon-only buttons are this much wider than tall: square. */
+  --ui-icon-button: 1;
+
+  /* A product that wants pill controls sets, in its own theme:
+       --ui-radius-control: var(--ui-radius-pill);
+       --ui-radius-control-sm: var(--ui-radius-pill);
+       --ui-icon-button: var(--ui-capsule);
+     and every button, chip, tab, segment, row and icon button follows. */
 
   /* Type */
   --ui-font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";

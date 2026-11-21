@@ -31,7 +31,7 @@
   min-height: var(--ui-control-sm);
   /* The small radius, like a small button; a long label wraps and keeps
      the corners rather than cutting the text. */
-  border-radius: var(--ui-radius-sm);
+  border-radius: var(--ui-radius-control-sm);
   isolation: isolate;
   font: var(--chip-font);
   line-height: 1.3;

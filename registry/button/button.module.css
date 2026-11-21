@@ -51,25 +51,23 @@
 /* Icon only (one element, named by aria-label): a square, with the same
    corners as every other button. */
 .button[data-icon-only] {
-  width: calc(var(--ui-control-md));
+  width: calc(var(--ui-control-md) * var(--ui-icon-button));
   padding-inline: 0;
 }
 
 .button[data-size="sm"][data-icon-only] {
-  width: calc(var(--ui-control-sm));
+  width: calc(var(--ui-control-sm) * var(--ui-icon-button));
 }
 
 .button[data-size="lg"][data-icon-only] {
-  width: calc(var(--ui-control-lg));
+  width: calc(var(--ui-control-lg) * var(--ui-icon-button));
 }
 
 .button[data-size="sm"] {
   height: var(--ui-control-sm);
   min-width: var(--ui-control-sm);
   padding-inline: 14px;
-  /* At 32px the control radius reads as a pill; a small button keeps the
-     same proportions as the rest at sm. */
-  border-radius: var(--ui-radius-sm);
+  border-radius: var(--ui-radius-control-sm);
 }
 
 /* A small button looks 32px but takes a 40px touch: the hit area grows 4px

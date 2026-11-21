@@ -230,7 +230,7 @@
 .courseNav {
   display: flex;
   flex-shrink: 0;
-  margin-inline-end: calc((var(--ui-icon-md) - var(--ui-control-md)) / 2);
+  margin-inline-end: calc((var(--ui-icon-md) - var(--ui-control-md) * var(--ui-icon-button)) / 2);
 }
 
 .who {

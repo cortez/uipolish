@@ -109,7 +109,7 @@
 .dialog {
   --dialog-pad: var(--ui-space-6);
   --corner: var(--ui-space-4);
-  --dialog-radius: calc(var(--corner) + var(--ui-radius-control));
+  --dialog-radius: calc(var(--corner) + min(var(--ui-radius-control), var(--ui-control-md) / 2));
   border-radius: var(--dialog-radius);
 }
 
@@ -192,7 +192,7 @@
   gap: var(--ui-space-3);
   /* The title keeps clear of Close, which sits in the corner. */
   padding: calc(var(--dialog-pad) - var(--ui-space-1))
-    calc(var(--corner) + var(--ui-control-md) + var(--ui-space-3)) var(--ui-space-4)
+    calc(var(--corner) + var(--ui-control-md) * var(--ui-icon-button) + var(--ui-space-3)) var(--ui-space-4)
     var(--dialog-pad);
 }
 

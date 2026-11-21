@@ -187,7 +187,7 @@
   padding-block: 5px;
   padding-inline: 14px;
   /* The small radius, like a small button; a long one wraps and keeps it. */
-  border-radius: var(--ui-radius-sm);
+  border-radius: var(--ui-radius-control-sm);
   font-size: var(--ui-text-md);
   line-height: 1.3;
 }

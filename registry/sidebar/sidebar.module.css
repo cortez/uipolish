@@ -7,10 +7,10 @@
   --sidebar-width: 264px;
   --sidebar-pad: var(--ui-space-2);
   --sidebar-row: var(--ui-control-sm);
-  --sidebar-capsule: var(--sidebar-row);
+  --sidebar-capsule: calc(var(--sidebar-row) * var(--ui-icon-button));
   --sidebar-rail: calc(var(--sidebar-capsule) + var(--sidebar-pad) * 2);
   --sidebar-inset: calc((var(--sidebar-capsule) - 16px) / 2);
-  --sidebar-more: 24px;
+  --sidebar-more: calc(24px * var(--ui-icon-button));
   --sidebar-bg: var(--ui-surface);
   /* Opaque versions of the row fills, so the collapsed count can cut out of them. */
   --sidebar-bg-current: color-mix(in oklch, var(--ui-foreground) 8%, var(--sidebar-bg));
