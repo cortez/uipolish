@@ -344,7 +344,10 @@ export function PromptInput({
 
   function handlePointerDown(event: PointerEvent<HTMLDivElement>) {
     const target = event.target as HTMLElement;
-    if (target.closest("button, a, input, select, textarea, label, [role='button']")) return;
+    // React bubbles events out of portals: a tap in a footer control's popup
+    // (the model picker's list) arrives here but isn't in the composer.
+    if (!event.currentTarget.contains(target)) return;
+    if (target.closest("button, a, input, select, textarea, label, [role='button'], [role='combobox'], [tabindex]:not([tabindex='-1'])")) return;
     event.preventDefault();
     focusAtEnd();
   }

@@ -128,6 +128,9 @@ there would make typing feel late.
   sits on a small disc, so the picture stays in view. Every button has a 40px
   hit area on coarse pointers.
 - The textarea is 16px on touch devices so iOS doesn't zoom into it.
+- A press on the composer's empty space focuses the textarea; a press on a
+  control, or inside a footer control's popup (the model picker's list),
+  never does, so choosing a model on a phone doesn't raise the keyboard.
 
 ## Before / after
 
