@@ -1,7 +1,7 @@
 .region {
   position: fixed;
   z-index: 50;
-  bottom: max(var(--ui-space-4), env(safe-area-inset-bottom));
+  bottom: calc(max(var(--ui-space-4), env(safe-area-inset-bottom)) + var(--toast-offset, 0px));
   width: min(380px, 100vw - 2 * var(--ui-space-4));
   outline: none;
   font-family: var(--ui-font-sans);

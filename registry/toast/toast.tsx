@@ -156,10 +156,13 @@ export type ToasterProps = {
   max?: number;
   /** Name of the region, read with its F6 shortcut. */
   label?: string;
+  /** Extra room under the stack, in px, so toasts clear something pinned to
+   *  the bottom of the window (an action bar, a tab bar). Default 0. */
+  offset?: number;
 };
 
 /** Renders the toasts. Built on Base UI's Toast: it owns timers, F6, swipe and announcements. */
-export function Toaster({ position = "bottom-right", max = 3, label = "Notifications" }: ToasterProps) {
+export function Toaster({ position = "bottom-right", max = 3, label = "Notifications", offset = 0 }: ToasterProps) {
   // A marker in place, so the portaled stack inherits the nearest themed subtree's tokens.
   const [host, setHost] = useState<HTMLSpanElement | null>(null);
   const themed = host?.closest<HTMLElement>("[data-theme]");
@@ -169,13 +172,13 @@ export function Toaster({ position = "bottom-right", max = 3, label = "Notificat
     <BaseToast.Provider toastManager={manager} limit={max}>
       <span ref={setHost} hidden />
       <BaseToast.Portal container={container}>
-        <Stack position={position} max={max} label={label} />
+        <Stack position={position} max={max} label={label} offset={offset} />
       </BaseToast.Portal>
     </BaseToast.Provider>
   );
 }
 
-function Stack({ position, max, label }: Required<ToasterProps>) {
+function Stack({ position, max, label, offset }: Required<ToasterProps>) {
   const { toasts } = BaseToast.useToastManager<ToastData>();
   const { places, height, leaving } = stack(toasts, max);
 
@@ -184,7 +187,10 @@ function Stack({ position, max, label }: Required<ToasterProps>) {
       className={styles.region}
       data-position={position}
       aria-label={`${label} (F6)`}
-      style={(state) => ({ height: state.expanded ? height.expanded : height.collapsed })}
+      style={(state) => ({
+        height: state.expanded ? height.expanded : height.collapsed,
+        ...(offset ? ({ "--toast-offset": `${offset}px` } as CSSProperties) : {}),
+      })}
     >
       {toasts.map((t) => (
         <ToastItem key={t.id} toast={t} place={places[t.id]} leaving={leaving} />

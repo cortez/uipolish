@@ -44,6 +44,11 @@ toast.promise(sendInvitations(), {
 <Toaster position="bottom-right" max={3} />
 ```
 
+On a screen with something pinned to the bottom of the window (an action
+bar, a tab bar), give the stack room above it, so a toast never covers the
+button that raised it: `<Toaster offset={64} />` (px, added to the 16px
+edge and the safe area).
+
 Every call returns an id. Passing the same `id` again updates that toast in
 place instead of adding another.
 

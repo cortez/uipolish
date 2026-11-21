@@ -79,6 +79,7 @@ Each column:
 | `align` | `end` for numbers: right-aligned on their last digit, with the sort arrow on the far side of the label. Text cells (the default, or a `cell` that returns a string) set their digits in tabular figures; in a `cell` that returns an element, put `font-variant-numeric: tabular-nums` on the number yourself |
 | `sortable` | The header becomes a sort button |
 | `resizable` | `false` to fix the width. On by default |
+| `grow` | Takes the table's spare width, with `width` as its smallest, so the columns fill the table. Give it to one column; without one, the spare width is an empty strip after the last column |
 | `validate` | Returns a message when the cell needs a look, or nothing |
 
 Define `columns` outside render, or memoize it, when the table is large:

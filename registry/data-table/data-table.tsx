@@ -47,6 +47,10 @@ export type DataTableColumn<Row> = {
   validate?: (row: Row) => string | null | undefined;
   /** Defaults to true. */
   resizable?: boolean;
+  /** Takes the table's spare width, so the columns fill it with no empty
+   *  strip after the last one. `width` is then its smallest. Give it to one
+   *  column (the name, the description). */
+  grow?: boolean;
 };
 
 type DataTableProps<Row> = Omit<ComponentProps<"div">, "children" | "onChange" | "role"> & {
@@ -300,7 +304,14 @@ export function DataTable<Row>({
     const room = Math.floor(viewWidth * 0.6) - (selectable ? SELECT_WIDTH : 0);
     if (room < columnWidths[0]) columnWidths[0] = Math.max(minOf(columns[0]), room);
   }
-  const template = [...(selectable ? [`${SELECT_WIDTH}px`] : []), ...columnWidths.map((w) => `${w}px`), "minmax(0, 1fr)"].join(" ");
+  // A growing column takes the spare width; without one, an empty track
+  // after the last column does, so resizing never stretches the others.
+  const grows = columns.some((c) => c.grow);
+  const template = [
+    ...(selectable ? [`${SELECT_WIDTH}px`] : []),
+    ...columnWidths.map((w, i) => (columns[i].grow ? `minmax(${w}px, 1fr)` : `${w}px`)),
+    ...(grows ? [] : ["minmax(0, 1fr)"]),
+  ].join(" ");
   const total = (selectable ? SELECT_WIDTH : 0) + columnWidths.reduce((a, b) => a + b, 0);
   const pinnedWidth = columns.length > 0 ? (selectable ? SELECT_WIDTH : 0) + columnWidths[0] : 0;
   const stickyCount = stickyFirstColumn && columns.length > 0 && pinnedWidth <= viewWidth * 0.6 ? offset + 1 : 0;
