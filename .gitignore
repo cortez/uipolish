@@ -9,3 +9,7 @@ next-env.d.ts
 
 # Workers' temporary preview pages, never shipped.
 /src/app/zz-*/
+
+# Paid screens, pulled in at build from the private cortez/uipolish-pro
+# (scripts/fetch-pro.mjs). Never committed here.
+/pro/

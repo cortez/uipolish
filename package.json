@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "node scripts/fetch-pro.mjs && next dev",
+    "build": "node scripts/fetch-pro.mjs && next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "node --test --no-warnings tests/*.test.mjs",
-    "skill": "node scripts/build-skill.mjs"
+    "skill": "node scripts/build-skill.mjs",
+    "pro": "node scripts/fetch-pro.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
