@@ -3,7 +3,7 @@
   "title": "Tree",
   "summary": "A file and folder tree for a side panel: nested rows from data, one selection, folders that fold on height, and the full keyboard of the ARIA tree pattern with one tab stop. Folders can load their children on first open, quiet for 300ms before a loading row shows.",
   "blurb": "A file and folder tree with the keyboard built in.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dependencies": [
     "button",
     "icons",

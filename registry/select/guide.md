@@ -48,7 +48,7 @@ Base UI's `Select`.
 | `error` | An error from outside, such as the server. Wins over `validate` |
 | `value`, `onValueChange`, `defaultValue` | Controlled or uncontrolled |
 | `placeholder` | Shown while nothing is chosen. Defaults to "Choose…" |
-| `size` | `md` (default): a form field, surface fill, hairline edge. `sm`: a 34px pill on a light fill, for toolbars and for sitting inside another pill |
+| `size` | `md` (default): a form field, surface fill, hairline edge. `sm`: a 34px trigger at the control radius on a light fill, for toolbars and for sitting inside another control |
 | `name`, `required`, `disabled`, `id`, `ref` | As on a native select |
 
 ## Keyboard
@@ -81,7 +81,7 @@ Disabled options are skipped by the keys and can't be chosen.
 | Placeholder | Placeholder in the subtle text color | nothing chosen |
 | Hover | Fills with `--ui-field-focus-fill` (`md`), fill one step darker (`sm`); the edge never changes | `@media (hover: hover)` |
 | Open | The same fill, held while the list is open; chevron flips | `[data-popup-open]` |
-| Focus | `md`: the field focus fill, at once; the edge stays. `sm`: a line just inside the pill | `:focus-visible`, never animated |
+| Focus | `md`: the field focus fill, at once; the edge stays. `sm`: a line just inside its edge | `:focus-visible`, never animated |
 | Invalid | Danger edge, error with an icon in the hint's place | `aria-invalid` |
 | Disabled | 50% opacity, default cursor | `disabled`, `[data-disabled]` |
 | Highlighted option | One rounded fill under the option, sliding between options (its height eases with the move when rows differ); under a disabled option it is the soft fill | `[data-highlighted]`, pointer or keyboard |

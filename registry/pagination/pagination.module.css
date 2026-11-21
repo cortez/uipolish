@@ -8,17 +8,17 @@
 @property --pagination-arrow {
   syntax: "<length>";
   inherits: true;
-  initial-value: 44px;
+  initial-value: 32px;
 }
 
 .root {
   --pagination-gap: 4px;
   --pagination-height: var(--ui-control-sm);
-  /* Arrows are the small icon button's capsule. Numbers are squares of the
-     same height, wider only when the longest page number needs it. The pill
-     is one number slot, placed past one arrow: plain arithmetic on these
+  /* Arrows are the small icon button, a square. Numbers are squares of the
+     same height, wider only when the longest page number needs it. The
+     highlight is one number slot, placed past one arrow: plain arithmetic on these
      two widths, so it always lands exactly on its number. */
-  --pagination-arrow: calc(var(--pagination-height) * var(--ui-capsule));
+  --pagination-arrow: calc(var(--pagination-height));
   --pagination-slot: max(var(--pagination-height), calc(var(--pagination-digits, 1) * 1ch + var(--ui-space-3)));
   --pagination-dir: 1;
 
@@ -67,7 +67,7 @@
 .item {
   display: flex;
   flex-shrink: 0;
-  /* The same curve as the pill, so a number and the pill moving together stay together. */
+  /* The same curve as the highlight, so a number and the highlight moving together stay together. */
   transition:
     translate var(--ui-dur-glide) var(--ui-ease-glide),
     opacity var(--ui-dur-fast) var(--ui-ease-enter);
@@ -82,7 +82,7 @@
 /* ---------- Controls ---------- */
 
 /* Raised to outrank the button's size rules, icon-only included, in any
-   load order: the pill's arithmetic needs these exact boxes. */
+   load order: the highlight's arithmetic needs these exact boxes. */
 .root .list .control.control {
   width: var(--pagination-slot);
   min-width: 0;
@@ -142,7 +142,7 @@
   inset-inline-start: 0;
   width: var(--pagination-slot);
   height: var(--pagination-height);
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-sm);
   background: var(--ui-fill-strong);
   translate: calc(
       var(--pagination-dir) *

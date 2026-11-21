@@ -37,7 +37,7 @@ and the old `xs`, `lg` and `xl` steps alias into these),
 - Line-heights are px for the UI steps so rows line up: 12px text in a 20px
   row (a footer beside 14px text, a field message) takes `--ui-leading-md`,
   not its own 16px.
-- Controls, pills and badges use `line-height: 1` so padding alone sets the
+- Controls, tags and badges use `line-height: 1` so padding alone sets the
   box. That's a rule, not a step.
 - Weight: two in all. 400 for text, everything but the Title style, and
   500 for titles. A
@@ -101,7 +101,7 @@ word that has fi or fl and see what you lose.
 | Headings (17–22px) | 24 / 28px |
 | UI text (12–15px) | 16 / 18 / 20 / 22px |
 | Running text, any size | 1.5 |
-| Buttons, pills, badges, labels | 1, so padding alone controls the box |
+| Buttons, chips, badges, labels | 1, so padding alone controls the box |
 
 The most common single miss: headings inheriting body line-height. A 22px
 heading at 1.5 has a hole in the middle of the layout.
@@ -124,7 +124,7 @@ heading at 1.5 has a hole in the middle of the layout.
   break 2–3 words in.
 - `hanging-punctuation: first` on prose, so an opening quote hangs outside
   the text edge (Safari; ignored elsewhere).
-- `white-space: nowrap` on pills, buttons and table headers.
+- `white-space: nowrap` on buttons, badges and table headers.
 
 ### Wrap, don't cut
 
@@ -183,7 +183,7 @@ with and without it) before relying on it to stop numbers jiggling. A
 readout that must keep its width without them reserves the width of its
 widest value.
 
-### A badge or pill inside a sentence
+### A badge or tag inside a sentence
 
 Shorter than the line (20px in a 24px line), its label on the sentence's
 baseline, 2px of room at each side. Never as tall as the line: it touches

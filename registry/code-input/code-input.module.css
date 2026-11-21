@@ -8,7 +8,7 @@
   font-family: var(--ui-font-sans);
 }
 
-/* Focused only while it's a pill, so focus has somewhere to stay; the pill shows the state. */
+/* Focused only while folded, so focus has somewhere to stay; the bar shows the state. */
 .root:focus {
   outline: none;
 }
@@ -21,8 +21,8 @@
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
-/* The boxes and the pill share one cell; the boxes stay in flow, so the row
-   keeps its size whatever the pill does. */
+/* The boxes and the bar share one cell; the boxes stay in flow, so the row
+   keeps its size whatever the bar does. */
 .stage {
   position: relative;
   display: grid;
@@ -114,7 +114,7 @@
   line-height: 1;
   text-align: center;
   outline: none;
-  /* Opacity, drift and blur: the boxes coming back out of the pill. */
+  /* Opacity, drift and blur: the boxes coming back out of the bar. */
   transition:
     --code-edge var(--ui-dur-instant) var(--ui-ease-color),
     --code-danger var(--ui-dur-fast) var(--ui-ease-color),
@@ -271,9 +271,9 @@
   }
 }
 
-/* ---------- Status: the boxes fold into a pill ---------- */
+/* ---------- Status: the boxes fold into a bar ---------- */
 
-/* Merging: each box drifts toward the pill's middle as it fades into it. */
+/* Merging: each box drifts toward the bar's middle as it fades into it. */
 .root[data-phase="verifying"] .box,
 .root[data-phase="success"] .box {
   opacity: 0;
@@ -312,8 +312,8 @@
   80% { translate: -1px 0; }
 }
 
-/* The pill: a quiet fill with no edge, the row's width at rest, the label's
-   when folded. Pinned to all four edges with auto margins, so it sits on the
+/* The status bar (.pill): a quiet fill with no edge at the control radius,
+   the row's width at rest, the label's when folded. Pinned to all four edges with auto margins, so it sits on the
    row's exact center and folds toward it from both sides at once. */
 .pill {
   position: absolute;
@@ -352,7 +352,7 @@
   flex: none;
   align-items: center;
   gap: var(--ui-space-2);
-  /* Even on both sides, so the glyph and words sit on the pill's center. */
+  /* Even on both sides, so the glyph and words sit on the bar's center. */
   padding-inline: var(--ui-space-4);
   font-size: var(--ui-text-md);
   font-weight: var(--ui-weight-medium);
@@ -458,7 +458,7 @@
     animation: none;
   }
 
-  /* The pill takes its width while unseen: at once on the way in, after its fade on the way out. */
+  /* The bar takes its width while unseen: at once on the way in, after its fade on the way out. */
   .pill {
     transition:
       opacity var(--ui-dur-fast) var(--ui-ease-color),

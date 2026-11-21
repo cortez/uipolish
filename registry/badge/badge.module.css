@@ -3,7 +3,7 @@
   --badge-text: var(--ui-muted);
   --badge-dot: var(--ui-subtle);
   --badge-edge: var(--ui-border);
-  /* A little taller than the line it sits on, so the pill has air above and
+  /* A little taller than the line it sits on, so the badge has air above and
      below its letters and still sits inside a 24px row. */
   --badge-height: 24px;
   /* Half the height: the label starts where the round end stops. */
@@ -32,7 +32,7 @@
 }
 
 /* In running text (a badge straight inside a paragraph or list item) the
-   pill is shorter than the line and its label sits on the sentence's
+   badge is shorter than the line and its label sits on the sentence's
    baseline, so it reads as part of the line with room above and below and
    never touches the lines around it; a little room at the sides keeps
    punctuation off it. */
@@ -87,7 +87,7 @@
 
 /* Trimmed to the capitals and the baseline, so centering the label centers
    the letters: the font's own spacing puts more room above them than below,
-   which reads as text sitting high in a short pill. */
+   which reads as text sitting high in a short badge. */
 .label {
   text-box: trim-both cap alphabetic;
 }

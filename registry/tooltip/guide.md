@@ -37,7 +37,7 @@ shared delay lives inside it.
 |---|---|---|
 | Closed | Nothing. With `describe`, the text stays in the DOM, hidden, so `aria-describedby` resolves | `keepMounted` |
 | Waiting | Nothing yet. The pointer rests on the trigger for 500ms | `delay` |
-| Open | Inverted pill above the trigger, optional arrow and shortcut | hover after the delay, or keyboard focus |
+| Open | Inverted label above the trigger, optional arrow and shortcut | hover after the delay, or keyboard focus |
 | Warm | The next tooltip opens with no delay and no animation | within 300ms of the last one closing, or while one is open |
 | Pressed | Closes and stays closed until the pointer leaves or focus moves on | `pointerdown` or `click` on the trigger |
 | Flipped / shifted | Moves to the other side or slides along the edge, 8px inside the viewport | Base UI `Positioner` |

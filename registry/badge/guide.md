@@ -1,7 +1,7 @@
 # Badge
 
 A small static label for a status or a count: "Going", "Card declined", a
-3 beside Replies. In a sentence it's a pill exactly as tall as the line
+3 beside Replies. In a sentence it's exactly as tall as the line
 it sits in, so it never makes that line taller; in a row it's 24px, a
 little taller than the text beside it. A tone
 tints it and colors an optional dot; the words always carry the meaning.
@@ -84,7 +84,7 @@ and 11 the same size, and the digits that change roll (see Motion).
 
 - **A little taller than the line.** `md` is 24px and `sm` 20px: four pixels
   more than the 20px and 16px lines they sit on, so the letters have air above and below and
-  the pill doesn't look squeezed. In a row, aligned to the top of the line
+  the badge doesn't look squeezed. In a row, aligned to the top of the line
   (`vertical-align: top`).
 - **In a sentence** (straight inside a `p`, `li`, `dd` or `figcaption`) it
   drops to 20px and sits on the text's baseline, so there's room above and
@@ -96,9 +96,11 @@ and 11 the same size, and the digits that change roll (see Motion).
   inside a sentence.
 - **The dot** is 6px, 6px from the label. It's a lighter mark than a
   letter, so its side looks emptier at the same padding; the start padding
-  is 2px less with a dot, which balances the pill.
+  is 2px less with a dot, which balances the badge.
 - **Counts** are never narrower than tall: one digit is a circle, two or
-  more a pill with 8px sides (6px at `sm`). `tabular-nums` gives every figure the same
+  more a wider badge with 8px sides (6px at `sm`). The badge takes the
+  control radius, which is half its height or more, so it reads round
+  only because it is short. `tabular-nums` gives every figure the same
   width.
 - In a flex row, align the row's items to center; the badge is as tall as
   a line of text beside it.

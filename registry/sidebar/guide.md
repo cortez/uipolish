@@ -7,8 +7,8 @@ bottom. ⌘B (Ctrl+B) folds it to an icon rail, where one tooltip glides
 between the icons as on Nav rail. Below 768px it leaves the layout and
 opens as a drawer from a button in the page's header.
 
-The current item is marked with Tabs' flat pill, and when it changes the
-pill flies from the old row to the new one. Behavior comes from Base UI
+The current item is marked with Tabs' flat highlight, and when it changes
+the highlight flies from the old row to the new one. Behavior comes from Base UI
 through the kit: the menus are Dropdown menu, the phone drawer is Drawer,
 and the rail's tooltip is Nav rail's `NavRailTooltipGroup`.
 
@@ -143,7 +143,7 @@ Ids must be unique across items, sections and the recent list, since one
 
 | Part | Size |
 |---|---|
-| Sidebar | 264px (`--sidebar-width`); collapsed, the 44px capsule plus 8px each side: 60px |
+| Sidebar | 264px (`--sidebar-width`); collapsed, the 32px square icon row plus 8px each side: 48px (40px plus 8px, 56px, on touch screens) |
 | Rows | 32px, Tabs' height; 40px on touch screens. 2px apart |
 | Primary and section items | 14px medium, icon 16px in `--ui-muted`. Nested rows indent to the label above |
 | Recent titles | 12px regular, one line, faded at the end when cut, the full title in `title` |
@@ -151,11 +151,11 @@ Ids must be unique across items, sections and the recent list, since one
 | Switcher and account | 40px; the 24px mark or avatar centered on the icon column below |
 
 Everything lines up on one column: each icon sits where it would be
-centered in the collapsed capsule, so folding the sidebar never moves an
-icon. Recent titles and headings start on the icons' left edge. The page
-beside it should be one surface step up (`--ui-surface` on the
-`--ui-canvas` sidebar), with no line between them: the change of surface is
-the edge.
+centered in the collapsed square row, so folding the sidebar never moves an
+icon. Recent titles and headings start on the icons' left edge. The sidebar
+and the page beside it are one surface (`--ui-surface`), divided by a single
+hairline at the sidebar's inner edge; don't inset the page as a card on a
+grey canvas.
 
 ## States
 
@@ -163,13 +163,13 @@ the edge.
 |---|---|---|
 | Rest | Labels and icons in the muted color | |
 | Hover | No fill: the row's label and icon come up from the muted color to the text color, as Nav rail's items do; a shortcut shows at the row's end | `@media (hover: hover)` |
-| Current | Tabs' flat pill (`--ui-track-pill`), icon in the text color | `aria-current="page"` |
-| Focus | A line inside the row's pill; the shortcut shows | `:focus-visible` |
+| Current | Tabs' flat highlight (`--ui-track-pill`), icon in the text color | `aria-current="page"` |
+| Focus | A line inside the row's edge; the shortcut shows | `:focus-visible` |
 | Badge | An accent count at the row's end; collapsed, at the icon's top right, cut out by a ring | `badge` |
 | Group open / closed | The chevron points down, then up; the rows open below | `aria-expanded` |
-| Collapsed | A 60px rail: mark, item icons, avatar. Sections and the recent list are hidden | `collapsed` |
+| Collapsed | A 48px rail (56px on touch screens): mark, item icons, avatar. Sections and the recent list are hidden | `collapsed` |
 | Collapsed, hovered | One tooltip beside the rail with the label and shortcut, gliding from icon to icon | `NavRailTooltipGroup` |
-| Recent row hovered | A "…" capsule at the row's end; always there on the current row and on touch | |
+| Recent row hovered | A square "…" button at the row's end; always there on the current row and on touch | |
 | Recent row with meta | A time or faces at the row's end in the subtle color; the "…" fades in over it on hover, focus and the current row, and the title never moves | `meta` |
 | Menu open | Its trigger holds the pressed fill | `data-popup-open` |
 | Renaming | The row becomes a field of the same shape, text in place, selected | Rename |
@@ -191,7 +191,7 @@ the edge.
 | Width, expanding | `--ui-dur-panel` | `--ui-ease-expand` |
 | Labels, headings, sections leaving | `--ui-dur-instant` | `--ui-ease-exit` |
 | Labels arriving, 120ms after the width starts | `--ui-dur-fast` | `--ui-ease-enter` |
-| Pill flying to the new current row: near edge leads | `--ui-dur-snap` | `--ui-ease-glide` |
+| Highlight flying to the new current row: near edge leads | `--ui-dur-snap` | `--ui-ease-glide` |
 | …far edge follows | `--ui-dur-glide` | `--ui-ease-glide` |
 | Group opening | `--ui-dur-panel` | `--ui-ease-expand` |
 | Group closing | `--ui-dur-base` | `--ui-ease-collapse` |
@@ -203,16 +203,16 @@ the edge.
 | Hover color | `--ui-dur-instant` | `--ui-ease-color` |
 
 Nothing reflows while the sidebar folds: rows narrow with it, so the
-current pill becomes the rail's capsule, while the sections and recent list
+current row's highlight becomes the rail's square, while the sections and recent list
 are held at the open width and fade before the edge reaches them. Labels
 leave in the first 120ms and come back once the width is most of the way
 open, so no word is read while it moves. The width eases like a height;
-the pill flies like Tabs', stretching
+the highlight flies like Tabs', stretching
 from one row to the next. It only flies between rows of the same width that
 are both on screen; otherwise it moves at once.
 
 Under `prefers-reduced-motion: reduce` the width, labels, groups and
-removals change at once, the pill jumps, the tooltip swaps in place, and a
+removals change at once, the highlight jumps, the tooltip swaps in place, and a
 chat that arrives takes its space at once and fades in.
 
 ## Accessibility

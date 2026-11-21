@@ -82,7 +82,7 @@
   }
 }
 
-/* The selected item: Tabs' flat pill, the same fill, no edge, no shadow. */
+/* The selected item: Tabs' flat highlight, the same fill, no edge, no shadow. */
 .row[data-selected] {
   --row-fill: var(--ui-track-pill);
   color: var(--ui-foreground);

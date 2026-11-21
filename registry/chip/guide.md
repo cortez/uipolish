@@ -1,6 +1,6 @@
 # Chip
 
-Two kinds of small pill for a row of choices. A **toggle chip** is a filter
+Two kinds of small rounded chip for a row of choices. A **toggle chip** is a filter
 that stays on or off: a real `<button aria-pressed>`. Off, it shows a plus;
 pressed, the plus's two bars swing into a check, so on and off differ by
 shape as well as by its fill, and the chip never changes width. A **removable chip** is a value already chosen, with its own remove

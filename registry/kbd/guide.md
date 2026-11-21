@@ -66,9 +66,9 @@ attribute it didn't render.
   makes the line taller. The caps are a pixel shorter at each end: 18px,
   the command palette's caps, and 14px.
 - Each cap is at least as wide as tall, 12px text, 5px sides (4px at
-  `sm`), 2px between caps, as in the palette.
-- **Color comes from the context.** The cap's fill is the text color
-  at 7%, flat, with no edge, so caps
+  `sm`), 3px between caps, as in the palette.
+- **Color comes from the context.** The cap is a hairline in the text
+  color at 22%, with no fill, so caps
   read the same in a muted hint, body text, or an ink tooltip. Set `color` on the Kbd or its parent.
 - `plain` takes the surrounding font, size and color, with no separators
   on Apple (⌘⇧P) and `+` elsewhere (Ctrl+Shift+P): each platform's own

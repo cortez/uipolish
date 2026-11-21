@@ -42,7 +42,7 @@
   padding-inline-end: var(--ui-space-4);
 }
 
-/* The small icon button's own capsule; only its color is set here. */
+/* The small icon button's own square; only its color is set here. */
 .popoverInfo {
   color: var(--ui-muted);
 }

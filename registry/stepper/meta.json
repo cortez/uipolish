@@ -3,7 +3,7 @@
   "title": "Stepper",
   "summary": "Progress through a flow of steps, as a row or a column of marks joined by a line that glides toward the current step. Done steps draw a check, a step in trouble turns danger, and passed steps can be buttons back. Under 128px a step it becomes dots and a count.",
   "blurb": "Progress through a multi-step flow.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dependencies": [
     "icons",
     "text-morph",

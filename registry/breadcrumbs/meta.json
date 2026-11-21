@@ -3,7 +3,7 @@
   "title": "Breadcrumbs",
   "summary": "Trail of links to the current page. A long middle folds into a … that opens in place, long labels fade instead of wrapping, and any router’s link fits.",
   "blurb": "A trail of links back from the current page.",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "dependencies": [
     "icons",
     "text"

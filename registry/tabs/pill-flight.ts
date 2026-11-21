@@ -1,8 +1,8 @@
-/* The pill's flight from one item to the next, shared by Tabs and the
+/* The indicator's flight from one item to the next, shared by Tabs and the
    Segmented control so the two move as one family. The resting position is
    the caller's; this plays the move between two spans on top of it. */
 
-/** A pill's offset and length along its track. */
+/** An indicator's offset and length along its track. */
 export type PillSpan = { start: number; length: number };
 
 function token(el: Element, name: string, fallback: string) {
@@ -24,7 +24,7 @@ function curve(value: string): (t: number) => number {
   };
 }
 
-/** Where the pill is along its track right now, mid-animation included. */
+/** Where the indicator is along its track right now, mid-animation included. */
 function translated(el: HTMLElement, vertical: boolean) {
   const transform = getComputedStyle(el).transform;
   if (!transform || transform === "none") return 0;
@@ -32,7 +32,7 @@ function translated(el: HTMLElement, vertical: boolean) {
   return vertical ? matrix.m42 : matrix.m41;
 }
 
-/** Stops a flight in progress and returns where it left the pill on screen, or null if it was still. */
+/** Stops a flight in progress and returns where it left the indicator on screen, or null if it was still. */
 export function stopPill(indicator: HTMLElement, vertical = false): PillSpan | null {
   const running = indicator.getAnimations();
   if (!running.length) return null;
@@ -43,10 +43,10 @@ export function stopPill(indicator: HTMLElement, vertical = false): PillSpan | n
 }
 
 /**
- * Flies the pill from one span to another: the edge facing the new item
+ * Flies the indicator from one span to another: the edge facing the new item
  * leads, the far edge follows, both on the glide (no overshoot), so the
- * pill stretches a little toward the new item and settles once. Length
- * animates, not scale, which would squash the round ends; the pill keeps
+ * indicator stretches a little toward the new item and settles once. Length
+ * animates, not scale, which would squash the rounded corners; it keeps
  * its other dimension. Under reduced motion it doesn't play.
  */
 export function flyPill(indicator: HTMLElement, from: PillSpan, to: PillSpan, vertical = false) {
@@ -69,6 +69,6 @@ export function flyPill(indicator: HTMLElement, from: PillSpan, to: PillSpan, ve
     );
   }
   // Backwards fill: an animation the compositor starts a frame late would
-  // otherwise show the pill at its destination for that frame.
+  // otherwise show the indicator at its destination for that frame.
   indicator.animate(frames, { duration, easing: "linear", fill: "backwards" });
 }

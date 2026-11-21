@@ -5,7 +5,7 @@ or a row along the bottom on a phone. One tooltip serves the whole rail. It
 waits the usual half second the first time, then follows the pointer or the
 keyboard from item to item, gliding to each one, easing to the new label's
 width and showing the item's shortcut. The current page has a raised
-capsule that glides to the next one when you pick it.
+highlight that glides to the next one when you pick it.
 
 Behavior comes from Base UI's `<Tooltip>`: one `Root` with a trigger per
 item, which handles the delay, focus, dismissal and positioning, and a
@@ -80,7 +80,7 @@ footer drops to the bottom. Horizontal, in a container wider than a phone
 (480px), the bar is as wide as its items and no wider, and centers itself.
 In a phone-width container it spans the width and every item, the footer
 included, takes an equal share, so the bar reads as a phone's tab bar. When
-the items don't fit at their capsule width they narrow evenly; the bar never
+the items don't fit at their square width they narrow evenly; the bar never
 passes its container, down to a 320px phone.
 
 ## On a phone
@@ -109,23 +109,23 @@ keep it to the five or six sections people know by their icon.
 |---|---|---|
 | Rest | Muted icon on the sunken track | |
 | Hover | The icon in the text color; no fill, the tooltip says which item it is | `@media (hover: hover)` |
-| Current | The raised capsule behind it, icon in the text color | `aria-current="page"` → `[data-current]` |
-| Focus | A line inside the item's capsule, and the tooltip at once | `:focus-visible` |
+| Current | The raised highlight behind it, icon in the text color | `aria-current="page"` → `[data-current]` |
+| Focus | A line inside the item's edge, and the tooltip at once | `:focus-visible` |
 | Tooltip waiting | Nothing yet: the pointer rests on an item for 500ms | Base UI `Provider` `delay` |
 | Tooltip open | Inverted label beside the item (above it on a bottom bar), shortcut after it | |
 | Tooltip warm | Moving along the rail, or coming back within 300ms: no wait, no entrance | Base UI `Provider` `timeout` |
 | Long press (touch) | The tooltip after 400ms held; it follows the finger along the rail, and lifting presses that item | the handle's `open(id)` |
 | Badge | An accent count at the icon's top right, cut out of the icon by a ring | `badge` |
-| Before JS | The current item paints its own capsule | `:not([data-ready])` |
+| Before JS | The current item paints its own highlight | `:not([data-ready])` |
 
 Pressing an item closes the tooltip until the pointer leaves it, so it
 doesn't sit over the page you just opened.
 
 ## Layout
 
-Items are 40px icon capsules, 1.375 times as wide as tall, with 4px between
-them, in a sunken hairline track 4px larger on every side, so the item and
-track ends are concentric. The tooltip sits 8px off the rail's outer side
+Items are 40px square icon buttons at the control radius, with 4px between
+them, in a sunken hairline track 4px larger on every side: a 48px-wide
+column. The tooltip sits 8px off the rail's outer side
 (above it when horizontal), never over the item under the pointer, and
 stays 8px inside the viewport. Each item's hit area reaches halfway across
 the gap to its neighbors, so a pointer moving along the rail goes straight
@@ -144,10 +144,10 @@ seven items on a 375px phone.
 | Old label fades out | `--ui-dur-instant` | `--ui-ease-color` |
 | New label fades in, 60ms later | `--ui-dur-fast` | `--ui-ease-enter` |
 | Both labels shift 4px the way the tooltip travels | `--ui-dur-glide` | `--ui-ease-glide` |
-| Capsule moves to the current item | `--ui-dur-glide` | `--ui-ease-glide` |
+| Highlight moves to the current item | `--ui-dur-glide` | `--ui-ease-glide` |
 | Icon color on hover | `--ui-dur-instant` | `--ui-ease-color` |
 
-Both the tooltip and the capsule are held by the rail, so they glide: no
+Both the tooltip and the highlight are held by the rail, so they glide: no
 overshoot past the item, and a change mid-move starts from where they are.
 The tooltip only glides once it has been on screen for a frame, so it never
 slides in from where it was last time, and it keeps gliding until it has
@@ -161,11 +161,11 @@ on from where it is: the width no longer snaps to the last label's on the
 way. The label keeps its own width inside the clipped box, so a new name
 is revealed at the edge and never squeezed or cut mid-word. Both
 animations fill backwards, so a frame painted before the compositor
-starts them never shows the tooltip at its destination. The capsule is placed
+starts them never shows the tooltip at its destination. The highlight is placed
 before first paint, re-placed without animating on resize, and moves by
 `transform` only.
 
-Under `prefers-reduced-motion: reduce` the tooltip and capsule jump, and the
+Under `prefers-reduced-motion: reduce` the tooltip and highlight jump, and the
 label swap is a plain crossfade.
 
 ## Accessibility

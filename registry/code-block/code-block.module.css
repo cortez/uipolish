@@ -1,8 +1,8 @@
 .block {
   --block-inset: var(--ui-space-2);
   --block-action: var(--ui-control-sm);
-  /* Every box's radius; also the inset plus half the action, so the corner
-     and the Copy pill stay concentric. */
+  /* Every box's radius; also the inset plus the small Copy button's 8px
+     corner, so the two stay concentric. */
   --block-radius: var(--ui-radius-lg);
   position: relative;
   min-width: 0;

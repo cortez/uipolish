@@ -49,7 +49,7 @@ summary heading per reasoning block; those are exactly what `steps` wants.
 | Done, opened | The full reasoning, no height cap | click, or `defaultOpen` |
 | Hover | Label and chevron go to the text color | `@media (hover: hover)` |
 | Press | A light fill behind the label, in 80ms | `:active` |
-| Focus | A line just inside the pill-shaped label | `:focus-visible` |
+| Focus | A line just inside the label's rounded edge | `:focus-visible` |
 
 **The duration.** Pass `duration` in seconds when you know it (from the API,
 or from history). Otherwise the block measures from when `streaming` turned

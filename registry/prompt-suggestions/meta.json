@@ -2,7 +2,7 @@
   "name": "prompt-suggestions",
   "title": "Prompt suggestions",
   "summary": "Suggested prompts for a chat: starter cards in an empty thread, or follow-up chips under an answer. They arrive as one group and fade out, then close their space, once something is sent.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "dependencies": [
     "icons",
     "text"

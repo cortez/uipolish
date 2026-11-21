@@ -128,10 +128,9 @@ and its ×, Add filter, Clear.
 ## Layout
 
 Every control in the bar is 40px (`--ui-control-md`), as the search field
-is: controls in one row share one height. Chips are pills filled with
-`--ui-fill-strong`, like a removable chip, with the words 20px in (where
-the round end stops) and a 32px × 4px from the end, concentric with the
-chip. Items sit `--ui-gap-inline` (8px) apart across and down. The search
+is: controls in one row share one height. Chips are rounded rectangles at
+the control radius, filled with `--ui-fill-strong` like a removable chip,
+with the words 20px in and a 32px × 4px from the end. Items sit `--ui-gap-inline` (8px) apart across and down. The search
 grows to fill a row up to 20rem and gives way first on a phone. Editors are
 18rem wide; a long list of options scrolls inside its own box. Rows start
 at the start; set `--filter-bar-justify: center` on an ancestor to center

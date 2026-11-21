@@ -57,7 +57,7 @@ const models = [
 inside them, so the text clears each row's curve. The same as the dropdown
 menu and the command palette.
 
-**Why the width is measured.** A pill sized by its content jumps when the
+**Why the width is measured.** A trigger sized by its content jumps when the
 label changes. The trigger renders an invisible copy of its content, measures
 it, and sets its own width in px, so the width can transition from the old
 label's width to the new one. Nothing else in the row moves suddenly.

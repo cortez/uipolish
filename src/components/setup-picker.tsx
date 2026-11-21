@@ -20,7 +20,7 @@ export function SetupPicker() {
   const t = CLIENTS[tool];
   return (
     <div className={styles.picker}>
-      {/* The agent is picked inside the command itself, so the pill stays put
+      {/* The agent is picked inside the command itself, so the command box stays put
           and only the words around it swap. */}
       <div className={styles.body}>
         <p key={`s-${tool}`}>{inline(t.steps)}</p>

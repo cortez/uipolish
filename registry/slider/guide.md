@@ -1,8 +1,8 @@
 # Slider
 
 A slider in the family's shapes: a label row with the value at its end, over
-a sunken track like the segmented control's and a raised capsule thumb like
-its pill. The range from the start to the thumb is `--ui-control-on`, the one accent, the same as
+a sunken track like the switch's and a raised capsule thumb like the
+switch's thumb. The range from the start to the thumb is `--ui-control-on`, the one accent, the same as
 a switch that's on and a checked box. The behavior is built on Base UI's
 `<Slider>`: its control is the whole 32px row under the label, and its
 thumb holds a real `<input type="range">`, so the keyboard, pointer, touch
@@ -48,7 +48,7 @@ and screen readers all get a proper slider.
 - **Control row:** `--ui-control-sm` (32px) tall, the whole hit area; 40px
   under a coarse pointer, without moving anything.
 - **Track:** 6px, `--ui-fill` with a hairline `--ui-border-strong` inner edge (the switch track's),
-  full radius: the segmented control's sunken track.
+  fully round (`--ui-radius-pill`), like the switch's sunken track.
 - **Range:** `--ui-control-on`, the whole track slid back with `translate` so
   its end sits under the thumb's center.
 - **Thumb:** a 20px capsule (`--ui-capsule` wide), the raised surface with

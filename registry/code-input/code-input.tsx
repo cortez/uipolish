@@ -43,11 +43,11 @@ type CodeInputProps = {
   className?: string;
   /**
    * Where checking the code has got to, set by the app. `verifying` locks the
-   * boxes and, once it has lasted 300ms, folds them into one pill; `success`
+   * boxes and, once it has lasted 300ms, folds them into one bar; `success`
    * draws a check and says "Verified"; `error` opens the boxes back up.
    */
   status?: CodeInputStatus;
-  /** Words for the pill and the default error. */
+  /** Words for the status bar and the default error. */
   labels?: { verifying?: string; success?: string; error?: string };
   /** After `status="error"`: select the first digit so typing writes over the code (default), or clear it. */
   retry?: "select" | "clear";
@@ -145,7 +145,7 @@ export function CodeInput({
   // After a failed code with retry="select": every digit stays, selected, and the next one typed starts over.
   const [replacing, setReplacing] = useState(false);
   const retried = useRef(0);
-  // Whether the group holds focus for the boxes while it's a pill.
+  // Whether the group holds focus for the boxes while they're folded.
   const held = useRef(false);
   if (failed !== wasFailed || phase !== lastPhase) {
     setWasFailed(failed);
@@ -185,7 +185,7 @@ export function CodeInput({
     focus(index);
   });
 
-  // The pill's width, and where each box drifts as it merges into it.
+  // The status bar's width, and where each box drifts as it merges into it.
   useLayoutEffect(() => {
     const stage = stageRef.current;
     const pill = pillRef.current;
@@ -194,7 +194,7 @@ export function CodeInput({
     const measure = () => {
       const width = pill.offsetWidth;
       stage.style.setProperty("--code-pill-width", `${width}px`);
-      // The pill folds toward the middle of the row.
+      // The bar folds toward the middle of the row.
       const center = stage.clientWidth / 2;
       for (const box of boxes.current) {
         if (!box) continue;
@@ -213,7 +213,7 @@ export function CodeInput({
   const reachable = (index: number) =>
     Math.min(index, value.length, length - 1);
 
-  // Focus follows the shape: the group while it's a pill, the boxes when they return.
+  // Focus follows the shape: the group while folded, the boxes when they return.
   useLayoutEffect(() => {
     const root = rootRef.current;
     const row = rowRef.current;
@@ -454,7 +454,7 @@ export function CodeInput({
               pathLength={1}
             />
           </svg>
-          {/* The morph eases its own width; the pill follows it and stays centered. */}
+          {/* The morph eases its own width; the bar follows it and stays centered. */}
           <TextMorph key={folds} className={styles.pillText}>
             {pillText}
           </TextMorph>
@@ -494,7 +494,7 @@ export function CodeInput({
 }
 
 /**
- * The shape to show for a status. Fast checks never fold the boxes: the pill
+ * The shape to show for a status. Fast checks never fold the boxes: the bar
  * appears once `verifying` has lasted 300ms, and then holds 400ms at least.
  */
 function usePhase(status: CodeInputStatus | undefined): Phase {

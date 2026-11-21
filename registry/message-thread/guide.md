@@ -130,8 +130,8 @@ push anything down.
 | New words: opacity | `--ui-dur-base` (200ms), up to 180ms stagger within one frame's words, in reading order | `--ui-ease-enter` |
 | Thinking band | `--ui-dur-sweep` per pass | `linear` |
 | Sent message in: fade and 4px rise | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |
-| Jump pill in: fade, 4px rise | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |
-| Jump pill out | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |
+| "Jump to latest" in: fade, 4px rise | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |
+| "Jump to latest" out | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |
 | Jump arrow nudges 1px down on hover or focus (`Icon` arrow-right) | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 | Actions reveal on hover | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Copy outline runs into a check (`Icon` copy → check) | see the icon set's guide | |
@@ -140,7 +140,7 @@ push anything down.
 
 Messages that are already there when the thread mounts don't animate in:
 reopening a conversation shouldn't replay it. Under `prefers-reduced-motion:
-reduce` words appear without fading, the thinking band holds still, the pill doesn't
+reduce` words appear without fading, the thinking band holds still, the jump button doesn't
 rise and "Jump to latest" scrolls instantly.
 
 ## Accessibility
@@ -155,7 +155,7 @@ rise and "Jump to latest" scrolls instantly.
   or the error. `aria-busy` is set on the message while it streams.
 - Each message is an `<article>` labeled with its author ("You",
   "Assistant", or your `author`). Avatars are off by default and decorative.
-- Actions are small ghost `Button`s (icon capsules, muted until hovered)
+- Actions are small ghost `Button`s (32px square icon buttons, muted until hovered)
   with names ("Copy", "Retry", "Good response",
   "Bad response"). Thumbs use `aria-pressed`. "Copied" or "Couldn't copy.
   Select the text instead." goes to a `role="status"` region.

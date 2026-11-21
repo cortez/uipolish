@@ -103,7 +103,7 @@ export function Pagination({
     const measure = () => {
       const style = getComputedStyle(root);
       const slot = parseFloat(style.getPropertyValue("--pagination-slot")) || 32;
-      const arrow = parseFloat(style.getPropertyValue("--pagination-arrow")) || 44;
+      const arrow = parseFloat(style.getPropertyValue("--pagination-arrow")) || 32;
       const gap = parseFloat(style.getPropertyValue("--pagination-gap")) || 0;
       const room = root.getBoundingClientRect().width + 0.5;
       const needs = (n: number) => {
@@ -208,7 +208,7 @@ export function Pagination({
       "aria-current": state.current ? ("page" as const) : undefined,
       // Still focusable at the ends, so focus stays on Next instead of dropping to the page.
       "aria-disabled": state.disabled || undefined,
-      // Previous and next are capsules; page numbers are squares.
+      // Previous and next are icon buttons; page numbers are squares, wider for long numbers.
       "data-arrow": state.arrow || undefined,
     };
 

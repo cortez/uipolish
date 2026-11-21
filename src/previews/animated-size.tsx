@@ -47,7 +47,7 @@ export function AnimatedSizePreview() {
       <section className={base.group}>
         <h2 className={base.label}>Width follows a label</h2>
         <div className={base.row}>
-          {/* Around the label, inside the pill: the pill stays whole as it widens. */}
+          {/* Around the label, inside the badge: the badge stays whole as it widens. */}
           <Badge tone={current.tone} dot>
             <AnimatedSize axis="width">{current.label}</AnimatedSize>
           </Badge>

@@ -84,7 +84,7 @@
   height: var(--avatar);
   margin-top: calc((var(--ui-text-md) * var(--ui-leading-prose) - var(--avatar)) / 2);
   overflow: hidden;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-pill);
   background: var(--ui-fill);
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
@@ -319,8 +319,8 @@
      clear of the last line's descenders, still read as part of it. */
   margin-top: var(--ui-space-4);
   /* Pull the first icon's ink in line with the text above: the icon sits
-     in the middle of a small capsule. */
-  margin-inline-start: calc((var(--ui-control-sm) * var(--ui-capsule) - var(--ui-icon-md)) / -2);
+     in the middle of a small square button. */
+  margin-inline-start: calc((var(--ui-control-sm) - var(--ui-icon-md)) / -2);
   transition: opacity var(--ui-dur-instant) var(--ui-ease-color);
 }
 
@@ -367,10 +367,10 @@
   --icon-fill: 1;
 }
 
-/* Copy carries its result as a word, so it isn't an icon-only capsule: at
+/* Copy carries its result as a word, so it isn't an icon-only button: at
    rest it's as wide as one, and "Copied" widens it. */
 .copy.copy {
-  min-width: calc(var(--ui-control-sm) * var(--ui-capsule));
+  min-width: calc(var(--ui-control-sm));
   padding-inline: var(--ui-space-2);
 }
 

@@ -3,7 +3,7 @@
   "title": "Chip",
   "summary": "Filter chips that stay pressed, and removable chips with their own named remove button. A plus swings into a check without changing the width, and removed chips fade before the rest slide into place.",
   "blurb": "Filter chips that stay pressed, and removable chips.",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "dependencies": [
     "icons",
     "text"

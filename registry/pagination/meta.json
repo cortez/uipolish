@@ -1,9 +1,9 @@
 {
   "name": "pagination",
   "title": "Pagination",
-  "summary": "Page numbers in a fixed number of slots, so the control never changes width as you page. Numbers slide under one moving pill, and Next stays focusable at the end.",
+  "summary": "Page numbers in a fixed number of slots, so the control never changes width as you page. Numbers slide under one moving highlight, and Next stays focusable at the end.",
   "blurb": "Page numbers in fixed slots, so the control never resizes.",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "dependencies": [
     "button",
     "icons",

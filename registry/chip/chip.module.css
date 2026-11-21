@@ -29,9 +29,9 @@
   box-sizing: border-box;
   max-width: 100%;
   min-height: var(--ui-control-sm);
-  /* A pill while it's one line; a long label wraps and the corners stay
-     the pill's, so it becomes a rounded box rather than cutting the text. */
-  border-radius: calc(var(--ui-control-sm) / 2);
+  /* The small radius, like a small button; a long label wraps and keeps
+     the corners rather than cutting the text. */
+  border-radius: var(--ui-radius-sm);
   isolation: isolate;
   font: var(--chip-font);
   line-height: 1.3;

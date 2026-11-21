@@ -43,7 +43,8 @@ mode for free.
 - **One neutral edge for every line.** A card's frame, a field, a button,
   a switch's track, a table's row rules, a separator, a key cap: all
   `--ui-border-strong` (drawn by `--ui-edge`; `--ui-border` is the same
-  value), one solid neutral at the one hairline weight. Two
+  value), one solid neutral at the one hairline weight, dark enough to
+  read crisp (L 0.93 on light, 0.28 on dark) rather than as a haze. Two
   grays side by side read as two thicknesses, a fainter line looks
   thinner, so there is no lighter "inner" tier: a box's insides and its
   frame are the same line. Depth comes from the shadow under a card, not
@@ -159,9 +160,10 @@ a status dot or a stacked avatar out of what it overlaps).
 
 - **Tabs and segmented controls share one look; only their semantics
   differ.** Both are a clear track inside a hairline edge
-  (`--ui-track-edge`), with one flat pill under the chosen item
-  (`--ui-track-pill`, no shadow, no edge) at `--ui-track-inset` from every
-  side, the same label colors and the same glide between items. A chosen
+  (`--ui-track-edge`) at the control radius, with one flat highlight under
+  the chosen item (`--ui-track-pill`, no shadow, no edge) at
+  `--ui-track-inset` from every side and the track's radius less that
+  inset, the same label colors and the same glide between items. A chosen
   item in a track isn't lifted: it's marked. Pick by meaning (tabs switch
   panels, a segmented control picks a value), never by look.
 
@@ -262,8 +264,9 @@ for real-looking services read as fake.
 ## 4. Radius
 
 - One scale from one knob: `--ui-radius: 4px`, and xs 4, sm 8, md 12,
-  lg 16 as its multiples, plus full for controls. Change the knob and every
-  corner follows. A literal radius anywhere else is a defect.
+  lg 16 as its multiples, plus full (`--ui-radius-pill`) for the few things
+  round by nature. Change the knob and every corner follows. A literal
+  radius anywhere else is a defect.
 - **Concentric rule, no exceptions: inner radius = outer radius − gap.** A
   card at 16px containing media inset by 4px gives the media 12px. A menu at
   14px with 6px padding gives its highlighted row 8px. Nested equal radii
@@ -271,8 +274,10 @@ for real-looking services read as fake.
   - Write the relationship, not the result:
     `border-radius: calc(var(--ui-radius-md) - 6px)`, so changing the outer
     radius or the padding keeps them lined up.
-  - A pill inside a pill lines up when the inner pill's height equals the
-    outer pill's height minus twice the gap.
+  - A highlight inside a track (a tab, a segmented option) takes the
+    track's radius less the inset, and its height is the track's less
+    twice the inset. A pill inside a pill (a switch's thumb) lines up the
+    same way: the inner height is the outer less twice the gap.
   - If the math lands under ~4px, change the padding or the outer radius;
     don't square the inner corner off.
   - A literal radius on a nested element is a defect even when it looks
@@ -283,18 +288,22 @@ for real-looking services read as fake.
 
   | Role | Radius | Examples |
   |---|---|---|
-  | Things you press | full | buttons, segmented controls, tabs, chips, a compact select in a toolbar |
   | Inline marks | xs (4) | inline code, key caps, a check box, a focus ring on text |
-| Small marks | sm (8) | table cells, a day in a calendar |
-| Fields you type in or choose from | md (12) | text field, select, combobox, date, number, each code box |
+  | Small marks | sm (8) | table cells, a day in a calendar, a small (32px) button |
+  | Everything you click or type in | md (12), `--ui-radius-control` | buttons, icon buttons (square), segmented controls, tabs, chips, nav and sidebar rows, a compact select in a toolbar; text field, select, combobox, date, number, each code box |
+  | Round by nature | full, `--ui-radius-pill` | a switch's track and thumb, a slider's track and knob, a progress bar, skeleton bars, avatars, radios |
   | Boxes, panels and cards | lg (16) | cards, tables, code blocks, diffs, menus, dialogs, command palette, drop zone, composer |
-  | Anything nested | outer − gap | options in a list, a button inside a field |
+  | Anything nested | outer − gap | options in a list, a button inside a field, the highlight in a track |
 
-  A select in a form is a field, so it matches the text field beside it; only
-  the compact toolbar select is a pill, like the buttons around it. A list
-  that opens from a field takes the field's radius, so the two read as one
-  piece. A field that holds round buttons is the exception that follows the
-  concentric rule: its radius is the button's radius plus the gap.
+  One rounded-rectangle edge for everything you click or type in: a button
+  beside a field, a select in a form and the compact select in a toolbar all
+  take the control radius, so a row of them reads as one family. Pills are
+  only for things round by nature; a button drawn as a pill reads as a
+  different kind of thing from the field beside it. A list that opens from a
+  field takes the field's radius, so the two read as one piece. A field that
+  holds buttons follows the concentric rule: its radius is the button's
+  radius plus the gap (a small button's 8 plus a 4px inset is the field's
+  12).
 
 ## 5. Color tokens & states
 

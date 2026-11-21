@@ -35,20 +35,21 @@
 .keys {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
 }
 
 .key {
   display: inline-grid;
   place-items: center;
   box-sizing: border-box;
-  /* A key cap: a small rounded square (wider for a word), a flat fill in
-     the text color, no edge. */
+  /* A key cap: a small rounded square (wider for a word) drawn by a
+     hairline in the text color, no fill, so it reads the same in a muted
+     hint, body text or an ink tooltip. */
   min-width: var(--kbd-height);
   height: var(--kbd-height);
   padding-inline: var(--kbd-pad);
   border-radius: var(--ui-radius-xs);
-  background: color-mix(in oklch, currentColor 7%, transparent);
+  box-shadow: inset 0 0 0 var(--ui-hairline) color-mix(in oklch, currentColor 22%, transparent);
   font-family: var(--ui-font-sans);
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-regular);

@@ -82,7 +82,7 @@ function ms(value: string) {
   return value.endsWith("ms") ? parseFloat(value) : parseFloat(value) * 1000;
 }
 
-/** A compact app navigation rail: icon items, one shared tooltip that glides between them, and a capsule on the current one. */
+/** A compact app navigation rail: icon items, one shared tooltip that glides between them, and a raised highlight on the current one. */
 export function NavRail({
   "aria-label": ariaLabel = "Main",
   items,
@@ -104,7 +104,7 @@ export function NavRail({
   const placed = useRef<{ value: string; x: number; y: number } | null>(null);
   const vertical = orientation === "vertical";
 
-  // Glide the capsule to the current item, like the segmented control's pill.
+  // Glide the highlight to the current item, like the segmented control's.
   const place = useCallback(
     (animate: boolean) => {
       const list = listRef.current;

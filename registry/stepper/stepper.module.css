@@ -385,7 +385,7 @@ button.dot:focus-visible {
   }
 }
 
-/* Glides along the track, the way a tab's pill does: no overshoot, so it
+/* Glides along the track, the way a tab's indicator does: no overshoot, so it
    never swings past the last dot. */
 .indicator {
   position: absolute;

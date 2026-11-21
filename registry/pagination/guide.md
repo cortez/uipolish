@@ -5,7 +5,7 @@ numbers and next sit in a fixed number of equal slots, seven where they
 fit: the first page, the last, the current one with a neighbor on each
 side, and a gap for the rest. Paging never changes how many slots there
 are or how wide they are, so the control holds still under the pointer and
-you can press Next again without aiming. One pill marks the current page;
+you can press Next again without aiming. One highlight marks the current page;
 past the middle it stays put and the numbers slide under it.
 
 ```tsx
@@ -66,11 +66,11 @@ its numbers, so it needs a row with a width of its own: inside an
 
 | State | What you see | How |
 |---|---|---|
-| Rest | Muted numbers and chevrons in borderless pills | ghost `Button` |
-| Hover | Text in the text color, no fill: the pill is the only fill a number gets. Previous and next fill | `@media (hover: hover)` |
+| Rest | Muted numbers and chevrons on borderless rounded squares | ghost `Button` |
+| Hover | Text in the text color, no fill: the highlight is the only fill a number gets. Previous and next fill | `@media (hover: hover)` |
 | Press | Shrinks a little and springs back; previous and next also take a darker fill in 80ms | the button's own press |
-| Current | The pill behind it, text in the text color; no hover or press of its own | `aria-current="page"` |
-| Focus | A line just inside the pill, instantly | `:focus-visible` |
+| Current | The highlight behind it, text in the text color; no hover or press of its own | `aria-current="page"` |
+| Focus | A line just inside the button's edge, instantly | `:focus-visible` |
 | At an end | Previous (or next) at 50%, ignores presses, still in the tab order | `aria-disabled` |
 | Narrow row | Five slots, then "Page 3 of 20" between the arrows | measured from the nav's own width |
 | One page | One number, both arrows off | |
@@ -81,13 +81,13 @@ no width.
 ## Layout
 
 Everything is on the small control height, 32px. Previous and next are
-the small icon button's capsule (44px wide). Every page number is a 32px
+the small icon button, a 32px square. Every page number is a 32px
 square, or wider when the longest page number needs it (three digits and
-up), with its number centered in tabular figures. The pill is exactly one
+up), with its number centered in tabular figures. The highlight is exactly one
 number's box, placed past one arrow, so it sits on its number to the
 pixel at every page and every width. The width of a slot comes from the
 page count, never the page, so "Page 9" and "Page 10" sit in the same row
-of slots. Gaps are 4px; on touch screens they open to 6px and each pill
+of slots. Gaps are 4px; on touch screens they open to 6px and each button
 takes a hit area 3px larger on every side, so neighbors' targets meet
 without overlapping.
 
@@ -106,18 +106,18 @@ and "of 5,000" is muted.
 
 | What | Duration | Easing |
 |---|---|---|
-| Pill slides to the new current page | `--ui-dur-glide` | `--ui-ease-glide`, lands without passing its slot |
-| Numbers that stay on screen slide to their new slot | `--ui-dur-glide` | `--ui-ease-glide`, the pill's own curve |
+| Highlight slides to the new current page | `--ui-dur-glide` | `--ui-ease-glide`, lands without passing its slot |
+| Numbers that stay on screen slide to their new slot | `--ui-dur-glide` | `--ui-ease-glide`, the highlight's own curve |
 | Numbers that arrive fade in where they land | `--ui-dur-fast` | `--ui-ease-enter` |
 | Numbers (and gaps) that leave fade out, riding along with the ones that stay, so no slot blinks empty | `--ui-dur-instant` fade, `--ui-dur-glide` slide | `--ui-ease-color`, `--ui-ease-glide` |
 | Hover, press and current colors | `--ui-dur-instant` | `--ui-ease-color` |
 | Range text ("26–50 of 240", "Page 3 of 12"): the digits that change roll, forward pages up and back pages down | `--ui-dur-glide` | `--ui-ease-glide` (text morph) |
 
 Each number is keyed by its page, so going from 4 to 5 slides 4, 5 and 6
-one slot along while the pill holds the middle slot: the row moves, not
-every label at once. The pill and the numbers share the glide, which
-doesn't overshoot, so a number sliding in lands in the pill without
-passing it. A jump (1 to 20) slides the pill the whole way, and
+one slot along while the highlight holds the middle slot: the row moves, not
+every label at once. The highlight and the numbers share the glide, which
+doesn't overshoot, so a number sliding in lands in the highlight without
+passing it. A jump (1 to 20) slides the highlight the whole way, and
 the numbers that stay (1 and 20) don't move. Slides use FLIP on
 `translate`, and one cut short starts again from where it is on screen.
 Nothing animates on the first paint or when the row resizes. The range text sits over a hidden copy of its widest value, so it never
@@ -139,7 +139,7 @@ swaps; colors still change.
 - Focus stays on the control you pressed, so a polite live region says
   where you are after each move ("Page 4 of 20"). In the compact variant
   the range text is that region.
-- Chevrons turn under right-to-left, and the pill moves from the right.
+- Chevrons turn under right-to-left, and the highlight moves from the right.
 
 ## Before / after
 

@@ -105,11 +105,11 @@
 
 /* ---------- Dialog ---------- */
 
-/* The radius is --corner plus half a button, so footer pills stay concentric with the corner. */
+/* The radius is --corner plus the control radius, so footer buttons stay concentric with the corner. */
 .dialog {
   --dialog-pad: var(--ui-space-6);
   --corner: var(--ui-space-4);
-  --dialog-radius: calc(var(--corner) + var(--ui-control-md) / 2);
+  --dialog-radius: calc(var(--corner) + var(--ui-radius-control));
   border-radius: var(--dialog-radius);
 }
 
@@ -192,7 +192,7 @@
   gap: var(--ui-space-3);
   /* The title keeps clear of Close, which sits in the corner. */
   padding: calc(var(--dialog-pad) - var(--ui-space-1))
-    calc(var(--corner) + var(--ui-control-md) * var(--ui-capsule) + var(--ui-space-3)) var(--ui-space-4)
+    calc(var(--corner) + var(--ui-control-md) + var(--ui-space-3)) var(--ui-space-4)
     var(--dialog-pad);
 }
 
@@ -223,7 +223,7 @@
   text-wrap: pretty;
 }
 
-/* Close is a full-size secondary icon button, the standard 40px capsule
+/* Close is a full-size secondary icon button, the standard 40px square
    with its edge and fill, so it reads as a button. It sits --corner from
    the top and from the end, the same distance both ways, concentric with
    the panel's corner (whose radius is --corner plus half the button).

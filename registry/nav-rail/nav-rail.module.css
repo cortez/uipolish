@@ -1,8 +1,8 @@
-/* A sunken capsule track; items are icon capsules inside it, --nav-rail-pad
-   from every edge, so their round ends are concentric with the track's. */
+/* A sunken track; items are square icon buttons inside it, --nav-rail-pad
+   from every edge. */
 .rail {
   --nav-rail-item-h: var(--ui-control-md);
-  --nav-rail-item-w: calc(var(--nav-rail-item-h) * var(--ui-capsule));
+  --nav-rail-item-w: calc(var(--nav-rail-item-h));
   --nav-rail-pad: 4px;
   --nav-rail-gap: 4px;
   /* Opaque, the same as --ui-fill over the canvas, so a badge can cut out of it. */
@@ -18,14 +18,14 @@
   gap: var(--nav-rail-gap);
   box-sizing: border-box;
   padding: var(--nav-rail-pad);
-  border-radius: calc(var(--nav-rail-item-h) / 2 + var(--nav-rail-pad));
+  border-radius: calc(var(--ui-radius-control) + var(--nav-rail-pad));
   background: var(--nav-rail-bg);
   box-shadow: var(--ui-track-edge);
   font-family: var(--ui-font-sans);
 }
 
 .rail[data-orientation="horizontal"] {
-  /* Its items at their capsule width, side by side: the width the bar takes
+  /* Its items at their square width, side by side: the width the bar takes
      when it has room (the component sets the counts). */
   --nav-rail-fit: calc(
     var(--nav-rail-count, 5) * var(--nav-rail-item-w) + (var(--nav-rail-count, 5) - 1) * var(--nav-rail-gap) + 2 *
@@ -89,7 +89,7 @@
 }
 
 .rail[data-orientation="horizontal"] .cell {
-  /* Equal shares of the bar: at their capsule width when it has room,
+  /* Equal shares of the bar: at their square width when it has room,
      wider on a phone, and evenly narrower rather than past its edge. */
   flex: 1 1 0;
   min-width: 0;
@@ -112,7 +112,7 @@
   width: 100%;
 }
 
-/* The raised capsule behind the current item; it glides from item to item. */
+/* The raised highlight behind the current item; it glides from item to item. */
 .indicator {
   position: absolute;
   top: 0;
@@ -161,7 +161,7 @@
   color: var(--ui-foreground);
 }
 
-/* Before the capsule is measured, the current item paints its own. */
+/* Before the highlight is measured, the current item paints its own. */
 .track:not([data-ready]) .item[data-current] {
   background: var(--nav-rail-capsule);
   box-shadow:

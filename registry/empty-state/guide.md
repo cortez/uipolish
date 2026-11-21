@@ -61,7 +61,7 @@ the content would take.
 - **Two**: side by side, `action` first, 8px apart, the pair centered.
   When they don't fit on one line (a side panel, a phone), they stack,
   `action` on top, and both take the full width of the space, so the pair
-  reads as one even block rather than two ragged pills. Side by side,
+  reads as one even block rather than two ragged buttons. Side by side,
   neither stretches.
 - The second is always one step quieter, so the eye lands on one: a
   `primary` with a `secondary`, or a `secondary` with a `ghost`. Same size

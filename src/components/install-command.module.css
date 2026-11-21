@@ -29,7 +29,7 @@
 }
 
 /* The command scrolls sideways inside a ScrollArea, which fades whichever
-   edge has more past it. The scroller reaches out to the pill's own edge on
+   edge has more past it. The scroller reaches out to the box's own edge on
    the left and across the 12px gap to the button on the right, so a
    scrolled command fades right up to both instead of leaving an empty band.
    At rest the text starts 20px in, the same inset as a code block's. */
@@ -69,15 +69,15 @@
   display: none;
 }
 
-/* Drawn inside the pill so it stays 6px from the command's edge. */
+/* Drawn inside the box so it stays 6px from the command's edge. */
 .code:has(:focus-visible) {
   outline-offset: -3px;
 }
 
-/* On a phone a pill leaves the command a few words of room, so it stops
+/* On a phone one line leaves the command a few words of room, so it stops
    being one line: the whole command wraps under the controls, readable
-   without scrolling. The box keeps the pill's padding and its corners stay
-   concentric with the controls inside. Copy becomes a 32px circle, and the
+   without scrolling. The box keeps its padding and its corners stay
+   concentric with the controls inside. Copy becomes a 32px square, and the
    check still says it worked. */
 @media (max-width: 479px) {
   .command {
@@ -85,7 +85,7 @@
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
     gap: 0 var(--ui-space-3);
-    border-radius: calc(var(--ui-control-sm) / 2 + var(--pad));
+    border-radius: calc(var(--ui-radius-sm) + var(--pad));
   }
 
   /* With a picker: picker and Copy share the top row, the command runs
@@ -115,8 +115,8 @@
     display: none;
   }
 
-  /* Several lines tall, the pill's round corner would cut into the last
-     line's first letter; a small corner clears the text. */
+  /* Several lines tall, a large corner would cut into the last line's
+     first letter; a small corner clears the text. */
   .code {
     height: auto;
     border-radius: var(--ui-radius-sm);

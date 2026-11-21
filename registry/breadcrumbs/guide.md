@@ -55,7 +55,7 @@ starts to fade (20em by default).
 | Link | Muted text | `<a>` |
 | Hover | A fill behind the crumb, text in the text color | `@media (hover: hover)` |
 | Press | Darker fill in 80ms | `:active` |
-| Focus | A line just inside the crumb's pill, instantly | `:focus-visible` |
+| Focus | A line just inside the crumb's edge, instantly | `:focus-visible` |
 | Current page | Text color, no hover or press | `aria-current="page"` |
 | Level with no page | Muted text, no hover or press | no `href` |
 | Folded | First crumb, "…", the last two | more than `max` items |
@@ -63,8 +63,9 @@ starts to fade (20em by default).
 
 ## Layout
 
-Text is the Small step (12px), each crumb a 24px pill with 6px of padding,
-and a 14px chevron between crumbs in the subtle color. The pills reach
+Text is the Small step (12px), each crumb 24px tall at the control radius
+with 6px of padding, and a 14px chevron between crumbs in the subtle
+color. The crumbs reach
 past the start edge by their padding, so the first label's text lines up
 with the title under it and the hover fill hangs outside.
 

@@ -22,7 +22,7 @@ pieces move between screens.
 
 | Role | Value | For |
 |---|---|---|
-| `--ui-pad-tag` | 12 | Inside a badge, tag or count pill: half its 24px height, so the label starts where the round end stops |
+| `--ui-pad-tag` | 12 | Inside a badge, tag or count: half its 24px height, so the label starts where the round end stops |
 | `--ui-pad-tag-sm` | 8 | A 20px tag, and a tag inside a sentence |
 | `--ui-pad-row` | 12 | Inside a row of a menu or a list in a panel, inline. Never less than the row's radius |
 | `--ui-inset-menu` | 4 | A menu's inset around its rows (rows take panel radius − inset) |
@@ -124,7 +124,7 @@ p:has(+ ul) { margin-block-end: 0.25em; }     /* a list belongs to its lead-in *
   each other, and a jump of 14 reads as two different families. Everything
   that sits in a row with a button takes a height from this scale, including
   composite controls: a segmented control or a switch is measured whole,
-  track included, not by its inner pill. Icon-only buttons are
+  track included, not by its inner highlight. Icon-only buttons are
   square, same height as their text siblings.
 - **Buttons are the standard control height (40).** Page actions, card and
   row actions, dialog footers, banners, empty states, form submits and demo
@@ -139,7 +139,7 @@ p:has(+ ul) { margin-block-end: 0.25em; }     /* a list belongs to its lead-in *
   form's actions or a demo's controls pick one step and every control in
   the row takes it: a search field (40px) sets its select and segmented
   control to 40, not 32 beside it. Only a control nested inside another
-  (a field's clear button, the copy button inside a command pill) is
+  (a field's clear button, the copy button inside a command box) is
   smaller, inset evenly on every side.
 - **Cards**: one internal padding value per card (`--ui-pad-card`), not
   different values per side. Media that bleeds to the card edge needs the
@@ -173,9 +173,9 @@ p:has(+ ul) { margin-block-end: 0.25em; }     /* a list belongs to its lead-in *
 ## 6. Breathing room failures to hunt
 
 - Text touching container edges (missing padding on mobile).
-- Buttons/badges where the text nearly touches the border — a pill with
+- Buttons/badges where the text nearly touches the border — a tag with
   `px-2` at 14px text is always cramped; start at `px-3`
-  (`--ui-pad-tag`: half the pill's height).
+  (`--ui-pad-tag`: half the tag's height).
 - Headings glued to the content above them instead of below (the 2:1 rule
   inverted).
 - Full-bleed sections whose *content* forgot the gutter.

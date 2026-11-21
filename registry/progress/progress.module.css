@@ -51,7 +51,7 @@
   position: relative;
   height: var(--progress-height);
   overflow: hidden;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-pill);
   background: var(--ui-fill-strong);
 }
 
@@ -106,7 +106,7 @@
   animation-name: progress-sweep-rtl;
 }
 
-/* 0.3 must match the pill's 30% width. */
+/* 0.3 must match the sweeping segment's 30% width. */
 @keyframes progress-sweep {
   from {
     translate: -100% 0;
@@ -136,7 +136,7 @@
   position: relative;
   height: var(--progress-height);
   overflow: hidden;
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-pill);
   background: var(--ui-fill-strong);
   transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
 }

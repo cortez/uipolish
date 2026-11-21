@@ -1,6 +1,6 @@
 # Button
 
-A pill-shaped button. Hover changes color only. Press goes down in 80ms and springs
+A rounded-rectangle button at the control radius (12px; 8px at `sm`). Hover changes color only. Press goes down in 80ms and springs
 back. A busy state keeps the button's width, and string labels morph in place
 when they change (Copy → Copied).
 
@@ -50,9 +50,10 @@ applies to it too:
 The same timing is exported as `useDelayedBusy(busy)` for busy text outside a
 button.
 
-**Icon buttons are capsules.** A button whose only child is one icon (an
-`<svg>` or a component such as `Icon`) and that has an `aria-label` is drawn 1.375 times as wide as it is
-tall (`--ui-capsule`), not as a circle, so every button shares one shape. A
+**Icon buttons are square.** A button whose only child is one icon (an
+`<svg>` or a component such as `Icon`) and that has an `aria-label` is drawn
+as wide as it is tall (40px, 32px at `sm`, 48px at `lg`) with the same
+corners as every other button, so every button shares one shape. A
 button with an icon and text is an ordinary button, and so is one whose
 only child is a text element (`<code>`, `<span>`), whatever its label.
 
@@ -131,7 +132,7 @@ wider.
 <button onClick={copy}>{copied ? "Copied" : "Copy"}</button>
 ```
 
-After: "Cop" stays put, "y" blurs out, "ied" blurs in, and the pill grows into
+After: "Cop" stays put, "y" blurs out, "ied" blurs in, and the button grows into
 the new word. Screen readers hear "Copied" from the status region.
 
 ```tsx

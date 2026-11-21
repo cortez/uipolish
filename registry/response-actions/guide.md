@@ -30,7 +30,7 @@ place under the row.
 
 | State | What you see | How |
 |---|---|---|
-| Rest | Four muted 16px icons on small ghost `Button`s (32px icon capsules) | `variant="ghost" size="sm"`, `--button-fg` set to muted |
+| Rest | Four muted 16px icons on small ghost `Button`s (32px square icon buttons) | `variant="ghost" size="sm"`, `--button-fg` set to muted |
 | Hover | Icon darkens, a light fill (`--ui-fill`) appears | `@media (hover: hover)` |
 | Press | The fill darkens and shrinks to `--ui-scale-press` (0.985) at once; the icon never moves | `:active` on `::before` |
 | Copied | The front sheet's outline runs into a check; back to the sheets after 2s | `Icon name="check"` |
@@ -38,7 +38,7 @@ place under the row.
 | Rated | The thumb fills in. Pressing the other thumb moves the rating; pressing the same one clears it | `aria-pressed`; `Icon name="thumbs-up"` / `"thumbs-down"` filled |
 | Thanked | "Thanks for the feedback" fades in at the end of the row for 3s | |
 | Asking | After a thumbs down, a field opens under the row with Send inside it and a close button beside it | `onComment`, `aria-expanded` |
-| Send waiting | Send is a quiet gray pill until there's text | `aria-disabled` |
+| Send waiting | Send is a quiet gray button until there's text | `aria-disabled` |
 
 The rating is recorded the moment a thumb is pressed. The comment is extra:
 closing the field keeps the thumbs down.
@@ -69,7 +69,7 @@ the user expects.
 Place the row 16px under the reply (`--ui-space-4`), as Message thread
 does. Only the field's height animates, and only what follows the reply moves.
 The row itself never shifts, and its first glyph starts on the reply's text
-edge: the buttons' capsules spill past it. Under `prefers-reduced-motion: reduce` the
+edge: the square buttons spill past it. Under `prefers-reduced-motion: reduce` the
 field opens at once, presses don't scale, and the copy icon swaps.
 
 ## Accessibility

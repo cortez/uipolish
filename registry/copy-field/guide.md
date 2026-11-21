@@ -50,7 +50,8 @@ end, shows in full on hover (`title`), and one press selects all of it.
 row, 8px from it. Pass a full-height button so the two line up:
 `<Button variant="secondary">Rotate</Button>` (with `size` matching the
 field's). It's outside the field, not
-inside it, because a pill button can't nest in the field's corners. When the
+inside it, because a full-height button leaves no inset for the field's
+corners to wrap around it. When the
 action replaces the value, change `value` and the field updates in place;
 say what happened in `hint` ("New link made. The old one stopped working.").
 

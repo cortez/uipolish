@@ -3,7 +3,7 @@
   "title": "Filter bar",
   "summary": "The row in front of a table or list: a search, the filters in effect as chips you can edit or remove, Add filter and Clear. Filters are plain data, each edited in its own small popover, and chips arrive and leave without a jump.",
   "blurb": "Search and editable filter chips in front of a table.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dependencies": [
     "button",
     "checkbox",

@@ -6,10 +6,10 @@
 }
 
 /* Only the 16px icons take layout space; the larger buttons overflow it
-   evenly. The first capsule is pulled back by its own inset (it's wider than
-   tall), so the copy glyph starts on the reply's text edge. */
+   evenly. The first button is pulled back by its own inset (half the
+   square less the icon), so the copy glyph starts on the reply's text edge. */
 .row {
-  --row-spill: calc((var(--ui-control-sm) * var(--ui-capsule) - var(--ui-icon-md)) / 2);
+  --row-spill: calc((var(--ui-control-sm) - var(--ui-icon-md)) / 2);
   position: relative;
   z-index: 1;
   display: flex;
@@ -21,7 +21,7 @@
 
 /* ---------- Icon buttons ---------- */
 
-/* Small ghost Buttons (icon-only capsules), muted until hovered or pressed.
+/* Small ghost Buttons (square, icon only), muted until hovered or pressed.
    Doubled so it outranks the button's own rules in any stylesheet order. */
 .action.action {
   --button-fg: var(--ui-muted);

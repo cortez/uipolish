@@ -63,9 +63,9 @@ Which curve for which job, and why:
 |---|---|---|---|
 | Something arrives: popover, menu, tooltip, toast, row, message | `--ui-ease-enter` | fast (small) or base (block) | Over 90% there by a third of the time, so it answers the click, with a shorter settle than quint-out so it reads as done sooner. Still a gentler first frame than expo-out, so opacity doesn't pop. |
 | Something leaves | `--ui-ease-exit` | one step shorter than its entrance | Starts gently and accelerates out, so the eye lets go and it never hangs half-visible. |
-| Something moves from where it was to where it is: FLIP, tab pill, toast stack | `--ui-ease-move` | `--ui-dur-move` | A spring with a little give (stiffness 484, damping ratio 0.72): it passes its target by about 4% and settles back, so things that move land with a touch of life instead of stopping dead. Interrupting and restarting from the current value looks continuous, which a cubic-bezier can't promise. |
+| Something moves from where it was to where it is: FLIP, tab indicator, toast stack | `--ui-ease-move` | `--ui-dur-move` | A spring with a little give (stiffness 484, damping ratio 0.72): it passes its target by about 4% and settles back, so things that move land with a touch of life instead of stopping dead. Interrupting and restarting from the current value looks continuous, which a cubic-bezier can't promise. |
 | Small hops: press release, a highlight moving one row | `--ui-ease-snap` | `--ui-dur-snap` | Stiffer (1156, damping 0.8): about 1.5% past, then back, all in 240ms. Short distances on a long spring look floaty. |
-| What a track or a count holds: a pill inside its group, a sheet against an edge, a height (one that retargets as you type included), text morph letters and width | `--ui-ease-glide` | `--ui-dur-glide` | The move spring without the give (critically damped): it lands without passing its target, so nothing swings past the end of its track or counts below where it stops. |
+| What a track or a count holds: a highlight inside its group, a sheet against an edge, a height (one that retargets as you type included), text morph letters and width | `--ui-ease-glide` | `--ui-dur-glide` | The move spring without the give (critically damped): it lands without passing its target, so nothing swings past the end of its track or counts below where it stops. |
 | Height opening (`grid-template-rows`) | `--ui-ease-expand` | `--ui-dur-panel` | Starts moving at once, so content below is pushed promptly, and brakes firmly instead of crawling. Not a spring: height drives reflow, so it should finish decisively. |
 | Height closing | `--ui-ease-collapse` | `--ui-dur-base` | Eases in while the content fades, then folds and stops with no tail. On the expand curve a close loses its content in the first frames and then crawls shut, which reads as a jump and a drag. |
 | Hover, highlight, selected, edge and tint changes; opacity as feedback | `--ui-ease-color` | `--ui-dur-instant` | Responds on the first frame with no travel to feel. |
@@ -234,7 +234,7 @@ second) shows its latest value at most about five times a second, and its
 last value always lands; a rate or an estimate settles once a second. The
 same goes for a name swapping in place: pace it, or it never finishes
 fading in.
-A pill that marks one item in a row (the current page, the chosen tab) is
+A highlight that marks one item in a row (the current page, the chosen tab) is
 sized and placed from the same variables as the item boxes, with odd-width
 items like arrows counted explicitly, so the number sits dead center in it.
 
@@ -258,11 +258,11 @@ waits for the delay.
 ### A sidebar folds to its rail without moving an icon
 
 Lay the rows out from the collapsed rail: each icon sits where it would be
-centered in the rail's capsule (content inset = (capsule − icon) / 2), so
+centered in the rail's square (content inset = (square − icon) / 2), so
 when the width changes no icon moves. The width eases like a height
 (`--ui-ease-expand` over `--ui-dur-panel` opening, `--ui-ease-collapse` over
-`--ui-dur-base` closing). Rows narrow with it, so the current row's pill
-becomes the rail's capsule; their labels leave on `--ui-dur-instant` in the
+`--ui-dur-base` closing). Rows narrow with it, so the current row's highlight
+becomes the rail's square; their labels leave on `--ui-dur-instant` in the
 first frames and come back half a beat after it starts opening, so no word
 is read while it moves. What has no icon (headings, a history list) is held
 at the open width so it never rewraps, fades first, and goes `inert`. With
@@ -271,8 +271,8 @@ reduced motion it switches at once.
 ### A field that waits folds into its answer
 
 A field that can't take input while work runs (a one-time code being
-checked) may fold into a pill the same height on the glide spring, and that
-pill carries the result: a success tint and a check, or it opens back into
+checked) may fold into one bar the same height on the glide spring, and that
+bar carries the result: a success tint and a check, or it opens back into
 the field with the input intact and the error below. Lock it at once, fold
 only after the 300ms busy delay, and keep the space it held so nothing below
 moves. Focus waits on the group while it's folded and returns to the field

@@ -88,7 +88,7 @@
 /* The remove × pulls out into the padding so its glyph ends on the same
    line as the dialog's close ×, the way the close button does. */
 .remove.remove {
-  margin-inline-end: calc((var(--ui-icon-md) - var(--ui-control-md) * var(--ui-capsule)) / 2);
+  margin-inline-end: calc((var(--ui-icon-md) - var(--ui-control-md)) / 2);
   color: var(--ui-muted);
 }
 

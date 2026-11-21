@@ -55,8 +55,8 @@
   box-sizing: border-box;
   max-width: 100%;
   min-height: var(--ui-control-md);
-  /* A pill while it's one line; a long value wraps and the corners stay. */
-  border-radius: calc(var(--ui-control-md) / 2);
+  /* The control radius, so a long value that wraps keeps the same corners. */
+  border-radius: var(--ui-radius-control);
   background: var(--chip-fill);
   box-shadow: inset 0 0 0 var(--ui-hairline) var(--chip-edge);
   color: var(--ui-foreground);

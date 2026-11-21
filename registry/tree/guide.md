@@ -78,7 +78,7 @@ A `TreeItem`:
 | Hover | Text, icon and chevron come up to the text color; no fill | `@media (hover: hover)` |
 | Press | A fill appears in 80ms and shrinks to 0.985, the text stays put; release springs back | `:active`, on a layer under the text |
 | Focus | A line just inside the row's edge, on the row alone, not the folder's contents | `:focus-visible` on the item |
-| Selected | Tabs' flat pill, text in the text color | `value` → `aria-selected` |
+| Selected | Tabs' flat highlight, text in the text color | `value` → `aria-selected` |
 | Open folder | Chevron a quarter turn down; children below, stepped in one level, a hairline down their start | `aria-expanded` |
 | Empty folder | One quiet line, "Empty", where the rows would be | `children: []` |
 | Loading, under 300ms | Nothing but the open chevron: a fast answer never flashes a loading row | `aria-busy` on the folder |
@@ -89,7 +89,7 @@ A `TreeItem`:
 
 ## Layout
 
-Rows are 32px tall with 2px between them, and fully round, as Sidebar's
+Rows are 32px tall with 2px between them, at the control radius, as Sidebar's
 are; 40px on touch screens. A row is laid out from its start: 12px, the
 chevron's 16px slot, 4px, the 16px icon, 8px, the label, then the value
 12px from the end. A row with no chevron keeps the slot, so icons and
@@ -101,7 +101,7 @@ down the tree in a span with `font-variant-numeric: tabular-nums`: the row
 doesn't set it, since a value can hold words.
 
 The tree has no box, padding or scroll of its own: put it in the panel
-that holds it (8px of padding suits the round rows), inside a scroll area
+that holds it (8px of padding suits the rows' corners), inside a scroll area
 when it can outgrow the panel.
 
 ## Motion

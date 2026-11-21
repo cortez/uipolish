@@ -153,7 +153,7 @@ type ThemeToggleProps = Omit<ComponentProps<"button">, "value" | "children"> & {
   tooltipSide?: "top" | "bottom" | "left" | "right";
 } & UseThemeOptions;
 
-/** One capsule that switches light and dark; its sun turns into a moon. */
+/** One square icon button that switches light and dark; its sun turns into a moon. */
 export function ThemeToggle({
   value,
   onValueChange,
@@ -273,7 +273,7 @@ export function ThemeSelect({
 }: ThemeSelectProps) {
   const controlled = value !== undefined;
   const page = useDocumentTheme({ storageKey, transition }, !controlled);
-  // Empty until hydration: no option is checked, and the pill appears in place.
+  // Empty until hydration: no option is checked, and the highlight appears in place.
   const current = value ?? page.theme ?? "";
   return (
     <SegmentedControl

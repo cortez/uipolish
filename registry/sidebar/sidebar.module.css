@@ -1,23 +1,23 @@
 /* The geometry every part reads, on the sidebar and on its phone drawer.
-   Rows are 32px, Tabs' height; collapsed, each is a 44px icon capsule (the
-   capsule ratio of a 32px button), so the rail is that plus the padding on
-   both sides. Content starts --sidebar-inset into a row: where a 16px icon
-   sits centered in the capsule, so icons don't move as the sidebar folds. */
+   Rows are 32px, Tabs' height; collapsed, each is a 32px square, as an
+   icon button is, so the rail is that plus the padding on both sides.
+   Content starts --sidebar-inset into a row: where a 16px icon sits
+   centered in the square, so icons don't move as the sidebar folds. */
 .vars {
   --sidebar-width: 264px;
   --sidebar-pad: var(--ui-space-2);
   --sidebar-row: var(--ui-control-sm);
-  --sidebar-capsule: calc(var(--sidebar-row) * var(--ui-capsule));
+  --sidebar-capsule: var(--sidebar-row);
   --sidebar-rail: calc(var(--sidebar-capsule) + var(--sidebar-pad) * 2);
   --sidebar-inset: calc((var(--sidebar-capsule) - 16px) / 2);
-  --sidebar-more: calc(24px * var(--ui-capsule));
-  --sidebar-bg: var(--ui-canvas);
+  --sidebar-more: 24px;
+  --sidebar-bg: var(--ui-surface);
   /* Opaque versions of the row fills, so the collapsed count can cut out of them. */
   --sidebar-bg-current: color-mix(in oklch, var(--ui-foreground) 8%, var(--sidebar-bg));
   --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
-/* A finger gets 40px rows; collapsed, that's Nav rail's 55px capsule. */
+/* A finger gets 40px rows; collapsed, that's Nav rail's 40px square. */
 @media (pointer: coarse) {
   .vars {
     --sidebar-row: var(--ui-control-md);
@@ -40,6 +40,9 @@
   min-height: 0;
   overflow: clip;
   background: var(--sidebar-bg);
+  /* One hairline at its inner edge: the sidebar and the page are one
+     surface, divided by a line, not two. */
+  box-shadow: inset calc(var(--ui-hairline) * -1) 0 0 var(--ui-border);
   color: var(--ui-foreground);
   font-family: var(--ui-font-sans);
   transition: width var(--ui-dur-panel) var(--ui-ease-expand);
@@ -142,10 +145,10 @@
   padding: 0 var(--sidebar-pad) var(--ui-space-4);
 }
 
-/* ---------- The pill ---------- */
+/* ---------- The flying highlight ---------- */
 
 /* Only on screen while it flies between rows; at rest the current row
-   paints the same flat pill itself. */
+   paints the same flat highlight itself. */
 .pill {
   position: absolute;
   top: 0;
@@ -202,7 +205,7 @@
   }
 }
 
-/* The current item: Tabs' flat pill, the same fill, no edge, no shadow. */
+/* The current item: Tabs' flat highlight, the same fill, no edge, no shadow. */
 .row[data-current] {
   background: var(--ui-track-pill);
   color: var(--ui-foreground);
@@ -212,9 +215,9 @@
   background: transparent;
 }
 
-/* The pill hands off without a fade: the row it leaves clears at once
-   (no second, fading pill behind the flying one) and the row it lands on
-   paints at once (no blink as the flying pill hides). Hover keeps its
+/* The highlight hands off without a fade: the row it leaves clears at once
+   (no second, fading highlight behind the flying one) and the row it lands
+   on paints at once (no blink as the flying highlight hides). Hover keeps its
    fade on every other row. */
 .row[data-current],
 .nav[data-flying] .row {
@@ -576,7 +579,7 @@
   opacity: 0;
 }
 
-/* The "…" capsule, 4px in from the row's round end, so the two are concentric.
+/* The "…" button, a 24px square, 4px in from the row's end.
    It shows on hover, focus, the current row and while its menu is open;
    always on touch. */
 .moreButton {
@@ -774,7 +777,7 @@
   height: 24px;
 }
 
-/* The mark on a round ink tile: round, so it's concentric with the button. */
+/* The mark on an ink tile, round at this size. */
 .mark {
   display: grid;
   place-items: center;

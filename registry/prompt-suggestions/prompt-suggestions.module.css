@@ -184,11 +184,10 @@
   gap: 6px;
   max-width: 100%;
   min-height: var(--ui-control-sm);
-  /* Half the height in, where the round end stops. */
   padding-block: 5px;
-  padding-inline: calc(var(--ui-control-sm) / 2);
-  /* A pill while it's one line; a long one wraps into a rounded box. */
-  border-radius: calc(var(--ui-control-sm) / 2);
+  padding-inline: 14px;
+  /* The small radius, like a small button; a long one wraps and keeps it. */
+  border-radius: var(--ui-radius-sm);
   font-size: var(--ui-text-md);
   line-height: 1.3;
 }

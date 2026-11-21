@@ -2,7 +2,7 @@
   "name": "empty-state",
   "title": "Empty state",
   "summary": "The message for an empty list or view: a title, one sentence and one action, with an optional plain icon. No illustration.",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "dependencies": [
     "icons"
   ]

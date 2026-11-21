@@ -82,9 +82,11 @@ in a table row, beside a button) it's centered like any control.
 
 The hit area is a control height, so the switch lines up with a button of
 the same size beside it, and it lays nothing out: a pseudo-element past the
-track's ends. Track and thumb are both full radius with the thumb inset
-evenly, so their ends are concentric, and the thumb is a capsule
-(`--ui-capsule` wide), the shape of every pressable thing.
+track's ends. Track and thumb are both fully round (`--ui-radius-pill`):
+a switch is round by nature, one of the few things that stay pills while
+buttons and tabs take the control radius. The thumb is inset evenly, so
+their ends are concentric, and it's a capsule (`--ui-capsule` wide), not a
+circle.
 
 **Surfaces.** The track is the segmented control's sunken track, with the
 strong fill: with no labels in it, the faint one barely reads as a control.

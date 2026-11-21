@@ -31,7 +31,7 @@ export function Button({
 }: ButtonProps) {
   const shown = useDelayedBusy(busy);
   // One icon and no text, named by aria-label: an icon button, drawn as a
-  // capsule. An icon is an <svg> or a component (Icon, a custom mark); a
+  // square. An icon is an <svg> or a component (Icon, a custom mark); a
   // lone text element (<code>, <span>) is a label, not an icon.
   const iconOnly =
     isValidElement(children) && (typeof children.type !== "string" || children.type === "svg") && Boolean(props["aria-label"]);

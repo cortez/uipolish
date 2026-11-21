@@ -24,7 +24,7 @@
 }
 
 /* A tab picked past the fade is brought into view by a scroll, not a cut:
-   the row slides while the pill travels. */
+   the row slides while the indicator travels. */
 @media (prefers-reduced-motion: no-preference) {
   .list {
     scroll-behavior: smooth;
@@ -70,7 +70,7 @@
   z-index: -1;
   width: var(--active-tab-width);
   height: var(--ui-control-sm);
-  border-radius: var(--ui-radius-control);
+  border-radius: calc(var(--ui-radius-control) - var(--ui-track-inset));
   background: var(--ui-track-pill);
   transform: translateX(var(--active-tab-left));
   contain: strict;
@@ -87,7 +87,7 @@
   height: var(--ui-control-sm);
   padding-inline: 14px;
   border: 0;
-  border-radius: var(--ui-radius-control);
+  border-radius: calc(var(--ui-radius-control) - var(--ui-track-inset));
   background: transparent;
   color: var(--ui-muted);
   /* One weight for every state: bolding the selected tab would widen it. */
@@ -107,7 +107,7 @@
   color: var(--ui-foreground);
 }
 
-/* Until the Indicator has measured, the selected tab carries the pill itself. */
+/* Until the Indicator has measured, the selected tab carries the highlight itself. */
 .list:not(:has(> .indicator:not([hidden]))) .tab[data-active] {
   background: var(--ui-track-pill);
 }
@@ -119,7 +119,7 @@
 }
 
 /* Pressing another tab brings its label up at once; no fill behind it,
-   which flashed under the pill as it arrived. */
+   which flashed under the indicator as it arrived. */
 .tab:active:not([data-active], [data-disabled]) {
   color: var(--ui-foreground);
   transition-duration: var(--ui-dur-press);

@@ -1,7 +1,7 @@
 # Segmented control
 
 Picks one value from two to five short options, shown side by side. It's a
-radio group in a clear hairline track, with one flat pill that glides to
+radio group in a clear hairline track, with one flat highlight that glides to
 the checked option. It looks and moves exactly like Tabs; only the meaning
 differs (a value, not a panel). It's built on Base UI's `RadioGroup` and `Radio`, which
 supply arrow keys, Tab, disabled options and form submission.
@@ -49,11 +49,11 @@ options share the width.
 |---|---|---|
 | Rest | Muted label | |
 | Hover | Label in the text color | `@media (hover: hover)` |
-| Press | On another option: its label comes up to the text color in 80ms (no fill, which would flash under the arriving pill); the pill flies there on release. On the chosen option: its pill presses to `--ui-scale-press` and springs back | `:active` |
-| Checked | Label in the text color, pill behind it | `[data-checked]` |
-| Focus | A line just inside the option's pill, instantly | `:focus-visible` |
+| Press | On another option: its label comes up to the text color in 80ms (no fill, which would flash under the arriving highlight); the highlight flies there on release. On the chosen option: the highlight presses to `--ui-scale-press` and springs back | `:active` |
+| Checked | Label in the text color, highlight behind it | `[data-checked]` |
+| Focus | A line just inside the option's edge, instantly | `:focus-visible` |
 | Disabled | 50% opacity, no hover, skipped by the arrow keys | `disabled` → `[data-disabled]` |
-| Before JS | The checked option paints its own pill | `:not([data-ready])` |
+| Before JS | The checked option paints its own highlight | `:not([data-ready])` |
 
 Every option keeps the same weight in every state, so checking one never
 changes a width.
@@ -66,43 +66,44 @@ one changes both:
 - `--ui-track-edge`: a clear track, no fill, inside a hairline of
   `--ui-border-strong`, the same edge as the fields and buttons it lines up
   with. With no fill of its own it sits as well on a card as on the page.
-- `--ui-track-inset`: 4px from the track's edge to the pill on every side.
-- `--ui-track-pill`: the checked option's flat pill (`--ui-fill-strong`), no
-  shadow and no edge, fully round, the same 14px label padding as a tab.
+- `--ui-track-inset`: 4px from the track's edge to the highlight on every side.
+- `--ui-track-pill`: the checked option's flat highlight (`--ui-fill-strong`),
+  no shadow and no edge, the same 14px label padding as a tab.
 
-At `md` the options and the pill are 32px inside the 4px inset, so the ends
-are concentric and 4 + 32 + 4 is the 40px control height: the group lines
+The track takes the control radius (12px) and the options and highlight
+take it less the inset, so the corners are concentric. At `md` they are
+32px inside the 4px inset, and 4 + 32 + 4 is the 40px control height: the group lines
 up with buttons and fields in a row. The whole control is measured, track
-included. At `sm` it's 32px whole and the inset drops by 1px (26px pill,
-12px padding, small text): a 4px inset would leave the pill too tight
+included. At `sm` it's 32px whole and the inset drops by 1px (a 26px
+highlight, 12px padding, small text): a 4px inset would leave the highlight too tight
 around its label. That size is the one difference from Tabs, which come in
 one size. On touch screens each option's hit area grows to 40px without
 moving anything.
 
 The control is never wider than its container. Labels stay whole, so when
 the options don't fit, they scroll sideways inside the track (no scrollbar
-shows), and the pill scrolls with them.
+shows), and the highlight scrolls with them.
 
 ## Motion
 
 | What | Duration | Easing |
 |---|---|---|
-| Pill stretches a little to the checked option and draws in behind it | `--ui-dur-glide` | both edges `--ui-ease-glide`, the leading one sooner |
+| Highlight stretches a little to the checked option and draws in behind it | `--ui-dur-glide` | both edges `--ui-ease-glide`, the leading one sooner |
 | Label color | `--ui-dur-instant` | `--ui-ease-color` |
-| Press: label up, pill to 0.985; release | `--ui-dur-press` (80ms); `--ui-dur-instant` color, `--ui-dur-snap` scale | `--ui-ease-color`, `--ui-ease-snap` |
+| Press: label up, highlight to 0.985; release | `--ui-dur-press` (80ms); `--ui-dur-instant` color, `--ui-dur-snap` scale | `--ui-ease-color`, `--ui-ease-snap` |
 
-The flight is the Tabs pill's own: one function, `flyPill` in
+The flight is the Tabs indicator's own: one function, `flyPill` in
 `tabs/pill-flight.ts`, plays both, so they never drift apart. The edge
 facing the new option leads and the far edge follows, with no overshoot, so
-the pill never swings past the group's ends, and it keeps its height in
+the highlight never swings past the group's ends, and it keeps its height in
 flight.
 
-The pill is one absolutely positioned, contained element. Position is a
+The highlight is one absolutely positioned, contained element. Position is a
 `translate`; its width is set directly, because scaling would
-squash its round ends. It's measured from fractional bounding boxes, so equal-width
-options that don't land on whole pixels still get a pill that fits exactly.
+squash its rounded corners. It's measured from fractional bounding boxes, so equal-width
+options that don't land on whole pixels still get a highlight that fits exactly.
 It's placed before first paint without animating (until then the checked
-option paints its own pill), re-placed without animating on resize and
+option paints its own highlight), re-placed without animating on resize and
 when fonts load, and if the value changes mid-move it starts from where it
 is on screen. Under `prefers-reduced-motion:
 reduce` it jumps.

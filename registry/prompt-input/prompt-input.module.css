@@ -49,7 +49,7 @@
   position: relative;
   display: grid;
   --composer-pad: var(--ui-space-2);
-  --composer-radius: calc(var(--ui-control-sm) / 2 + var(--composer-pad));
+  --composer-radius: calc(var(--ui-radius-sm) + var(--composer-pad));
   padding: var(--composer-pad);
   border-radius: var(--composer-radius);
   background: var(--ui-surface);
@@ -309,7 +309,7 @@
   min-width: 0;
 }
 
-/* Attach: a small ghost Button (an icon capsule), muted until hovered. */
+/* Attach: a small ghost Button (a square icon button), muted until hovered. */
 .iconButton.iconButton {
   --button-fg: var(--ui-muted);
 }
@@ -321,10 +321,10 @@
 }
 
 /* Send / Stop: a small primary Button. It carries "Stop" as a word while a
-   reply streams, so it isn't an icon-only capsule: at rest it's as wide as
+   reply streams, so it isn't an icon-only button: at rest it's as wide as
    one, and the word widens it. */
 .send.send {
-  min-width: calc(var(--ui-control-sm) * var(--ui-capsule));
+  min-width: var(--ui-control-sm);
   /* No gap: the label's leading space is the gap, so the arrow alone sits
      dead center. */
   gap: 0;
@@ -333,7 +333,7 @@
   font-size: var(--ui-text-sm);
 }
 
-/* Nothing to send: a quiet gray pill that doesn't answer hover or press. */
+/* Nothing to send: a quiet gray button that doesn't answer hover or press. */
 .send.send[data-state="empty"] {
   --button-bg: var(--ui-fill-strong);
   --button-bg-hover: var(--ui-fill-strong);

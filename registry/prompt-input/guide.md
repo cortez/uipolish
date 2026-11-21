@@ -38,11 +38,11 @@ pasted, dropped or picked, and show as chips above the text.
 
 | State | What you see | How |
 |---|---|---|
-| Empty | Placeholder, send button as a quiet gray capsule with a gray arrow | `data-state="empty"`, `aria-disabled` |
+| Empty | Placeholder, send button as a quiet gray square with a gray arrow | `data-state="empty"`, `aria-disabled` |
 | Ready | Send fills with the text color the moment there's non-whitespace text or a file | `data-state="ready"` |
 | Focused | While the text box has focus the whole composer fills with `--ui-field-focus-fill`, instantly; the edge stays as it rests. Focus on Attach, a footer control (the model picker) or Send doesn't fill it | `:has(textarea:focus)` |
 | Growing | The textarea grows a row at a time up to `maxRows` (8), then scrolls | `field-sizing: content`, JS fallback |
-| Streaming | Send becomes a "■ Stop" pill; Esc stops too. The textarea stays editable | `streaming` |
+| Streaming | Send becomes a "■ Stop" button; Esc stops too. The textarea stays editable | `streaming` |
 | Attachments | Image chips are fixed 56×56 thumbnails that fade in; files show name, type and size | paste, drop, or the + button |
 | Dragging files | A dashed outline and "Drop files to attach" over the composer | `data-dragging` |
 | Rejected file | The hint line turns red and says which file and why, for 5 seconds | `accept`, `maxFiles` |
@@ -75,7 +75,7 @@ the height is set from `scrollHeight` in a layout effect, before paint.
 | Fill back from focus | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Focus fill | 0ms, never animated; the edge never changes | n/a |
 | The arrow reshapes into the stop square: a line opens into its outline, then it fills (`Icon` send → stop) | see the icon set's guide | |
-| "Stop" label and pill width | `--ui-dur-glide` (320ms) via TextMorph | `--ui-ease-glide` |
+| "Stop" label and button width | `--ui-dur-glide` (320ms) via TextMorph | `--ui-ease-glide` |
 | The attachment row's space: opens for the first file (or a new row of them), closes after the last one has faded (`animated-size`) | `--ui-dur-panel` (280ms) open, `--ui-dur-base` (200ms) close | `--ui-ease-expand`, `--ui-ease-collapse` |
 | Chip in (an added file; `defaultFiles` are there from the first paint) | `--ui-dur-fast` (160ms), fade, scale from 0.97 | `--ui-ease-enter` |
 | Chip out | `--ui-dur-instant` (120ms), fade, scale to 0.97 | `--ui-ease-exit` |
@@ -95,8 +95,8 @@ there would make typing feel late.
 
 ## Layout
 
-- Composer padding is 8px, so the 32px round buttons sit concentric with the
-  24px corner (16 + 8). Text starts 16px in. Chips are inset 12px and take a
+- Composer padding is 8px around the 32px square buttons, which take the
+  small button's 8px corner; the composer's corner is 24px. Text starts 16px in. Chips are inset 12px and take a
   12px radius.
 - The line under the composer is centered. It shows `hint` if you pass one;
   with attachments on it's kept, empty, so a rejection notice never moves

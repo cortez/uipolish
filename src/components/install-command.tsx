@@ -7,8 +7,8 @@ import { ScrollArea } from "@registry/scroll-area/scroll-area";
 import { TextMorph } from "@registry/text-morph/text-morph";
 import styles from "./install-command.module.css";
 
-/** A copyable line in a pill: a setup command, or instructions for an agent.
- *  `leading` sits at the pill's start, such as a compact select that picks
+/** A copyable line in a box: a setup command, or instructions for an agent.
+ *  `leading` sits at the box's start, such as a compact select that picks
  *  which command is shown. `ready` false turns a copy into `onNotReady`, for
  *  a command still missing something the reader has to fill in. */
 export function InstallCommand({

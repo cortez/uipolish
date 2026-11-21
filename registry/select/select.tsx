@@ -42,7 +42,7 @@ type SelectProps = {
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   placeholder?: string;
-  /** `md` is a form field; `sm` is a compact pill. */
+  /** `md` is a form field; `sm` is a compact toolbar trigger. */
   size?: "sm" | "md";
   name?: string;
   required?: boolean;

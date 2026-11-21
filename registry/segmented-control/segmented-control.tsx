@@ -30,7 +30,7 @@ type SegmentedControlProps = Omit<ComponentProps<"div">, "defaultValue" | "onCha
   size?: "sm" | "md";
 };
 
-/** A Base UI radio group with one pill that glides to the checked option, as the Tabs pill does. */
+/** A Base UI radio group with one highlight that glides to the checked option, as the Tabs indicator does. */
 export function SegmentedControl({
   value: controlledValue,
   defaultValue,
@@ -88,7 +88,7 @@ export function SegmentedControl({
       indicator.setAttribute("data-visible", "");
       if (last && last.value === value && last.x === x && last.width === width) return;
 
-      // A change mid-move starts from where the pill is on screen.
+      // A change mid-move starts from where the highlight is on screen.
       const origin = stopPill(indicator) ?? (last ? { start: last.x, length: last.width } : null);
       indicator.style.transform = `translateX(${x}px)`;
       indicator.style.width = `${width}px`;
@@ -96,7 +96,7 @@ export function SegmentedControl({
 
       const moved = last && last.value !== value;
       if (!animate || !moved || !origin || !painted.current) return;
-      // The same flight as the Tabs pill: stretch and draw in.
+      // The same flight as the Tabs indicator: stretch and draw in.
       flyPill(indicator, origin, { start: x, length: width });
     },
     [value],

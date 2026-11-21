@@ -178,7 +178,7 @@ export function TabList({ className, children, ...props }: TabListProps) {
     return () => cancelAnimationFrame(frame);
   }, []);
 
-  // Base UI's Indicator rests the pill on the selected tab through its CSS
+  // Base UI's Indicator rests the highlight on the selected tab through its CSS
   // variables. On a change of tab, this plays the flight between them on top.
   useLayoutEffect(() => {
     const list = listRef.current;
@@ -191,7 +191,7 @@ export function TabList({ className, children, ...props }: TabListProps) {
     const vertical = axisOf(list) === "vertical";
     const last =
       from === null ? undefined : Array.from(list.querySelectorAll<HTMLElement>('[role="tab"]')).find((t) => t.dataset.value === from);
-    // A change mid-move starts from where the pill is on screen.
+    // A change mid-move starts from where the indicator is on screen.
     const origin = last && (stopPill(indicator, vertical) ?? span(last, list, vertical));
     if (origin && painted.current) flyPill(indicator, origin, span(tab, list, vertical), vertical);
     reveal(list, tab, painted.current);

@@ -1,6 +1,6 @@
 # Theme toggle
 
-An icon-only capsule that switches the page between light and dark. The icon
+A square icon button that switches the page between light and dark. The icon
 is one drawing: the sun's disc grows into the moon while a second circle
 slides over it and bites out the crescent, and the rays turn and pull in. It
 stores the choice in `localStorage`, follows the system until someone makes
@@ -116,7 +116,7 @@ over `--ui-dur-base`, and the page switches without a crossfade.
   isn't linked as a description, since the name already says it.
 - `ThemeSelect` is a radio group (`SegmentedControl`): arrow keys move
   between Light, Dark and System. Until hydration no option is checked, and
-  the pill appears in place without sliding.
+  the highlight appears in place without sliding.
 
 ## Drawing
 

@@ -60,7 +60,7 @@ moves. Every row is one height in every state.
 | `current` | `aria-current` on the row's link or button: `page` for links, `true` otherwise, or the value you pass |
 | `disabled` | The row can't be opened. The description stays at full contrast |
 
-`ListAction` is a 32px round icon button (40px to hit on touch screens): `icon`, `label` (its accessible
+`ListAction` is a 32px square icon button (40px to hit on touch screens): `icon`, `label` (its accessible
 name, "Remove Maya Chen", not "Remove") and every `<button>` prop.
 
 ## States
@@ -94,7 +94,7 @@ span with `font-variant-numeric: tabular-nums`: the row doesn't set it,
 since a trailing value can hold words, and some fonts widen every space with it.
 
 When actions are last in a row, the last icon lines up with the end of
-the text in the rows around it and its round fill reaches into the row's
+the text in the rows around it and its fill reaches into the row's
 padding.
 
 ## Motion

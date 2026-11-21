@@ -1,6 +1,6 @@
 /* The whole control, track included, is a control height: --segmented-h.
-   The options sit inside it, --segmented-pad from every edge. Track, pill
-   and inset are the Tabs' own (--ui-track-* in the tokens): the two share
+   The options sit inside it, --segmented-pad from every edge. Track,
+   highlight and inset are the Tabs' own (--ui-track-* in the tokens): the two share
    one look and differ only in what they mean. */
 .root {
   --segmented-h: var(--ui-control-md);
@@ -24,7 +24,7 @@
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
-/* Tabs come in one size. At sm a 4px inset would leave a 24px pill too
+/* Tabs come in one size. At sm a 4px inset would leave a 24px highlight too
    tight around its label, so the inset drops by 1px; all else is shared. */
 .root[data-size="sm"] {
   --segmented-h: var(--ui-control-sm);
@@ -48,7 +48,7 @@
   left: 0;
   z-index: -1;
   height: var(--segmented-option);
-  border-radius: var(--ui-radius-control);
+  border-radius: calc(var(--ui-radius-control) - var(--segmented-pad));
   background: var(--ui-track-pill);
   contain: strict;
   pointer-events: none;
@@ -56,7 +56,7 @@
   transition: scale var(--ui-dur-snap) var(--ui-ease-snap);
 }
 
-/* Pressing the chosen option presses its pill, like a button's fill. */
+/* Pressing the chosen option presses its highlight, like a button's fill. */
 .root:has(.option[data-checked]:active:not([data-disabled])) .indicator {
   scale: var(--ui-scale-press);
   transition-duration: var(--ui-dur-press);
@@ -73,7 +73,7 @@
   min-width: 0;
   height: var(--segmented-option);
   padding-inline: 14px;
-  border-radius: var(--ui-radius-control);
+  border-radius: calc(var(--ui-radius-control) - var(--segmented-pad));
   color: var(--ui-muted);
   /* One weight in every state, so selecting never changes a width. */
   font: var(--ui-weight-medium) var(--ui-text-md) / 1 var(--ui-font-sans);
@@ -92,7 +92,7 @@
   color: var(--ui-foreground);
 }
 
-/* Until the pill has measured, the checked option carries it itself. */
+/* Until the highlight has measured, the checked option carries it itself. */
 .root:not([data-ready]) .option[data-checked] {
   background: var(--ui-track-pill);
 }
@@ -104,7 +104,7 @@
 }
 
 /* Pressing another option brings its label up at once; no fill behind
-   it, which flashed under the pill as it arrived. */
+   it, which flashed under the highlight as it arrived. */
 .root[data-ready] .option:active:not([data-checked], [data-disabled]) {
   color: var(--ui-foreground);
   transition-duration: var(--ui-dur-press);

@@ -2,7 +2,7 @@
   "name": "progress",
   "title": "Progress",
   "summary": "Linear progress whose fill glides to each new amount without overshooting. The indeterminate state slides a short pill along the track, and a segmented variant shows named steps.",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "dependencies": [
     "text-morph"
   ],

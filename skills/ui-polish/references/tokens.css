@@ -36,7 +36,7 @@
      round to the 4px grid so nothing lands between pixels. */
 
   /* Inside things: how far content sits in from its own edge. */
-  /* A badge, tag or count pill: half its 24px height, so the label starts
+  /* A badge, tag or count: half its 24px height, so the label starts
      where the round end stops. */
   --ui-pad-tag: var(--ui-space-3);
   /* A 20px tag, and a tag inside a sentence. */
@@ -73,21 +73,24 @@
      check box, a focus ring); sm 8 for small marks (a tag, a key cap, a
      cell); md 12 for fields and rows; lg 16 for boxes, panels, menus and
      cards. Anything nested takes outer − gap. Controls (buttons, chips,
-     toggles, tabs) are fully round: pills. Nothing else is allowed. */
+     tabs, the selected row of a nav) share the fields' md: one edge for
+     everything you click or type in. Only things that are round by nature
+     (a switch's track and thumb, a slider's knob, a progress bar, an
+     avatar) are pills. Nothing else is allowed. */
   --ui-radius: 4px;
   --ui-radius-xs: var(--ui-radius);
   --ui-radius-sm: calc(var(--ui-radius) * 2);
   --ui-radius-md: calc(var(--ui-radius) * 3);
   --ui-radius-lg: calc(var(--ui-radius) * 4);
   --ui-radius-full: 9999px;
-  --ui-radius-control: var(--ui-radius-full);
+  --ui-radius-control: var(--ui-radius-md);
+  --ui-radius-pill: var(--ui-radius-full);
 
   /* Control heights */
   --ui-control-sm: 32px;
   --ui-control-md: 40px;
   --ui-control-lg: 48px;
-  /* Icon-only buttons are capsules, this much wider than tall, not circles:
-     an easier target, and one shape for every button. */
+  /* A switch's thumb and a slider's knob are this much wider than tall. */
   --ui-capsule: 1.375;
 
   /* Type */
@@ -173,13 +176,13 @@
   --ui-ease-exit: cubic-bezier(0.4, 0, 1, 1);
 
   --ui-scale-press: 0.985;
-  /* Move: layout moves (tab pill, toast stack). A spring sampled over --ui-dur-move,
+  /* Move: layout moves (tab indicator, toast stack). A spring sampled over --ui-dur-move,
      a little underdamped (damping 0.72): it overshoots about 4% and settles. */
   --ui-dur-move: 380ms;
   --ui-ease-move: linear(0, 0.0197, 0.0712, 0.1442, 0.2303, 0.3231, 0.4171, 0.5086, 0.5948, 0.6739, 0.7446, 0.8066, 0.8597, 0.9043, 0.9409, 0.9702, 0.993, 1.0102, 1.0225, 1.0307, 1.0357, 1.038, 1.0383, 1.0371, 1.0348, 1.0318, 1.0284, 1.0248, 1.0212, 1.0177, 1.0145, 1.0116, 1.009, 1.0067, 1.0048, 1.0032, 1.0019, 1.0008, 1, 0.9994, 1);
 
   /* Glide: the same move without the give, critically damped. For what is
-     held by a track or a count: a pill inside its group, a sheet against an
+     held by a track or a count: a highlight inside its group, a sheet against an
      edge, a height, a number counting to its value. */
   --ui-dur-glide: 320ms;
   --ui-ease-glide: linear(0, 0.0319, 0.106, 0.2005, 0.3013, 0.3998, 0.4917, 0.5739, 0.6459, 0.7079, 0.7606, 0.8048, 0.8416, 0.872, 0.8969, 0.9172, 0.9337, 0.9471, 0.9578, 0.9665, 0.9734, 0.9789, 0.9834, 0.9869, 0.9896, 0.9918, 0.9936, 0.995, 0.996, 0.9969, 0.9976, 0.9981, 1);
@@ -236,7 +239,7 @@
      too. Only hover, focus and selected step darker, to --ui-field-focus.
      Colored ones mix a hue at --ui-border-tint: the status edges below, or
      a component's own hue (a phase, a brand) at the same strength. */
-  --ui-border-strong: light-dark(oklch(0.954 0 0), oklch(0.26 0 0));
+  --ui-border-strong: light-dark(oklch(0.93 0 0), oklch(0.28 0 0));
   /* An empty checkbox or radio: the same edge as a field or an outline
      button, over the soft fill, so every outline on a form is one line. */
   --ui-border-control: var(--ui-border-strong);
@@ -285,7 +288,7 @@
   --ui-border-success: color-mix(in oklch, var(--ui-success) var(--ui-border-tint), transparent);
   --ui-border-warning: color-mix(in oklch, var(--ui-warning) var(--ui-border-tint), transparent);
   --ui-border-danger: color-mix(in oklch, var(--ui-danger) var(--ui-border-tint), transparent);
-  /* Tints: the one fill behind status text (a badge, a pill, a changed
+  /* Tints: the one fill behind status text (a badge, a tag, a changed
      line). Stronger in dark, where a low-alpha hue disappears. */
   --ui-accent-tint: light-dark(color-mix(in oklch, var(--ui-accent) 16%, transparent), color-mix(in oklch, var(--ui-accent) 26%, transparent));
   --ui-success-tint: light-dark(color-mix(in oklch, var(--ui-success) 16%, transparent), color-mix(in oklch, var(--ui-success) 26%, transparent));
@@ -319,7 +322,7 @@
      darker edge. Raised carries no ring: pair it with --ui-edge. */
   --ui-edge: 0 0 0 var(--ui-hairline) var(--ui-border-strong);
   /* A track of choices (tabs, a segmented control): clear inside a hairline
-     edge, with one flat pill under the chosen item, inset from every side.
+     edge, with one flat highlight under the chosen item, inset from every side.
      Both components read these, so they always look like one family. */
   --ui-track-edge: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
   --ui-track-inset: 4px;

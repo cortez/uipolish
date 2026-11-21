@@ -30,7 +30,7 @@ import styles from "./sidebar.module.css";
 
 /* Behavior comes from Base UI through the kit: the menus are Dropdown menu,
    the phone drawer is Drawer, the collapsed rail's one tooltip is Nav rail's.
-   This file keeps the layout, the collapse, the pill and the recent list. */
+   This file keeps the layout, the collapse, the current-row highlight and the recent list. */
 
 /** Below this width the sidebar leaves the layout and opens as a drawer. Keep in sync with the CSS. */
 export const SIDEBAR_DRAWER_QUERY = "(max-width: 767px)";
@@ -395,7 +395,7 @@ function usable(el: Element) {
   return el.getClientRects().length > 0 && !el.closest("[inert]");
 }
 
-/** Inside its scroll region's visible box, so a pill flying there isn't drawn over the fade. */
+/** Inside its scroll region's visible box, so a highlight flying there isn't drawn over the fade. */
 function inView(el: Element) {
   const viewport = el.closest("[data-sidebar-scroll]")?.firstElementChild;
   if (!viewport) return true;
@@ -405,9 +405,10 @@ function inView(el: Element) {
 }
 
 /**
- * The current row paints its own flat pill. When the current item changes,
- * one pill flies from the old row to the new one, as Tabs' does, then hands
- * back. Rows of different widths, hidden rows and reduced motion just switch.
+ * The current row paints its own flat highlight. When the current item
+ * changes, one highlight flies from the old row to the new one, as Tabs'
+ * does, then hands back. Rows of different widths, hidden rows and reduced
+ * motion just switch.
  */
 function usePillFlight(
   navRef: RefObject<HTMLElement | null>,

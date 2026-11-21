@@ -3,7 +3,7 @@
 Suggested prompts for a chat, in two layouts. **Starter cards** fill an
 empty thread: two to four cards, each a short title, an optional line of
 detail and an optional icon. **Follow-up chips** sit under an answer: a
-wrapping row of pills with the next thing the person might ask. Pressing
+wrapping row of chips with the next thing the person might ask. Pressing
 either calls `onSelect` with the suggestion. The set arrives as one group,
 and when you pass an empty list it fades out, then closes its space.
 
@@ -92,10 +92,10 @@ node. `detail` shows on cards only.
   doesn't leave its neighbor short.
 - The icon sits on the title's first line, 12px before the text. Titles and
   details wrap rather than cut: a suggestion is read in full.
-- **Chips** are 32px pills (`--ui-control-sm`) with 14px labels, the
-  same height and type as `Chip`, padded half their height so the label ends
-  where the round end starts. A long one wraps into a rounded box instead of
-  cutting. They wrap with 8px across and down.
+- **Chips** are 32px (`--ui-control-sm`) with 14px labels and the small
+  radius (8px), the same height, type and corners as `Chip` and a small
+  button, 14px in at the sides. A long one wraps, keeping its corners,
+  instead of cutting. They wrap with 8px across and down.
 - Leaving closes the group's own height. A parent that spaces its
   children with `gap` would keep that gap until the group is gone and then
   drop it in one frame, so tell the group what it is:

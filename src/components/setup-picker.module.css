@@ -14,7 +14,7 @@
 }
 
 /* Text for a newly picked agent replaces the old in place: a fade, no
-   travel. The command pill between them stays. */
+   travel. The command box between them stays. */
 .body p {
   margin: 0;
   color: var(--ui-muted);

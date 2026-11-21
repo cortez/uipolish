@@ -311,7 +311,7 @@
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  --close-width: calc(var(--close-size) * var(--ui-capsule));
+  --close-width: calc(var(--close-size));
   width: var(--close-width);
   height: var(--close-size);
   margin-block-start: calc(var(--ui-space-1) + var(--ui-leading-2xl) / 2 - var(--close-size) / 2);

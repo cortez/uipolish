@@ -1,17 +1,17 @@
 # Tabs
 
 Switches between sibling views of one thing: the menu, notes and
-activity of a single dinner. A pill sits behind the selected tab and glides
-to the next one. The selected tab can live in the URL, so a refresh, a shared
+activity of a single dinner. A flat highlight sits behind the selected tab and
+glides to the next one. The selected tab can live in the URL, so a refresh, a shared
 link or the back button lands on the same tab. A tab can carry a count, and
 the list can stand as a column beside the panels, as a settings sidebar.
 
 The behavior (roving focus, arrow keys, ARIA wiring) is built on Base UI's
-`Tabs`; UI Polish adds the pill's motion, URL sync, counts and crossfade.
+`Tabs`; UI Polish adds the indicator's motion, URL sync, counts and crossfade.
 
 Tabs and the Segmented control share one look: the clear hairline track
-(`--ui-track-edge`), the 4px inset (`--ui-track-inset`), the flat pill
-(`--ui-track-pill`), the label colors and the pill's flight
+(`--ui-track-edge`), the 4px inset (`--ui-track-inset`), the flat indicator
+(`--ui-track-pill`), the label colors and the indicator's flight
 (`pill-flight.ts`, used by both). Change them there and both follow. They
 differ only in meaning: tabs switch panels, a segmented control picks a
 value. The control also comes in `sm`, with a 1px smaller inset; tabs come
@@ -75,7 +75,7 @@ when selected or hovered), at regular weight, its digits in tabular figures
 (the text morph sets them on the digits alone). A count
 that changes keeps its width as long as it keeps its digits; when it gains
 or loses one (9 → 10), the digits roll with `TextMorph`, the tab's width
-follows on the glide spring, and the pill follows the tab frame by frame,
+follows on the glide spring, and the indicator follows the tab frame by frame,
 so nothing beside it jumps. Screen readers hear it as part of the name,
 with a pause: "Guests, 14". Show counts that help choose a tab (unread,
 pending); a count on every tab is noise.
@@ -95,12 +95,12 @@ pending); a count on every tab is noise.
 
 The list is a column at least 160px wide (as wide as its longest tab), 32px
 from the panel, its top lined up with the panel's. It has no edge: in a
-column, the pill alone marks the selection. Tabs are full-width rows with
-the label at the start and any count lined up at the end. The pill travels
+column, the indicator alone marks the selection. Tabs are full-width rows with
+the label at the start and any count lined up at the end. The indicator travels
 up and down with the same small stretch as in a row. The Tabs measure their own width with a container
 query: under 480px a column and a readable panel don't fit side by side,
 so the list becomes the usual row above the panels. The script reads the
-axis from the layout, so arrow keys, `aria-orientation` and the pill all
+axis from the layout, so arrow keys, `aria-orientation` and the indicator all
 follow (Base UI's `orientation` is set from the measured axis). Because the Tabs measure themselves, give them a width from their
 container (a block, or a stretched grid or flex item), not a shrink-to-fit
 one.
@@ -111,10 +111,10 @@ one.
 |---|---|---|
 | Rest | Muted label, no background | `.tab` |
 | Hover | Label turns to the text color, `--ui-dur-instant` | `@media (hover: hover)` only |
-| Press | An unselected tab's label comes up to the text color in 80ms, before the pill arrives; no fill, which would flash under the arriving pill | `:active` |
-| Selected | Label in the text color, pill behind it | `[data-active]` (Base UI) |
+| Press | An unselected tab's label comes up to the text color in 80ms, before the indicator arrives; no fill, which would flash under the arriving indicator | `:active` |
+| Selected | Label in the text color, indicator behind it | `[data-active]` (Base UI) |
 | Focus | A line just inside the tab's edge, appears instantly | `:focus-visible` |
-| Before JS | The selected tab paints its own pill until the moving pill is measured | indicator still `hidden` |
+| Before JS | The selected tab paints its own highlight until the moving indicator is measured | indicator still `hidden` |
 | Count | Number after the label, subtle; muted when selected or hovered | `count` |
 | Vertical | A column with no edge, full-width rows, counts at the end; rows are 40px on touch | `orientation="vertical"`, at 480px and wider |
 | Overflow | List scrolls sideways with no scrollbar; the edge with hidden tabs fades. A mouse wheel scrolls it sideways, then the page once it reaches an end; a swipe past the end stops there, with no rubber band or back gesture. Selecting a tab scrolls it clear of the fade (smoothly; at once under reduced motion), and the first and last back to the 4px inset | `data-overflow-start`, `data-overflow-end`, `scroll-padding-inline` |
@@ -126,40 +126,40 @@ regular one, so selecting it would push its neighbors sideways.
 
 | What | Duration | Easing |
 |---|---|---|
-| Pill stretches a little toward the new tab and draws in behind it | `--ui-dur-glide` | both edges `--ui-ease-glide`, the leading one sooner, so it never overshoots or swings past the last tab |
-| Pill in a column: the same, along the column | `--ui-dur-glide` | as above |
+| Indicator stretches a little toward the new tab and draws in behind it | `--ui-dur-glide` | both edges `--ui-ease-glide`, the leading one sooner, so it never overshoots or swings past the last tab |
+| Indicator in a column: the same, along the column | `--ui-dur-glide` | as above |
 | Label and count color | `--ui-dur-instant` | `--ui-ease-color` |
-| Count changes: the digits that differ roll (up as it grows); if it gains or loses a digit, the tab width and pill follow | `--ui-dur-glide` | `--ui-ease-glide` (text morph); at most five changes a second, the last always lands |
+| Count changes: the digits that differ roll (up as it grows); if it gains or loses a digit, the tab width and indicator follow | `--ui-dur-glide` | `--ui-ease-glide` (text morph); at most five changes a second, the last always lands |
 | Old panel fades out (`crossfade`) | `--ui-dur-instant` | `--ui-ease-color` |
 | New panel fades in (`crossfade`), 75ms after | `--ui-dur-fast` | `--ui-ease-enter` |
 
-How the pill moves:
+How the indicator moves:
 
 - It's Base UI's `Tabs.Indicator`: one absolutely positioned, empty element
   behind the tabs. At rest it sits on the selected tab through Base UI's
   `--active-tab-left` and `--active-tab-width` (`--active-tab-top` and
   `--active-tab-height` in a column), as a `translateX` and a width. Width is the one
-  non-transform property it animates, because `scaleX` would squash its round
-  ends mid-flight. The element is `contain: strict`, so resizing it lays out
+  non-transform property it animates, because `scaleX` would squash its rounded
+  corners mid-flight. The element is `contain: strict`, so resizing it lays out
   nothing else.
 - Its two edges travel separately, both on the glide: the edge facing the
-  new tab leads, the far edge follows. The pill stretches a little toward
+  new tab leads, the far edge follows. The indicator stretches a little toward
   the tab and draws itself in, settling once with no overshoot, so it
   never runs past the end of the list and never wobbles. The frames are
   sampled from the two easing tokens in JS and played as one Web Animation
   on top of the resting position, which takes over when it ends. The flight
   lives in `pill-flight.ts`, which the Segmented control plays too.
-- The pill keeps its height in flight and never overshoots: a dip and a
+- The indicator keeps its height in flight and never overshoots: a dip and a
   springy leading edge read as organic, a blob more than a control.
 - Nothing animates until the page has painted once. A tab selected from
   the URL is already in place; it doesn't slide in from the left.
 - Base UI observes the list and every tab and re-places it without
   animation when the window resizes or a web font loads late and changes the
   labels' widths.
-- If the user picks another tab mid-move, the pill starts from where it is
+- If the user picks another tab mid-move, the indicator starts from where it is
   on screen, so the motion stays continuous.
 
-Under `prefers-reduced-motion: reduce` the pill and counts switch at once
+Under `prefers-reduced-motion: reduce` the indicator and counts switch at once
 and the list scrolls without easing; the panels still crossfade, which is a
 fade and no movement.
 
@@ -216,7 +216,8 @@ Follows the WAI-ARIA tabs pattern.
   render), so arrowing past a tab doesn't load it.
 - The selected panel has `tabIndex={0}` so a panel with no controls can
   still be reached and scrolled by keyboard.
-- The visible pill is 32px tall; on coarse pointers each tab's hit area
+- The visible indicator is 32px tall, a rounded rectangle at the control
+  radius less the 4px inset; on coarse pointers each tab's hit area
   extends to 40px. In a column, where rows touch, each row is 40px instead.
 
 ## Before / after
@@ -237,7 +238,7 @@ const [tab, setTab] = useState("menu");
 {tab === "menu" && <DinnerMenu />}
 ```
 
-After: arrow keys work, nothing reflows, the pill glides between tabs, and
+After: arrow keys work, nothing reflows, the indicator glides between tabs, and
 `?tab=notes` survives reload and Back.
 
 ```tsx
