@@ -47,6 +47,16 @@
   transition-duration: 0ms;
 }
 
+/* Snap points: the sheet is as tall as its top point and rests lower by Base
+   UI's offset. --drawer-grab holds where a finger caught it mid-settle. */
+.drawer[data-snaps] {
+  transform: translate3d(
+    var(--drawer-swipe-movement-x, 0px),
+    calc(var(--drawer-snap-point-offset, 0px) + var(--drawer-swipe-movement-y, 0px) + var(--drawer-grab, 0px)),
+    0
+  );
+}
+
 /* Off screen, clear of the shadow, so nothing of the panel shows. */
 .drawer[data-starting-style],
 .drawer[data-ending-style] {
@@ -107,6 +117,16 @@
   box-shadow: var(--ui-shadow-raised);
 }
 
+/* Over a live page there's no dim to set it apart: the floating edge and
+   shadow do, as on the side panel. */
+.drawer[data-mode="sheet"][data-modal="false"] {
+  box-shadow: var(--ui-shadow-floating);
+}
+
+.drawer[data-mode="sheet"][data-snaps] {
+  height: var(--drawer-snap-height);
+}
+
 .drawer[data-mode="sheet"][data-keyboard] {
   --drawer-safe: 0px;
 }
@@ -161,6 +181,10 @@
     transform: none;
     opacity: 0;
   }
+  /* A sheet with snap points fades where it rests, or where the drag left it. */
+  .drawer[data-snaps]:is([data-starting-style], [data-ending-style]) {
+    transform: translate3d(0, calc(var(--drawer-snap-point-offset, 0px) + var(--drawer-swipe-movement-y, 0px)), 0);
+  }
 }
 
 /* ---------- Layout ---------- */
@@ -179,6 +203,16 @@
   height: auto;
 }
 
+.drawer[data-snaps] .frame {
+  height: 100%;
+}
+
+/* Below the top point a drag anywhere moves the sheet, so the body doesn't
+   scroll; Base UI hands a drag to a body only when it can scroll. */
+.drawer[data-snaps]:not([data-snap-top]) .body {
+  overflow-y: hidden;
+}
+
 .handle {
   display: none;
 }
@@ -194,6 +228,28 @@
   background: color-mix(in oklch, var(--ui-foreground) 16%, transparent);
 }
 
+/* With snap points the handle is a button (see the script). Its target
+   reaches past the bar; the rows below paint over the overlap. */
+.grabber {
+  position: relative;
+  padding: 0;
+  border: 0;
+  color: var(--ui-foreground);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.grabber::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--ui-space-2) * -1) calc(var(--ui-space-6) * -1);
+}
+
+.grabber:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-space-1);
+}
+
 .header {
   grid-row: header;
   position: relative;
@@ -207,8 +263,19 @@
   padding-block-start: var(--ui-space-3);
 }
 
-.drawer[data-mode="sheet"] :is(.handle, .header, .footer) {
+.drawer[data-mode="sheet"] :is(.handle, .header, .top, .footer) {
   touch-action: none;
+}
+
+/* Your own row in the header's place (`header={node}`). */
+.top {
+  grid-row: header;
+  position: relative;
+  padding: var(--ui-space-2) var(--drawer-pad);
+}
+
+.drawer[data-mode="side"] .top {
+  padding-block-start: var(--drawer-pad);
 }
 
 .heading {
@@ -304,6 +371,15 @@
   line-height: var(--ui-leading-md);
 }
 
+/* No header row: the body starts where the header would. */
+.handle + .body {
+  padding-block-start: var(--drawer-pad);
+}
+
+.drawer[data-mode="sheet"] .handle + .body {
+  padding-block-start: var(--ui-space-3);
+}
+
 .drawer[data-mode="sheet"] .body:last-child {
   padding-block-end: calc(var(--drawer-pad) + var(--drawer-safe));
 }
@@ -328,6 +404,7 @@
 }
 
 .header::after,
+.top::after,
 .footer::before {
   content: "";
   position: absolute;
@@ -337,7 +414,8 @@
   pointer-events: none;
 }
 
-.header::after {
+.header::after,
+.top::after {
   bottom: 0;
   opacity: 0;
 }
@@ -359,7 +437,8 @@
     scroll-timeline: --drawer-scroll block;
   }
 
-  .header::after {
+  .header::after,
+  .top::after {
     animation: drawer-edge-in linear both;
     animation-timeline: --drawer-scroll;
     animation-range: 0 var(--ui-space-4);
@@ -375,6 +454,7 @@
 /* Chromium keeps an animation's last value once its scroll timeline goes inactive,
    so a body that now fits would keep stale edges. The script sets data-fits. */
 .frame:has(> .body[data-fits]) .header::after,
+.frame:has(> .body[data-fits]) .top::after,
 .frame:has(> .body[data-fits]) .footer::before {
   animation: none;
 }

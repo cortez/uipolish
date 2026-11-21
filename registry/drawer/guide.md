@@ -10,6 +10,10 @@ with a flick, it carries on off the screen at the speed of your finger;
 released short, it springs back. The body scrolls between a header and a
 footer that stay put.
 
+Three things are optional: `modal={false}` leaves the page behind live,
+`snapPoints` gives the phone sheet heights to rest at, as in vaul, and
+`header` swaps the title row for your own (or none).
+
 ```tsx
 <Drawer
   open={open}
@@ -40,8 +44,9 @@ footer that stay put.
 
 - A short question or a confirm: use a dialog. A drawer for one sentence
   and two buttons is a long trip for the eye.
-- Something people need to see while they work on the page: give it a
-  column of the layout. This drawer is always modal.
+- Something people need to see while they work on the page, on a wide
+  screen: give it a column of the layout. On a phone, a non-modal sheet with
+  snap points is the column (`modal={false}`).
 - Navigation on its own: a menu or a page is clearer than a panel of links.
 - A flow with steps: use a dialog with steps, or a page.
 - On top of another drawer or a dialog. On a phone both are sheets that
@@ -54,7 +59,7 @@ footer that stay put.
 | Prop | What it does |
 |---|---|
 | `open`, `onOpenChange` | Controlled. Escape, the scrim, the close button and a drag down all call `onOpenChange(false)` |
-| `title` | The panel's name. Labels the dialog |
+| `title` | The panel's name, in the header. Labels the dialog. Optional when `header` isn't the built-in row and you name it with `aria-label` or `aria-labelledby` |
 | `description` | A line under the title. Describes the dialog |
 | `children` | The body. Scrolls on its own |
 | `footer` | Pinned under the body. Wrap buttons in `DrawerActions`, main action last |
@@ -64,10 +69,40 @@ footer that stay put.
 | `triggerRef` | Where focus returns. Defaults to whatever had focus when it opened |
 | `finalFocus` | Where focus goes when the trigger is gone (a removed row) |
 | `locked` | Escape, the scrim, the close button and dragging do nothing, e.g. while saving |
+| `modal` | `true` (default): scrim, focus trap, scroll lock. `false`: no scrim; the page scrolls and takes taps and Tab, and a press on it or focus moving to it doesn't close the drawer. Escape, the close button and a drag still do |
+| `snapPoints` | Heights the sheet rests at, lowest first: a fraction of the screen's height (`0.58`), pixels (`320` or `"320px"`) or `"20rem"`. Sheet only; the side panel ignores them. It opens at the first |
+| `snapPoint`, `onSnapPointChange` | Optional control of the point, with your own values. Every open starts at the first. A drag that closes the sheet reports `null` |
+| `header` | `true` (default): title, description and close button. `false`: no header row, only the handle. A node: your own row in its place, pinned above the body and draggable like the header |
+| `aria-label`, `aria-labelledby` | The dialog's name when there's no `title`. In development a drawer with neither warns in the console |
 
 `DrawerActions` lays footer buttons out at the end of the row; on a sheet
 they share the width. `SHEET_QUERY` is exported for layouts that need to
-know which form the drawer takes.
+know which form the drawer takes, and the `DrawerSnapPoint` type for your
+snap state.
+
+```tsx
+// A phone sheet that leaves the plan above it live: half height, or nearly full.
+<Drawer
+  open={course !== null}
+  onOpenChange={(open) => !open && setCourse(null)}
+  modal={false}
+  snapPoints={[0.58, 0.92]}
+  aria-labelledby={titleId}
+  header={
+    <div className={styles.course}>
+      <h2 id={titleId}>{course.name}</h2>
+      <Button variant="ghost" size="sm" aria-label="Next course" onClick={next}>
+        <Icon name="chevron-right" />
+      </Button>
+      <Button variant="ghost" size="sm" aria-label="Close" onClick={close}>
+        <Icon name="close" />
+      </Button>
+    </div>
+  }
+>
+  <Steps course={course} />
+</Drawer>
+```
 
 ## States
 
@@ -84,6 +119,13 @@ know which form the drawer takes.
 | Reopened while closing | Turns around from where it is | A transition, so it reverses from the current transform |
 | Keyboard up (sheet) | Sheet sits on top of the keyboard, not under it | `visualViewport` lifts it by the covered height |
 | Locked | Nothing closes it; it can't be dragged | `locked` |
+| Non-modal | No scrim; the floating edge and shadow set the sheet apart from the live page, as on the side panel. Taps, scrolling and Tab reach the page | `modal={false}`, `[data-modal="false"]` |
+| Below the top snap point | Sheet rests lower, its bottom off screen. A drag anywhere on it, body included, moves it; the body doesn't scroll | `--drawer-snap-point-offset`; `.body` is `overflow-y: hidden` without `[data-snap-top]` |
+| At the top snap point | The body scrolls. Once it's scrolled to the top, a drag down on it moves the sheet | `[data-snap-top]` |
+| Released between points | Glides to the nearest point; a flick goes one point on; below the lowest, nearer closed than open, it closes | Base UI's `snapToSequentialPoints` |
+| Caught while settling | Stops under the finger and carries on from there | `--drawer-grab` (below) |
+| Own header (`header={node}`) | Your row under the handle, 8px below it, with the hairline under it once the body scrolls | `.top` |
+| No header (`header={false}`) | Only the handle; the body starts where the header would | `.handle + .body` |
 
 **When it's a sheet.** `(max-width: 640px), (pointer: coarse) and
 (max-height: 500px)`: a narrow window, or a touch screen too short for a
@@ -92,7 +134,7 @@ lives in one place, the script, which sets `data-mode` on the panel; the
 panel isn't rendered until it opens, so there's no first paint to get wrong.
 
 **Dragging.** Only the sheet drags; the side panel and a `locked` drawer
-don't. The handle, header and footer drag with any pointer. The body is
+don't. The handle, header and footer drag with any pointer (with snap points the handle is a button, so a mouse drags from the header). The body is
 Base UI's `Drawer.Content`: a finger drags the sheet once the body is
 scrolled to the top, and a mouse there selects text instead. Base UI tells
 taps from drags, leaves a sideways start to whatever is under it, and
@@ -100,6 +142,34 @@ decides from distance and velocity whether a release dismisses. Fields,
 buttons and anything marked `data-base-ui-swipe-ignore` never start a drag
 (`data-base-ui-swipe-ignore="x"` keeps a horizontal carousel's own drags
 while vertical swipes still move the sheet).
+
+**Snap points.** Base UI resolves the points, runs the drag and decides
+where a release lands; the component supplies the parts it doesn't:
+
+- The sheet is as tall as its top point (at most the screen less 48px) and
+  rests lower by Base UI's offset, so its foot is off screen at a lower
+  point and a `footer` shows only at the top. Points reach Base UI as whole
+  pixels, so a resting sheet never sits on a fractional offset that blurs
+  its text.
+- Base UI moves the sheet from the body only when the body can't scroll,
+  so below the top point the body's overflow is hidden and any drag moves
+  the sheet. At the top it scrolls, and Base UI takes a downward drag once
+  it's at its top. A horizontal carousel inside keeps its own drags with
+  `data-base-ui-swipe-ignore="x"`.
+- A flick moves one point, not straight to closed (vaul's way): from the
+  lowest point it closes. A slow release closes once the sheet is nearer
+  closed than its lowest point, so on a phone a long drag that starts low
+  on the sheet may not get there: start from the top row, or flick.
+- Base UI measures a drag from the point the sheet was heading to, so a
+  finger landing mid-settle would make it jump there. The component holds
+  the difference in `--drawer-grab` from the touch to the release, so the
+  sheet stops under the finger and follows it; the release glides it out.
+  Where the release lands is still decided from Base UI's offset, which
+  can differ from what you see by what was left of the settle.
+- Closing doesn't move a sheet that only fades: Base UI resets the point as
+  it starts closing, and the component keeps the one it left from.
+- With `modal`, Base UI shows the scrim in full at the top point and lifts
+  it as the sheet goes lower.
 
 ## Layout
 
@@ -126,6 +196,7 @@ the inset to be non-zero.
 | Panel and scrim out | `--drawer-close` (`--ui-dur-panel`, 280ms) | `--ui-ease-expand` |
 | Out after a flick | `--drawer-close` × `--drawer-swipe-strength` (0.1 to 1) | `--ui-ease-expand` |
 | Glide back after a short drag | `--ui-dur-glide` | `--ui-ease-glide` |
+| Between snap points, after a release or from the keyboard | `--ui-dur-glide` (320ms), from where it is | `--ui-ease-glide` |
 | Scrim back after a short drag | `--drawer-open` | `--ui-ease-expand` |
 | Header and footer hairlines | scroll position, over 16px | `linear` |
 | Close button press release | `--ui-dur-snap` | `--ui-ease-snap` |
@@ -139,7 +210,9 @@ so leaving never lingers. A flick shortens the exit in proportion to its
 strength, so the sheet never stalls under the thumb. Under
 `prefers-reduced-motion: reduce` it fades in and out in
 `--ui-dur-instant` without sliding, and a short drag snaps back at once;
-dragging itself still follows the finger, since that motion is the user's.
+a sheet with snap points fades where it rests (or where a drag left it)
+and jumps between points without travel; dragging itself still follows the
+finger, since that motion is the user's.
 The scrim is a plain dim, never blurred.
 
 ## Scroll lock
@@ -162,8 +235,21 @@ where nothing can cover it.
 - Base UI's modal Drawer: the page is inert, Tab stays in the panel, and
   screen readers don't read what's behind. It portals to `<body>`, or into
   the nearest `[data-theme]` element around the trigger.
+- With `modal={false}` it's a dialog without `aria-modal`: Tab walks on
+  from the panel into the page, and the page stays readable and usable.
+  Escape still closes it, wherever focus is.
 - The title and description are `Drawer.Title` and `Drawer.Description`, so
-  the panel is labelled and described by them.
+  the panel is labelled and described by them. Without the built-in
+  header, pass `aria-labelledby` (the id of your row's heading) or
+  `aria-label`.
+- Snap points from the keyboard: the sheet opens at the first point with
+  focus in the body. With snap points the handle is a button ("Expand
+  sheet", "Collapse sheet"), just before the header in Tab order: Enter or
+  Space steps it up, and from the top back to the lowest; Arrow Up and Down
+  (or Page Up and Down) move one point, Home and End to the ends. None of
+  these close it. Tabbing to a control below the screen's edge raises the
+  sheet to its top point. Base UI has no keyboard handling of its own for
+  snap points.
 - Focus on open: `initialFocus`, otherwise the first control in the body,
   otherwise the first in the footer. Never the close button. On a sheet a
   text field isn't focused on open (the keyboard would cover the sheet as it
@@ -174,8 +260,9 @@ where nothing can cover it.
   controlled, so `locked` can hold it. A select or popover open inside it
   takes Escape first.
 - Dragging is never the only way out: the close button is always there, 32px
-  tall, 40px on touch screens, with `aria-label="Close"`. The handle is
-  decoration (`aria-hidden`).
+  tall, 40px on touch screens, with `aria-label="Close"`. Without snap
+  points the handle is decoration (`aria-hidden`). With your own header,
+  give it a close button.
 - A drag never starts on a button, so letting go doesn't press one by
   accident.
 

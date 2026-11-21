@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Button } from "@registry/button/button";
 import { Checkbox } from "@registry/checkbox/checkbox";
 import { Drawer, DrawerActions } from "@registry/drawer/drawer";
+import { Icon } from "@registry/icons/icons";
 import { Segment, SegmentedControl } from "@registry/segmented-control/segmented-control";
 import { Switch } from "@registry/switch/switch";
 import { TextField } from "@registry/text-field/text-field";
@@ -54,6 +55,202 @@ function count(n: number) {
 
 function matches(guest: Guest, filters: Filters) {
   return filters.rsvp.includes(guest.rsvp) && (!filters.dietOnly || guest.diet.trim() !== "");
+}
+
+type Course = { time: string; name: string; who: string; steps: string[]; table: string[] };
+
+/** Plates go out clockwise from the window seat. */
+const SEATS = ["Priya", "Dev", "Amara", "Theo", "Lucía", "Jonah", "Noor", "Karim"];
+
+const COURSES: Course[] = [
+  {
+    time: "7:00",
+    name: "Drinks on the terrace",
+    who: "Amara pours; the spritz jug is in the door of the fridge.",
+    steps: [
+      "Ice into both buckets",
+      "Slice the blood oranges for the Negronis",
+      "Top up the elderflower jug with soda",
+      "Olives and the good crisps out on the low table",
+      "Light the lanterns on the steps",
+      "Glasses back in by 7:25 for the bread",
+    ],
+    table: ["Noor: no almonds in the nibbles", "Theo is driving: elderflower, not prosecco"],
+  },
+  {
+    time: "7:45",
+    name: "Burrata, blood orange, fennel",
+    who: "Plated in the kitchen, two at a time. Priya carries.",
+    steps: [
+      "Burrata out of the fridge at 7:15",
+      "Shave the fennel into iced water",
+      "Segment four blood oranges, keep the juice",
+      "Toast the pistachios, then let them cool",
+      "Plate: fennel, orange, burrata torn in half",
+      "Juice, oil and flaky salt over each plate",
+      "Pistachios last, so they stay crisp",
+      "Bread basket refilled on the way out",
+    ],
+    table: ["Noor: pistachios on the side (tree nuts)", "Priya: vegetarian, no change", "Lucía: no shellfish, no change"],
+  },
+  {
+    time: "8:30",
+    name: "Short rib, soft polenta",
+    who: "Out of the oven at 8:10; Jonah stirs the polenta.",
+    steps: [
+      "Rest the short rib under foil",
+      "Whisk butter and parmesan into the polenta",
+      "Reduce the braising liquid by half",
+      "Warm the plates in the bottom oven",
+      "Polenta, rib, sauce, gremolata",
+      "Mushroom ragù for Priya's plate",
+    ],
+    table: ["Priya: mushroom ragù instead of rib", "Sam can't come: one plate fewer"],
+  },
+  {
+    time: "9:15",
+    name: "Olive oil cake",
+    who: "Cut at the table; coffee on at 9:05.",
+    steps: [
+      "Whip the crème fraîche with a little honey",
+      "Warm the cake for five minutes",
+      "Coffee and mint tea on the tray",
+      "Candles on, lights down",
+    ],
+    table: ["Noor: the cake has almond flour; a poached pear instead"],
+  },
+];
+
+/** A non-modal sheet with two snap points and its own top row: the running
+    order stays live above it, and a tap on another course moves the sheet. */
+function RunningOrder() {
+  const [course, setCourse] = useState<number | null>(null);
+  // The course the sheet shows, kept while it slides away.
+  const [shown, setShown] = useState(0);
+  const [done, setDone] = useState<Record<string, boolean>>({});
+  const titleId = useId();
+  const c = COURSES[shown];
+
+  function show(i: number) {
+    setShown(i);
+    setCourse(i);
+  }
+
+  return (
+    <section className={base.group}>
+      <div className={styles.header}>
+        <h2 className={base.heading}>Running order</h2>
+        <p className={base.note}>Friday supper · 8 at the table</p>
+      </div>
+      <ul className={styles.list}>
+        {COURSES.map((item, i) => (
+          <li key={item.name}>
+            <button
+              type="button"
+              className={styles.row}
+              aria-current={course === i || undefined}
+              onClick={() => show(i)}
+            >
+              <span className={styles.time}>{item.time}</span>
+              <span className={styles.name}>{item.name}</span>
+              <span className={styles.rsvp}>
+                {item.steps.filter((step) => done[`${i}:${step}`]).length} of {item.steps.length}
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      <p className={base.note}>
+        The sheet leaves the running order live: tap another course and it follows. On a phone it rests at
+        half height; drag anywhere on it to raise it, and once it’s up the steps scroll.
+      </p>
+
+      <Drawer
+        open={course !== null}
+        onOpenChange={(open) => !open && setCourse(null)}
+        modal={false}
+        snapPoints={[0.58, 0.92]}
+        aria-labelledby={titleId}
+        header={
+          <div className={styles.course}>
+            <div className={styles.courseHeading}>
+              <h2 id={titleId} className={styles.courseName}>
+                {c.name}
+              </h2>
+              <p className={base.note}>
+                {c.time} · Course {shown + 1} of {COURSES.length}
+              </p>
+            </div>
+            <div className={styles.courseNav}>
+              <Button
+                variant="ghost"
+                aria-label="Previous course"
+                disabled={shown === 0}
+                onClick={() => show(shown - 1)}
+              >
+                <Icon name="chevron-left" />
+              </Button>
+              <Button
+                variant="ghost"
+                aria-label="Next course"
+                disabled={shown === COURSES.length - 1}
+                onClick={() => show(shown + 1)}
+              >
+                <Icon name="chevron-right" />
+              </Button>
+              <Button variant="ghost" aria-label="Close" onClick={() => setCourse(null)}>
+                <Icon name="close" />
+              </Button>
+            </div>
+          </div>
+        }
+      >
+        <div className={styles.sections}>
+          <p className={styles.who}>{c.who}</p>
+          <fieldset className={styles.fieldset}>
+            <legend className={base.label}>Steps</legend>
+            {c.steps.map((step) => {
+              const key = `${shown}:${step}`;
+              return (
+                <Checkbox
+                  key={key}
+                  label={step}
+                  checked={done[key] ?? false}
+                  onCheckedChange={(on) => setDone((d) => ({ ...d, [key]: on }))}
+                />
+              );
+            })}
+          </fieldset>
+          <section className={styles.section}>
+            <h3 className={base.label}>At the table</h3>
+            <ul className={styles.history}>
+              {c.table.map((line) => (
+                <li key={line} className={styles.past}>
+                  {line}
+                </li>
+              ))}
+            </ul>
+          </section>
+          <section className={styles.section}>
+            <h3 className={base.label}>Plates out, clockwise from the window</h3>
+            <ol className={styles.history}>
+              {SEATS.map((name, seat) => {
+                const swap = c.table.find((line) => line.startsWith(`${name}:`));
+                return (
+                  <li key={name} className={styles.past}>
+                    <span>{name}</span>
+                    <span className={styles.meta}>
+                      Seat {seat + 1} · {swap ? swap.slice(name.length + 2) : "As written"}
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+        </div>
+      </Drawer>
+    </section>
+  );
 }
 
 export function DrawerPreview() {
@@ -267,6 +464,8 @@ export function DrawerPreview() {
           />
         </div>
       </Drawer>
+
+      <RunningOrder />
     </div>
   );
 }

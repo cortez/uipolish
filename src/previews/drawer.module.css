@@ -66,6 +66,10 @@
   }
 }
 
+.row[aria-current="true"]::before {
+  background: var(--ui-fill);
+}
+
 .row:active::before {
   background: var(--ui-fill-strong);
   transition-duration: var(--ui-dur-press);
@@ -183,4 +187,52 @@
 .past .meta {
   font-size: var(--ui-text-sm);
   line-height: var(--ui-leading-sm);
+}
+
+/* ---------- Running order ---------- */
+
+.time {
+  flex-shrink: 0;
+  width: 3.5em;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--ui-leading-sm);
+}
+
+/* The sheet's own top row: the course, then back, next and close. */
+.course {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-3);
+}
+
+.courseHeading {
+  display: grid;
+  flex: 1;
+  gap: var(--ui-space-1);
+  min-width: 0;
+  /* The title's first line on the buttons' center. */
+  padding-block-start: calc((var(--ui-control-md) - var(--ui-leading-2xl)) / 2);
+}
+
+.courseName {
+  margin: 0;
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-display);
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-title);
+  line-height: var(--ui-leading-2xl);
+  letter-spacing: var(--ui-tracking-heading);
+  text-wrap: balance;
+}
+
+.courseNav {
+  display: flex;
+  flex-shrink: 0;
+  margin-inline-end: calc((var(--ui-icon-md) - var(--ui-control-md) * var(--ui-capsule)) / 2);
+}
+
+.who {
+  margin: 0;
 }
