@@ -398,3 +398,16 @@
   overflow-x: hidden;
   overflow-wrap: break-word;
 }
+
+/* iOS zooms the whole page into any text field under 16px when it takes
+   focus. Each field sets --ui-text-touch under (pointer: coarse), but an
+   iPad with a trackpad or keyboard reports a fine pointer, and a field a
+   component styles on its own can miss it. On iOS (the only engine with
+   -webkit-touch-callout), every typing field is at least 16px, whatever
+   its pointer or its own size. Important, because it must outrank each
+   field's own class; a larger size (an inline edit in a heading) stays. */
+@supports (-webkit-touch-callout: none) {
+  :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="button"], [type="submit"], [type="reset"], [type="image"]), textarea, select, [contenteditable]:not([contenteditable="false"])) {
+    font-size: max(var(--ui-text-touch), 1em) !important;
+  }
+}

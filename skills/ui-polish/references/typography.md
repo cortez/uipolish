@@ -289,6 +289,11 @@ get one step smaller and a wider container.
 
 **Form inputs: minimum 16px on touch** or iOS Safari zooms the page on focus:
 `@media (pointer: coarse) { .input { font-size: var(--ui-text-touch); } }`.
+`tokens.css` also holds every typing field on iOS to at least 16px
+(`@supports (-webkit-touch-callout: none)`), which covers an iPad with a
+trackpad (a fine pointer) and any field that misses its own touch rule. Never
+stop the zoom with `maximum-scale=1` or `user-scalable=no`: that blocks
+pinch zoom for people who need it.
 
 Anchor targets under a sticky header need `scroll-margin-top` (roughly header
 height + 16px), or in-page links bury headings under the nav.
