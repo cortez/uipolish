@@ -9,7 +9,7 @@
 //   repo, set in Vercel), the default branch's tarball is downloaded.
 // - Otherwise ./pro is left empty and the site builds without screens.
 import { execFileSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -50,6 +50,13 @@ const names = readdirSync(join(out, "screens"), { withFileTypes: true })
   .map((d) => d.name)
   .sort();
 const ident = (n) => "S_" + n.replace(/[^a-z0-9]/gi, "_");
+// Each screen's title, summary and the components it's built from, for the
+// /screens page. A screen without a meta.json shows its folder name.
+const info = names.map((n) => {
+  const file = join(out, "screens", n, "meta.json");
+  const meta = existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : {};
+  return { name: n, title: meta.title ?? n, summary: meta.summary ?? "", components: meta.components ?? [] };
+});
 writeFileSync(
   join(out, "index.ts"),
   [
@@ -58,6 +65,9 @@ writeFileSync(
     ...names.map((n) => `import ${ident(n)} from "./screens/${n}/${n}";`),
     "",
     `export const SCREENS: Record<string, ComponentType> = { ${names.map((n) => `${JSON.stringify(n)}: ${ident(n)}`).join(", ")} };`,
+    "",
+    "export type ScreenInfo = { name: string; title: string; summary: string; components: string[] };",
+    `export const SCREEN_INFO: ScreenInfo[] = ${JSON.stringify(info, null, 2)};`,
     "",
   ].join("\n"),
 );

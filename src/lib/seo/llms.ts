@@ -54,7 +54,7 @@ export async function llmsText(full: boolean): Promise<string> {
     `- Design rules: the rules as one file: a Claude Code skill (${abs("/skill.md")}) or for AGENTS.md (${abs("/rules.md")})`,
     `- shadcn/ui: install with \`npx shadcn add\` (registry at ${abs("/r/registry.json")})`,
     `- [OpenAPI spec](${abs("/openapi.json")}): the REST API, for agents without MCP`,
-    ...(SCREENS.copper ? [`- [Example app](${abs("/example")}): Copper, an AI assistant for a caterer, built only from these components`] : []),
+    ...(SCREENS.copper ? [`- [UI Polish Pro screens](${abs("/screens")}): whole app screens built from these components, $299 once for a whole team`, `- [Example app](${abs("/example")}): Copper, an AI assistant for a caterer, built only from these components`] : []),
     `- [Contact](${abs("/contact")})`,
   );
 
