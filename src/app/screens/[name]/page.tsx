@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SCREENS, SCREEN_INFO } from "@pro/index";
+import { ProPreview } from "@/components/pro-preview";
 import { pageMetadata } from "@/lib/seo/site";
 
 type Props = { params: Promise<{ name: string }> };
@@ -20,6 +21,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { name } = await params;
   const Screen = SCREENS[name];
-  if (!Screen || name === "copper") notFound();
-  return <Screen />;
+  const info = SCREEN_INFO.find((s) => s.name === name);
+  if (!Screen || !info || name === "copper") notFound();
+  return (
+    <ProPreview title={info.title}>
+      <Screen />
+    </ProPreview>
+  );
 }

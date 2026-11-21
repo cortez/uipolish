@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { SCREENS } from "@pro/index";
+import { SCREENS, SCREEN_INFO } from "@pro/index";
+import { ProPreview } from "@/components/pro-preview";
 import { pageMetadata } from "@/lib/seo/site";
 
 export const metadata: Metadata = pageMetadata({
@@ -11,10 +12,14 @@ export const metadata: Metadata = pageMetadata({
 });
 
 /** The example app: a UI Polish Pro screen, pulled in at build from the
- *  private repo (scripts/fetch-pro.mjs). It fills the window, so it has none
- *  of the site's chrome. Without the screens, there's no page. */
+ *  private repo (scripts/fetch-pro.mjs), under the bar that says how to get
+ *  it. Without the screens, there's no page. */
 export default function Page() {
   const Copper = SCREENS.copper;
   if (!Copper) notFound();
-  return <Copper />;
+  return (
+    <ProPreview title={SCREEN_INFO.find((s) => s.name === "copper")?.title ?? "Copper"}>
+      <Copper />
+    </ProPreview>
+  );
 }

@@ -1,0 +1,88 @@
+/* The bar over a Pro screen's preview, and the frame the screen fills. */
+.page {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--ui-canvas);
+  color: var(--ui-foreground);
+  font-family: var(--ui-font-sans);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+  min-height: var(--ui-control-lg);
+  padding: var(--ui-space-2) var(--ui-space-4) var(--ui-space-2) var(--ui-space-2);
+  background: var(--ui-surface);
+  box-shadow: inset 0 calc(var(--ui-hairline) * -1) 0 var(--ui-border);
+}
+
+.back {
+  flex: none;
+}
+
+.what {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-3);
+  min-width: 0;
+  margin: 0;
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.name {
+  overflow: hidden;
+  font-weight: var(--ui-weight-title);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.note,
+.once {
+  color: var(--ui-muted);
+  white-space: nowrap;
+}
+
+.buy {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ui-space-4);
+  margin-inline-start: auto;
+}
+
+.price {
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-title);
+  line-height: var(--ui-leading-sm);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The screen fills the frame rather than the window: its root is told to
+   take the frame's height. */
+.frame {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.frame > div {
+  height: 100%;
+}
+
+@media (max-width: 767px) {
+  .note,
+  .once,
+  .backLabel {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .price {
+    display: none;
+  }
+}

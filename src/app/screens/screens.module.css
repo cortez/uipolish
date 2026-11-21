@@ -1,5 +1,124 @@
-/* The Pro page: one card per screen, then what the price includes. */
-.list {
+/* The Pro page: a roomy hero, the screen itself, then what it is, how it
+   works, the price and questions. */
+
+/* The hero gets more room than a docs page's intro: a section's distance
+   above, and its parts a step further apart. */
+.hero.hero {
+  gap: var(--ui-space-3);
+  padding-block: var(--ui-space-7) var(--ui-space-8);
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--ui-accent-text);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-title);
+  line-height: var(--ui-leading-sm);
+}
+
+.lede {
+  margin-top: var(--ui-space-1);
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-3);
+  margin-top: var(--ui-space-5);
+}
+
+.fine {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
+.thanks {
+  max-width: 720px;
+  padding-bottom: var(--ui-space-7);
+}
+
+/* ---------- The screen ---------- */
+
+.shot {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--ui-radius-lg);
+  box-shadow:
+    inset 0 0 0 var(--ui-hairline) var(--ui-border-strong),
+    var(--ui-shadow-raised);
+  /* The picture's own ratio, held before it loads, so nothing below moves. */
+  aspect-ratio: 1440 / 900;
+  background: var(--ui-surface);
+}
+
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The hairline sits over the picture, not under it. */
+.shot::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  content: "";
+  pointer-events: none;
+}
+
+/* One picture per theme, following the page's. */
+.shot img.dark {
+  display: none;
+}
+
+:global(html[data-theme="dark"]) .shot img.dark {
+  display: block;
+}
+
+:global(html[data-theme="dark"]) .shot img.light {
+  display: none;
+}
+
+.shotLabel {
+  position: absolute;
+  bottom: var(--ui-space-4);
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-height: var(--ui-control-md);
+  padding-inline: var(--ui-space-4);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-surface);
+  box-shadow:
+    inset 0 0 0 var(--ui-hairline) var(--ui-border),
+    var(--ui-shadow-raised);
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-sm);
+  white-space: nowrap;
+  translate: -50% 0;
+  transition: translate var(--ui-dur-snap) var(--ui-ease-snap);
+}
+
+@media (hover: hover) {
+  .shot:hover .shotLabel {
+    translate: -50% -2px;
+  }
+}
+
+.shot:focus-visible {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+/* ---------- Cards and steps ---------- */
+
+.list,
+.steps {
   display: grid;
   gap: var(--ui-space-4);
   margin: 0;
@@ -7,19 +126,19 @@
   list-style: none;
 }
 
-.card {
+.steps {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.card,
+.step,
+.price {
   display: grid;
-  gap: var(--ui-space-3);
+  align-content: start;
+  gap: var(--ui-space-2);
   padding: var(--ui-space-5);
   border-radius: var(--ui-radius-lg);
   box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong);
-}
-
-.head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--ui-space-3);
 }
 
 .name {
@@ -29,18 +148,73 @@
   line-height: var(--ui-leading-md);
 }
 
+.uses {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+}
+
 /* The card's text to its action: a step further than heading to text. */
-.actions {
+.cardActions,
+.priceAction {
   display: flex;
-  margin-top: var(--ui-space-2);
+  margin-top: var(--ui-space-4);
+}
+
+.stepNumber {
+  display: grid;
+  place-items: center;
+  width: var(--ui-space-6);
+  height: var(--ui-space-6);
+  margin-bottom: var(--ui-space-2);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-accent-tint);
+  color: var(--ui-accent-text);
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-title);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Price ---------- */
+
+.price {
+  gap: var(--ui-space-4);
+}
+
+.amount {
+  display: flex;
+  align-items: baseline;
+  gap: var(--ui-space-2);
+  margin: 0;
+  font-size: var(--ui-text-2xl);
+  font-weight: var(--ui-weight-title);
+  line-height: var(--ui-leading-2xl);
+  font-variant-numeric: tabular-nums;
+}
+
+.per {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  font-weight: normal;
 }
 
 .included {
   display: grid;
-  gap: var(--ui-space-2);
-  max-width: var(--ui-measure);
+  gap: var(--ui-space-3);
   margin: 0;
-  padding-inline-start: var(--ui-space-5);
-  color: var(--ui-muted);
+  padding: 0;
+  list-style: none;
   line-height: var(--ui-leading-prose);
+}
+
+.included li {
+  display: flex;
+  gap: var(--ui-space-3);
+}
+
+.tick {
+  flex: none;
+  margin-top: 0.2em;
+  color: var(--ui-accent);
 }
