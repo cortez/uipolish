@@ -117,6 +117,25 @@ export function useStickToBottom(
           }
         }
       }
+      // Anything else that arrives (a teammate's reply, someone joining)
+      // while the reader is at the end comes into view: as much of it as
+      // fits, never past its own top, so a long one reads from its start.
+      if (!anchor.current || rising) return;
+      const added = records.flatMap((r) => [...r.addedNodes]).filter((n): n is HTMLElement => n instanceof HTMLElement && n !== spacer);
+      const last = added[added.length - 1];
+      if (!last) return;
+      const view = scroller.getBoundingClientRect();
+      const box = last.getBoundingClientRect();
+      const wasAtEnd = box.top <= view.bottom + 1;
+      if (!wasAtEnd || box.bottom <= view.bottom) return;
+      const by = Math.min(box.bottom - view.bottom + pad("paddingBottom"), box.top - view.top - pad("paddingTop"));
+      if (by <= 0) return;
+      // Its room is part of the page now: let the browser scroll into it.
+      room();
+      const smooth = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+      rising = smooth;
+      if (smooth) setTimeout(() => (rising = false), 700);
+      scroller.scrollBy({ top: by, behavior: smooth ? "smooth" : "auto" });
     });
     mutations.observe(content, { childList: true });
 

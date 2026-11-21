@@ -111,9 +111,14 @@ push anything down.
   behind it is that clamp: the room is remade and the message put back
   before the frame is drawn.
 - **Longer than the view.** Once the reply outgrows the room, the spacer is
-  gone and nothing scrolls on its own: the reader reads from the top of the
-  reply. "Jump to latest" appears when its end is more than 64px below the
-  view; it smooth-scrolls there and follows the bottom from then on.
+  gone and a streaming reply doesn't scroll on its own: the reader reads
+  from its top. "Jump to latest" appears when its end is more than 64px
+  below the view; it smooth-scrolls there and follows the bottom from then
+  on.
+- **Something new arrives.** A message that isn't the user's (a teammate's
+  reply, someone joining) added while the reader is at the end glides into
+  view, as much of it as fits and never past its own top. A reader who has
+  scrolled back up stays put and gets "Jump to latest".
 - **`overflow-anchor` stays `auto`.** It keeps the paragraph the user is
   reading still when something above it changes height after they've
   scrolled up.
