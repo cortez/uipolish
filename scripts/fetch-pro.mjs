@@ -45,8 +45,12 @@ mkdirSync(join(out, "screens"), { recursive: true });
 // An index the site imports from (@pro/index): every screen whose folder
 // holds <name>.tsx, by name. Empty when there are none, so the site still
 // builds and its screen pages simply aren't there.
+// PRO_SCREENS=a,b limits a local build to those screens (working on one
+// while others are half-built); unset, every screen is in.
+const only = process.env.PRO_SCREENS?.split(",").map((n) => n.trim()).filter(Boolean);
 const names = readdirSync(join(out, "screens"), { withFileTypes: true })
   .filter((d) => d.isDirectory() && existsSync(join(out, "screens", d.name, `${d.name}.tsx`)))
+  .filter((d) => !only?.length || only.includes(d.name))
   .map((d) => d.name)
   .sort();
 const ident = (n) => "S_" + n.replace(/[^a-z0-9]/gi, "_");
