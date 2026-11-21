@@ -36,8 +36,6 @@ const SHEET = {
 const RIM = {
   d: "M5.76 5.76A1.75 1.75 0 0 1 7 5.25H11.5A1.75 1.75 0 0 1 13.25 7V11.5A1.75 1.75 0 0 1 11.5 13.25",
 } satisfies Stroke;
-// Both strokes at 45°: the copy's front corner, turned an eighth of a turn
-// (see TURN_INTO_CHECK).
 const CHECK = {
   d: "M3.75 8.25 L6.75 11.25 L12.75 5.25",
 } satisfies Stroke;
@@ -614,17 +612,13 @@ type El = {
   still: boolean;
 };
 
-/* Copy turns into the check. The front sheet's bottom-left corner, turned
-   an eighth of a turn anticlockwise, is a check: its left edge becomes the
-   short stroke and its bottom edge the long one. So the whole icon tilts
-   45° about that corner while the corner slides to the check's point, the
-   left edge shortens, the bottom edge lengthens and the rounded corner
-   sharpens; the rest of the front sheet and the back sheet tilt with it
-   as they erase. Check back to copy is the same move in reverse. Each is
-   [top of the left edge or short stroke, corner, end of the long stroke]. */
-const TURN_FROM: [Pt, Pt, Pt] = [[5.25, 7], [5.25, 13.25], [11.5, 13.25]];
-const TURN_TO: [Pt, Pt, Pt] = [[3.75, 8.25], [6.75, 11.25], [12.75, 5.25]];
-const turnsIntoCheck = (a: IconName, b: IconName) => (a === "copy" && b === "check") || (a === "check" && b === "copy");
+/* Copy and check swap rather than morph: two shapes this different only
+   tangle on the way. The one leaving shrinks a little and fades fast; the
+   one arriving pops up from smaller on the bounce, and the check draws its
+   stroke as it comes. Both stay centred, so nothing travels. */
+const swaps = (a: IconName, b: IconName) => (a === "copy" && b === "check") || (a === "check" && b === "copy");
+/** How small a swapped icon is when it's gone. */
+const SWAP_SMALL = 0.6;
 
 /** CSS cubic-bezier(x1, y1, x2, y2) at time `t`. */
 function bezier(x1: number, y1: number, x2: number, y2: number, t: number) {
@@ -639,15 +633,6 @@ function bezier(x1: number, y1: number, x2: number, y2: number, t: number) {
   }
   return at(y1, y2, u);
 }
-
-/** A point turned by `rad` about `about`. */
-const spin = (p: Pt, rad: number, about: Pt): Pt => {
-  const cos = Math.cos(rad);
-  const sin = Math.sin(rad);
-  const x = p[0] - about[0];
-  const y = p[1] - about[1];
-  return [about[0] + x * cos - y * sin, about[1] + x * sin + y * cos];
-};
 
 /** `pts` turned so it starts at the end nearer `ink`. */
 function fromNearEnd(pts: Pt[], ink: Pt[][]): Pt[] {
@@ -727,14 +712,25 @@ function createEngine(host: SVGGElement, start: IconName) {
     return { ms, ease };
   };
 
-  /** The turn's timing: the draw curve over the move duration. A turn on the
-   *  glide does most of its turning in the first frames and then creeps;
-   *  easing in and out keeps the tilt even, so it reads as one motion. */
-  const turnTiming = () => {
+  /** A duration token in ms, and an easing token as a function: a sampled
+   *  spring (linear(...)) or a cubic-bezier. */
+  const token = (dur: string, ease: string, fallback: number) => {
     const css = getComputedStyle(host);
-    const raw = css.getPropertyValue("--ui-dur-move").trim();
-    const ms = parseFloat(raw) * (/\ds$/.test(raw) && !raw.endsWith("ms") ? 1000 : 1) || 380;
-    const [x1, y1, x2, y2] = (/cubic-bezier\(([^)]+)\)/.exec(css.getPropertyValue("--ui-ease-draw"))?.[1].split(",").map(parseFloat) ?? [0.35, 0, 0.15, 1]);
+    const raw = css.getPropertyValue(dur).trim();
+    const ms = parseFloat(raw) * (/\ds$/.test(raw) && !raw.endsWith("ms") ? 1000 : 1) || fallback;
+    const val = css.getPropertyValue(ease);
+    const stops = /linear\(([^)]+)\)/.exec(val)?.[1].split(",").map(parseFloat);
+    if (stops && stops.length > 1 && !stops.some(Number.isNaN)) {
+      return {
+        ms,
+        ease: (t: number) => {
+          const u = t * (stops.length - 1);
+          const i = Math.min(stops.length - 2, Math.floor(u));
+          return stops[i] + (stops[i + 1] - stops[i]) * (u - i);
+        },
+      };
+    }
+    const [x1, y1, x2, y2] = /cubic-bezier\(([^)]+)\)/.exec(val)?.[1].split(",").map(parseFloat) ?? [0.2, 1, 0.3, 1];
     return { ms, ease: (t: number) => bezier(x1, y1, x2, y2, t) };
   };
 
@@ -854,87 +850,74 @@ function createEngine(host: SVGGElement, start: IconName) {
     }
   }
 
-  /* ---------- Copy ↔ check: the turn (see TURN_FROM) ---------- */
+  /* ---------- Copy ↔ check: the swap (see swaps) ---------- */
 
-  let turning: { k: number; sheet: SVGPathElement; rest: { node: SVGPathElement; pts: Pt[] }[] } | null = null;
+  type Layer = { g: SVGGElement; paths: SVGPathElement[]; o: number; s: number; d: number };
+  let swap: { copy: Layer; check: Layer } | null = null;
 
-  const endTurn = () => {
-    if (!turning) return;
-    turning.sheet.remove();
-    for (const r of turning.rest) r.node.remove();
-    turning = null;
+  const paint = (l: Layer, drawn: boolean) => {
+    l.g.setAttribute("transform", `translate(8 8) scale(${r2(l.s * 100) / 100}) translate(-8 -8)`);
+    l.g.style.opacity = String(Math.max(0, Math.min(1, l.o)));
+    l.g.style.visibility = l.o > 0.001 ? "" : "hidden";
+    if (drawn) for (const p of l.paths) p.style.strokeDasharray = `${Math.max(0, Math.min(1, l.d))} 2`;
+  };
+  const endSwap = () => {
+    if (!swap) return;
+    swap.copy.g.remove();
+    swap.check.g.remove();
+    swap = null;
   };
 
-  /** The turn at `k`: 0 is copy, 1 the check. */
-  function drawTurn(k: number) {
-    const t = turning!;
-    t.k = k;
-    const lerp = (a: Pt, b: Pt): Pt => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
-    const angle = (-Math.PI / 4) * k;
-    const corner = lerp(TURN_FROM[1], TURN_TO[1]);
-    const up = spin([0, -1], angle, [0, 0]);
-    const along = spin([1, 0], angle, [0, 0]);
-    const short = dist(TURN_FROM[0], TURN_FROM[1]) + (dist(TURN_TO[0], TURN_TO[1]) - dist(TURN_FROM[0], TURN_FROM[1])) * k;
-    const long = dist(TURN_FROM[1], TURN_FROM[2]) + (dist(TURN_TO[1], TURN_TO[2]) - dist(TURN_FROM[1], TURN_FROM[2])) * k;
-    // The sheet's rounded corner sharpens into the check's point.
-    const r = 1.75 * (1 - k);
-    const at = (dir: Pt, len: number): Pt => [corner[0] + dir[0] * len, corner[1] + dir[1] * len];
-    const p = (q: Pt) => `${r2(q[0])} ${r2(q[1])}`;
-    t.sheet.setAttribute("d", `M${p(at(up, short))}L${p(at(up, r))}Q${p(corner)} ${p(at(along, r))}L${p(at(along, long))}`);
-    // The rest of the copy is carried round the same corner, fading out
-    // evenly over the first half: a whole shape dimming, never a stub.
-    const o = Math.max(0, 1 - k / 0.5);
-    for (const { node, pts } of t.rest) {
-      const part = pts.map((q) => {
-        const turned = spin(q, angle, TURN_FROM[1]);
-        return [turned[0] + corner[0] - TURN_FROM[1][0], turned[1] + corner[1] - TURN_FROM[1][1]] as Pt;
-      });
-      node.setAttribute("d", poly(part));
-      node.style.opacity = String(o * o * (3 - 2 * o));
-      node.style.visibility = o > 0 ? "" : "hidden";
-    }
-  }
-
-  function startTurn(next: IconName) {
-    const target = next === "check" ? 1 : 0;
-    if (!turning) {
-      // From rest: the turn's own strokes take the place of the icon's.
-      const from = name === "check" ? 1 : 0;
+  function startSwap(next: IconName) {
+    if (!swap) {
       for (const el of els) el.node.remove();
       els = [];
-      const copy = strands("copy");
-      const sheet = copy.find((s) => s.key === "sheet#0")!;
-      const node = (cls: string) => {
-        const n = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        n.setAttribute("class", cls);
-        host.appendChild(n);
-        return n;
+      const layer = (icon: IconName, on: boolean): Layer => {
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        const paths = strands(icon).map((st) => {
+          const n = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          n.setAttribute("class", st.cls);
+          n.setAttribute("d", st.d);
+          n.setAttribute("pathLength", "1");
+          g.appendChild(n);
+          return n;
+        });
+        host.appendChild(g);
+        return { g, paths, o: on ? 1 : 0, s: on ? 1 : SWAP_SMALL, d: on ? 1 : 0 };
       };
-      turning = {
-        k: from,
-        sheet: node(sheet.cls),
-        // The rim, the back sheet, and the sheet's own top-left half-corner
-        // (the turn draws the sheet from the top of its left edge), so the
-        // first frame is the copy exactly as it rests.
-        rest: [
-          ...copy.filter((s) => s !== sheet).map((s) => ({ node: node(s.cls), pts: s.pts })),
-          { node: node(sheet.cls), pts: sheet.pts.slice(0, sheet.pts.findIndex((q) => q[1] >= TURN_FROM[0][1]) + 1) },
-        ],
-      };
-      drawTurn(from);
+      swap = { copy: layer("copy", name === "copy"), check: layer("check", name === "check") };
+      paint(swap.copy, false);
+      paint(swap.check, true);
     }
     name = next;
-    const start = turning.k;
-    const { ms, ease } = turnTiming();
-    // Turning back mid-way takes only the time the distance left needs.
-    const span = ms * Math.max(0.35, Math.abs(target - start));
+    const sw = swap;
+    const inn = next === "check" ? sw.check : sw.copy;
+    const out = next === "check" ? sw.copy : sw.check;
+    // A check that has gone draws again from nothing.
+    if (inn === sw.check && inn.o < 0.05) inn.d = 0;
+    const o0 = { inO: inn.o, inS: inn.s, inD: inn.d, outO: out.o, outS: out.s };
+    const leave = token("--ui-dur-instant", "--ui-ease-exit", 120);
+    const pop = token("--ui-dur-bounce", "--ui-ease-bounce", 380);
+    const drawOn = token("--ui-dur-base", "--ui-ease-draw", 200);
+    const fadeIn = token("--ui-dur-fast", "--ui-ease-enter", 160);
+    // The new icon starts once the old one is mostly gone: a sliver of overlap,
+    // never both at full strength.
+    const lag = leave.ms * 0.75;
+    const total = lag + Math.max(pop.ms, drawOn.ms, fadeIn.ms);
     const began = performance.now();
+    const part = (now: number, from: number, ms: number) => Math.min(1, Math.max(0, (now - began - from) / ms));
     const step = (now: number) => {
-      const t = Math.min(1, Math.max(0, (now - began) / span));
-      drawTurn(start + (target - start) * ease(t));
-      if (t === 1) {
+      const lt = leave.ease(part(now, 0, leave.ms));
+      out.o = o0.outO * (1 - lt);
+      out.s = o0.outS + (SWAP_SMALL - o0.outS) * lt;
+      inn.o = o0.inO + (1 - o0.inO) * fadeIn.ease(part(now, lag, fadeIn.ms));
+      inn.s = o0.inS + (1 - o0.inS) * pop.ease(part(now, lag, pop.ms));
+      inn.d = o0.inD + (1 - o0.inD) * drawOn.ease(part(now, lag, drawOn.ms));
+      paint(out, out === sw.check);
+      paint(inn, inn === sw.check);
+      if (now - began >= total) {
         frame = 0;
-        endTurn();
+        endSwap();
         lay(name);
         return;
       }
@@ -949,16 +932,15 @@ function createEngine(host: SVGGElement, start: IconName) {
       cancelAnimationFrame(frame);
       frame = 0;
       if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        endTurn();
+        endSwap();
         name = next;
         lay(next);
         return;
       }
-      if (turnsIntoCheck(name, next)) return startTurn(next);
-      // Anything else interrupts the turn where it lands nearest.
-      if (turning) {
-        name = turning.k >= 0.5 ? "check" : "copy";
-        endTurn();
+      if (swaps(name, next)) return startSwap(next);
+      // Anything else ends the swap on the icon it was heading for.
+      if (swap) {
+        endSwap();
         lay(name);
         if (next === name) return;
       }
@@ -985,8 +967,8 @@ function createEngine(host: SVGGElement, start: IconName) {
       if (!frame) return;
       cancelAnimationFrame(frame);
       frame = 0;
-      if (turning) {
-        endTurn();
+      if (swap) {
+        endSwap();
         lay(name);
       } else settle();
     },
