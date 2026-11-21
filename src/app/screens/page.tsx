@@ -10,7 +10,7 @@ import Link from "@/components/link";
 import { SiteLayout } from "@/components/site-layout";
 import { Badge } from "@registry/badge/badge";
 import {
-  PLANNED,
+  CATALOG,
   PRO_OPEN,
   PRO_PRICE,
   previewHref,
@@ -29,7 +29,24 @@ export const metadata: Metadata = pageMetadata({
 });
 
 /** Screens with a picture of themselves in public/screens/<name>-{light,dark}.webp. */
-const SHOTS = new Set(["copper"]);
+const SHOTS = new Set(["copper", "agent-builder", "analytics", "approvals", "evals", "inbox", "knowledge", "settings", "support-widget", "traces"]);
+
+type Card = { name: string; title: string; tagline: string; built: boolean; components: number };
+
+/** The catalog in its order: built screens open, the rest are in the works;
+ *  a built screen the catalog doesn't name goes last with its own summary. */
+function cards(): Card[] {
+  const built = new Map(SCREEN_INFO.map((s) => [s.name, s]));
+  const listed = CATALOG.map((c) => ({ ...c, built: built.has(c.name), components: built.get(c.name)?.components.length ?? 0 }));
+  const extra = SCREEN_INFO.filter((s) => !CATALOG.some((c) => c.name === s.name)).map((s) => ({
+    name: s.name,
+    title: s.title,
+    tagline: s.summary,
+    built: true,
+    components: s.components.length,
+  }));
+  return [...listed, ...extra];
+}
 
 const INCLUDED = [
   "Every screen, now and as they’re added, with lifetime updates",
@@ -94,7 +111,7 @@ export default async function Page({
   if (!SCREEN_INFO.length) notFound();
   const purchased = (await searchParams).purchased === "1";
   const checkout = proCheckout();
-  const first = SCREEN_INFO[0];
+  const first = SCREEN_INFO.find((s) => s.name === CATALOG[0].name) ?? SCREEN_INFO[0];
 
   const buy = (label: string) =>
     checkout ? (
@@ -198,38 +215,42 @@ export default async function Page({
         </Link>
       )}
 
-      <section className={site.section} aria-labelledby="screens-title">
+      <section className={`${site.section} ${site.wide}`} aria-labelledby="screens-title">
         <h2 id="screens-title" className={site.heading}>
-          {PRO_OPEN ? `${SCREEN_INFO.length} screens` : "The screens"}
+          {`${SCREEN_INFO.length} screens`}
         </h2>
-        <ul className={styles.list}>
-          {SCREEN_INFO.map((s) => (
-            <li key={s.name} className={styles.card}>
-              <h3 className={styles.name}>{s.title}</h3>
-              {s.summary && <p className={site.text}>{s.summary}</p>}
-              <p className={styles.uses}>
-                Built from {s.components.length} UI Polish components.
-              </p>
-              <div className={styles.cardActions}>
-                <ButtonLink
-                  as={Link}
-                  href={previewHref(s.name)}
-                  variant="secondary"
-                >
-                  Open live preview
-                </ButtonLink>
-              </div>
-            </li>
-          ))}
-          {PLANNED.filter(
-            (p) => !SCREEN_INFO.some((s) => s.name === p.name),
-          ).map((p) => (
-            <li key={p.name} className={styles.card} data-planned>
-              <div className={styles.cardHead}>
-                <h3 className={styles.name}>{p.title}</h3>
-                <Badge>In the works</Badge>
-              </div>
-              <p className={site.text}>{p.summary}</p>
+        <ul className={styles.grid}>
+          {cards().map((c) => (
+            <li key={c.name} className={styles.tile} data-planned={c.built ? undefined : ""}>
+              {c.built ? (
+                <Link href={previewHref(c.name)} className={styles.tileLink}>
+                  <span className={styles.thumb}>
+                    {SHOTS.has(c.name) && (
+                      <>
+                        <Image className={styles.light} src={`/screens/${c.name}-light.webp`} alt="" width={1440} height={900} sizes="(max-width: 720px) 100vw, 520px" />
+                        <Image className={styles.dark} src={`/screens/${c.name}-dark.webp`} alt="" width={1440} height={900} sizes="(max-width: 720px) 100vw, 520px" />
+                      </>
+                    )}
+                  </span>
+                  <span className={styles.tileText}>
+                    <span className={styles.name}>{c.title}</span>
+                    <span className={styles.tagline}>{c.tagline}</span>
+                    <span className={styles.open}>
+                      Open live preview <Icon name="arrow-right" />
+                    </span>
+                  </span>
+                </Link>
+              ) : (
+                <div className={styles.tileLink}>
+                  <span className={styles.thumb} />
+                  <span className={styles.tileText}>
+                    <span className={styles.name}>
+                      {c.title} <Badge>In the works</Badge>
+                    </span>
+                    <span className={styles.tagline}>{c.tagline}</span>
+                  </span>
+                </div>
+              )}
             </li>
           ))}
         </ul>

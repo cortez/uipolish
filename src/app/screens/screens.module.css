@@ -231,3 +231,113 @@
 .card[data-planned] .name {
   color: var(--ui-muted);
 }
+
+/* ---------- The catalog: a tile per screen ---------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: var(--ui-space-6) var(--ui-space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tileLink {
+  display: grid;
+  gap: var(--ui-space-3);
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+/* The picture, held at its own ratio before it loads so nothing moves. */
+.thumb {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 1440 / 900;
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-fill);
+  box-shadow: var(--ui-shadow-resting);
+  transition:
+    translate var(--ui-dur-snap) var(--ui-ease-snap),
+    box-shadow var(--ui-dur-fast) var(--ui-ease-color);
+}
+
+.thumb img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The hairline sits over the picture, not under it. */
+.thumb::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border);
+  content: "";
+  pointer-events: none;
+}
+
+.thumb img.dark {
+  display: none;
+}
+
+:global(html[data-theme="dark"]) .thumb img.dark {
+  display: block;
+}
+
+:global(html[data-theme="dark"]) .thumb img.light {
+  display: none;
+}
+
+@media (hover: hover) {
+  .tileLink:hover .thumb {
+    translate: 0 -2px;
+    box-shadow: var(--ui-shadow-raised);
+  }
+
+  .tileLink:hover .open {
+    color: var(--ui-foreground);
+  }
+}
+
+.tileLink:focus-visible .thumb {
+  outline: var(--ui-ring-focus);
+  outline-offset: var(--ui-ring-offset);
+}
+
+.tileText {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.tileText .name {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+}
+
+.tagline {
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  text-wrap: pretty;
+}
+
+.open {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  margin-top: var(--ui-space-1);
+  color: var(--ui-muted);
+  font-size: var(--ui-text-sm);
+  line-height: var(--ui-leading-sm);
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+.tile[data-planned] .thumb {
+  box-shadow: none;
+}

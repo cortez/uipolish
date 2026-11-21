@@ -13,16 +13,18 @@ export const proCheckout = () => (PRO_OPEN ? process.env.PRO_CHECKOUT_URL?.trim(
 /** Where each screen's live preview opens. Copper predates /screens/<name>. */
 export const previewHref = (name: string) => (name === "copper" ? "/example" : `/screens/${name}`);
 
-/** Screens being built, shown on /screens until each one ships (then it
- *  comes from the screens themselves and drops off this list by name). */
-export const PLANNED: { name: string; title: string; summary: string }[] = [
-  { name: "support-widget", title: "Support widget", summary: "The assistant in the corner of your site: a launcher, help search, an AI chat that cites its sources, and a hand-off to a person." },
-  { name: "agent-builder", title: "Agent builder", summary: "Configure an agent (model, instructions, tools, knowledge, guardrails), compare versions, and test the draft in a live chat before you publish." },
-  { name: "traces", title: "Agent runs", summary: "Every run an agent made, and each one as a timeline of steps: model calls, tool calls, tokens, latency, cost and errors, with a replay." },
-  { name: "approvals", title: "Approvals", summary: "A review queue for actions agents want to take: see what, why and what changes, then approve, edit or reject, one at a time or in bulk." },
-  { name: "evals", title: "Evals and playground", summary: "Run a prompt across models side by side, score answers against a test set, and compare eval runs before a change ships." },
-  { name: "knowledge", title: "Knowledge base", summary: "The documents an assistant answers from: upload, indexing status, chunks and sources, and a test search that shows what it retrieves." },
-  { name: "inbox", title: "Support inbox", summary: "A support queue where AI triages every conversation and drafts each reply with its sources, and people review, edit and send." },
-  { name: "analytics", title: "Usage and cost", summary: "Requests, tokens, spend and latency by model and feature, a budget with alerts, and the most expensive calls behind each number." },
-  { name: "settings", title: "Settings and billing", summary: "Team and roles, usage-based billing with spend limits, API keys with scopes, and which models the workspace may use." },
+/** The catalog in the order /screens shows it, with a one-line pitch each.
+ *  A screen not built yet shows as "In the works"; a built screen missing
+ *  here goes at the end with its own summary. */
+export const CATALOG: { name: string; title: string; tagline: string }[] = [
+  { name: "copper", title: "Agent workspace", tagline: "A full AI assistant app: streaming chat with reasoning and tool steps, records in a drawer, a command palette." },
+  { name: "agent-builder", title: "Agent builder", tagline: "Configure an agent's model, instructions, tools and knowledge, compare versions, and test the draft live." },
+  { name: "traces", title: "Agent runs", tagline: "Every run as a timeline of model and tool calls, with tokens, cost, errors, replay and retry." },
+  { name: "approvals", title: "Approvals", tagline: "Review what agents want to do: the reasoning, the exact change, policy checks; approve, edit or reject." },
+  { name: "evals", title: "Evals and playground", tagline: "Run a prompt across models side by side, diff against a baseline, and compare graded eval runs." },
+  { name: "knowledge", title: "Knowledge base", tagline: "The documents an assistant answers from: indexing, chunks, sources, and a test search with citations." },
+  { name: "inbox", title: "Support inbox", tagline: "AI triages every conversation and drafts each reply with its sources; people review and send." },
+  { name: "support-widget", title: "Support widget", tagline: "The assistant in the corner of your site: help search, an AI chat that cites sources, hand-off to a person." },
+  { name: "analytics", title: "Usage and cost", tagline: "Spend, tokens and latency by model and feature, a budget with alerts, and the costliest calls behind them." },
+  { name: "settings", title: "Settings and billing", tagline: "Team and roles, usage-based billing with spend limits, API keys with scopes, and allowed models." },
 ];
