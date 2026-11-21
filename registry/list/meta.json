@@ -3,7 +3,7 @@
   "title": "List",
   "summary": "Rows of peers, static, links or buttons, each row one tab stop with nothing nested inside it. Secondary actions show on hover or focus without moving anything, and every row keeps its height in every state.",
   "blurb": "Rows of peers, each one tab stop, steady in every state.",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "dependencies": [
     "field",
     "icons",

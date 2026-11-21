@@ -149,7 +149,7 @@
    Only the outermost element of each control is lifted, which carries the
    rest with it: lifting the parts inside one (a switch's absolutely placed
    track) would pull them out of their own layout. */
-.trailing > :is(a, button, input, select, textarea, label, [tabindex], :has(a, button, input, select, textarea, [tabindex])),
+:is(.leading, .trailing) > :is(a, button, input, select, textarea, label, [tabindex], :has(a, button, input, select, textarea, [tabindex])),
 .actions > * {
   position: relative;
   z-index: 2;

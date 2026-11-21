@@ -3,7 +3,7 @@
   "title": "Split view",
   "summary": "Resizable panes, side by side or stacked: a chat beside the document it writes, a list beside its detail. Drag, step with the keyboard or double-click the hairline divider; a pane can snap shut and reopen to its size, and the layout can be remembered. Narrow, it shows one pane at a time.",
   "blurb": "Resizable panes, with a divider you can drag or key.",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "dependencies": [
     "segmented-control"
   ]

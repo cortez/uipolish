@@ -324,19 +324,19 @@
     margin-bottom: var(--ui-space-3);
   }
 
-  .root[data-narrow="switch"] > .frame {
+  .root:is([data-narrow="switch"], [data-narrow="stack"]) > .frame {
     grid-template-columns: minmax(0, 1fr);
     overflow: clip;
     transition: none;
   }
 
-  .root[data-narrow="switch"] > .frame > .divider {
+  .root:is([data-narrow="switch"], [data-narrow="stack"]) > .frame > .divider {
     display: none;
   }
 
   /* Every pane in one cell; the one shown fades in just after the one
      leaving has gone, slid a little from the side it lies on. */
-  .root[data-narrow="switch"] > .frame > .pane {
+  .root:is([data-narrow="switch"], [data-narrow="stack"]) > .frame > .pane {
     grid-area: 1 / 1;
     opacity: 0;
     visibility: hidden;
@@ -347,11 +347,11 @@
       visibility 0s linear var(--ui-dur-instant);
   }
 
-  .root[data-narrow="switch"] > .frame > .pane[data-side="before"] {
+  .root:is([data-narrow="switch"], [data-narrow="stack"]) > .frame > .pane[data-side="before"] {
     translate: calc(var(--split-shift) * -1) 0;
   }
 
-  .root[data-narrow="switch"] > .frame > .pane[data-active] {
+  .root:is([data-narrow="switch"], [data-narrow="stack"]) > .frame > .pane[data-active] {
     opacity: 1;
     visibility: visible;
     translate: 0 0;
@@ -362,7 +362,7 @@
   }
 
   /* Collapsing is a wide-screen idea: here every pane can be shown. */
-  .root[data-narrow="switch"] > .frame > .pane > .content {
+  .root:is([data-narrow="switch"], [data-narrow="stack"]) > .frame > .pane > .content {
     min-width: 0;
     opacity: 1;
     visibility: inherit;
@@ -376,8 +376,8 @@
   .handle::before {
     transition-property: opacity, background-color;
   }
-  .root[data-narrow="switch"] > .frame > .pane,
-  .root[data-narrow="switch"] > .frame > .pane[data-active] {
+  .root:is([data-narrow="switch"], [data-narrow="stack"]) > .frame > .pane,
+  .root:is([data-narrow="switch"], [data-narrow="stack"]) > .frame > .pane[data-active] {
     transition-property: opacity, visibility;
   }
 }

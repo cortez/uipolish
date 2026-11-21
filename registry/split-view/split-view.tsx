@@ -54,11 +54,17 @@ type SplitViewProps = {
   storageKey?: string;
   /** Each pane's share of the view, in percent, as it changes (every frame of a drag). */
   onResize?: (sizes: number[]) => void;
-  /** Under 560px wide, a horizontal split shows one pane at a time with a switch above (`switch`, default), or stays side by side (`split`). */
-  narrow?: "switch" | "split";
+  /** Under 560px wide, a horizontal split shows one pane at a time: with a
+   *  switch above (`switch`, default), or as a stack you move through
+   *  yourself (`stack`: a list, then the item you picked, with your own Back
+   *  setting `narrowPane`). Or it stays side by side (`split`). */
+  narrow?: "switch" | "stack" | "split";
   /** The pane shown when narrow, by `id`: control it to open a detail when a row is picked. Default: the first. */
   narrowPane?: string;
   onNarrowPaneChange?: (id: string) => void;
+  /** Fires when the view starts or stops showing one pane at a time, so a
+   *  stack can show its Back button only then. */
+  onNarrowChange?: (narrow: boolean) => void;
   className?: string;
 };
 
@@ -176,6 +182,7 @@ export function SplitView({
   narrow = "switch",
   narrowPane,
   onNarrowPaneChange,
+  onNarrowChange,
   className,
 }: SplitViewProps) {
   const panes: Pane[] = Children.toArray(children)
@@ -201,7 +208,15 @@ export function SplitView({
     latest.current = layout;
   });
 
-  const isNarrow = horizontal && narrow === "switch" && width > 0 && width < NARROW;
+  const isNarrow = horizontal && narrow !== "split" && width > 0 && width < NARROW;
+  const reportNarrow = useRef(onNarrowChange);
+  useEffect(() => {
+    reportNarrow.current = onNarrowChange;
+  });
+  const measured = width > 0;
+  useEffect(() => {
+    if (measured) reportNarrow.current?.(isNarrow);
+  }, [isNarrow, measured]);
 
   // Measure before paint: the defaults (or what was stored) become
   // percentages, and stay in step with the view's size from then on.

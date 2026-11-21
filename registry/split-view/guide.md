@@ -49,7 +49,8 @@ shows one pane at a time with a switch above it.
 | `orientation` | `horizontal` (default): side by side. `vertical`: one above another |
 | `storageKey` | Keeps each pane's size and its last open size in `localStorage` (`split-view:<key>`), written when a drag ends, a key moves the divider or a pane opens or closes. A layout that doesn't match the panes is ignored |
 | `onResize` | `(sizes) => void`, each pane's share in percent, on every change, every frame of a drag included |
-| `narrow` | Under 560px of its own width, a horizontal split shows one pane at a time with a switch above it (`switch`, default), or stays side by side (`split`). Vertical splits always stay split |
+| `narrow` | Under 560px of its own width, a horizontal split shows one pane at a time: with a switch above it (`switch`, default), or as a stack you move through yourself (`stack`), the way a phone goes from a list to the item picked and back. Or it stays side by side (`split`). Vertical splits always stay split |
+| `onNarrowChange` | Fires with `true` when the view starts showing one pane at a time and `false` when it stops, so a `stack` shows its Back button only then |
 | `narrowPane`, `onNarrowPaneChange` | The pane shown when narrow, by `id`. Control it to open a detail when a row is picked; the switch reports back. Default: the first pane |
 | `className` | On the root |
 
@@ -81,6 +82,7 @@ container inside, with `height: 100%`.
 | Focused (keyboard) | As dragging, with the focus ring around the grip | |
 | At the view's edge (the pane past it is closed) | The hit area and grip move inside the edge, where they can be reached | Closed: hidden and `inert` |
 | Narrow (`switch`) | Hidden | One pane, with a segmented control above to switch. It follows the view's own width wherever it sits, with no size container needed around it |
+| Narrow (`stack`) | Hidden | One pane, no switch: set `narrowPane` to the detail when a row is picked and back to the list from your own Back button. The pane slides in from the side it lies on, the same as the switch |
 
 ## Layout
 

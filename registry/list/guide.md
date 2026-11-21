@@ -49,7 +49,7 @@ moves. Every row is one height in every state.
 | Prop | What it does |
 |---|---|
 | `variant` (List) | `box` (default): rows in a rounded surface with an edge. `plain`: no box; the rows' fills reach past the text by the row padding, so text lines up with the content above |
-| `leading` | An avatar, icon or thumbnail. Decorative: the title names the row |
+| `leading` | An avatar, icon or thumbnail, or a control such as a checkbox for picking rows; a control takes its own clicks over a row link. An avatar or icon is decorative: the title names the row |
 | `title` | The row's name. It wraps when it runs long, and a long unbroken word breaks inside itself. On a link or button row it's the accessible name |
 | `description` | Smaller text under the title; wraps like the title. Read as the row's description. For a disabled row, say why here |
 | `trailing` | A value, badge or control after the text. Plain text here is read after the description. A control here takes its own clicks over a row link: its outermost element is lifted above the link, so a switch, menu or button keeps its own layout inside |
