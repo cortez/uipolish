@@ -25,6 +25,7 @@ const ALLOW = [
   { file: "src/components/install-command.tsx", match: "className={styles.copy}", reason: "The copy button inside the install command's pill." },
   { file: "src/components/site-search.tsx", match: 'aria-label="Search components"', reason: "Search, an icon in the top bar beside the 32px theme toggle and GitHub." },
   { file: "src/components/pro-preview.tsx", match: 'aria-label="All screens"', reason: "Back, in the compact bar over a screen preview, which keeps the screen's own header in view." },
+  { file: "src/components/pro-preview.tsx", match: 'href="/screens" variant="secondary"', reason: "About Pro, in the compact bar over a screen preview." },
   { file: "src/components/pro-preview.tsx", match: "href={checkout}", reason: "Buy, in the compact bar over a screen preview." },
   { file: "src/components/pro-preview.tsx", match: 'href="/screens#buy"', reason: "Buy, in the compact bar over a screen preview." },
   { file: "src/components/site-head.tsx", match: 'href="/screens"', reason: "Pro, a text link among the header's 32px icon buttons." },

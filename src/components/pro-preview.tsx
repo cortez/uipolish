@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { ButtonLink } from "@registry/button/button-link";
 import { Icon } from "@registry/icons/icons";
 import Link from "@/components/link";
-import { PRO_PRICE, proCheckout } from "@/lib/pro";
+import { PRO_OPEN, PRO_PRICE, proCheckout } from "@/lib/pro";
 import styles from "./pro-preview.module.css";
 
 /** A UI Polish Pro screen's live preview: a bar that says what this is and
@@ -21,10 +21,18 @@ export function ProPreview({ title, children }: { title: string; children: React
           <span className={styles.note}>Live preview on sample data</span>
         </p>
         <div className={styles.buy}>
-          <span className={styles.price}>
-            {PRO_PRICE} <span className={styles.once}>one-time, whole team</span>
-          </span>
-          {checkout ? (
+          {PRO_OPEN ? (
+            <span className={styles.price}>
+              {PRO_PRICE} <span className={styles.once}>one-time, whole team</span>
+            </span>
+          ) : (
+            <span className={styles.once}>Part of UI Polish Pro, opening soon</span>
+          )}
+          {!PRO_OPEN ? (
+            <ButtonLink as={Link} href="/screens" variant="secondary" size="sm">
+              About Pro
+            </ButtonLink>
+          ) : checkout ? (
             <ButtonLink href={checkout} size="sm">
               Buy UI Polish Pro
             </ButtonLink>

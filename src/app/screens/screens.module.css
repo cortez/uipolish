@@ -218,3 +218,16 @@
   margin-top: 0.2em;
   color: var(--ui-accent);
 }
+
+/* A screen that's still being built: its name and an "In the works" badge
+   on one line, and no preview to open. */
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+.card[data-planned] .name {
+  color: var(--ui-muted);
+}
