@@ -58,8 +58,10 @@
   transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
-/* Focus fills the composer at once; the edge stays as it rests. */
-.composer:focus-within {
+/* Typing fills the composer at once; the edge stays as it rests. Only the
+   text box counts: focus left on Attach, the model picker or Send after a
+   click isn't typing, so the composer stays as it rests. */
+.composer:has(textarea:focus) {
   background: var(--ui-field-focus-fill);
   transition-duration: 0s;
 }

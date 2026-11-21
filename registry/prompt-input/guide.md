@@ -40,7 +40,7 @@ pasted, dropped or picked, and show as chips above the text.
 |---|---|---|
 | Empty | Placeholder, send button as a quiet gray capsule with a gray arrow | `data-state="empty"`, `aria-disabled` |
 | Ready | Send fills with the text color the moment there's non-whitespace text or a file | `data-state="ready"` |
-| Focused | The whole composer fills with `--ui-field-focus-fill`, instantly; the edge stays as it rests | `:focus-within` |
+| Focused | While the text box has focus the whole composer fills with `--ui-field-focus-fill`, instantly; the edge stays as it rests. Focus on Attach, a footer control (the model picker) or Send doesn't fill it | `:has(textarea:focus)` |
 | Growing | The textarea grows a row at a time up to `maxRows` (8), then scrolls | `field-sizing: content`, JS fallback |
 | Streaming | Send becomes a "■ Stop" pill; Esc stops too. The textarea stays editable | `streaming` |
 | Attachments | Image chips are fixed 56×56 thumbnails that fade in; files show name, type and size | paste, drop, or the + button |
