@@ -360,7 +360,15 @@ export function Drawer({
                 changeSnap(snapPoints![snaps.indexOf(sheetHeight)]);
               }
             }}
-            initialFocus={() => {
+            initialFocus={(openType) => {
+              // Opened by a pointer or a finger, the sheet itself takes focus:
+              // a ring on its first button would be a ring nobody asked for.
+              // Tab reaches that button next. Opened from the keyboard, focus
+              // goes straight to the first control, where its ring belongs.
+              // A drawer opened from its owner's state doesn't know how: then the
+              // control that opened it says, by whether it holds keyboard focus.
+              const byKeyboard = openType === "keyboard" || Boolean(trigger?.matches(":focus-visible"));
+              if (!initialFocus?.current && !byKeyboard && popup) return popup;
               let el = initialFocus?.current ?? firstFocusable(body) ?? firstFocusable(footerEl);
               // Focusing a field while the sheet rises throws the keyboard over it.
               if (!initialFocus?.current && sheet && el && isTextEntry(el)) el = null;

@@ -65,7 +65,7 @@ Three things are optional: `modal={false}` leaves the page behind live,
 | `footer` | Pinned under the body. Wrap buttons in `DrawerActions`, main action last |
 | `side` | `end` (default) or `start` on wider screens; `bottom` makes it a sheet everywhere. Phones always get the sheet |
 | `size` | Width of the side panel: `sm` 360, `md` 420 (default), `lg` 560 |
-| `initialFocus` | Where focus goes on open. Defaults to the first control in the body |
+| `initialFocus` | Where focus goes on open. Defaults to the first control in the body when opened from the keyboard, and to the panel itself when opened by a pointer or a finger (no ring on open; Tab reaches the first control) |
 | `triggerRef` | Where focus returns. Defaults to whatever had focus when it opened |
 | `finalFocus` | Where focus goes when the trigger is gone (a removed row) |
 | `locked` | Escape, the scrim, the close button and dragging do nothing, e.g. while saving |
@@ -250,8 +250,11 @@ where nothing can cover it.
   these close it. Tabbing to a control below the screen's edge raises the
   sheet to its top point. Base UI has no keyboard handling of its own for
   snap points.
-- Focus on open: `initialFocus`, otherwise the first control in the body,
-  otherwise the first in the footer. Never the close button. On a sheet a
+- Focus on open: `initialFocus`; otherwise, opened from the keyboard, the
+  first control in the body (its ring shows, as it should), and opened by a
+  pointer or a finger, the panel itself, so no ring appears that nobody
+  asked for; Tab then reaches the first control. With no control in the
+  body, the first in the footer. Never the close button. On a sheet a
   text field isn't focused on open (the keyboard would cover the sheet as it
   rises); the sheet itself is, and the first Tab reaches the field.
 - Focus on close: back to the trigger, or to `finalFocus` if the trigger is

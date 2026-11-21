@@ -3,7 +3,7 @@
   "title": "Drawer",
   "summary": "Panel that slides in from the end edge, and on phones rises as a sheet you drag down to dismiss, at the speed of your flick. The body scrolls between a header and footer that stay put. Modal by default; non-modal with snap points for a sheet that leaves the page live.",
   "blurb": "A side panel on desktop and a draggable sheet on phones.",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "dependencies": [
     "icons"
   ],
