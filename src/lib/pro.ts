@@ -16,6 +16,7 @@ export const previewHref = (name: string) => (name === "copper" ? "/example" : `
 /** Screens being built, shown on /screens until each one ships (then it
  *  comes from the screens themselves and drops off this list by name). */
 export const PLANNED: { name: string; title: string; summary: string }[] = [
+  { name: "support-widget", title: "Support widget", summary: "The assistant in the corner of your site: a launcher, help search, an AI chat that cites its sources, and a hand-off to a person." },
   { name: "agent-builder", title: "Agent builder", summary: "Configure an agent (model, instructions, tools, knowledge, guardrails), compare versions, and test the draft in a live chat before you publish." },
   { name: "traces", title: "Agent runs", summary: "Every run an agent made, and each one as a timeline of steps: model calls, tool calls, tokens, latency, cost and errors, with a replay." },
   { name: "approvals", title: "Approvals", summary: "A review queue for actions agents want to take: see what, why and what changes, then approve, edit or reject, one at a time or in bulk." },
