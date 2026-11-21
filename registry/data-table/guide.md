@@ -97,6 +97,7 @@ the sort and the validation pass rerun when it changes.
 | Resize edge | A short hairline at every header edge; it lengthens under the pointer and turns full contrast while dragged or focused | `role="separator"` |
 | Needs a look | Text in the danger color and an alert mark on the side away from the alignment edge | `validate`; `aria-invalid` |
 | Loading | After 300ms, hairlines for the rows to come and a shimmering label | `loading` with no rows; `aria-busy` |
+| Row lines | A hairline between rows, drawn at each row's top (not the first: the header's line is there). A table that scrolls is cut to whole rows at rest, the few pixels left over sitting under it as plain surface, so no sliver of a next row (and its line) peeks above the bottom edge: the table's edge or the footer's line is the only line there | `.row::after`, `data-first`, the viewport's height |
 | Empty | Your `empty` content, centered in the visible part of the body | no rows, not loading |
 
 Under the grid, while any cell needs a look, one line counts them ("2 cells

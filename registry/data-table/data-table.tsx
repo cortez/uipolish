@@ -355,6 +355,29 @@ export function DataTable<Row>({
   // Widths and row count change the scroll range without a resize.
   useLayoutEffect(() => measure(), [measure, total, rowCount]);
 
+  // A scrolling table shows whole rows at rest: the viewport is cut to the
+  // header plus as many full rows as fit, and the few pixels left over sit
+  // under it as plain surface. Otherwise a sliver of the next row, with its
+  // line, peeks just above the bottom edge and reads as a double border.
+  useLayoutEffect(() => {
+    const viewport = viewportRef.current;
+    const root = viewport?.parentElement;
+    if (!viewport || !root) return;
+    const fit = () => {
+      viewport.style.flex = "";
+      const head = parseFloat(getComputedStyle(root).getPropertyValue("--data-table-head")) || 0;
+      const room = viewport.clientHeight - head;
+      const whole = Math.floor(room / rowHeight);
+      if (rowCount > whole && whole > 0 && room - whole * rowHeight > 0.5) {
+        viewport.style.flex = `0 0 ${head + whole * rowHeight + (viewport.offsetHeight - viewport.clientHeight)}px`;
+      }
+    };
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, [rowHeight, rowCount]);
+
   /* ---------- Active cell and focus ---------- */
 
   const [active, setActive] = useState<Cell>({ row: 0, col: 0 });
@@ -607,6 +630,7 @@ export function DataTable<Row>({
                   className={styles.row}
                   style={{ top: index * rowHeight }}
                   data-active={current.row === index + 1 || undefined}
+                  data-first={index === 0 || undefined}
                 >
                   {selectable && (
                     <div
