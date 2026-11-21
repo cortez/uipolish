@@ -16,11 +16,12 @@ export const previewHref = (name: string) => (name === "copper" ? "/example" : `
 /** Screens being built, shown on /screens until each one ships (then it
  *  comes from the screens themselves and drops off this list by name). */
 export const PLANNED: { name: string; title: string; summary: string }[] = [
-  { name: "settings", title: "Settings and billing", summary: "Profile, team members and roles, plans, invoices and API keys." },
-  { name: "inbox", title: "Inbox", summary: "Triage a queue of conversations: filters, assignment, snooze and bulk actions." },
-  { name: "analytics", title: "Analytics", summary: "Charts over a date range, filters, and a breakdown table you can sort." },
-  { name: "onboarding", title: "Onboarding", summary: "A multi-step setup with progress, validation and a finish worth reaching." },
-  { name: "auth", title: "Sign in", summary: "Sign in, sign up, a magic link, a two-step code and a password reset." },
-  { name: "records", title: "Records", summary: "A CRM-style table with saved views, a record drawer and inline edits." },
-  { name: "projects", title: "Projects", summary: "A board of tasks with a task drawer, filters, assignees and due dates." },
+  { name: "agent-builder", title: "Agent builder", summary: "Configure an agent (model, instructions, tools, knowledge, guardrails), compare versions, and test the draft in a live chat before you publish." },
+  { name: "traces", title: "Agent runs", summary: "Every run an agent made, and each one as a timeline of steps: model calls, tool calls, tokens, latency, cost and errors, with a replay." },
+  { name: "approvals", title: "Approvals", summary: "A review queue for actions agents want to take: see what, why and what changes, then approve, edit or reject, one at a time or in bulk." },
+  { name: "evals", title: "Evals and playground", summary: "Run a prompt across models side by side, score answers against a test set, and compare eval runs before a change ships." },
+  { name: "knowledge", title: "Knowledge base", summary: "The documents an assistant answers from: upload, indexing status, chunks and sources, and a test search that shows what it retrieves." },
+  { name: "inbox", title: "Support inbox", summary: "A support queue where AI triages every conversation and drafts each reply with its sources, and people review, edit and send." },
+  { name: "analytics", title: "Usage and cost", summary: "Requests, tokens, spend and latency by model and feature, a budget with alerts, and the most expensive calls behind each number." },
+  { name: "settings", title: "Settings and billing", summary: "Team and roles, usage-based billing with spend limits, API keys with scopes, and which models the workspace may use." },
 ];
