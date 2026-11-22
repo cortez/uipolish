@@ -31,7 +31,7 @@
    text color. At body weight they read as one more paragraph; the space
    above them, not their size, tells the levels apart. */
 .prose :is(h2, h3, h4) {
-  margin: var(--ui-space-7) 0 var(--ui-space-3);
+  margin: var(--ui-space-8) 0 var(--ui-space-4);
   color: var(--ui-foreground);
   font-size: var(--ui-text-md);
   line-height: var(--ui-leading-md);
@@ -40,17 +40,18 @@
 }
 
 .prose h2 {
-  margin-top: var(--ui-space-8);
+  margin-top: calc(var(--ui-space-8) + var(--ui-space-6));
 }
 
 /* On a phone a section is a screen or less, so it needs less air to read
-   as new: 48 above a section, 32 above a subsection. */
+   as new: 64 above a section, 40 above a subsection. On a wide screen,
+   96 and 64. */
 @media (max-width: 640px) {
   .prose :is(h3, h4) {
-    margin-top: var(--ui-space-6);
+    margin-top: calc(var(--ui-space-6) + var(--ui-space-2));
   }
   .prose h2 {
-    margin-top: var(--ui-space-7);
+    margin-top: var(--ui-space-8);
   }
 }
 
@@ -74,7 +75,7 @@
 .prose ul,
 .prose ol {
   max-width: var(--ui-measure);
-  margin: 0 0 var(--ui-space-4);
+  margin: 0 0 var(--ui-space-5);
   color: var(--ui-foreground);
 }
 
@@ -87,7 +88,7 @@
    set in from the divider hairline, in the text's own size. */
 .prose blockquote {
   max-width: var(--ui-measure);
-  margin: 0 0 var(--ui-space-4);
+  margin: 0 0 var(--ui-space-5);
   padding-inline-start: var(--ui-space-4);
   box-shadow: inset var(--ui-hairline) 0 0 var(--ui-border);
 }
@@ -101,7 +102,7 @@
 }
 
 .prose li + li {
-  margin-top: var(--ui-space-2);
+  margin-top: var(--ui-space-3);
 }
 
 .prose li::marker {

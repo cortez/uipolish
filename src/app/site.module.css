@@ -1,5 +1,5 @@
-/* Shared type and rhythm. Heading to text 16, title to lede 16, block 16,
-   text to action 32, intro to first block 48, subsection 48, section 64. */
+/* Shared type and rhythm. Title to lede 8, block 16, text to action 32,
+   intro to first block and section to section 96 (64 on a phone). */
 
 /* Three styles for the site's own text: the title style for a page's
    title and its section headings, body, and small. */
@@ -26,8 +26,8 @@
 
 .intro {
   display: grid;
-  gap: var(--ui-space-1);
-  padding-bottom: var(--ui-space-8);
+  gap: var(--ui-space-2);
+  padding-bottom: calc(var(--ui-space-8) + var(--ui-space-6));
 }
 
 /* Buttons under the intro's text sit a step further off than the text
@@ -49,7 +49,7 @@
   grid-template-columns: minmax(0, 1fr);
   gap: var(--ui-gap-group);
   max-width: 720px;
-  padding-top: var(--ui-space-8);
+  padding-top: calc(var(--ui-space-8) + var(--ui-space-6));
   scroll-margin-top: var(--ui-space-6);
 }
 
@@ -96,13 +96,13 @@
 
 /* Code in guides is the Code block component, spaced like a table. */
 .code {
-  margin: 0 0 var(--ui-space-6);
+  margin: 0 0 var(--ui-space-7);
 }
 
 /* A table in a hairline box: rows split by hairlines, no fills. Wraps the
    <table> and scrolls sideways on its own when it can't fit. */
 .table {
-  margin: 0 0 var(--ui-space-6);
+  margin: 0 0 var(--ui-space-7);
   overflow-x: auto;
   border-radius: var(--ui-radius-lg);
   background: var(--ui-surface);
@@ -259,5 +259,15 @@
 @media (hover: hover) {
   .text a:hover {
     text-decoration-color: currentColor;
+  }
+}
+
+/* On a phone a section is a screen or less: 64 between them is enough. */
+@media (max-width: 640px) {
+  .intro {
+    padding-bottom: var(--ui-space-8);
+  }
+  .section {
+    padding-top: var(--ui-space-8);
   }
 }

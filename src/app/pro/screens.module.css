@@ -5,7 +5,13 @@
    above, and its parts a step further apart. */
 .hero.hero {
   gap: var(--ui-space-3);
-  padding-block: var(--ui-space-7) var(--ui-space-8);
+  padding-block: var(--ui-space-7) calc(var(--ui-space-8) + var(--ui-space-6));
+}
+
+@media (max-width: 640px) {
+  .hero.hero {
+    padding-bottom: var(--ui-space-8);
+  }
 }
 
 .eyebrow {
