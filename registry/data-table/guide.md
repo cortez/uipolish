@@ -72,7 +72,7 @@ Each column:
 |---|---|
 | `key` | Unique; also the field read from each row by default |
 | `header` | The column's name, in the header and in every label made from it |
-| `cell` | What the cell renders. Defaults to the value as text |
+| `cell` | What the cell renders. Defaults to the value as text. The value is clipped to its box (it truncates with a fade), so anything you draw at its edges, like an icon tile's outline, must sit inside: `box-shadow: inset 0 0 0 var(--ui-hairline) var(--ui-border-strong)`, not `var(--ui-edge)` |
 | `value` | What it sorts on. Defaults to `row[key]`. Numbers and dates sort as such, text naturally ("Table 2" before "Table 10") |
 | `compare` | Your own ascending order, when `value` isn't enough |
 | `width`, `minWidth`, `maxWidth` | 160, 72 and 640 by default |
