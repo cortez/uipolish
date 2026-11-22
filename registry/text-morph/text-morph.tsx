@@ -343,7 +343,13 @@ export function TextMorph({ children, className }: { children: string; className
     const was = new Map(last.glyphs.map((g) => [g.key, g.char]));
     const current = new Set(glyphs.map((g) => g.key));
     const leaving = last.glyphs.some((g) => !current.has(g.key));
-    const lead = exit * (leaving ? 0.85 : 0.4);
+    // Arrivals overlap the leaving letters' fade rather than waiting it out,
+    // and their stagger spreads over 60ms at most, so a long new word lands
+    // as fast as a short one.
+    const lead = exit * (leaving ? 0.5 : 0.25);
+    const arriving = glyphs.filter((g) => !last.lefts.has(g.key)).length;
+    const step = Math.min(12, 60 / Math.max(1, arriving - 1));
+    const base = ms(token(row, "--ui-dur-base", "200ms"));
     let entering = 0;
     for (const g of glyphs) {
       const el = nodes.get(g.key)!;
@@ -361,7 +367,7 @@ export function TextMorph({ children, className }: { children: string; className
             transform: [enterFrom, "none"],
             filter: ["blur(2px)", "none"],
           },
-          { duration: duration * 0.75, easing: enter, delay: lead + entering++ * 15, fill: "backwards" },
+          { duration: base, easing: enter, delay: lead + entering++ * step, fill: "backwards" },
         );
         continue;
       }

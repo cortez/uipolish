@@ -112,8 +112,9 @@ in a tile. Every chevron in the same role is the same size.
 | The strike draws on / retracts | `--ui-dur-base` (200ms) / `--ui-dur-fast` (160ms) | `--ui-ease-draw` / `--ui-ease-exit` |
 | Hover nudges (1px) | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 
-The glide never overshoots, so strokes that meet end to end stay joined all
-the way and a result (a check landing) doesn't bounce.
+Every point moves on the same glide, so strokes that meet end to end stay
+joined all the way, and the glide passes its mark by under a pixel, so a
+result (a check landing) doesn't bounce.
 
 Under `prefers-reduced-motion: reduce` every change lands at once: the new
 icon is simply there.

@@ -4,7 +4,7 @@ Animates a label from one string to another. Letters the two strings share
 slide to their new place, letters that leave fade out, letters that arrive
 fade in with a small rise and a 2px blur on the plain enter curve (no
 bounce: vertical overshoot in a line of text reads as jitter), and the width
-follows on the glide, which never overshoots, so a button resizes once and stops. It uses React, the Web
+follows on the glide, which passes its mark by under a pixel, so a button resizes once and stops. It uses React, the Web
 Animations API and CSS, with no animation library.
 
 Button uses it for string labels.
@@ -78,7 +78,7 @@ footer count all render their changing figures through it.
 |---|---|---|
 | Shared letters slide, width follows | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
 | Leaving letters | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |
-| Arriving letters (labels) | 75% of `--ui-dur-glide`, after 40% of the leave time, or 85% when letters are leaving, +15ms per letter | `--ui-ease-enter` |
+| Arriving letters (labels) | `--ui-dur-base` (200ms), after a quarter of the leave time, or half when letters are leaving, staggered up to 12ms a letter and 60ms in all, so a long word lands as soon as a short one | `--ui-ease-enter` |
 | Rolling digit: the old one rolls out | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
 | Rolling digit: the new one rolls in, passing its line by about 12% (a pixel) and settling | `--ui-dur-bounce` (380ms) | `--ui-ease-bounce` |
 | Rolling digit: the old one fades | `--ui-dur-instant` (120ms) | `--ui-ease-color` |

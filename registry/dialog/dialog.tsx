@@ -141,8 +141,8 @@ export function Modal({
       popup.animate(
         { translate: [`0 ${top - next}px`, "0 0"] },
         {
-          duration: ms(cs.getPropertyValue("--ui-dur-panel")),
-          easing: cs.getPropertyValue("--ui-ease-expand").trim() || "ease-out",
+          duration: ms(cs.getPropertyValue("--dialog-resize-dur")),
+          easing: cs.getPropertyValue("--dialog-resize-ease").trim() || "ease-out",
           composite: "add",
         },
       );

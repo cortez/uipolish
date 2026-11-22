@@ -122,15 +122,14 @@ The dialog's edge is the one in `--ui-shadow-floating`: the same outline color a
 | Guard in, in the footer's place, 60ms after (half of `--ui-dur-instant`) | `--ui-dur-fast` | `--ui-ease-enter` |
 | Body and header dim behind the guard | `--ui-dur-fast` | `--ui-ease-color` |
 | Close button press release (it's a `Button`) | `--ui-dur-snap` | `--ui-ease-snap` |
-| Panel height to new content (open / close) | `--ui-dur-panel` / `--ui-dur-base` | `--ui-ease-expand` |
-| Panel width to a new `size` | `--ui-dur-panel` | `--ui-ease-expand` |
+| Panel height to new content, width to a new `size`, and a recentring glide: one spring, so the edges move as one; it passes the new size by about 1.5% and settles | `--ui-dur-glide` | `--ui-ease-snap` (as `--dialog-resize-dur` / `--dialog-resize-ease` on the panel) |
 | Leaving step fades | `--ui-dur-instant` | `--ui-ease-color` |
 | Arriving step fades in, half a beat later | `--ui-dur-fast` | `--ui-ease-enter` |
 
 The panel arrives the same way every time: it fades and scales up from
 0.97 around its own center, on the enter curve. No blur, no direction.
-Nothing travels, so nothing springs; the only springs are the ones that
-size it to new content. Opacity finishes first, so the panel is solid
+Nothing travels, so nothing springs; the only spring is the one that
+sizes it to new content, with a little give. Opacity finishes first, so the panel is solid
 before it's settled. Under `prefers-reduced-motion: reduce` there is no
 scale (the panel and backdrop fade in `--ui-dur-instant`), sizes
 change at once, a recentering panel moves at once and steps swap without

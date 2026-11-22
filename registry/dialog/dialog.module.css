@@ -131,7 +131,23 @@
   transition:
     opacity var(--ui-dur-fast) var(--ui-ease-enter),
     scale var(--ui-dur-base) var(--ui-ease-enter),
-    width var(--ui-dur-panel) var(--ui-ease-expand);
+    width var(--dialog-resize-dur) var(--dialog-resize-ease);
+}
+
+/* A change of size (a step, an error, a wider panel) lands on the snap
+   spring, stretched over the glide: it passes its new size by about 1.5%,
+   a few pixels, and settles, so the panel feels like it took the content
+   in rather than slid to a stop. Height, width and the recentring all
+   share it, so the edges move as one. */
+.dialog {
+  --dialog-resize-dur: var(--ui-dur-glide);
+  --dialog-resize-ease: var(--ui-ease-snap);
+}
+
+.sizer {
+  --animated-size-grow: var(--dialog-resize-dur);
+  --animated-size-shrink: var(--dialog-resize-dur);
+  --animated-size-ease: var(--dialog-resize-ease);
 }
 
 /* Passes the height limit down, so a tall body still scrolls inside. */

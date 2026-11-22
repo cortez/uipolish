@@ -36,7 +36,7 @@
 
 /* The shell grows a row at a time. It clips what's inside, so a row that is
    still opening never paints past the edge; everything inside moves on the
-   glide, which never overshoots, so nothing is ever cut while it settles. */
+   glide, which passes its mark by under a pixel, so nothing is cut while it settles. */
 .control {
   composes: shell from "../field/field.module.css";
   --tag-inset: var(--shell-inset);

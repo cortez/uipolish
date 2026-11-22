@@ -196,11 +196,13 @@
   --ui-dur-move: 380ms;
   --ui-ease-move: linear(0, 0.0197, 0.0712, 0.1442, 0.2303, 0.3231, 0.4171, 0.5086, 0.5948, 0.6739, 0.7446, 0.8066, 0.8597, 0.9043, 0.9409, 0.9702, 0.993, 1.0102, 1.0225, 1.0307, 1.0357, 1.038, 1.0383, 1.0371, 1.0348, 1.0318, 1.0284, 1.0248, 1.0212, 1.0177, 1.0145, 1.0116, 1.009, 1.0067, 1.0048, 1.0032, 1.0019, 1.0008, 1, 0.9994, 1);
 
-  /* Glide: the same move without the give, critically damped. For what is
-     held by a track or a count: a highlight inside its group, a sheet against an
-     edge, a height, a number counting to its value. */
+  /* Glide: the move without the give. For what is held by a track or a
+     count: a highlight inside its group, a sheet against an edge, a height,
+     a number counting to its value. Damping 0.9: it arrives early (95% of
+     the way at 40% of the time) and passes its mark by 0.15%, under a
+     pixel, so it lands once, with no long crawl into place. */
   --ui-dur-glide: 320ms;
-  --ui-ease-glide: linear(0, 0.0319, 0.106, 0.2005, 0.3013, 0.3998, 0.4917, 0.5739, 0.6459, 0.7079, 0.7606, 0.8048, 0.8416, 0.872, 0.8969, 0.9172, 0.9337, 0.9471, 0.9578, 0.9665, 0.9734, 0.9789, 0.9834, 0.9869, 0.9896, 0.9918, 0.9936, 0.995, 0.996, 0.9969, 0.9976, 0.9981, 1);
+  --ui-ease-glide: linear(0, 0.0269, 0.0928, 0.1802, 0.277, 0.3749, 0.4687, 0.555, 0.6324, 0.7001, 0.7583, 0.8075, 0.8485, 0.8823, 0.9097, 0.9317, 0.9491, 0.9628, 0.9734, 0.9815, 0.9875, 0.992, 0.9953, 0.9976, 0.9992, 1.0003, 1.0009, 1.0013, 1.0015, 1.0015, 1.0015, 1.0014, 1.0012, 1.0011, 1.0009, 1.0008, 1.0007, 1.0005, 1.0004, 1.0004, 1);
 
   /* Snap: short hops, press release, chevrons. A stiffer spring sampled over
      --ui-dur-snap (damping 0.8): about 1.5% past, then back. */

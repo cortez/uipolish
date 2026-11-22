@@ -126,7 +126,7 @@ regular one, so selecting it would push its neighbors sideways.
 
 | What | Duration | Easing |
 |---|---|---|
-| Indicator stretches a little toward the new tab and draws in behind it | `--ui-dur-glide` | both edges `--ui-ease-glide`, the leading one sooner, so it never overshoots or swings past the last tab |
+| Indicator stretches a little toward the new tab and draws in behind it | `--ui-dur-glide` | both edges `--ui-ease-glide`, the leading one sooner, so it never visibly swings past the last tab |
 | Indicator in a column: the same, along the column | `--ui-dur-glide` | as above |
 | Label and count color | `--ui-dur-instant` | `--ui-ease-color` |
 | Count changes: the digits that differ roll (up as it grows); if it gains or loses a digit, the tab width and indicator follow | `--ui-dur-glide` | `--ui-ease-glide` (text morph); at most five changes a second, the last always lands |
@@ -149,7 +149,7 @@ How the indicator moves:
   sampled from the two easing tokens in JS and played as one Web Animation
   on top of the resting position, which takes over when it ends. The flight
   lives in `pill-flight.ts`, which the Segmented control plays too.
-- The indicator keeps its height in flight and never overshoots: a dip and a
+- The indicator keeps its height in flight and never visibly overshoots (the glide passes by under a pixel): a dip and a
   springy leading edge read as organic, a blob more than a control.
 - Nothing animates until the page has painted once. A tab selected from
   the URL is already in place; it doesn't slide in from the left.
