@@ -23,7 +23,8 @@ own.
 - An inline label whose width changes (`axis="width"`). Put it around the
   label, inside the badge or button that holds it: the box clips while it
   moves, and a rounded shape clipped from outside loses its corners on the
-  way.
+  way. The clip starts on the very frame the content changes, before it is
+  painted, so content that grows never spills past the box first.
 
 ## When not to
 

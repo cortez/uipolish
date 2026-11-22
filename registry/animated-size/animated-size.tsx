@@ -77,6 +77,16 @@ export function AnimatedSize({ axis = "height", className, children, ...props }:
         const grows = axis === "width" ? w > before.w : axis === "height" ? h > before.h : w * h > before.w * before.h;
         outer.dataset.direction = grows ? "grow" : "shrink";
       }
+      // Clip from this very frame: waiting for transitionrun (a frame or two
+      // later) let content that just grew spill past the box before it was
+      // caught, a one-frame flash that read as a stutter.
+      const animates =
+        before !== null &&
+        outer.dataset.armed !== undefined &&
+        !reflow &&
+        !follow &&
+        !matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (animates) outer.dataset.moving = "";
       if (axis !== "width") outer.style.height = `${h}px`;
       if (axis !== "height") outer.style.width = `${w}px`;
       if (outer.dataset.armed === undefined) arm();
