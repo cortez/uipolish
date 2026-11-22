@@ -14,6 +14,7 @@ import {
 } from "@registry/dropdown-menu/dropdown-menu";
 import styles from "./preview.module.css";
 import local from "./dropdown-menu.module.css";
+import { copyText } from "@registry/text/copy-text";
 
 type Estimate = {
   id: string;
@@ -76,7 +77,7 @@ export function DropdownMenuPreview() {
     const url = `https://example.com/e/${row.id.toLowerCase()}`;
     let ok = false;
     try {
-      await navigator.clipboard.writeText(url);
+      if (!(await copyText(url))) throw new Error("Couldn’t copy");
       ok = true;
     } catch {
       // No clipboard access (an insecure page, a denied permission): say so

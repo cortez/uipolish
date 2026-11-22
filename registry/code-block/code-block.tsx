@@ -14,6 +14,7 @@ import { AnimatedSize } from "../animated-size/animated-size";
 import { Button } from "../button/button";
 import { canTokenize, tokenizeLine, type LineState, type Token } from "./tokenize";
 import styles from "./code-block.module.css";
+import { copyText } from "../text/copy-text";
 
 export { tokenizeLine, canTokenize } from "./tokenize";
 export type { Token, TokenType, LineState } from "./tokenize";
@@ -124,8 +125,7 @@ export function CodeBlock({
   async function handleCopy() {
     clearTimeout(copyTimer.current);
     try {
-      if (!navigator.clipboard) throw new Error("Clipboard unavailable");
-      await navigator.clipboard.writeText(code);
+      if (!(await copyText(code))) throw new Error("Couldn’t copy");
       setCopy("copied");
     } catch {
       setCopy("failed");

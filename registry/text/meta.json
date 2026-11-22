@@ -1,8 +1,8 @@
 {
   "name": "text",
   "title": "Text",
-  "summary": "CSS text utilities: truncation that fades the end instead of adding an ellipsis, text for screen readers only, and a shimmer for work in progress.",
+  "summary": "Text utilities: truncation that fades the end instead of adding an ellipsis, text for screen readers only, a shimmer for work in progress, and copying text to the clipboard where the Clipboard API is refused.",
   "blurb": "Text utilities: fading truncation, screen-reader text, shimmer.",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "dependencies": []
 }

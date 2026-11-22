@@ -5,6 +5,7 @@ import { FieldMessage } from "../field/field";
 import { Icon } from "../icons/icons";
 import { Tooltip } from "../tooltip/tooltip";
 import styles from "./copy-field.module.css";
+import { copyText } from "../text/copy-text";
 
 type CopyFieldProps = {
   label: string;
@@ -76,8 +77,7 @@ export function CopyField({
   async function handleCopy() {
     window.clearTimeout(timer.current);
     try {
-      if (!navigator.clipboard) throw new Error("Clipboard unavailable");
-      await navigator.clipboard.writeText(value);
+      if (!(await copyText(value))) throw new Error("Couldn’t copy");
       setCopy("copied");
       onCopied?.();
       timer.current = window.setTimeout(() => setCopy("idle"), COPIED_MS);

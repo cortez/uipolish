@@ -43,7 +43,7 @@ end, shows in full on hover (`title`), and one press selects all of it.
 | `secret` | Mask the value behind 16 dots, with a Show button |
 | `revealed`, `defaultRevealed`, `onRevealedChange` | Controlled or uncontrolled reveal, for a secret |
 | `hint` | Guidance under the field. A failed copy says so in its place |
-| `onCopied` | Called once the value is on the clipboard |
+| `onCopied` | Called once the value is on the clipboard (the Clipboard API, or Text's `copyText` fallback where it's refused, as in in-app browsers) |
 | `action` | A control beside the field, the field's height: a "Rotate" or "Regenerate" button |
 
 **The action slot.** `action` sits to the right of the field, on the field's

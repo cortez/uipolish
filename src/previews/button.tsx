@@ -5,6 +5,7 @@ import { Button } from "@registry/button/button";
 import { Icon } from "@registry/icons/icons";
 import own from "./button.module.css";
 import styles from "./preview.module.css";
+import { copyText } from "@registry/text/copy-text";
 
 export function ButtonPreview() {
   const [sendState, setSendState] = useState<"idle" | "busy" | "sent">("idle");
@@ -24,11 +25,8 @@ export function ButtonPreview() {
   }
 
   async function copy() {
-    try {
-      await navigator.clipboard.writeText("https://example.com/d/saturday-supper");
-    } catch {
-      // Clipboard can be blocked in previews; the label still shows the flow.
-    }
+    // Clipboard can be blocked in previews; the label still shows the flow.
+    await copyText("https://example.com/d/saturday-supper");
     setCopied(true);
     later(() => setCopied(false), 1600);
   }

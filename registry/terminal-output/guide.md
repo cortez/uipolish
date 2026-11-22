@@ -67,7 +67,7 @@ elsewhere.
 | Stopping | Stop reads "Stopping…" if the promise takes over 300ms | `Button busy` |
 | Stop failed | Stop reads "Stop failed"; the announcement says to press it again | `onStop` rejected |
 | Copied | "Copy" morphs to "Copied" for 2s; "Copied to clipboard" is announced | Button's label morph, `role="status"` |
-| Copy failed | Label reads "Copy failed"; the announcement says to select and copy by hand | clipboard missing or blocked |
+| Copy failed | Label reads "Copy failed"; the announcement says to select and copy by hand | neither the Clipboard API nor the fallback copy worked (`copyText` from Text) |
 
 A command that ends inside 300ms never shows "Running" or Stop: it goes
 straight from the command alone to its exit code.

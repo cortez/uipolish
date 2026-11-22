@@ -5,6 +5,7 @@ import { Button } from "../button/button";
 import { Icon } from "../icons/icons";
 import { Tooltip } from "../tooltip/tooltip";
 import styles from "./response-actions.module.css";
+import { copyText } from "../text/copy-text";
 
 export type Rating = "up" | "down" | null;
 
@@ -63,8 +64,7 @@ export function ResponseActions({ text, rating, onRate, onComment, onRetry, clas
   async function copy() {
     window.clearTimeout(copyTimer.current);
     try {
-      if (!navigator.clipboard) throw new Error("Clipboard unavailable");
-      await navigator.clipboard.writeText(text);
+      if (!(await copyText(text))) throw new Error("Couldn’t copy");
       setCopied(true);
       setAnnouncement("Copied");
       copyTimer.current = window.setTimeout(() => setCopied(false), COPIED_MS);

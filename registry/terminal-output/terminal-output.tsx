@@ -15,6 +15,7 @@ import { AnimatedSize } from "../animated-size/animated-size";
 import { Button } from "../button/button";
 import { useDelayedBusy } from "../button/use-delayed-busy";
 import styles from "./terminal-output.module.css";
+import { copyText } from "../text/copy-text";
 
 export type TerminalStatus = "running" | "done" | "failed" | "stopped";
 
@@ -196,8 +197,7 @@ export function TerminalOutput({
   async function handleCopy() {
     clearTimeout(copyTimer.current);
     try {
-      if (!navigator.clipboard) throw new Error("Clipboard unavailable");
-      await navigator.clipboard.writeText(lines.map((l) => l.text).join("\n"));
+      if (!(await copyText(lines.map((l) => l.text).join("\n")))) throw new Error("Couldn’t copy");
       setCopy("copied");
     } catch {
       setCopy("failed");

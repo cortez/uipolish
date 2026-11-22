@@ -6,6 +6,7 @@ import { Icon, type IconName } from "@registry/icons/icons";
 import { List, ListAction, ListItem } from "@registry/list/list";
 import base from "./preview.module.css";
 import styles from "./list.module.css";
+import { copyText } from "@registry/text/copy-text";
 
 type Guest = {
   id: string;
@@ -48,8 +49,7 @@ export function ListPreview() {
   async function copy(guest: Guest) {
     const link = `https://example.com/d/friday-supper?guest=${guest.id}`;
     try {
-      if (!navigator.clipboard) throw new Error("No clipboard");
-      await navigator.clipboard.writeText(link);
+      if (!(await copyText(link))) throw new Error("Couldn’t copy");
       setCopied(guest.id);
       setStatus(`Copied ${guest.name}’s invitation link`);
     } catch {

@@ -16,6 +16,7 @@ import { Icon } from "../icons/icons";
 import { StreamingText } from "./streaming-text";
 import { useStickToBottom } from "./use-stick-to-bottom";
 import styles from "./message-thread.module.css";
+import { copyText as copyToClipboard } from "../text/copy-text";
 
 export { StreamingText } from "./streaming-text";
 
@@ -231,8 +232,7 @@ function MessageActions({ hidden, copyText, onRetry, feedback, onFeedback }: Mes
   async function handleCopy() {
     clearTimeout(timer.current);
     try {
-      if (!navigator.clipboard) throw new Error("Clipboard unavailable");
-      await navigator.clipboard.writeText(copyText);
+      if (!(await copyToClipboard(copyText))) throw new Error("Couldn’t copy");
       setCopy("copied");
     } catch {
       setCopy("failed");

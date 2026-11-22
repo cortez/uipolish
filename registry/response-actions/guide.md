@@ -34,7 +34,7 @@ place under the row.
 | Hover | Icon darkens, a light fill (`--ui-fill`) appears | `@media (hover: hover)` |
 | Press | The fill darkens and shrinks to `--ui-scale-press` (0.985) at once; the icon never moves | `:active` on `::before` |
 | Copied | The front sheet's outline runs into a check; back to the sheets after 2s | `Icon name="check"` |
-| Copy failed | "Couldn’t copy. Select the text instead." in red at the end of the row | clipboard rejected or missing |
+| Copy failed | "Couldn’t copy. Select the text instead." in red at the end of the row | neither the Clipboard API nor the fallback copy worked (`copyText` from Text) |
 | Rated | The thumb fills in. Pressing the other thumb moves the rating; pressing the same one clears it | `aria-pressed`; `Icon name="thumbs-up"` / `"thumbs-down"` filled |
 | Thanked | "Thanks for the feedback" fades in at the end of the row for 3s | |
 | Asking | After a thumbs down, a field opens under the row with Send inside it and a close button beside it | `onComment`, `aria-expanded` |

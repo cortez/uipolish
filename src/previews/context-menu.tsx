@@ -15,6 +15,7 @@ import {
 } from "@registry/dropdown-menu/dropdown-menu";
 import styles from "./preview.module.css";
 import local from "./context-menu.module.css";
+import { copyText } from "@registry/text/copy-text";
 
 type Course = "Starter" | "Main" | "Dessert";
 
@@ -69,7 +70,7 @@ export function ContextMenuPreview() {
   async function copyLink(dish: Dish) {
     let ok = false;
     try {
-      await navigator.clipboard.writeText(`https://example.com/menu/${dish.id}`);
+      if (!(await copyText(`https://example.com/menu/${dish.id}`))) throw new Error("Couldn’t copy");
       ok = true;
     } catch {
       // No clipboard access: say so in place rather than pretending.

@@ -55,6 +55,25 @@ The whole string stays in the DOM, so screen readers read all of it. Where
 the cut part carries meaning (a file name's extension, a page title), also
 put the full text in `title`, or in a tooltip if the row has one.
 
+## Copying text
+
+`copyText(text)` from `copy-text.ts` puts text on the clipboard and resolves
+whether it got there. It tries the Clipboard API, and where that's missing
+or refused (a social app's in-app browser, a page that isn't served
+securely, a denied permission) it copies from a hidden, read-only textarea,
+which those browsers still allow inside a tap. Call it straight from the
+press, before awaiting anything else. Code block, Copy field, Response
+actions, Terminal output and Message thread copy through it.
+
+```tsx
+async function copy() {
+  setState((await copyText(link)) ? "copied" : "failed");
+}
+```
+
+On `false`, say so in place and select the text so it can be copied by
+hand; never show "Copied" for a copy that didn't happen.
+
 ## How it works
 
 1. `overflow: hidden` makes the element a scroll container. It only has a

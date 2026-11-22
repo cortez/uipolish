@@ -51,7 +51,7 @@ more.
 | Overflowing | Fades on the edge(s) that have more code; scroller becomes a tab stop | `data-fade-start`, `data-fade-end`, `tabIndex={0}` |
 | Scroller focused | The 1px focus ring around the whole block, appears instantly | `:has(.scroller:focus-visible)` |
 | Copied | "Copy" morphs to "Copied" for 2s; "Copied to clipboard" is announced | `TextMorph`, `role="status"` |
-| Copy failed | Label reads "Copy failed"; the announcement says to select and copy by hand | clipboard missing or blocked |
+| Copy failed | Label reads "Copy failed"; the announcement says to select and copy by hand | neither the Clipboard API nor the fallback copy worked (`copyText` from Text) |
 
 ## Streaming without flashing
 

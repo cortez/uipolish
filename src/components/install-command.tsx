@@ -6,6 +6,7 @@ import { Icon } from "@registry/icons/icons";
 import { ScrollArea } from "@registry/scroll-area/scroll-area";
 import { TextMorph } from "@registry/text-morph/text-morph";
 import styles from "./install-command.module.css";
+import { copyText } from "@registry/text/copy-text";
 
 /** A copyable line in a box: a setup command, or instructions for an agent.
  *  `leading` sits at the box's start, such as a compact select that picks
@@ -35,7 +36,7 @@ export function InstallCommand({
       return;
     }
     try {
-      await navigator.clipboard.writeText(command);
+      if (!(await copyText(command))) throw new Error("Couldn’t copy");
       setCopied(true);
       clearTimeout(timer.current);
       timer.current = window.setTimeout(() => setCopied(false), 1600);

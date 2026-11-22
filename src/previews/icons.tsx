@@ -6,6 +6,7 @@ import { ScrollArea } from "@registry/scroll-area/scroll-area";
 import { Segment, SegmentedControl } from "@registry/segmented-control/segmented-control";
 import styles from "./preview.module.css";
 import local from "./icons.module.css";
+import { copyText } from "@registry/text/copy-text";
 
 type Pair = { label: string; off: IconName; on: IconName };
 
@@ -70,7 +71,7 @@ export function IconsPreview() {
     const jsx = `<Icon name="${name}" />`;
     window.clearTimeout(timer.current);
     try {
-      await navigator.clipboard.writeText(jsx);
+      if (!(await copyText(jsx))) throw new Error("Couldn’t copy");
       setStatus(`Copied ${jsx}`);
     } catch {
       setStatus(`Couldn’t copy. Write ${jsx}.`);

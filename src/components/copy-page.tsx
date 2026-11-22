@@ -6,6 +6,7 @@ import { Button } from "@registry/button/button";
 import { Icon } from "@registry/icons/icons";
 import { TextMorph } from "@registry/text-morph/text-morph";
 import styles from "./install-command.module.css";
+import { copyText } from "@registry/text/copy-text";
 
 /** Copies the page as Markdown, from its twin at /md/<path>, to paste into
  *  an agent or a note. */
@@ -43,12 +44,7 @@ export function CopyPage() {
   async function copy() {
     const cached = ready.current?.path === path ? ready.current.text : null;
     if (cached !== null) {
-      show("copied");
-      try {
-        await navigator.clipboard.writeText(cached);
-      } catch {
-        show("blocked");
-      }
+      show((await copyText(cached)) ? "copied" : "blocked");
       return;
     }
     // Not fetched yet (a click straight after arriving): fetch it now.
@@ -64,11 +60,12 @@ export function CopyPage() {
       if (typeof ClipboardItem !== "undefined" && navigator.clipboard?.write) {
         const blob = markdown().then((text) => new Blob([text], { type: "text/plain" }));
         await navigator.clipboard.write([new ClipboardItem({ "text/plain": blob })]);
-      } else {
-        await navigator.clipboard.writeText(await markdown());
+      } else if (!(await copyText(await markdown()))) {
+        throw new Error("Couldn’t copy");
       }
     } catch {
-      next = "blocked";
+      // Refused (an in-app browser): try once more the older way.
+      next = (await copyText(await markdown().catch(() => ""))) ? "copied" : "blocked";
     }
     show(next);
   }

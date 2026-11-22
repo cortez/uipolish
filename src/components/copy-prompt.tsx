@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@registry/button/button";
 import { Icon } from "@registry/icons/icons";
 import styles from "./install-command.module.css";
+import { copyText } from "@registry/text/copy-text";
 
 const COPIED = "Paste into your agent";
 
@@ -17,7 +18,7 @@ export function CopyPrompt({ prompt, label, variant }: { prompt: string; label: 
   async function copy() {
     let next: typeof state = "copied";
     try {
-      await navigator.clipboard.writeText(prompt);
+      if (!(await copyText(prompt))) throw new Error("Couldn’t copy");
     } catch {
       // Clipboard blocked: the label says so in place. Get started, beside
       // this button, has the same setup.

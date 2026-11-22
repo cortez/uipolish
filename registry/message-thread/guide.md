@@ -59,7 +59,7 @@ reply needs a comment field or more than the default three.
 | Stopped | The partial reply, then "You stopped this reply." in subtle text; actions stay, Retry included | `status="stopped"` |
 | Error | The partial reply, a hairline, the error in red with a Retry button | `status="error"`, `error`, `onRetry` |
 | Scrolled up | "Jump to latest" floats above the composer: a small secondary `Button` on the raised shadow | user scrolled away from the bottom |
-| Copied | The copy icon turns into a check and "Copied" grows out of it for 2s | Copy action |
+| Copied | The copy icon turns into a check and "Copied" grows out of it for 2s; it copies through Text's `copyText`, so it still works where the Clipboard API is refused (in-app browsers) | Copy action |
 | Rated | The thumb fills in; pressing it again clears it | `aria-pressed`; `Icon` thumbs-up / thumbs-down |
 
 **What an error says.** What happened, in a sentence: "The connection dropped
