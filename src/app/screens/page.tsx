@@ -8,7 +8,6 @@ import { Icon } from "@registry/icons/icons";
 import { SCREEN_INFO } from "@pro/index";
 import Link from "@/components/link";
 import { SiteLayout } from "@/components/site-layout";
-import { Badge } from "@registry/badge/badge";
 import {
   CATALOG,
   PRO_OPEN,
@@ -24,21 +23,44 @@ export const metadata: Metadata = pageMetadata({
   title: "UI Polish Pro: app screens",
   description: PRO_OPEN
     ? `Whole app screens built only from UI Polish components, every state designed and working. ${PRO_PRICE} once for your whole team, every screen now and as they're added.`
-    : "Whole app screens built only from UI Polish components, every state designed and working. The first is live to try; Pro opens once the full set is ready.",
+    : "Whole app screens built only from UI Polish components, every state designed and working, on sample data you can try live.",
   path: "/screens",
 });
 
 /** Screens with a picture of themselves in public/screens/<name>-{light,dark}.webp. */
-const SHOTS = new Set(["copper", "agent-builder", "analytics", "approvals", "evals", "inbox", "knowledge", "settings", "support-widget", "traces"]);
+const SHOTS = new Set([
+  "copper",
+  "agent-builder",
+  "analytics",
+  "approvals",
+  "evals",
+  "inbox",
+  "knowledge",
+  "settings",
+  "support-widget",
+  "traces",
+]);
 
-type Card = { name: string; title: string; tagline: string; built: boolean; components: number };
+type Card = {
+  name: string;
+  title: string;
+  tagline: string;
+  built: boolean;
+  components: number;
+};
 
 /** The catalog in its order: built screens open, the rest are in the works;
  *  a built screen the catalog doesn't name goes last with its own summary. */
 function cards(): Card[] {
   const built = new Map(SCREEN_INFO.map((s) => [s.name, s]));
-  const listed = CATALOG.map((c) => ({ ...c, built: built.has(c.name), components: built.get(c.name)?.components.length ?? 0 }));
-  const extra = SCREEN_INFO.filter((s) => !CATALOG.some((c) => c.name === s.name)).map((s) => ({
+  const listed = CATALOG.filter((c) => built.has(c.name)).map((c) => ({
+    ...c,
+    built: true,
+    components: built.get(c.name)!.components.length,
+  }));
+  const extra = SCREEN_INFO.filter(
+    (s) => !CATALOG.some((c) => c.name === s.name),
+  ).map((s) => ({
     name: s.name,
     title: s.title,
     tagline: s.summary,
@@ -89,18 +111,6 @@ const FAQ = [
   },
 ];
 
-const FAQ_SOON = [
-  FAQ[0],
-  {
-    q: "When can I buy it?",
-    a: "When the set above is built: Pro opens with all of them, not one. Until then nothing is for sale, and the live preview is free to try.",
-  },
-  {
-    q: "What will it cost?",
-    a: "One price, once, for your whole team: every developer and project, client work included, and every screen added later.",
-  },
-];
-
 /** UI Polish Pro: what the paid screens are, what they cost, and the way to
  *  buy them. Without the screens, there's no page. */
 export default async function Page({
@@ -111,7 +121,8 @@ export default async function Page({
   if (!SCREEN_INFO.length) notFound();
   const purchased = (await searchParams).purchased === "1";
   const checkout = proCheckout();
-  const first = SCREEN_INFO.find((s) => s.name === CATALOG[0].name) ?? SCREEN_INFO[0];
+  const first =
+    SCREEN_INFO.find((s) => s.name === CATALOG[0].name) ?? SCREEN_INFO[0];
 
   const buy = (label: string) =>
     checkout ? (
@@ -127,9 +138,7 @@ export default async function Page({
   return (
     <SiteLayout>
       <header className={`${site.intro} ${styles.hero}`}>
-        <p className={styles.eyebrow}>
-          {PRO_OPEN ? "UI Polish Pro" : "UI Polish Pro · In the works"}
-        </p>
+        <p className={styles.eyebrow}>UI Polish Pro</p>
         <h1 className={site.title}>
           Whole app screens, built from UI Polish and ready to make yours.
         </h1>
@@ -167,11 +176,11 @@ export default async function Page({
                 variant="secondary"
                 size="lg"
               >
-                Tell me when it opens
+                Get in touch
               </ButtonLink>
             </div>
             <p className={styles.fine}>
-              Opens with the full set of screens · One price for your whole team
+              One price for your whole team · Every future screen
             </p>
           </>
         )}
@@ -215,20 +224,41 @@ export default async function Page({
         </Link>
       )}
 
-      <section className={`${site.section} ${site.wide}`} aria-labelledby="screens-title">
+      <section
+        className={`${site.section} ${site.wide}`}
+        aria-labelledby="screens-title"
+      >
         <h2 id="screens-title" className={site.heading}>
           {`${SCREEN_INFO.length} ${SCREEN_INFO.length === 1 ? "screen" : "screens"}`}
         </h2>
         <ul className={styles.grid}>
           {cards().map((c) => (
-            <li key={c.name} className={styles.tile} data-planned={c.built ? undefined : ""}>
+            <li
+              key={c.name}
+              className={styles.tile}
+              data-planned={c.built ? undefined : ""}
+            >
               {c.built ? (
                 <Link href={previewHref(c.name)} className={styles.tileLink}>
                   <span className={styles.thumb}>
                     {SHOTS.has(c.name) && (
                       <>
-                        <Image className={styles.light} src={`/screens/${c.name}-light.webp`} alt="" width={1440} height={900} sizes="(max-width: 720px) 100vw, 520px" />
-                        <Image className={styles.dark} src={`/screens/${c.name}-dark.webp`} alt="" width={1440} height={900} sizes="(max-width: 720px) 100vw, 520px" />
+                        <Image
+                          className={styles.light}
+                          src={`/screens/${c.name}-light.webp`}
+                          alt=""
+                          width={1440}
+                          height={900}
+                          sizes="(max-width: 720px) 100vw, 520px"
+                        />
+                        <Image
+                          className={styles.dark}
+                          src={`/screens/${c.name}-dark.webp`}
+                          alt=""
+                          width={1440}
+                          height={900}
+                          sizes="(max-width: 720px) 100vw, 520px"
+                        />
                       </>
                     )}
                   </span>
@@ -240,17 +270,7 @@ export default async function Page({
                     </span>
                   </span>
                 </Link>
-              ) : (
-                <div className={styles.tileLink}>
-                  <span className={styles.thumb} />
-                  <span className={styles.tileText}>
-                    <span className={styles.name}>
-                      {c.title} <Badge>In the works</Badge>
-                    </span>
-                    <span className={styles.tagline}>{c.tagline}</span>
-                  </span>
-                </div>
-              )}
+              ) : null}
             </li>
           ))}
         </ul>
@@ -309,7 +329,7 @@ export default async function Page({
           Questions
         </h2>
         <Accordion>
-          {(PRO_OPEN ? FAQ : FAQ_SOON).map((item, i) => (
+          {FAQ.map((item, i) => (
             <AccordionItem key={item.q} value={String(i)} title={item.q}>
               <p>{item.a}</p>
             </AccordionItem>

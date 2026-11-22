@@ -1,9 +1,12 @@
 /** UI Polish Pro: whether it's on sale, the price, and what's coming;
  *  shared by /screens and every screen preview's bar. */
 
-/** Pro opens for sale once there's a catalog worth the price. Until then
- *  nothing on the site sells it, whatever PRO_CHECKOUT_URL holds. */
-export const PRO_OPEN = false;
+import { SCREEN_INFO } from "@pro/index";
+
+/** Pro is on sale whenever the build has a catalog worth the price: six
+ *  screens or more. With fewer (a build without the private screens) the
+ *  site shows what there is and sells nothing. */
+export const PRO_OPEN = SCREEN_INFO.length >= 6;
 
 export const PRO_PRICE = "$299";
 
@@ -14,8 +17,8 @@ export const proCheckout = () => (PRO_OPEN ? process.env.PRO_CHECKOUT_URL?.trim(
 export const previewHref = (name: string) => (name === "copper" ? "/example" : `/screens/${name}`);
 
 /** The catalog in the order /screens shows it, with a one-line pitch each.
- *  A screen not built yet shows as "In the works"; a built screen missing
- *  here goes at the end with its own summary. */
+ *  Only screens in the build show; one missing here goes at the end with
+ *  its own summary. */
 export const CATALOG: { name: string; title: string; tagline: string }[] = [
   { name: "copper", title: "Agent workspace", tagline: "A full AI assistant app: streaming chat with reasoning and tool steps, records in a drawer, a command palette." },
   { name: "agent-builder", title: "Agent builder", tagline: "Configure an agent's model, instructions, tools and knowledge, compare versions, and test the draft live." },

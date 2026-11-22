@@ -26,7 +26,7 @@ export function ProPreview({ title, children }: { title: string; children: React
               {PRO_PRICE} <span className={styles.once}>one-time, whole team</span>
             </span>
           ) : (
-            <span className={styles.once}>Part of UI Polish Pro, opening soon</span>
+            <span className={styles.once}>Part of UI Polish Pro</span>
           )}
           {!PRO_OPEN ? (
             <ButtonLink as={Link} href="/screens" variant="secondary" size="sm">
