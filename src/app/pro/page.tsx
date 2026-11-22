@@ -30,7 +30,7 @@ export const metadata: Metadata = pageMetadata({
   path: "/pro",
 });
 
-/** Screens with a picture of themselves in public/screens/<name>-{light,dark}.webp. */
+/** Screens with a picture of themselves in public/shots/<name>-{light,dark}.webp. */
 const SHOTS = new Set([
   "copper",
   "agent-builder",
@@ -234,7 +234,7 @@ export default async function Page({
         >
           <Image
             className={styles.light}
-            src={`/screens/${first.name}-light.webp`}
+            src={`/shots/${first.name}-light.webp`}
             alt=""
             width={1440}
             height={900}
@@ -243,7 +243,7 @@ export default async function Page({
           />
           <Image
             className={styles.dark}
-            src={`/screens/${first.name}-dark.webp`}
+            src={`/shots/${first.name}-dark.webp`}
             alt=""
             width={1440}
             height={900}
@@ -276,7 +276,7 @@ export default async function Page({
                       <>
                         <Image
                           className={styles.light}
-                          src={`/screens/${c.name}-light.webp`}
+                          src={`/shots/${c.name}-light.webp`}
                           alt=""
                           width={1440}
                           height={900}
@@ -284,7 +284,7 @@ export default async function Page({
                         />
                         <Image
                           className={styles.dark}
-                          src={`/screens/${c.name}-dark.webp`}
+                          src={`/shots/${c.name}-dark.webp`}
                           alt=""
                           width={1440}
                           height={900}
@@ -342,7 +342,7 @@ export default async function Page({
                 purchase email.
               </p>
               {MCP_SETUPS.map((setup) => (
-                <div key={setup.label}>
+                <div key={setup.label} className={styles.mcpSetup}>
                   <p className={styles.mcpLabel}>{setup.label}</p>
                   <InstallCommand
                     command={setup.command}

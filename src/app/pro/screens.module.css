@@ -358,8 +358,16 @@
   min-width: 0;
 }
 
+/* A label sits 8px over its command; each pair is a step apart from the next. */
+.mcpSetup {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ui-space-2);
+  margin-top: var(--ui-space-2);
+}
+
 .mcpLabel {
-  margin: var(--ui-space-2) 0 0;
+  margin: 0;
   font-size: var(--ui-text-sm);
   font-weight: var(--ui-weight-title);
   line-height: var(--ui-leading-sm);
