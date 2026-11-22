@@ -75,4 +75,29 @@ writeFileSync(
     "",
   ].join("\n"),
 );
+// Every screen's source as text, for licensed MCP requests (get_screen).
+// The /mcp function imports this, so the files ship inside it; a path read
+// from disk at request time would be invisible to the tracer.
+const TEXT = /\.(tsx?|jsx?|mjs|css|md|json|txt)$/;
+const MAX_FILE = 256 * 1024;
+const walk = (dir, rel = "") =>
+  readdirSync(join(dir, rel), { withFileTypes: true }).flatMap((d) => {
+    const path = rel ? `${rel}/${d.name}` : d.name;
+    if (d.isDirectory()) return d.name === "node_modules" || d.name.startsWith(".") ? [] : walk(dir, path);
+    if (!TEXT.test(d.name)) return [];
+    const content = readFileSync(join(dir, path), "utf8");
+    return content.length > MAX_FILE ? [] : [{ path, content }];
+  });
+const files = Object.fromEntries(
+  names.map((n) => [n, walk(join(out, "screens", n)).sort((a, b) => a.path.localeCompare(b.path))]),
+);
+writeFileSync(
+  join(out, "files.ts"),
+  [
+    "// Written by scripts/fetch-pro.mjs. Do not edit.",
+    "export type ScreenFile = { path: string; content: string };",
+    `export const SCREEN_FILES: Record<string, ScreenFile[]> = JSON.parse(${JSON.stringify(JSON.stringify(files))});`,
+    "",
+  ].join("\n"),
+);
 console.log(`pro: ${names.length} screen${names.length === 1 ? "" : "s"}${names.length ? ": " + names.join(", ") : ""}`);

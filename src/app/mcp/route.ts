@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { SERVER_INSTRUCTIONS, TOOLS, callTool, type CallContext } from "@/lib/mcp/tools";
+import { licenseKeyFrom } from "@/lib/license";
 import { count, slug } from "@/lib/stats";
 
 export const runtime = "nodejs";
 
 // Minimal MCP server: JSON-RPC 2.0 over one HTTP POST endpoint (Streamable
-// HTTP transport). No sign-in and no key: everything is open.
+// HTTP transport). The components and rules need no sign-in and no key. Only
+// get_screen (UI Polish Pro) needs a license key, sent as
+// Authorization: Bearer <key>; it's checked when that tool is called.
 
 type JsonRpcRequest = {
   jsonrpc: "2.0";
@@ -76,7 +79,7 @@ export async function POST(request: Request) {
     return NextResponse.json(err(null, PARSE_ERROR, "Parse error"), { status: 400, headers: CORS });
   }
 
-  const ctx: CallContext = { events: [] };
+  const ctx: CallContext = { events: [], licenseKey: licenseKeyFrom(request.headers) };
   const isBatch = Array.isArray(body);
   const requests = (isBatch ? body : [body]) as JsonRpcRequest[];
   const responses: JsonRpcResponse[] = [];
@@ -111,7 +114,7 @@ export async function OPTIONS() {
     headers: {
       ...CORS,
       "access-control-allow-methods": "POST, GET, OPTIONS",
-      "access-control-allow-headers": "content-type, authorization, mcp-protocol-version",
+      "access-control-allow-headers": "content-type, authorization, x-license-key, mcp-protocol-version",
     },
   });
 }

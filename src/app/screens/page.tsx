@@ -7,6 +7,7 @@ import { ButtonLink } from "@registry/button/button-link";
 import { Icon } from "@registry/icons/icons";
 import { SCREEN_INFO } from "@pro/index";
 import Link from "@/components/link";
+import { InstallCommand } from "@/components/install-command";
 import { SiteLayout } from "@/components/site-layout";
 import {
   CATALOG,
@@ -17,6 +18,7 @@ import {
   proCheckout,
 } from "@/lib/pro";
 import { pageMetadata } from "@/lib/seo/site";
+import { MCP_URL } from "@/lib/setup";
 import site from "../site.module.css";
 import styles from "./screens.module.css";
 
@@ -93,6 +95,19 @@ const STEPS = [
   },
 ];
 
+/** A placeholder: the buyer swaps in the key from their purchase email. */
+const KEY = "UIPOLISH-XXXX-XXXX-XXXX";
+const MCP_SETUPS = [
+  {
+    label: "Claude Code",
+    command: `claude mcp add --transport http uipolish ${MCP_URL} --header "Authorization: Bearer ${KEY}"`,
+  },
+  {
+    label: "Cursor, in .cursor/mcp.json",
+    command: `{ "mcpServers": { "uipolish": { "url": "${MCP_URL}", "headers": { "Authorization": "Bearer ${KEY}" } } } }`,
+  },
+];
+
 const FAQ = [
   {
     q: "Are the components free?",
@@ -108,7 +123,7 @@ const FAQ = [
   },
   {
     q: "How do I get the screens after I buy?",
-    a: "Your license key comes by email. Then sign in to Polar’s customer portal (polar.sh/ui-polish/portal) with the email you paid with and connect your GitHub account, and you’re invited to the private repo.",
+    a: "Your license key comes by email. Then sign in to Polar’s customer portal (polar.sh/ui-polish/portal) with the email you paid with and connect your GitHub account, and you’re invited to the private repo. Your key also unlocks the screens in your AI tool over MCP.",
   },
   {
     q: "Do I get new screens?",
@@ -197,14 +212,16 @@ export default async function Page({
             tone="success"
             title="Thanks for buying UI Polish Pro"
             actions={
-              <ButtonLink href={PRO_PORTAL} size="sm">
+              <ButtonLink href={PRO_PORTAL}>
                 Connect GitHub
               </ButtonLink>
             }
           >
             Your license key is in your email. To get the screens, connect
             GitHub in Polar’s customer portal and you’re invited to the
-            private repo. Sign in there with the email you paid with.
+            private repo. Sign in there with the email you paid with. Your key
+            also unlocks the screens{" "}
+            <a href="#ai-tool">in your AI tool</a>.
           </Alert>
         </div>
       )}
@@ -307,6 +324,37 @@ export default async function Page({
                 </li>
               ))}
             </ol>
+          </section>
+
+          <section
+            id="ai-tool"
+            className={site.section}
+            aria-labelledby="ai-tool-title"
+          >
+            <h2 id="ai-tool-title" className={site.heading}>
+              Use with your AI tool
+            </h2>
+            <div className={styles.mcp}>
+              <p className={site.text}>
+                Add your license key to the UI Polish MCP server, then ask for
+                a screen by name, like “add the inbox screen”. Your agent
+                writes its files into your project. Swap in the key from your
+                purchase email.
+              </p>
+              {MCP_SETUPS.map((setup) => (
+                <div key={setup.label}>
+                  <p className={styles.mcpLabel}>{setup.label}</p>
+                  <InstallCommand
+                    command={setup.command}
+                    label={`${setup.label} setup`}
+                  />
+                </div>
+              ))}
+              <p className={styles.fine}>
+                Other tools: add {MCP_URL} with the header Authorization:
+                Bearer and your key. The free components work with no key.
+              </p>
+            </div>
           </section>
 
           <section
