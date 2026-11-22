@@ -488,9 +488,13 @@
   .messageText {
     animation-name: agent-question-fade;
   }
-  .panel,
+  /* Spelled out: narrowing the property list would hand opacity the
+     height's slot and its 280ms. */
+  .panel {
+    transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+  }
   .panel[data-open="true"] {
-    transition-property: opacity;
+    transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
   }
   .choice:not([data-multiple]) .control::before,
   .choice:not([data-multiple])[data-checked] .control::before,

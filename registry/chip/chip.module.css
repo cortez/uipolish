@@ -4,8 +4,17 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  /* Rows stay packed at the top while the height eases between them. */
+  align-content: flex-start;
   gap: var(--ui-gap-inline);
   min-width: 0;
+}
+
+/* Growing by a row: the chip arriving in it is clipped by the edge rather
+   than drawn over what's below, with room for focus rings. */
+.group[data-sizing="grow"] {
+  overflow: clip;
+  overflow-clip-margin: var(--ui-space-1);
 }
 
 .group:focus {

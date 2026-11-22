@@ -110,6 +110,7 @@ On and off never differ by color alone: the plus becomes a check.
 | Removed chip fades out | `--ui-dur-instant` | `--ui-ease-exit` |
 | The chips after it slide into its space | `--ui-dur-move` | `--ui-ease-move` |
 | A chip added later fades in | `--ui-dur-fast` | `--ui-ease-enter` |
+| The group's height, when a chip that comes or goes adds or takes away a row | `--ui-dur-glide` | `--ui-ease-glide` |
 
 **Removing follows the list-removal rule** in
 `foundation/rules/motion.md`: the item fades out fast, starting on the
@@ -123,10 +124,15 @@ chip is still visible, and nothing shrinks. To do this yourself without
 measure every sibling, remove it, then animate each sibling's `translate`
 from its old position to zero on `--ui-ease-move` over `--ui-dur-move`.
 
+When that adds or takes away a row, the group's height eases to the new
+one on the glide, so what sits below slides by a row instead of jumping.
+While it grows it clips the chip still fading in at its edge, so the new
+row never draws over what's below.
+
 Chips there on the first paint don't fade in; only chips added after the
 group has mounted do. Under `prefers-reduced-motion: reduce`, the mark
-swaps, removed chips go at once and the rest jump into place; colors still
-change.
+swaps, removed chips go at once and the rest jump into place, the group's
+height changes at once; colors still change.
 
 ## Accessibility
 

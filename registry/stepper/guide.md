@@ -107,7 +107,7 @@ queues. A stepper first drawn on a step is simply there.
 
 Under `prefers-reduced-motion: reduce` the line fills and the pill moves at
 once, the check appears already drawn, and the marks swap their contents
-with a fade only, with no delay.
+with a fade only, with no delay and no scale.
 
 ## Accessibility
 

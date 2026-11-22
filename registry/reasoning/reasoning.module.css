@@ -76,9 +76,11 @@
   grid-template-columns: 1fr;
   color: var(--ui-subtle);
   font-weight: var(--ui-weight-regular);
+  /* Arriving, it fades in on the enter curve as its column opens; it
+     leaves on the exit curve (below). */
   transition:
     grid-template-columns var(--ui-dur-glide) var(--ui-ease-glide),
-    opacity var(--ui-dur-instant) var(--ui-ease-exit);
+    opacity var(--ui-dur-fast) var(--ui-ease-enter);
   --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
@@ -103,6 +105,9 @@
 .root:not([data-ticking]) .timer {
   grid-template-columns: 0fr;
   opacity: 0;
+  transition:
+    grid-template-columns var(--ui-dur-glide) var(--ui-ease-glide),
+    opacity var(--ui-dur-instant) var(--ui-ease-exit);
 }
 
 /* The label swaps lines by rising: the old line goes up and out, the new
@@ -302,11 +307,19 @@
     mask-image: none;
     color: var(--ui-muted);
   }
-  .swap,
-  .timer,
-  .panel,
-  .panel[data-open="true"] {
+  .swap {
     transition-property: opacity, color;
+  }
+  /* Spelled out: narrowing the property list would hand opacity the
+     first slot's timing, the column's glide or the height's 280ms. */
+  .timer,
+  .panel[data-open="true"] {
+    transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
+  }
+  .root[data-state="done"] .timer,
+  .root:not([data-ticking]) .timer,
+  .panel {
+    transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
   }
 }
 

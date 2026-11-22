@@ -1098,8 +1098,12 @@ button.event:active {
   button.event:active {
     scale: none;
   }
-  .dayFold,
+  /* Spelled out: narrowing the property list would hand opacity the
+     height's slot and its 280ms. */
+  .dayFold {
+    transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
+  }
   .dayFold[data-folded] {
-    transition-property: opacity;
+    transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
   }
 }

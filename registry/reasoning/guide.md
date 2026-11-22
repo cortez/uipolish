@@ -70,6 +70,7 @@ open for a user who opened it last time.
 | The new line rises in from below, half a beat later (`--ui-dur-instant` / 2, 60ms) | `--ui-dur-base` (200ms) | `--ui-ease-enter` |
 | The label's width glides to the new line; the timer and chevron move with it | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
 | The window follows new text; a new paragraph rises 6px and clears a 2px blur | `--ui-dur-glide` (320ms) scroll; `--ui-dur-base` (200ms) | ease-out; `--ui-ease-enter` |
+| Timer arrives: its column opens and it fades in | `--ui-dur-glide` (320ms); fade `--ui-dur-fast` (160ms) | `--ui-ease-glide`, `--ui-ease-enter` |
 | Timer folds away, chevron glides left | `--ui-dur-glide` (320ms); timer fades out in `--ui-dur-instant` (120ms) | `--ui-ease-glide`, `--ui-ease-exit` |
 | Open: height. While thinking, the window opens with the first line of text, not before: an open, empty panel would jump to its six lines | `--ui-dur-panel` (280ms) | `--ui-ease-expand` |
 | Open: text fades in, 75ms after the height starts | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |
@@ -85,7 +86,8 @@ stops the moment thinking ends.
 Under `prefers-reduced-motion: reduce` the label is static muted text (no
 band), lines swap with a plain crossfade and no rise, the width snaps, the
 window jumps to new text, and opening and closing are instant; only the
-short opacity fades remain.
+short opacity fades remain (`--ui-dur-fast` in, `--ui-dur-instant` out, for the
+panel and the timer alike).
 
 ## Accessibility
 

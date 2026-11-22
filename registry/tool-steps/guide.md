@@ -73,6 +73,7 @@ that step back to `running` and the error clears.
 | A step added to a list already on screen: fade and 4px rise, while the list's height eases open for it (`animated-size`). The steps a list is first drawn with don't animate | `--ui-dur-fast` (160ms); height `--ui-dur-panel` (280ms) | `--ui-ease-enter`; `--ui-ease-expand` |
 | A step's error opens when it fails: height, then the text fades in 60ms later. An error a list is first drawn with is simply there | `--ui-dur-panel` (280ms) height, `--ui-dur-fast` (160ms) fade | `--ui-ease-expand`, `--ui-ease-enter` |
 | Retry: the error fades out first, then gives its space back, so the steps under it slide up instead of jumping | `--ui-dur-instant` (120ms) fade, then `--ui-dur-base` (200ms) height | `--ui-ease-exit`, `--ui-ease-collapse` |
+| A step's time fades in where it will stay when the step starts (a time the row is drawn with is simply there) | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |
 | Status icon crossfade: old out, new in from scale 0.97 | out `--ui-dur-instant` (120ms), in `--ui-dur-fast` (160ms), scale `--ui-dur-snap` | `--ui-ease-color`, `--ui-ease-enter`, `--ui-ease-snap` |
 | Title and summary label changes | `--ui-dur-glide` (320ms) | `--ui-ease-glide`, via text morph |
 | Light band across the summary | `--ui-dur-sweep` (2.4s) per sweep, only while running | `linear` |
@@ -90,7 +91,7 @@ a ticking second moves nothing and the space in "1m 14s" keeps its width.
 
 Under `prefers-reduced-motion: reduce` steps appear without rising, the band
 is replaced by static muted text at full strength, the done check appears already drawn, labels
-swap without morphing, panels and errors open instantly, and the running dot holds its
+swap without morphing, status icons crossfade without scaling, panels and errors open instantly, and the running dot holds its
 size and fades slowly instead.
 
 ## Accessibility

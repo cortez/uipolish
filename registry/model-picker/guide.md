@@ -90,6 +90,7 @@ The list's edge is the one in `--ui-shadow-floating`: the same outline color as 
 | List opens: fade, unblur from 2px and scale 0.97 → 1 from the trigger side | `--ui-dur-fast` | `--ui-ease-enter` |
 | List closes | `--ui-dur-instant` | `--ui-ease-exit` |
 | Highlight moves between options | `--ui-dur-snap` | `--ui-ease-snap` |
+| Highlight first appears, in place | `--ui-dur-instant` | `--ui-ease-color` |
 | Check draws in on the new selection | `--ui-dur-base` | `--ui-ease-draw` |
 | Name morph and trigger width | `--ui-dur-glide` | `--ui-ease-glide`: the width lands once, with no overshoot to narrow the trigger past its new size |
 | Fill and text color | `--ui-dur-instant` | `--ui-ease-color` |

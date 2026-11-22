@@ -72,7 +72,11 @@
 }
 
 .highlight[data-jump] {
-  transition-property: opacity, background-color;
+  /* Spelled out: a shorter property list would hand opacity the translate's
+     timing. */
+  transition:
+    opacity var(--ui-dur-instant) var(--ui-ease-color),
+    background-color var(--ui-dur-instant) var(--ui-ease-color);
 }
 
 .highlight[data-tone="danger"] {

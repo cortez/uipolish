@@ -103,7 +103,9 @@ wrap.
 | Press | Down in `--ui-dur-press`, back on `--ui-ease-snap` |
 
 Under `prefers-reduced-motion` pages crossfade in place without sliding,
-presses don't shrink, and the popover only fades.
+presses don't shrink, the popover only fades, and on a phone the day's
+list folds as a short fade (`--ui-dur-fast` in, `--ui-dur-instant` out)
+with its height changing at once.
 
 ## Accessibility
 

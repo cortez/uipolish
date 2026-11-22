@@ -3,7 +3,7 @@
   "title": "Agent question",
   "summary": "The card an agent shows when it needs you to decide something mid-task. A short question, two to four choices with the agent's own pick marked, an optional typed answer, and one line once you've answered.",
   "kit": "agent",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "dependencies": [
     "animated-size",
     "button",

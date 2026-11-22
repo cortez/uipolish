@@ -127,7 +127,8 @@ Every height change eases, so the thread under the card moves with it and
 never jumps.
 
 Under `prefers-reduced-motion: reduce` the card, the line and the message fade
-in without rising or growing, the field opens and closes as a fade, the
+in without rising or growing, the field opens and closes as a short fade
+(`--ui-dur-fast` in, `--ui-dur-instant` out), the
 height of the card changes in one step, and the dot and tick appear at once.
 
 ## Accessibility

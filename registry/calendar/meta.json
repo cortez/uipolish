@@ -3,7 +3,7 @@
   "title": "Calendar",
   "summary": "Events calendar with month and week views. Pages slide the way the date picker's months do, overlapping events sit side by side, and a narrow calendar trades its chips for dots and a day list.",
   "blurb": "A month and week calendar of events.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dependencies": [
     "animated-size",
     "button",

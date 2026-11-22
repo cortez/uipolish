@@ -180,8 +180,8 @@ The menu's edge is the one in `--ui-shadow-floating`: the same outline color as 
 | Light band across a busy label | `--ui-dur-sweep` per pass | `linear` |
 
 The highlight moves with `translate`; only its height eases when it lands
-on a row with a second line. It jumps instead of sliding the first time it
-appears. The trigger skips the
+on a row with a second line. It fades in place (`--ui-dur-instant`) instead of sliding the first
+time it appears. The trigger skips the
 button's press-scale (`[aria-haspopup]`), so the menu opens from where the
 button really is. Under `prefers-reduced-motion: reduce` the menu only
 fades (no scale, no blur), the highlight jumps between items, labels swap without morphing,

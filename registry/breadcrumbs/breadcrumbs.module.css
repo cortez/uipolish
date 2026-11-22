@@ -166,7 +166,9 @@ a.crumb:focus-visible {
 
 /* Reduced motion: nothing slides; a revealed crumb still fades in. */
 @media (prefers-reduced-motion: reduce) {
+  /* Spelled out: narrowing the property list would hand opacity the
+     first slot's timing, the slide's 380ms spring. */
   .item {
-    transition-property: opacity;
+    transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
   }
 }

@@ -338,6 +338,14 @@ button.title:active {
   white-space: nowrap;
   min-width: 5ch;
   text-align: end;
+  transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
+}
+
+/* Empty until the step starts: the timer fades in where it will stay
+   instead of appearing on one frame. A time the row is drawn with is simply there. */
+.meta:empty {
+  opacity: 0;
+  transition: none;
 }
 
 /* A ticking time in equal-width figures. On each figure, never the line:
@@ -462,14 +470,23 @@ button.title:active {
   .step[data-arrived] {
     animation: none;
   }
-  .panel,
-  .io,
-  .errorBox,
-  .root[data-open="true"] > .panel,
-  .io[data-open="true"],
-  .errorBox[data-open="true"],
+  /* The icon that's showing redeclares its transitions, so hold the scale
+     itself still: the status crossfades without growing. */
   .icon > * {
     transition-property: opacity, color;
+    scale: none;
+  }
+  /* Spelled out: narrowing the property list would hand opacity the
+     height's slot, its 280ms open or the error's delayed close. */
+  .panel,
+  .io,
+  .errorBox {
+    transition: opacity var(--ui-dur-instant) var(--ui-ease-exit);
+  }
+  .root[data-open="true"] > .panel,
+  .io[data-open="true"],
+  .errorBox[data-open="true"] {
+    transition: opacity var(--ui-dur-fast) var(--ui-ease-enter);
   }
   .tick,
   .icon[data-status="done"] .tick {

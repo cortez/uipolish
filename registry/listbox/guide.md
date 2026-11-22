@@ -9,8 +9,8 @@ highlight.
 - `useHighlight({ centerSelected })` returns `listRef`, `barRef` and
   `listNode`. Put `listRef` on the scrolling list and `barRef` on a span
   that is the list's first child. One highlight slides on the snap spring
-  to whichever row Base UI marks `data-highlighted`, appears in place the
-  first time, and the list gets `data-fits` when it doesn't scroll (for
+  to whichever row Base UI marks `data-highlighted`, fades in place the
+  first time (`--ui-dur-instant`), and the list gets `data-fits` when it doesn't scroll (for
   the edge fade). With `centerSelected`, the chosen row
   (`data-selected`) starts in the middle each time the list opens. Base UI
   keeps the highlighted row in view.

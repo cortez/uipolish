@@ -116,6 +116,7 @@ The open list's edge is the one in `--ui-shadow-floating`: the same outline colo
 | List opens: fade, unblur and scale 0.97 → 1 from the trigger (`--transform-origin`) | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |
 | List closes | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |
 | Highlight moves between options | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
+| Highlight first appears, in place | `--ui-dur-instant` | `--ui-ease-color` |
 | Chevron flips: its tip moves, its ends stay | `Icon` | |
 | Hint and error trade places (Field's `FieldMessage`) | `--ui-dur-instant` (120ms) out, `--ui-dur-fast` (160ms) in | `--ui-ease-color`, `--ui-ease-enter` |
 

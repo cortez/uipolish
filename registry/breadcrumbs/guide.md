@@ -90,7 +90,8 @@ than jumping to make room. The revealed crumbs sit still and are
 uncovered as the others leave (`clip-path`, following the first sliding
 crumb), so the two never draw over each other on the way. Nothing animates on the first paint. Under
 `prefers-reduced-motion: reduce` nothing slides: the crumbs take their
-places at once and the revealed ones still fade in.
+places at once and the revealed ones still fade in, on `--ui-dur-fast`
+and `--ui-ease-enter` (not the slide's spring).
 
 ## Accessibility
 

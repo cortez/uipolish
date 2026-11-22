@@ -84,6 +84,47 @@ export function ChipGroup({ className, children, ...props }: ChipGroupProps) {
 
   const chips = () => Array.from(ref.current?.querySelectorAll<HTMLElement>("[data-chip]") ?? []);
 
+  // The group's height as last drawn: kept current while it rests (a
+  // narrower window rewraps it), so a change grows or shrinks from there.
+  const count = useRef<number | null>(null);
+  const drawn = useRef<number | null>(null);
+  const sizing = useRef<Animation | null>(null);
+  useEffect(() => {
+    const group = ref.current;
+    if (!group) return;
+    const observer = new ResizeObserver(() => {
+      if (sizing.current?.playState !== "running") drawn.current = group.offsetHeight;
+    });
+    observer.observe(group);
+    return () => observer.disconnect();
+  }, []);
+
+  // A chip that comes or goes can add or take away a row. The group's
+  // height follows on the glide, so what's below slides instead of jumping
+  // a row; while it grows it clips the chip still fading in.
+  useLayoutEffect(() => {
+    const group = ref.current;
+    if (!group) return;
+    const n = chips().length;
+    if (count.current === n) return;
+    const first = count.current === null;
+    count.current = n;
+    const running = sizing.current?.playState === "running";
+    const from = running ? group.getBoundingClientRect().height : drawn.current;
+    sizing.current?.cancel();
+    const to = group.offsetHeight;
+    drawn.current = to;
+    if (first || reduced() || from === null || Math.abs(from - to) < 0.5) return;
+    const easing = token(group, "--ui-ease-glide", "ease-out");
+    const duration = ms(token(group, "--ui-dur-glide", "320ms"));
+    const animation = group.animate({ height: [`${from}px`, `${to}px`] }, { duration, easing });
+    group.dataset.sizing = to > from ? "grow" : "shrink";
+    animation.onfinish = animation.oncancel = () => {
+      if (sizing.current === animation) delete group.dataset.sizing;
+    };
+    sizing.current = animation;
+  });
+
   function beforeRemove(chip: HTMLElement) {
     const all = chips();
     snapshot.current = {

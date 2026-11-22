@@ -479,8 +479,11 @@ button.dot:focus-visible {
   .root[data-direction="forward"] .mark[data-status="current"] {
     transition-delay: 0s;
   }
+  /* The layer that's showing redeclares its transitions, so hold the
+     scale itself still: the mark crossfades without growing. */
   .mark > * {
     transition-property: opacity;
+    scale: none;
   }
   .check path,
   .mark[data-status="complete"] .check path {
