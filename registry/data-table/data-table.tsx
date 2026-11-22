@@ -79,6 +79,10 @@ type DataTableProps<Row> = Omit<ComponentProps<"div">, "children" | "onChange" |
 
   /** Pins the first column (and checkboxes). */
   stickyFirstColumn?: boolean;
+  /** The table fills a container that already has an edge (a card, a
+   *  panel): no outline or corners of its own, only a line across its top,
+   *  so the two never draw a double border. */
+  flush?: boolean;
   /** Fixed row height in px, used for virtualization. Defaults to 44. */
   rowHeight?: number;
   /** Rows rendered past each edge of the visible window. Defaults to 6. */
@@ -142,6 +146,7 @@ export function DataTable<Row>({
   defaultSelectedIds,
   onSelectedIdsChange,
   stickyFirstColumn = false,
+  flush = false,
   rowHeight = 44,
   overscan = 6,
   loading = false,
@@ -560,6 +565,7 @@ export function DataTable<Row>({
       className={className ? `${styles.root} ${className}` : styles.root}
       style={{ ...vars, ...style }}
       data-focused={focused || undefined}
+      data-flush={flush || undefined}
       {...props}
     >
       <div

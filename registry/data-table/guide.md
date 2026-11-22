@@ -60,6 +60,7 @@ Give the box its height there; it's 440px by default.
 | `selectable` | Adds the checkbox column and select-all |
 | `selectedIds`, `defaultSelectedIds`, `onSelectedIdsChange` | The selected row ids, as a `Set`. Controlled or uncontrolled |
 | `stickyFirstColumn` | The checkboxes and the first column stay put while the rest scroll sideways, as long as they take no more than 60% of the table's width. In a narrow table (a phone) the first column first gives up width, down to its `minWidth`, to stay pinned; only past that do they scroll with the rest |
+| `flush` | For a table that fills a card or panel with its own edge: the table drops its outline and corners and keeps only a line across its top, so card and table never draw a double border. Give the container `overflow: clip` and no padding where the table meets it |
 | `rowHeight` | Every row's height in px. 44 by default |
 | `overscan` | Rows rendered past each edge of the visible window. 6 by default |
 | `loading`, `loadingLabel` | With no rows yet, the body holds its space and names the wait |
