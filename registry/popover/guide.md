@@ -50,7 +50,7 @@ the trigger. Focus is not trapped: this is a non-modal panel.
 | Arrow | A 16×8 notch pointing at the trigger's center, in the panel's own border | `arrow` |
 | Pressed again | Closes; doesn't flash closed and open | |
 
-The panel's edge is the one in `--ui-shadow-floating`: the same outline color as fields (`--ui-border-strong`), drawn once. Don't add a ring of your own on top; two rings read as a darker edge. Its fill is glass: `--ui-surface-glass` (the surface at 96%) over a `--ui-glass-blur` (12px) blur of what's behind, so it reads as a solid panel with a hint of the page under it. For a solid panel set them to `var(--ui-surface)` and `0px`.
+The panel's corner is concentric with what it holds: 16px of padding plus a control's 12px radius, 28px, as a dialog's, so a field or a button against its padding lines up with the curve. The panel's edge is the one in `--ui-shadow-floating`: the same outline color as fields (`--ui-border-strong`), drawn once. Don't add a ring of your own on top; two rings read as a darker edge. Its fill is glass: `--ui-surface-glass` (the surface at 96%) over a `--ui-glass-blur` (12px) blur of what's behind, so it reads as a solid panel with a hint of the page under it. For a solid panel set them to `var(--ui-surface)` and `0px`.
 
 ## Motion
 

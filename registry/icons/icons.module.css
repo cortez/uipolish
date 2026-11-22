@@ -75,6 +75,11 @@
   stroke-width: calc(var(--ui-icon-stroke, 1.25) * var(--ui-icon-stem) * 3.2);
 }
 
+/* A dot that reads as a point: twice the line, about 2.5px by 14px text. */
+.pip {
+  stroke-width: calc(var(--ui-icon-stroke, 1.25) * var(--ui-icon-stem) * 2);
+}
+
 /* Solid: filled, with a thin stroke in the same color rounding its corners. */
 /* A line becoming a solid fills in the second half of the move, once its
    outline has closed: filled sooner, an open outline shows as a gray wedge. */

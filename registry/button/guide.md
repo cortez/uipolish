@@ -52,8 +52,9 @@ button.
 
 **Icon buttons are square.** A button whose only child is one icon (an
 `<svg>` or a component such as `Icon`) and that has an `aria-label` is drawn
-as wide as it is tall (40px, 32px at `sm`, 48px at `lg`) with the same
-corners as every other button, so every button shares one shape. A
+as wide as it is tall (40px, 32px at `sm`, 48px at `lg`), with no side
+padding so the icon sits dead center, and the same corners as every
+other button, so every button shares one shape. A
 button with an icon and text is an ordinary button, and so is one whose
 only child is a text element (`<code>`, `<span>`), whatever its label. The button sizes its
 own icons (an `svg` directly inside it) to 16px; an svg nested in something

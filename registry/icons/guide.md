@@ -93,6 +93,9 @@ in a tile. Every chevron in the same role is the same size.
   (`--ui-icon-stroke-regular` beside 400 text, `-medium` beside 500)
   and every icon inside matches. See
   `foundation/rules/typography.md`, "Icons beside text".
+- **Dots.** A dot (the overflow menu's three, a grip's six, a list's
+  bullets) is drawn at twice the line, about 2.5px by 14px text: at the
+  line's own weight it's a speck you can barely find.
 - **Filling an outline.** `--icon-fill: 1` on the icon or a parent fills
   every closed outline in the text color (a pressed thumb).
 - **Parent hover, no JS.** The 1px nudges react to the nearest `button`, `a`,

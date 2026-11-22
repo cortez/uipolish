@@ -169,7 +169,7 @@ grey canvas.
 | Group open / closed | The chevron points down, then up; the rows open below | `aria-expanded` |
 | Collapsed | A 48px rail (56px on touch screens): mark, item icons, avatar. Sections and the recent list are hidden | `collapsed` |
 | Collapsed, hovered | One tooltip beside the rail with the label and shortcut, gliding from icon to icon | `NavRailTooltipGroup` |
-| Recent row hovered | A square "…" button at the row's end; always there on the current row and on touch | |
+| Recent row hovered | A square "…" button at the row's end, in from it as far as from the row's top and bottom, its corners concentric with the row's; always there on the current row and on touch | |
 | Recent row with meta | A time or faces at the row's end in the subtle color; the "…" fades in over it on hover, focus and the current row, and the title never moves | `meta` |
 | Menu open | Its trigger holds the pressed fill | `data-popup-open` |
 | Renaming | The row becomes a field of the same shape, text in place, selected | Rename |

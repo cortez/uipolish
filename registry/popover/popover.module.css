@@ -10,9 +10,11 @@
   position: relative;
   box-sizing: border-box;
   padding: var(--popover-pad);
-  /* A box on the scale: lg, like a menu or a card. Its content sits a full
-     16px in, clear of the curve. */
-  border-radius: var(--ui-radius-lg);
+  /* Concentric with what it holds: a field or a button against its
+     padding has the control's radius, so the panel's is that plus the
+     padding (16 + 12 = 28, as a dialog's), capped at half a control so a
+     pill theme doesn't turn it into an oval. */
+  border-radius: calc(var(--popover-pad) + min(var(--ui-radius-control), var(--ui-control-md) / 2));
   background: var(--ui-surface-glass);
   /* Prefixed first: the CSS build keeps only the last of the pair, and
      Chrome and Firefox read the unprefixed one alone. */

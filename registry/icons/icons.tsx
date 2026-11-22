@@ -21,6 +21,9 @@ type Stroke = {
   cut?: boolean;
   /** Draw as a solid rounded block. */
   block?: boolean;
+  /** A dot that reads as a point (the overflow menu's three, a grip's six):
+   *  at the line's own weight it's a speck, so it draws at twice the line. */
+  pip?: boolean;
   /** A filled shape with softly rounded corners (play, pause, stop). */
   solid?: boolean;
   /** Nudges 1px while the parent control is hovered or focused. */
@@ -155,14 +158,14 @@ const ICONS = {
   },
   /* Three dots in a row: the overflow menu on a row or a card. */
   more: {
-    a: { d: "M3.75 8 L3.76 8" },
-    dot: { d: "M8 8 L8.01 8" },
-    b: { d: "M12.25 8 L12.26 8" },
+    a: { d: "M3.75 8 L3.76 8", pip: true },
+    dot: { d: "M8 8 L8.01 8", pip: true },
+    b: { d: "M12.25 8 L12.26 8", pip: true },
   },
   /* Six dots in two columns: a handle to drag something by. */
   grip: {
-    a: { d: "M6 3.75 L6.01 3.75 M6 8 L6.01 8 M6 12.25 L6.01 12.25" },
-    b: { d: "M10 3.75 L10.01 3.75 M10 8 L10.01 8 M10 12.25 L10.01 12.25" },
+    a: { d: "M6 3.75 L6.01 3.75 M6 8 L6.01 8 M6 12.25 L6.01 12.25", pip: true },
+    b: { d: "M10 3.75 L10.01 3.75 M10 8 L10.01 8 M10 12.25 L10.01 12.25", pip: true },
   },
   /* Rating a reply. Down is up turned half round, point for point, so the
      two share keys and a flip morphs. Fill the icon (fill: currentColor on
@@ -256,7 +259,7 @@ const ICONS = {
   },
   list: {
     lines: { d: "M6.75 4.5h6.5M6.75 8h6.5M6.75 11.5h6.5" },
-    dots: { d: "M3.25 4.5h.01M3.25 8h.01M3.25 11.5h.01" },
+    dots: { d: "M3.25 4.5h.01M3.25 8h.01M3.25 11.5h.01", pip: true },
   },
   terminal: {
     frame: { d: "M2.75 4.5A1.75 1.75 0 0 1 4.5 2.75h7a1.75 1.75 0 0 1 1.75 1.75v7a1.75 1.75 0 0 1-1.75 1.75h-7a1.75 1.75 0 0 1-1.75-1.75Z" },
@@ -407,7 +410,7 @@ function resample(line: Pt[], keep: number[] = []): Pt[] {
 
 function strandsOf(key: string, s: Stroke): Strand[] {
   const out: Strand[] = [];
-  const cls = [styles.strand, s.solid && styles.solid, s.block && styles.block, s.fx && styles[s.fx]].filter(Boolean).join(" ");
+  const cls = [styles.strand, s.solid && styles.solid, s.block && styles.block, s.pip && styles.pip, s.fx && styles[s.fx]].filter(Boolean).join(" ");
   let segs: Seg[] = [];
   let sig = "";
   let d = "";
@@ -1091,7 +1094,7 @@ export function Icon({ name, className, ...props }: IconProps) {
               <path
                 key={key}
                 d={s.d}
-                className={[styles.strand, s.solid && styles.solid, s.block && styles.block, s.fx && styles[s.fx]].filter(Boolean).join(" ")}
+                className={[styles.strand, s.solid && styles.solid, s.block && styles.block, s.pip && styles.pip, s.fx && styles[s.fx]].filter(Boolean).join(" ")}
               />
             ),
           )}

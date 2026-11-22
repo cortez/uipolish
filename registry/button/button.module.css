@@ -57,10 +57,13 @@
 
 .button[data-size="sm"][data-icon-only] {
   width: calc(var(--ui-control-sm) * var(--ui-icon-button));
+  /* The size rules below set padding at the same weight; this one outranks them. */
+  padding-inline: 0;
 }
 
 .button[data-size="lg"][data-icon-only] {
   width: calc(var(--ui-control-lg) * var(--ui-icon-button));
+  padding-inline: 0;
 }
 
 .button[data-size="sm"] {
