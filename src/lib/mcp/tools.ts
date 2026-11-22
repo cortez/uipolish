@@ -13,6 +13,11 @@ import {
   packagesOf,
   type ComponentMeta,
 } from "@/lib/content";
+import { checkLicense } from "@/lib/license";
+import { SCREEN_FILES } from "@pro/files";
+import { SCREEN_INFO } from "@pro/index";
+
+const PRO_URL = "https://uipolish.com/screens";
 
 export const SERVER_INSTRUCTIONS = `UI Polish is a set of components and design rules where every state, transition and edge case is worked out.
 
@@ -22,7 +27,9 @@ To add a component, call list_components, then get_component. Write every file i
 
 If the project uses Tailwind CSS v4 (its CSS has @import "tailwindcss"), pass tailwind: true to get_component, so the CSS modules come in Tailwind's components layer and utility classes override them, and set up the bridge once (get_rules topic "tailwind"). Keep the CSS modules; don't rewrite components into utility classes.
 
-Before calling UI work done, go through the checklist (get_rules topic "checklist").`;
+Before calling UI work done, go through the checklist (get_rules topic "checklist").
+
+UI Polish Pro screens are whole app screens built from these components. list_screens shows them; get_screen returns one screen's files and needs a Pro license key in this server's config (header Authorization: Bearer <key>).`;
 
 type Tool = {
   name: string;
@@ -67,14 +74,33 @@ export const TOOLS: Tool[] = [
       required: ["name"],
     },
   },
+  {
+    name: "list_screens",
+    description:
+      "UI Polish Pro: whole app screens built only from UI Polish components, with what each is and the components it uses. Fetching one with get_screen needs a Pro license key.",
+    inputSchema: { type: "object", properties: {} },
+  },
+  {
+    name: "get_screen",
+    description:
+      "UI Polish Pro: every source file and the guide for one screen from list_screens. Needs a UI Polish Pro license key, sent as the header Authorization: Bearer <key> in this server's config.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        name: { type: "string", description: "Screen name from list_screens, e.g. inbox." },
+      },
+      required: ["name"],
+    },
+  },
 ];
 
 type ToolResult = { content: { type: "text"; text: string }[]; isError?: boolean };
 
 const text = (t: string, isError = false): ToolResult => ({ content: [{ type: "text", text: t }], ...(isError ? { isError } : {}) });
 
-/** `events` collects anonymous usage counts. */
-export type CallContext = { events?: string[] };
+/** `events` collects anonymous usage counts. `licenseKey` is the request's
+ *  Pro license key, if any; it's checked only when a Pro tool is called. */
+export type CallContext = { events?: string[]; licenseKey?: string };
 
 async function getRules(topic: unknown) {
   if (topic === "tokens") return text(await getTokens());
@@ -159,6 +185,55 @@ async function getComponent(name: unknown, stack: unknown, tailwind: unknown, ct
   );
 }
 
+const NEEDS_KEY = `get_screen needs a UI Polish Pro license key. Buy Pro at ${PRO_URL} and your key comes by email. Then add it to this MCP server's config as the header Authorization: Bearer <your key>, and reconnect.`;
+
+function listScreens() {
+  if (!SCREEN_INFO.length) return text(`No Pro screens are available right now. See ${PRO_URL}.`);
+  const line = (s: (typeof SCREEN_INFO)[number]) =>
+    `- ${s.name}: ${s.title}${s.summary ? `. ${s.summary}` : ""}${s.components.length ? ` Uses: ${s.components.join(", ")}.` : ""}`;
+  return text(
+    [
+      `${SCREEN_INFO.length} UI Polish Pro ${SCREEN_INFO.length === 1 ? "screen" : "screens"}. Try each live at ${PRO_URL}.`,
+      SCREEN_INFO.map(line).join("\n"),
+      `get_screen returns a screen's files and needs a UI Polish Pro license key (${PRO_URL}).`,
+    ].join("\n\n"),
+  );
+}
+
+async function getScreen(name: unknown, ctx: CallContext) {
+  if (!ctx.licenseKey) return text(NEEDS_KEY, true);
+  const check = await checkLicense(ctx.licenseKey);
+  if (check === "unavailable") return text("Couldn't check your license key right now. Try again in a minute.", true);
+  if (check === "invalid")
+    return text(`That license key isn't valid. Check it against the one in your purchase email, or buy UI Polish Pro at ${PRO_URL}.`, true);
+
+  if (!SCREEN_INFO.length) return text(`No Pro screens are available right now. See ${PRO_URL}.`, true);
+  const names = SCREEN_INFO.map((s) => s.name);
+  if (typeof name !== "string" || !name) return text(`Pass a screen name. Screens: ${names.join(", ")}.`, true);
+  const info = SCREEN_INFO.find((s) => s.name === name);
+  const files = SCREEN_FILES[name];
+  if (!info || !files?.length) return text(`No screen "${name}". Screens: ${names.join(", ")}.`, true);
+  ctx.events?.push(`screen.${info.name}.served`);
+
+  const guide = files.find((f) => /^(guide|readme)\.md$/i.test(f.path));
+  const lang = (path: string) => path.split(".").pop() ?? "";
+  return text(
+    [
+      `# ${info.title}`,
+      info.summary,
+      ...(info.components.length
+        ? [`It's built from these UI Polish components: ${info.components.join(", ")}. Add any the project doesn't have yet with get_component first.`]
+        : []),
+      `Write each file below at the path shown, under a folder for this screen (for example components/screens/${info.name}/...), then swap the sample data for the project's own.`,
+      ...(guide ? [guide.content] : []),
+      "## Files",
+      ...files
+        .filter((f) => f !== guide)
+        .map((f) => `### ${f.path}\n\n\`\`\`${lang(f.path)}\n${f.content}${f.content.endsWith("\n") ? "" : "\n"}\`\`\``),
+    ].join("\n\n"),
+  );
+}
+
 export async function callTool(
   name: string,
   args: Record<string, unknown>,
@@ -172,6 +247,10 @@ export async function callTool(
       return listAll();
     case "get_component":
       return getComponent(args.name, args.stack, args.tailwind, ctx);
+    case "list_screens":
+      return listScreens();
+    case "get_screen":
+      return getScreen(args.name, ctx);
     default:
       return null;
   }

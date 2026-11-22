@@ -258,4 +258,25 @@ describe("MCP", () => {
     assert.match(list, /- model-picker \(agent kit\), v/);
     assert.match(list, /- button, v/);
   });
+
+  test("get_screen needs a license key and points to /screens; a bad key never gets files", async () => {
+    const call = async (headers = {}) =>
+      (
+        await (
+          await fetch(server.url + "/mcp", {
+            method: "POST",
+            headers: { "content-type": "application/json", ...headers },
+            body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "get_screen", arguments: { name: "copper" } } }),
+          })
+        ).json()
+      ).result;
+    const none = await call();
+    assert.equal(none.isError, true);
+    assert.match(none.content[0].text, /license key/);
+    assert.match(none.content[0].text, /uipolish\.com\/screens/);
+    const bad = await call({ authorization: "Bearer UIPOLISH-NOT-A-REAL-KEY" });
+    assert.equal(bad.isError, true);
+    assert.doesNotMatch(bad.content[0].text, /UIPOLISH-NOT-A-REAL-KEY/);
+    assert.doesNotMatch(bad.content[0].text, /## Files/);
+  });
 });

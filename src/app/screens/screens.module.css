@@ -341,3 +341,18 @@
 .tile[data-planned] .thumb {
   box-shadow: none;
 }
+
+/* ---------- In your AI tool ---------- */
+
+.mcp {
+  display: grid;
+  gap: var(--ui-space-3);
+  max-width: 720px;
+}
+
+.mcpLabel {
+  margin: var(--ui-space-2) 0 0;
+  font-size: var(--ui-text-sm);
+  font-weight: var(--ui-weight-title);
+  line-height: var(--ui-leading-sm);
+}
