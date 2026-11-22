@@ -217,7 +217,7 @@ export default async function Page({
 
       <section className={`${site.section} ${site.wide}`} aria-labelledby="screens-title">
         <h2 id="screens-title" className={site.heading}>
-          {`${SCREEN_INFO.length} screens`}
+          {`${SCREEN_INFO.length} ${SCREEN_INFO.length === 1 ? "screen" : "screens"}`}
         </h2>
         <ul className={styles.grid}>
           {cards().map((c) => (
