@@ -77,10 +77,10 @@ container inside, with `height: 100%`.
 | State | Divider | Pane |
 |---|---|---|
 | Resting | A 1px line in the edge color | Its content |
-| Hovered | After 120ms the line darkens to the hover edge and a 4 × 24px grip grows from its middle | |
-| Dragging | Line in the hover edge, grip in ink; the resize cursor stays even off the divider | Content takes no pointer, so an iframe or a selection can't steal the drag |
-| Focused (keyboard) | As dragging, with the focus ring around the grip | |
-| At the view's edge (the pane past it is closed) | The hit area and grip move inside the edge, where they can be reached | Closed: hidden and `inert` |
+| Hovered | After 120ms the line darkens to the hover edge, and the cursor turns to resize. No grip: the line is the whole divider | |
+| Dragging | Line in the hover edge; the resize cursor stays even off the divider | Content takes no pointer, so an iframe or a selection can't steal the drag |
+| Focused (keyboard) | As dragging, with the focus ring around the line's strip | |
+| At the view's edge (the pane past it is closed) | The hit area moves inside the edge, where they can be reached | Closed: hidden and `inert` |
 | Narrow (`switch`) | Hidden | One pane, with a segmented control above to switch. It follows the view's own width wherever it sits, with no size container needed around it |
 | Narrow (`stack`) | Hidden | One pane, no switch: set `narrowPane` to the detail when a row is picked and back to the list from your own Back button. The pane slides in from the side it lies on, the same as the switch |
 
@@ -89,9 +89,9 @@ container inside, with `height: 100%`.
 - The divider is a track of no width: the line sits on the first pixel of
   the pane after it, so panes never lose a pixel to it.
 - The hit area is 9px across (4px into each pane), so it doesn't take the
-  scrollbar of the pane beside it; the grip is a 24 × 40px target in the
-  middle. On a touch screen the strip is 25px and the grip 40px, and the
-  grip always shows.
+  scrollbar of the pane beside it, and widens to 24 × 40px in the middle.
+  On a touch screen the strip is 25px and the middle 40px. Nothing is drawn
+  but the line.
 - While a pane opens or closes, its content keeps its open width and rests
   against the pane's outer edge, so nothing inside rewraps as the edge
   passes over it; the other pane's content reflows once, as it would on a
@@ -110,7 +110,7 @@ container inside, with `height: 100%`.
 | An arrow key step | `--ui-dur-snap` | `--ui-ease-snap` |
 | Double-click reset | `--ui-dur-glide` | `--ui-ease-glide` |
 | A closing pane's content fades out first; an opening one's fades in half a beat in | out `--ui-dur-instant` (120ms), in `--ui-dur-fast` (160ms), 60ms late | `--ui-ease-exit`, `--ui-ease-enter` |
-| Hover: line color and grip (scale along the line, 50% to 100%) | `--ui-dur-instant`, after a 120ms beat; grip `--ui-dur-snap` | `--ui-ease-color`, `--ui-ease-snap` |
+| Hover: line color | `--ui-dur-instant`, after a 120ms beat | `--ui-ease-color` |
 | Narrow switch: the leaving pane fades, the arriving one fades in and slides 16px from its side | out `--ui-dur-instant`, in `--ui-dur-fast` 60ms late; slide `--ui-dur-glide` | `--ui-ease-color`, `--ui-ease-enter`, `--ui-ease-glide` |
 
 Closing lands on the glide rather than the snap: the snap's overshoot would
@@ -121,7 +121,7 @@ so a drag is never smoothed into lag. Repeated presses, a key held down or
 collapsing mid-drag all retarget from where the panes are on screen.
 
 Under `prefers-reduced-motion: reduce` every size change is instant; the
-content fades and the grip's color change remain.
+content fades and the line's color change remain.
 
 ## Accessibility
 

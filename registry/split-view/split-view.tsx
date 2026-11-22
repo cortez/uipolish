@@ -509,7 +509,7 @@ export function SplitView({
     const next = panes[i + 1];
     const a = sizes ? bounds(pane, space) : undefined;
     const b = sizes ? bounds(next, space) : undefined;
-    // Against the view's edge (everything past it closed), the grip moves
+    // Against the view's edge (everything past it closed), the hit area moves
     // inside, where a pointer can reach all of it.
     const edge = !sizes ? undefined : sizes.slice(i + 1).every((s) => s <= 0) ? "end" : sizes.slice(0, i + 1).every((s) => s <= 0) ? "start" : undefined;
     cells.push(

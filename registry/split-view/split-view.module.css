@@ -150,8 +150,9 @@
   height: var(--ui-hairline);
 }
 
-/* A grip on the line's middle: quiet until the pointer or focus is on the
-   divider, then it grows along the line. Its 24px box is the mouse target. */
+/* No grip: the hairline is the whole divider, and it lights on hover, drag
+   and focus. This 24px box in the line's middle is only extra room for the
+   pointer, drawn nothing. */
 .handle {
   position: absolute;
   display: grid;
@@ -174,39 +175,14 @@
   cursor: row-resize;
 }
 
-.handle::before {
-  content: "";
-  border-radius: var(--ui-radius-full);
-  background: var(--ui-field-focus);
-  opacity: 0;
-  transition:
-    opacity var(--ui-dur-instant) var(--ui-ease-color),
-    scale var(--ui-dur-snap) var(--ui-ease-snap),
-    background-color var(--ui-dur-instant) var(--ui-ease-color);
-}
 
-.root[data-orientation="horizontal"] > .frame > .divider > .handle::before {
-  width: var(--ui-space-1);
-  height: var(--ui-space-5);
-  scale: 1 0.5;
-}
 
-.root[data-orientation="vertical"] > .frame > .divider > .handle::before {
-  width: var(--ui-space-5);
-  height: var(--ui-space-1);
-  scale: 0.5 1;
-}
 
 /* Hover answers after a beat, so a pointer passing over the line on its
    way somewhere doesn't light it. */
 @media (hover: hover) {
   .divider:hover .line {
     background: var(--ui-field-focus);
-    transition-delay: var(--ui-dur-instant);
-  }
-  .divider:hover .handle::before {
-    opacity: 1;
-    scale: 1;
     transition-delay: var(--ui-dur-instant);
   }
 }
@@ -217,22 +193,14 @@
   transition-delay: 0s;
 }
 
-.divider[data-dragging] .handle::before,
-.divider:focus-visible .handle::before {
-  opacity: 1;
-  scale: 1;
-  background: var(--ui-foreground);
-  transition-delay: 0s;
-}
-
-/* The ring goes around the grip, the part that looks like a control. */
-.divider:focus-visible .handle {
-  border-radius: var(--ui-radius-full);
+/* The ring goes around the line's strip, the divider itself. */
+.divider:focus-visible::before {
+  border-radius: var(--ui-radius-pill);
   outline: var(--ui-ring-focus);
   outline-offset: var(--ui-ring-offset);
 }
 
-/* Against the view's edge, the hit area and grip lie wholly inside it. */
+/* Against the view's edge, the hit area lies wholly inside it. */
 .root[data-orientation="horizontal"] > .frame > .divider[data-edge="end"]::before {
   inset-inline-start: calc((var(--ui-space-2) + var(--ui-hairline)) * -1);
 }
@@ -258,7 +226,7 @@
   top: 0;
 }
 
-/* A finger needs 40px: the strip widens to 24px and the grip to 40. */
+/* A finger needs room: the strip widens to 24px, the middle box to 40. */
 @media (pointer: coarse) {
   .root[data-orientation="horizontal"] > .frame > .divider::before {
     inset-inline-start: calc(var(--ui-space-3) * -1);
@@ -275,10 +243,6 @@
   .root[data-orientation="vertical"] > .frame > .divider > .handle {
     top: calc(var(--ui-control-md) / -2 + var(--ui-hairline) / 2);
     height: var(--ui-control-md);
-  }
-  .handle::before {
-    opacity: 1;
-    scale: 1;
   }
   .root[data-orientation="horizontal"] > .frame > .divider[data-edge="end"]::before {
     inset-inline-start: calc((var(--ui-space-5) + var(--ui-hairline)) * -1);
@@ -372,9 +336,6 @@
 @media (prefers-reduced-motion: reduce) {
   .root[data-motion] > .frame {
     transition: none;
-  }
-  .handle::before {
-    transition-property: opacity, background-color;
   }
   .root:is([data-narrow="switch"], [data-narrow="stack"]) > .frame > .pane,
   .root:is([data-narrow="switch"], [data-narrow="stack"]) > .frame > .pane[data-active] {

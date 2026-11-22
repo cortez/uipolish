@@ -1,3 +1,13 @@
+/* The reading column: the intro, setup and guide sit in one 720px column
+   centered on the page, under the demo, which keeps the page's full width
+   (a table or a split view needs the room). */
+.column {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 720px;
+  margin-inline: auto;
+}
+
 /* Blocks 16 apart, code and tables 32, sections 64 and subsections 48
    (margins collapse). */
 .prose {
