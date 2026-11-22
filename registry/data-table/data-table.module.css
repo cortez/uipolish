@@ -411,6 +411,23 @@
   opacity: 0;
 }
 
+/* Scrolled sideways, the divider marks the pinned column's edge; its resize
+   line, centered on the same edge, would draw a second one beside it. It
+   rests hidden and still shows on hover, focus and drag. */
+.viewport[data-more-start] .headCell[data-sticky-last] .resize::before {
+  opacity: 0;
+}
+
+.viewport[data-more-start] .headCell[data-sticky-last]:is([data-resizing], :has(.resize:focus-visible)) .resize::before {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .viewport[data-more-start] .headCell[data-sticky-last] .resize:hover::before {
+    opacity: 1;
+  }
+}
+
 /* ---------- Selection ---------- */
 
 .cell.selectCell,

@@ -3,7 +3,7 @@
   "title": "Data table",
   "summary": "Keyboard-first grid for real data: one tab stop, arrow keys between cells, a stable sort whose arrow flips its head, columns resized by pointer or keys, range selection, and thousands of rows virtualized without a dependency.",
   "blurb": "A keyboard-first grid for real data, sortable and fast.",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "dependencies": [
     "checkbox",
     "icons",
