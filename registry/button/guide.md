@@ -55,7 +55,9 @@ button.
 as wide as it is tall (40px, 32px at `sm`, 48px at `lg`) with the same
 corners as every other button, so every button shares one shape. A
 button with an icon and text is an ordinary button, and so is one whose
-only child is a text element (`<code>`, `<span>`), whatever its label.
+only child is a text element (`<code>`, `<span>`), whatever its label. The button sizes its
+own icons (an `svg` directly inside it) to 16px; an svg nested in something
+else in the label, such as an Avatar's letters, keeps its own size.
 
 **Busy vs disabled.** Busy means "working on it": the button keeps focus,
 stays in the tab order and ignores presses. Disabled means "you can't do this

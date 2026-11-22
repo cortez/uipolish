@@ -163,7 +163,9 @@
   padding: var(--ui-space-1) 6px;
 }
 
-.content svg {
+/* The button's own icons only: an svg inside something else in the label
+   (an avatar's letters, a badge's mark) keeps its own size. */
+.content > svg {
   width: var(--ui-icon-md);
   height: var(--ui-icon-md);
   flex-shrink: 0;

@@ -32,7 +32,10 @@
   max-width: var(--message-thread-width, 680px);
   min-height: 100%;
   margin-inline: auto;
-  padding: var(--ui-space-5) var(--ui-space-4) var(--ui-space-6);
+  /* Inset from the sides: set it to the composer's gutter plus its own
+     padding, so the thread's text lines up with what you type and nothing
+     in it is wider than the composer below. */
+  padding: var(--ui-space-5) var(--message-thread-inset, var(--ui-space-4)) var(--ui-space-6);
 }
 
 /* Sized by the scroll hook; never shrinks under flex. */

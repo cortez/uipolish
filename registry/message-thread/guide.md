@@ -89,6 +89,15 @@ push anything down.
 4. **Settle.** A second after streaming ends, the animated tree is replaced
    by a plain one. Long threads keep almost no extra spans.
 
+## Lining up with the composer
+
+Give the thread the composer's column: the same `--message-thread-width` as
+the composer's container, and `--message-thread-inset` (16px by default)
+equal to the composer's gutter plus its own padding, less the 12px a
+message already sits in (16 + 16 − 12 = 20px for Prompt input in a 16px
+gutter). The thread's text then starts where typed text starts, and no card in the thread is wider than the composer, so nothing
+pokes out past its rounded corners as it scrolls by.
+
 ## How the scroll works
 
 - **Loaded: the latest.** On mount the thread shows its end, and a

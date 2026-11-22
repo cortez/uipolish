@@ -409,8 +409,8 @@ export function TextMorph({ children, className }: { children: string; className
                 {g.char}
               </span>
             ))
-          : // Digits are tabular from the first paint, as they are once split,
-            // so the first change never shifts them.
+          : // Digits keep their own span from the first paint, as they do
+            // once split, so the first change never shifts them.
             runs(glyphs).map((run, i) =>
               run.digit ? (
                 <span key={i} className={styles.digits}>

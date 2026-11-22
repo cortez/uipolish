@@ -48,6 +48,13 @@ mkdirSync(join(out, "screens"), { recursive: true });
 // PRO_SCREENS=a,b limits a local build to those screens (working on one
 // while others are half-built); unset, every screen is in.
 const only = process.env.PRO_SCREENS?.split(",").map((n) => n.trim()).filter(Boolean);
+// Screens left out are removed from the copy too, so a type check never
+// reads a half-built one.
+if (only?.length) {
+  for (const d of readdirSync(join(out, "screens"), { withFileTypes: true })) {
+    if (d.isDirectory() && !only.includes(d.name)) rmSync(join(out, "screens", d.name), { recursive: true, force: true });
+  }
+}
 const names = readdirSync(join(out, "screens"), { withFileTypes: true })
   .filter((d) => d.isDirectory() && existsSync(join(out, "screens", d.name, `${d.name}.tsx`)))
   .filter((d) => !only?.length || only.includes(d.name))

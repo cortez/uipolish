@@ -131,7 +131,8 @@
   display: grid;
 }
 
-.leading svg {
+/* The item's icon only: an avatar or other mark here keeps its own size. */
+.leading > svg {
   width: var(--ui-icon-md);
   height: var(--ui-icon-md);
   stroke-width: var(--ui-icon-stroke);

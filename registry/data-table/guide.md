@@ -91,7 +91,7 @@ the sort and the validation pass rerun when it changes.
 | State | What you see | How |
 |---|---|---|
 | Active cell | A line just inside the cell, at once | `:focus-visible` on the cell; one cell is the tab stop |
-| Active row | The row a step darker while the grid has focus | `data-active` |
+| Active row | The row a step darker while moving through the grid with the keyboard; a click or tap on a row tints nothing, since rows aren't clickable | `data-active` with a `:focus-visible` cell |
 | Sorted column | Header label at full contrast, arrow shown | `aria-sort` on the header |
 | Sort hover | Header filled a step, an unsorted column previews its arrow at half strength | `@media (hover: hover)` |
 | Selected row | The quiet fill (`--ui-fill-solid`), opaque under the sticky column | `aria-selected` |

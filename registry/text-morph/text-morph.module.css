@@ -4,14 +4,11 @@
   white-space: pre;
 }
 
-/* Equal-width figures on the digits alone, so a digit that rolls never
-   changes the width. Never on the whole label: in some fonts the tabular
-   feature also widens the space, and every word gap would grow. */
-.digits,
-.glyph[data-digit],
-.ghost[data-digit] {
-  font-variant-numeric: tabular-nums;
-}
+/* Figures are the font's own, proportional ones, inherited from the
+   context: tabular figures give a narrow 1 the width of a 0 and space a
+   number out (1,267 grows 15%). A digit that rolls to a different width is
+   fine: the width animates with it. A context that needs columns to line
+   up (a table) sets tabular-nums itself, and it is inherited here. */
 
 /* The real label, for screen readers and find-in-page. */
 .label {

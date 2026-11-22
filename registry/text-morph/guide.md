@@ -27,8 +27,7 @@ Button uses it for string labels.
 
 1. Until the label first changes, it renders as plain text, kerned as the
    font intends, so a page of labels that never change carries no
-   per-letter boxes; only a run of digits gets a span, so figures are
-   tabular from the first paint and the first change doesn't shift them.
+   per-letter boxes, and figures are the font's own, proportional ones.
    Each letter's place is measured from the text, so the first morph starts
    from exactly where the letters were drawn.
 2. The string is split into graphemes (`Intl.Segmenter`, so emoji and accents
@@ -56,18 +55,18 @@ Button uses it for string labels.
    lands on the bounce: it passes its line by about a pixel and settles,
    like a counter's wheel clicking home. While digits
    roll, the row's block padding fades out with a mask, so a digit is whole
-   on the line and gone past it, like a wheel behind a window. The digits
-   alone are tabular (never the whole label, so letters and spaces keep the
-   font's own widths), so a roll never changes the width; a new place (9 → 10) rolls
-   in beside the others and the width follows.
+   on the line and gone past it, like a wheel behind a window. Figures keep
+   the font's own widths (tabular ones give a narrow 1 a 0's width and space
+   a number out), and the width follows a roll that changes it, as it does
+   when a new place (9 → 10) rolls in beside the others.
 7. **Paced.** A change that arrives within 200ms of the last one waits its
    turn, so the text changes at most five times a second and the latest
    value always lands, however fast and however long the changes keep
    coming. The accessible copy updates at once.
 
-Don't set `font-variant-numeric: tabular-nums` on an element around a
-`TextMorph`: it already sets it on the digits, and on the whole label some
-fonts widen the spaces too.
+Set `font-variant-numeric: tabular-nums` around a `TextMorph` only where
+figures must line up in a column (a table's numbers); it is inherited. A
+headline figure, a count or a price reads better with the font's own.
 
 This is the one number animator in the registry: Number input, Usage
 meter, Progress, Pagination, Badge counts, Tab counts and the Data table's

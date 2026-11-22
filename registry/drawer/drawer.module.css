@@ -10,9 +10,10 @@
 .backdrop,
 .drawer {
   /* A whole surface crossing the screen: the longest any transition runs
-     on the way in (380ms), the panel duration on the way out. */
+     on the way in (380ms). Out is quick (200ms) on a curve that starts at
+     full speed and has no long tail, so closing never feels like a wait. */
   --drawer-open: var(--ui-dur-move);
-  --drawer-close: var(--ui-dur-panel);
+  --drawer-close: var(--ui-dur-base);
 }
 
 .drawer {
@@ -76,7 +77,7 @@
 
 /* A flick hands over its speed: the faster the release, the shorter the exit. */
 .drawer[data-ending-style] {
-  transition: transform calc(var(--drawer-close) * var(--drawer-swipe-strength, 1)) var(--ui-ease-expand);
+  transition: transform calc(var(--drawer-close) * var(--drawer-swipe-strength, 1)) var(--ui-ease-color);
 }
 
 .drawer[data-size="sm"] {
@@ -163,6 +164,7 @@
 
 .backdrop[data-ending-style] {
   transition-duration: calc(var(--drawer-close) * var(--drawer-swipe-strength, 1));
+  transition-timing-function: var(--ui-ease-color);
 }
 
 @media (prefers-reduced-motion: reduce) {

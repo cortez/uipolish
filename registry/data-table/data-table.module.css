@@ -337,7 +337,10 @@
   --row-base: var(--data-table-selected);
 }
 
-.root[data-focused] .row[data-active] {
+/* The row under the active cell is tinted only while moving through the
+   table with the keyboard: a click or tap on a row that does nothing must
+   not light it up as if it did. */
+.root[data-focused]:has(:is(.cell, .headCell):focus-visible) .row[data-active] {
   --row-bg: color-mix(in oklch, var(--row-base), var(--ui-foreground) 4%);
 }
 
