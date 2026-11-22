@@ -31,3 +31,6 @@ export const CATALOG: { name: string; title: string; tagline: string }[] = [
   { name: "analytics", title: "Usage and cost", tagline: "Spend, tokens and latency by model and feature, a budget with alerts, and the costliest calls behind them." },
   { name: "settings", title: "Settings and billing", tagline: "Team and roles, usage-based billing with spend limits, API keys with scopes, and allowed models." },
 ];
+
+/** Polar's customer portal, where a buyer connects GitHub for repo access. */
+export const PRO_PORTAL = "https://polar.sh/ui-polish/portal";

@@ -11,6 +11,7 @@ import { SiteLayout } from "@/components/site-layout";
 import {
   CATALOG,
   PRO_OPEN,
+  PRO_PORTAL,
   PRO_PRICE,
   previewHref,
   proCheckout,
@@ -73,7 +74,7 @@ function cards(): Card[] {
 const INCLUDED = [
   "Every screen, now and as they’re added, with lifetime updates",
   "One license for your whole team: unlimited developers and projects, client work included",
-  "Each screen’s source, sample data and guide, in a private GitHub repo you’re invited to",
+  "Each screen’s source, sample data and guide, in a private GitHub repo you join with your GitHub account",
   "Built only from the free UI Polish components, so a screen is code you already know how to change",
 ];
 
@@ -83,8 +84,8 @@ const STEPS = [
     body: `${PRO_PRICE}, checkout by Polar. Your receipt and license key come by email.`,
   },
   {
-    title: "Get the repo",
-    body: "You’re invited to the private GitHub repo with every screen, and to every screen added later.",
+    title: "Connect GitHub",
+    body: "Sign in to Polar’s customer portal with the email you paid with and connect GitHub. You’re invited to the private repo with every screen, and every screen added later.",
   },
   {
     title: "Make it yours",
@@ -104,6 +105,10 @@ const FAQ = [
   {
     q: "What do I need to use a screen?",
     a: "A React app with the UI Polish components installed. Each screen lists the components it imports, and its guide says how to wire in your own data.",
+  },
+  {
+    q: "How do I get the screens after I buy?",
+    a: "Your license key comes by email. Then sign in to Polar’s customer portal (polar.sh/ui-polish/portal) with the email you paid with and connect your GitHub account, and you’re invited to the private repo.",
   },
   {
     q: "Do I get new screens?",
@@ -188,9 +193,18 @@ export default async function Page({
 
       {purchased && (
         <div className={styles.thanks}>
-          <Alert tone="success" title="Thanks for buying UI Polish Pro">
-            Your license key and an invite to the private GitHub repo are on
-            their way to the email you paid with.
+          <Alert
+            tone="success"
+            title="Thanks for buying UI Polish Pro"
+            actions={
+              <ButtonLink href={PRO_PORTAL} size="sm">
+                Connect GitHub
+              </ButtonLink>
+            }
+          >
+            Your license key is in your email. To get the screens, connect
+            GitHub in Polar’s customer portal and you’re invited to the
+            private repo. Sign in there with the email you paid with.
           </Alert>
         </div>
       )}
