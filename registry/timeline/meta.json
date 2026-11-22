@@ -3,7 +3,7 @@
   "title": "Timeline",
   "summary": "An activity feed grouped by day: who did what, when, on a thin rail of avatars and icons. New items slide in at the top while the rest move down on the move spring, and changed numbers roll.",
   "blurb": "An activity feed of who did what, grouped by day.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dependencies": [
     "avatar",
     "button",

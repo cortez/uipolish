@@ -1,7 +1,7 @@
 .root {
   --crumb-pad: 6px;
   --breadcrumbs-label-max: 20em;
-  --ui-icon-stroke: calc(var(--ui-icon-stroke-regular) * 16 / 14);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 
   min-width: 0;
   color: var(--ui-muted);

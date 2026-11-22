@@ -1,8 +1,11 @@
 # Icons
 
 One component, `<Icon name="…" />`, over a small table of 16px stroke icons:
-round caps and joins, `currentColor`, and a stroke that matches the weight of
-the text beside it (`--ui-icon-stroke`). Changing `name` turns one icon into the
+round caps and joins, `currentColor`, and a stroke that matches the stem of
+the text beside it at any size: the line is a fixed screen width taken from
+the text's own size and weight (`--ui-icon-stroke` × `--ui-icon-stem`), so a
+12px icon by 12px text, a 16px icon by a 14px label and a 20px icon by 16px
+text each draw their letters' line. Changing `name` turns one icon into the
 other: the ink on screen reshapes into the new icon, each stroke travelling
 to the stroke nearest it, so nothing fades out and nothing is redrawn. Any
 name can follow any other. A state is a name:
@@ -29,8 +32,8 @@ in a tile. Every chevron in the same role is the same size.
 
 ## When not to
 
-- Illustrations or icons larger than about 24px: the stroke is in grid units
-  and grows with the icon. Draw a separate set for large sizes.
+- Illustrations or icons larger than about 24px: the line keeps the text's
+  width, so a big icon reads thin. Draw a separate set for large sizes.
 - An icon whose motion has no cause. Nothing here loops or plays on mount.
 - Brand marks and file-type badges: those are images, not stroke icons.
 

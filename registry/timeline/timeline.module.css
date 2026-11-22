@@ -110,7 +110,7 @@
 .root[data-variant="compact"] .dot svg {
   width: var(--ui-icon-xs);
   height: var(--ui-icon-xs);
-  --ui-icon-stroke: calc(var(--ui-icon-stroke-regular) * 16 / 12);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .dot[data-tone="accent"] {

@@ -210,7 +210,7 @@
   width: var(--ui-icon-sm);
   height: var(--ui-icon-sm);
   margin-top: calc((var(--ui-leading-md) - 14px) / 2);
-  --ui-icon-stroke: calc(var(--ui-icon-stroke-regular) * 16 / 14);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }
 
 .error[data-shown] .errorText {

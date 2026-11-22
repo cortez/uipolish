@@ -215,14 +215,14 @@ button.head:focus-visible .mark {
 .glyph {
   width: var(--ui-icon-sm);
   height: var(--ui-icon-sm);
-  /* The line of a 16px icon, kept at 14px. */
-  --ui-icon-stroke: calc(var(--ui-icon-stroke-medium) * 16 / 14);
+  --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
 
+/* Its own 16-unit drawing at 14px: the line of a 16px icon, kept. */
 .glyph {
   fill: none;
   stroke: currentColor;
-  stroke-width: var(--ui-icon-stroke);
+  stroke-width: calc(var(--ui-icon-stroke) * 16 / 14);
   stroke-linecap: round;
 }
 

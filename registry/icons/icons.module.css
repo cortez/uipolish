@@ -5,9 +5,17 @@
   overflow: visible;
   fill: none;
   stroke: currentColor;
-  stroke-width: var(--ui-icon-stroke, 1.5);
+  /* The line matches the stem of the text beside it, at any icon size: a
+     fixed screen width (non-scaling, below) taken from the text's own size
+     and weight, so a 12px icon by 12px text, a 16px one by a 15px label and
+     a 20px one by 16px text each draw the letters' line. */
+  stroke-width: calc(var(--ui-icon-stroke, 1.25) * var(--ui-icon-stem));
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.icon :is(path, circle, line, polyline, rect) {
+  vector-effect: non-scaling-stroke;
 }
 
 /* A chevron is one size everywhere (--ui-icon-chevron), a step under the
@@ -64,7 +72,7 @@
 }
 
 .block {
-  stroke-width: 4;
+  stroke-width: calc(var(--ui-icon-stroke, 1.25) * var(--ui-icon-stem) * 3.2);
 }
 
 /* Solid: filled, with a thin stroke in the same color rounding its corners. */
@@ -72,7 +80,7 @@
    outline has closed: filled sooner, an open outline shows as a gray wedge. */
 .solid {
   fill-opacity: 1;
-  stroke-width: var(--ui-icon-stroke-medium);
+  stroke-width: calc(var(--ui-icon-stroke-medium) * var(--ui-icon-stem));
   transition:
     fill-opacity calc(var(--ui-dur-glide) * 0.4) var(--ui-ease-color) calc(var(--ui-dur-glide) * 0.35),
     stroke-width var(--ui-dur-glide) var(--ui-ease-glide),
@@ -101,7 +109,7 @@
 /* Mask copy of a cut stroke: gaps the other strokes on both sides of it. */
 .cut {
   stroke: black;
-  stroke-width: calc(var(--ui-icon-stroke, 1.5) * 3);
+  stroke-width: calc(var(--ui-icon-stroke, 1.25) * var(--ui-icon-stem) * 3);
 }
 
 /* ---------- Parent hover ---------- */

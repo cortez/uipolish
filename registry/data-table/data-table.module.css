@@ -449,7 +449,7 @@
 }
 
 .issueIcon {
-  --ui-icon-stroke: calc(var(--ui-icon-stroke-regular) * 16 / 14);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
   width: var(--ui-icon-sm);
   height: var(--ui-icon-sm);
   margin-inline-start: auto;
@@ -480,7 +480,7 @@
 }
 
 .footerIcon {
-  --ui-icon-stroke: calc(var(--ui-icon-stroke-regular) * 16 / 14);
+  --ui-icon-stroke: var(--ui-icon-stroke-regular);
   flex-shrink: 0;
   width: var(--ui-icon-sm);
   height: var(--ui-icon-sm);
