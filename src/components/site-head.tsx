@@ -19,7 +19,7 @@ export function SiteHead({ components }: { components: Item[] }) {
       <nav className={styles.actions} aria-label="Site">
         <SiteSearch components={components} />
         {SCREENS.copper && (
-          <ButtonLink as={Link} href="/screens" variant="ghost" size="sm">
+          <ButtonLink as={Link} href="/pro" variant="ghost" size="sm">
             Pro
           </ButtonLink>
         )}

@@ -27,7 +27,7 @@ export const metadata: Metadata = pageMetadata({
   description: PRO_OPEN
     ? `Whole app screens built only from UI Polish components, every state designed and working. ${PRO_PRICE} once for your whole team, every screen now and as they're added.`
     : "Whole app screens built only from UI Polish components, every state designed and working, on sample data you can try live.",
-  path: "/screens",
+  path: "/pro",
 });
 
 /** Screens with a picture of themselves in public/screens/<name>-{light,dark}.webp. */

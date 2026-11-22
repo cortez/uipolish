@@ -95,13 +95,13 @@ when it opens, so a reflexive Enter does nothing harmful.
 
 - **Header.** The title is the display size (20/28, title weight,
   `--ui-tracking-heading`), the description Body in muted, 4px under it.
-  The top padding is a step short of the sides (28 against 32), since the
+  The top padding is a step short of the sides (20 against 24), since the
   title's line height already puts air above its capitals.
-- **Body.** The sides' padding, 32px (24px on phones), and scrolls on its
+- **Body.** The sides' padding, 24px (16px on phones), and scrolls on its
   own when tall.
 - **Footer.** A hairline above it. Buttons are the 40px control size and sit
   16px from the panel's edges, concentric with its corner: the radius is
-  16px plus half a button. Text in the footer (a step count, an error, the
+  16px plus the button's radius. Text in the footer (a step count, an error, the
   guard's question) lines up with the content's edge instead. On phones the
   actions share the row in halves while both labels fit and stack full
   width, main action last, when one doesn't.

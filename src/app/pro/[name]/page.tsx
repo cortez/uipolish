@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { name } = await params;
   const info = SCREEN_INFO.find((s) => s.name === name);
   if (!info) return {};
-  return pageMetadata({ title: info.title, description: info.summary, path: `/screens/${name}` });
+  return pageMetadata({ title: info.title, description: info.summary, path: `/pro/${name}` });
 }
 
 /** A UI Polish Pro screen's live preview, filling the window like /example. */

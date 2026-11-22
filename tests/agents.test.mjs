@@ -259,7 +259,7 @@ describe("MCP", () => {
     assert.match(list, /- button, v/);
   });
 
-  test("get_screen needs a license key and points to /screens; a bad key never gets files", async () => {
+  test("get_screen needs a license key and points to /pro; a bad key never gets files", async () => {
     const call = async (headers = {}) =>
       (
         await (
@@ -273,7 +273,7 @@ describe("MCP", () => {
     const none = await call();
     assert.equal(none.isError, true);
     assert.match(none.content[0].text, /license key/);
-    assert.match(none.content[0].text, /uipolish\.com\/screens/);
+    assert.match(none.content[0].text, /uipolish\.com\/pro/);
     const bad = await call({ authorization: "Bearer UIPOLISH-NOT-A-REAL-KEY" });
     assert.equal(bad.isError, true);
     assert.doesNotMatch(bad.content[0].text, /UIPOLISH-NOT-A-REAL-KEY/);

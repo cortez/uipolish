@@ -12,9 +12,9 @@ export function ProPreview({ title, children }: { title: string; children: React
   return (
     <div className={styles.page}>
       <header className={styles.bar}>
-        <ButtonLink as={Link} href="/screens" variant="ghost" size="sm" className={styles.back} aria-label="All screens">
+        <ButtonLink as={Link} href="/pro" variant="ghost" size="sm" className={styles.back} aria-label="UI Polish Pro">
           <Icon name="chevron-left" />
-          <span className={styles.backLabel}>Screens</span>
+          <span className={styles.backLabel}>Pro</span>
         </ButtonLink>
         <p className={styles.what}>
           <span className={styles.name}>{title}</span>
@@ -29,7 +29,7 @@ export function ProPreview({ title, children }: { title: string; children: React
             <span className={styles.once}>Part of UI Polish Pro</span>
           )}
           {!PRO_OPEN ? (
-            <ButtonLink as={Link} href="/screens" variant="secondary" size="sm">
+            <ButtonLink as={Link} href="/pro" variant="secondary" size="sm">
               About Pro
             </ButtonLink>
           ) : checkout ? (
@@ -37,7 +37,7 @@ export function ProPreview({ title, children }: { title: string; children: React
               Buy UI Polish Pro
             </ButtonLink>
           ) : (
-            <ButtonLink as={Link} href="/screens#buy" size="sm">
+            <ButtonLink as={Link} href="/pro#buy" size="sm">
               Get UI Polish Pro
             </ButtonLink>
           )}

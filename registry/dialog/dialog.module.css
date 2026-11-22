@@ -107,7 +107,7 @@
 
 /* The radius is --corner plus the control radius, so footer buttons stay concentric with the corner. */
 .dialog {
-  --dialog-pad: var(--ui-space-6);
+  --dialog-pad: var(--ui-space-5);
   --corner: var(--ui-space-4);
   --dialog-radius: calc(var(--corner) + min(var(--ui-radius-control), var(--ui-control-md) / 2));
   border-radius: var(--dialog-radius);
@@ -364,7 +364,7 @@
 
 @media (max-width: 480px) {
   .dialog {
-    --dialog-pad: var(--ui-space-5);
+    --dialog-pad: var(--ui-space-4);
   }
   .actions {
     flex: 1 1 100%;

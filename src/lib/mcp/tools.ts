@@ -17,7 +17,7 @@ import { checkLicense } from "@/lib/license";
 import { SCREEN_FILES } from "@pro/files";
 import { SCREEN_INFO } from "@pro/index";
 
-const PRO_URL = "https://uipolish.com/screens";
+const PRO_URL = "https://uipolish.com/pro";
 
 export const SERVER_INSTRUCTIONS = `UI Polish is a set of components and design rules where every state, transition and edge case is worked out.
 

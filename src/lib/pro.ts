@@ -13,8 +13,8 @@ export const PRO_PRICE = "$299";
 /** The Polar checkout, from PRO_CHECKOUT_URL, once Pro is open. */
 export const proCheckout = () => (PRO_OPEN ? process.env.PRO_CHECKOUT_URL?.trim() || null : null);
 
-/** Where each screen's live preview opens. Copper predates /screens/<name>. */
-export const previewHref = (name: string) => (name === "copper" ? "/example" : `/screens/${name}`);
+/** Where each screen's live preview opens. Copper predates /pro/<name>. */
+export const previewHref = (name: string) => (name === "copper" ? "/example" : `/pro/${name}`);
 
 /** The catalog in the order /screens shows it, with a one-line pitch each.
  *  Only screens in the build show; one missing here goes at the end with

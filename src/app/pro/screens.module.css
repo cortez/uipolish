@@ -29,6 +29,7 @@
 
 .fine {
   margin: 0;
+  overflow-wrap: anywhere;
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
   line-height: var(--ui-leading-sm);
@@ -344,10 +345,17 @@
 
 /* ---------- In your AI tool ---------- */
 
+/* One column that can shrink below a command's length: a command scrolls
+   inside its own box instead of pushing the page sideways. */
 .mcp {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--ui-space-3);
   max-width: 720px;
+}
+
+.mcp > * {
+  min-width: 0;
 }
 
 .mcpLabel {

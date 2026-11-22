@@ -29,6 +29,10 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/components", destination: "/", permanent: true },
+      // UI Polish Pro lives at /pro; /screens was its first address (and
+      // Polar's success URL may still point there, with ?purchased=1).
+      { source: "/screens", destination: "/pro", permanent: true },
+      { source: "/screens/:name", destination: "/pro/:name", permanent: true },
       { source: "/components/:name", destination: "/docs/:name", permanent: true },
       { source: "/docs/installation", destination: "/#get-started", permanent: true },
       // UI Polish is components: the screens, apps and feature-sized pieces
