@@ -9,6 +9,7 @@ import { SCREEN_INFO } from "@pro/index";
 export const PRO_OPEN = SCREEN_INFO.length >= 6;
 
 export const PRO_PRICE = "$299";
+export const SCREEN_COUNT = SCREEN_INFO.length;
 
 /** The Polar checkout, from PRO_CHECKOUT_URL, once Pro is open. */
 export const proCheckout = () => (PRO_OPEN ? process.env.PRO_CHECKOUT_URL?.trim() || null : null);

@@ -25,8 +25,8 @@ import styles from "./screens.module.css";
 export const metadata: Metadata = pageMetadata({
   title: "UI Polish Pro: app screens",
   description: PRO_OPEN
-    ? `Whole app screens built only from UI Polish components, every state designed and working. ${PRO_PRICE} once for your whole team, every screen now and as they're added.`
-    : "Whole app screens built only from UI Polish components, every state designed and working, on sample data you can try live.",
+    ? `${SCREEN_INFO.length} app screens for AI products, built from UI Polish components with every state done. ${PRO_PRICE}, paid once, with no seat limits and new screens included.`
+    : "App screens for AI products, built from UI Polish components with every state done. Try each one live on sample data.",
   path: "/pro",
 });
 
@@ -74,24 +74,24 @@ function cards(): Card[] {
 }
 
 const INCLUDED = [
-  "Every screen, now and as they’re added, with lifetime updates",
-  "One license for your whole team: unlimited developers and projects, client work included",
-  "Each screen’s source, sample data and guide, in a private GitHub repo you join with your GitHub account",
-  "Built only from the free UI Polish components, so a screen is code you already know how to change",
+  `All ${SCREEN_INFO.length} screens, plus every screen and update added later`,
+  "No seat limits: use it across your company and on client projects",
+  "Source, sample data and a written guide for each screen, in a private GitHub repo",
+  "Made only from the free UI Polish components, so there’s nothing new to learn",
 ];
 
 const STEPS = [
   {
-    title: "Buy once",
-    body: `${PRO_PRICE}, checkout by Polar. Your receipt and license key come by email.`,
+    title: "Buy",
+    body: `Pay ${PRO_PRICE} through Polar. Your receipt and license key arrive by email.`,
   },
   {
-    title: "Connect GitHub",
-    body: "Sign in to Polar’s customer portal with the email you paid with and connect GitHub. You’re invited to the private repo with every screen, and every screen added later.",
+    title: "Get the repo",
+    body: "Sign in to Polar’s customer portal with the same email and connect GitHub. You’ll get an invite to the private repo.",
   },
   {
-    title: "Make it yours",
-    body: "Copy a screen into your app, swap the sample data for yours, and change anything: it’s your code.",
+    title: "Copy a screen",
+    body: "Copy a screen into your app, replace the sample data with yours, and edit whatever you like.",
   },
 ];
 
@@ -114,8 +114,8 @@ const FAQ = [
     a: "Yes. Every UI Polish component is free and MIT licensed, and stays that way. Pro is the finished screens built from them.",
   },
   {
-    q: "Who does one license cover?",
-    a: "Your whole team: every developer, every project, including work you build for clients. You can’t resell or redistribute the screens themselves as a kit or template.",
+    q: "How many people can use it?",
+    a: "Anyone at your company, on any number of projects, client work included. What you can’t do is resell or share the screens themselves as a kit or template.",
   },
   {
     q: "What do I need to use a screen?",
@@ -123,11 +123,11 @@ const FAQ = [
   },
   {
     q: "How do I get the screens after I buy?",
-    a: "Your license key comes by email. Then sign in to Polar’s customer portal (polar.sh/ui-polish/portal) with the email you paid with and connect your GitHub account, and you’re invited to the private repo. Your key also unlocks the screens in your AI tool over MCP.",
+    a: "Your license key arrives by email. Sign in to Polar’s customer portal (polar.sh/ui-polish/portal) with the email you paid with and connect GitHub, and you’ll get an invite to the private repo. The same key works in your AI tool over MCP.",
   },
   {
     q: "Do I get new screens?",
-    a: "Yes. Every screen added later is yours at no extra cost, along with updates to the ones you have.",
+    a: "Yes, at no extra cost, along with updates to the ones you have.",
   },
 ];
 
@@ -160,12 +160,12 @@ export default async function Page({
       <header className={`${site.intro} ${styles.hero}`}>
         <p className={styles.eyebrow}>UI Polish Pro</p>
         <h1 className={site.title}>
-          Whole app screens, built from UI Polish and ready to make yours.
+          App screens for AI products, built with UI Polish.
         </h1>
         <p className={`${site.text} ${styles.lede}`}>
-          Start from a finished screen instead of a blank page: every state
-          designed, every interaction working, on the free components you
-          already use.
+          Chat, agent runs, approvals, evals, billing and more. Each screen
+          handles its loading, empty and error states, and it’s plain React
+          on the free components, so you can change anything.
         </p>
         {PRO_OPEN ? (
           <>
@@ -181,7 +181,7 @@ export default async function Page({
               </ButtonLink>
             </div>
             <p className={styles.fine}>
-              One-time payment · Your whole team · Every future screen
+              Pay once. No seat limits. New screens are included.
             </p>
           </>
         ) : (
@@ -200,7 +200,7 @@ export default async function Page({
               </ButtonLink>
             </div>
             <p className={styles.fine}>
-              One price for your whole team · Every future screen
+              No seat limits. New screens are included.
             </p>
           </>
         )}
@@ -217,10 +217,10 @@ export default async function Page({
               </ButtonLink>
             }
           >
-            Your license key is in your email. To get the screens, connect
-            GitHub in Polar’s customer portal and you’re invited to the
-            private repo. Sign in there with the email you paid with. Your key
-            also unlocks the screens{" "}
+            Your license key is in your email. To get the code, sign in to
+            Polar’s customer portal with the email you paid with and connect
+            GitHub. You’ll get an invite to the private repo. Your key also
+            works{" "}
             <a href="#ai-tool">in your AI tool</a>.
           </Alert>
         </div>
@@ -336,10 +336,10 @@ export default async function Page({
             </h2>
             <div className={styles.mcp}>
               <p className={site.text}>
-                Add your license key to the UI Polish MCP server, then ask for
-                a screen by name, like “add the inbox screen”. Your agent
-                writes its files into your project. Swap in the key from your
-                purchase email.
+                Add the UI Polish MCP server with your license key, then ask
+                your agent for a screen by name, like “add the inbox screen”.
+                It writes the files into your project. Replace the placeholder
+                key below with yours.
               </p>
               {MCP_SETUPS.map((setup) => (
                 <div key={setup.label} className={styles.mcpSetup}>
@@ -351,8 +351,9 @@ export default async function Page({
                 </div>
               ))}
               <p className={styles.fine}>
-                Other tools: add {MCP_URL} with the header Authorization:
-                Bearer and your key. The free components work with no key.
+                Other tools: point them at {MCP_URL} with your key in an
+                Authorization: Bearer header. The free components don’t need a
+                key.
               </p>
             </div>
           </section>
@@ -363,12 +364,12 @@ export default async function Page({
             aria-labelledby="buy-title"
           >
             <h2 id="buy-title" className={site.heading}>
-              One price
+              Pricing
             </h2>
             <div className={styles.price}>
               <p className={styles.amount}>
                 {PRO_PRICE}
-                <span className={styles.per}>one-time</span>
+                <span className={styles.per}>paid once</span>
               </p>
               <ul className={styles.included}>
                 {INCLUDED.map((line) => (
