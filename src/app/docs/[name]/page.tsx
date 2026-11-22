@@ -69,7 +69,7 @@ export default async function ComponentPage({
   return (
     <>
       <JsonLd nodes={ld} />
-      <header className={`${site.intro} ${styles.column}`}>
+      <header className={site.intro}>
         <h1 className={site.title}>{meta.title}</h1>
         <p className={site.text}>{meta.summary}</p>
         <div className={site.actions}>
@@ -81,7 +81,7 @@ export default async function ComponentPage({
         <LivePreview name={name} />
       </div>
 
-      <section className={`${site.section} ${styles.column}`} aria-labelledby="setup">
+      <section className={`${site.section} ${site.split}`} aria-labelledby="setup">
         <h2 id="setup" className={site.heading}>
           Installation
         </h2>
@@ -141,7 +141,7 @@ export default async function ComponentPage({
         )}
       </section>
 
-      <article className={`${styles.prose} ${styles.column}`}>
+      <article className={styles.prose}>
         <Markdown source={guide} skipTitle />
       </article>
 

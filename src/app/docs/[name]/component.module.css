@@ -1,15 +1,7 @@
-/* The reading column: the intro, setup and guide sit in one 720px column
-   centered on the page, under the demo, which keeps the page's full width
-   (a table or a split view needs the room). */
-.column {
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 720px;
-  margin-inline: auto;
-}
-
-/* Blocks 16 apart, code and tables 32, sections 64 and subsections 48
-   (margins collapse). */
+/* Blocks 24 apart, code and tables 48, sections 96 and subsections 64
+   (margins collapse). On a wide screen the guide is two columns: each
+   section's heading on the left, its content in a 720px column on the
+   right; see the end of this file. */
 .prose {
   max-width: 720px;
   padding-top: var(--ui-space-8);
@@ -122,4 +114,36 @@
 .prose a {
   color: inherit;
   text-underline-offset: 3px;
+}
+
+/* Two columns on a wide screen, as the page's other sections: an h2 sits
+   on the left, level with the first block of its section, and everything
+   else runs down the right. Grid items' margins don't collapse, so the
+   space above a heading is the gap less the 24px the block before it
+   already keeps under itself. */
+@media (min-width: 960px) {
+  .prose {
+    display: grid;
+    grid-template-columns: minmax(160px, 1fr) minmax(0, 720px);
+    column-gap: var(--ui-space-7);
+    align-items: start;
+    max-width: none;
+  }
+  .prose > * {
+    grid-column: 2;
+  }
+  .prose > h2 {
+    grid-column: 1;
+  }
+  .prose > h2,
+  .prose > h2 + * {
+    margin-top: calc(var(--ui-space-8) + var(--ui-space-6) - var(--ui-space-5));
+  }
+  .prose > h2:first-child,
+  .prose > h2:first-child + * {
+    margin-top: 0;
+  }
+  .prose > :is(h3, h4) {
+    margin-top: calc(var(--ui-space-8) - var(--ui-space-5));
+  }
 }

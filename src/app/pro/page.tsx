@@ -309,7 +309,7 @@ export default async function Page({
 
       {PRO_OPEN && (
         <>
-          <section className={site.section} aria-labelledby="how-title">
+          <section className={`${site.section} ${site.split}`} aria-labelledby="how-title">
             <h2 id="how-title" className={site.heading}>
               How it works
             </h2>
@@ -328,7 +328,7 @@ export default async function Page({
 
           <section
             id="ai-tool"
-            className={site.section}
+            className={`${site.section} ${site.split}`}
             aria-labelledby="ai-tool-title"
           >
             <h2 id="ai-tool-title" className={site.heading}>
@@ -360,7 +360,7 @@ export default async function Page({
 
           <section
             id="buy"
-            className={site.section}
+            className={`${site.section} ${site.split}`}
             aria-labelledby="buy-title"
           >
             <h2 id="buy-title" className={site.heading}>
@@ -387,7 +387,7 @@ export default async function Page({
         </>
       )}
 
-      <section className={site.section} aria-labelledby="faq-title">
+      <section className={`${site.section} ${site.split}`} aria-labelledby="faq-title">
         <h2 id="faq-title" className={site.heading}>
           Questions
         </h2>
