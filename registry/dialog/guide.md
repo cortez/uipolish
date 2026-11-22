@@ -97,7 +97,7 @@ when it opens, so a reflexive Enter does nothing harmful.
   `--ui-tracking-heading`), the description Body in muted, 4px under it.
   The top padding is a step short of the sides (20 against 24), since the
   title's line height already puts air above its capitals.
-- **Body.** The sides' padding, 24px (16px on phones), and scrolls on its
+- **Body.** The sides' padding, 24px, on phones too, and scrolls on its
   own when tall.
 - **Footer.** A hairline above it. Buttons are the 40px control size and sit
   16px from the panel's edges, concentric with its corner: the radius is

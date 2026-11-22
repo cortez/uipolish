@@ -363,9 +363,6 @@
 }
 
 @media (max-width: 480px) {
-  .dialog {
-    --dialog-pad: var(--ui-space-4);
-  }
   .actions {
     flex: 1 1 100%;
   }
