@@ -42,7 +42,7 @@ export default async function Home() {
         </h2>
         {/* The first two rows of a wide screen come with the page; a phone
             shows the first twelve and a button for the rest. */}
-        <Catalog items={all.sort(byTitle).map(item)} eager={6} phoneLimit={12} />
+        <Catalog items={all.sort(byTitle).map(item)} eager={6} />
       </section>
     </SiteLayout>
   );

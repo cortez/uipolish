@@ -109,20 +109,3 @@
   outline: var(--ui-ring-focus);
   outline-offset: 2px;
 }
-
-/* On a phone the list stops after the first cards, with a button for the
-   rest; from two columns up, everything shows and the button doesn't. */
-.more {
-  display: none;
-}
-
-@media (max-width: 639px) {
-  .grid[data-fold] > li[data-past-fold] {
-    display: none;
-  }
-  .more {
-    display: flex;
-    justify-content: center;
-    margin-top: var(--ui-space-6);
-  }
-}
