@@ -54,7 +54,7 @@ moves. Every row is one height in every state.
 | `description` | Smaller text under the title; wraps like the title. Read as the row's description. For a disabled row, say why here |
 | `trailing` | A value, badge or control after the text. Plain text here is read after the description. A control here takes its own clicks over a row link: its outermost element is lifted above the link, so a switch, menu or button keeps its own layout inside |
 | `actions` | Secondary actions, usually `ListAction`s. Shown on hover and focus, always on touch |
-| `chevron` | A chevron at the end, for rows that open something deeper. Nudges 2px on hover and focus |
+| `chevron` | A chevron at the end, for rows that open something deeper. It stays still: the row's fill answers hover |
 | `href`, `target`, `rel`, `as` | Makes the row a link. `as` takes your router's link component |
 | `onClick` | Makes the row a button (when there's no `href`). On a link row it's passed to the link |
 | `current` | `aria-current` on the row's link or button: `page` for links, `true` otherwise, or the value you pass |
@@ -68,7 +68,7 @@ name, "Remove Maya Chen", not "Remove") and every `<button>` prop.
 | State | What you see | How |
 |---|---|---|
 | Rest | Rows on the surface, hairlines between them from the text to the end | |
-| Hover | The row fills one step; the hairlines above and below it step aside; actions fade in; the chevron nudges 2px toward the end | `@media (hover: hover)`, link and button rows only |
+| Hover | The row fills one step; the hairlines above and below it step aside; actions fade in; nothing moves | `@media (hover: hover)`, link and button rows only |
 | Press | The fill goes a step darker in 80ms and shrinks to 0.985, the text stays put; release eases back | `:active` on the row's link or button, not on its actions |
 | Focus | A line just inside the row's edge, around the whole row; actions show | `:focus-visible` on the link or button |
 | Current | A stronger fill, held; its hairlines step aside | `current` → `aria-current` |
@@ -106,7 +106,6 @@ padding.
 | Press release (scale) | `--ui-dur-snap` | `--ui-ease-snap` |
 | Separators stepping aside | `--ui-dur-instant` | `--ui-ease-color` |
 | Actions fading in and out | `--ui-dur-instant` | `--ui-ease-color` |
-| Chevron nudge | `--ui-dur-snap` | `--ui-ease-snap` |
 
 Under `prefers-reduced-motion: reduce` the press doesn't shrink and the
 chevron doesn't move; colors and fades stay, as they're feedback.

@@ -117,38 +117,8 @@
   stroke-width: calc(var(--ui-icon-stroke, 1.25) * var(--ui-icon-stem) * 3);
 }
 
-/* ---------- Parent hover ---------- */
-
-@media (hover: hover) {
-  :is(button, a, [role="button"], [role="menuitem"]):hover:not(:disabled, [aria-disabled="true"]) .lid {
-    translate: 0 -1px;
-  }
-  :is(button, a, [role="button"], [role="menuitem"]):hover:not(:disabled, [aria-disabled="true"]) .out {
-    translate: 1px -1px;
-  }
-  :is(button, a, [role="button"], [role="menuitem"]):hover:not(:disabled, [aria-disabled="true"]) .drop {
-    translate: 0 1px;
-  }
-  :is(button, a, [role="button"], [role="menuitem"]):hover:not(:disabled, [aria-disabled="true"]) .forward {
-    translate: 1px 0;
-  }
-}
-
-:is(button, a, [role="button"], [role="menuitem"]):focus-visible .lid {
-  translate: 0 -1px;
-}
-
-:is(button, a, [role="button"], [role="menuitem"]):focus-visible .out {
-  translate: 1px -1px;
-}
-
-:is(button, a, [role="button"], [role="menuitem"]):focus-visible .drop {
-  translate: 0 1px;
-}
-
-:is(button, a, [role="button"], [role="menuitem"]):focus-visible .forward {
-  translate: 1px 0;
-}
+/* Nothing nudges on hover or focus: an icon stays where it is drawn, and
+   the control around it answers with its fill. */
 
 @media (prefers-reduced-motion: reduce) {
   .strand,

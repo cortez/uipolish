@@ -176,7 +176,6 @@
   flex-shrink: 0;
   margin-inline-end: -4px;
   color: var(--ui-subtle);
-  transition: translate var(--ui-dur-snap) var(--ui-ease-snap);
 }
 
 :is([dir="rtl"]) .chevron {
@@ -186,12 +185,6 @@
 @media (hover: hover) {
   .row[data-interactive]:hover {
     --row-fill: var(--ui-fill);
-  }
-  .row[data-interactive]:hover .chevron {
-    translate: 2px 0;
-  }
-  :is([dir="rtl"]) .row[data-interactive]:hover .chevron {
-    translate: -2px 0;
   }
   .row[data-interactive]:hover .main,
   .row[data-interactive]:hover + .row .main {
@@ -221,14 +214,6 @@
 .row:has(.primary:focus-visible) {
   outline: var(--ui-ring-focus);
   outline-offset: var(--ui-ring-offset);
-}
-
-.row[data-interactive]:has(.primary:focus-visible) .chevron {
-  translate: 2px 0;
-}
-
-:is([dir="rtl"]) .row[data-interactive]:has(.primary:focus-visible) .chevron {
-  translate: -2px 0;
 }
 
 .row[data-disabled] :is(.leading, .title, .trailing, .chevron) {
@@ -266,10 +251,4 @@
     transition: none;
   }
   /* The hover and focus nudges, in either direction, undone. */
-  .row[data-interactive]:hover .chevron,
-  .row[data-interactive]:has(.primary:focus-visible) .chevron,
-  :is([dir="rtl"]) .row[data-interactive]:hover .chevron,
-  :is([dir="rtl"]) .row[data-interactive]:has(.primary:focus-visible) .chevron {
-    translate: none;
-  }
 }

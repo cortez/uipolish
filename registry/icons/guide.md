@@ -51,7 +51,7 @@ in a tile. Every chevron in the same role is the same size.
 | `info`, `alert`, `check-circle` | ring, stem, dot (tick) | One ring that stays still; the stem and dot change ends between `info` and `alert`, and reshape into the tick for `check-circle`. `warning` is its own triangle. |
 | `thumbs-up`, `thumbs-down`, `pin` | hand, cuff; head, point | Down is up turned half round, so a flip turns the hand over. A pressed rating fills: set `--icon-fill: 1` on the icon or its control. |
 | `diff-added`, `diff-modified`, `diff-removed`, `diff-renamed` | frame, bar (+ stem, dot, head) | One rounded square that stays still; the mark inside reshapes. |
-| `more`, `grip`, `pencil`, `sidebar`, `panel`, `search`, `link`, `download`, `upload`, `trash`, `external`, `file`, `retry`, `calendar`, `home`, `compose`, `settings`, `help`, `clock`, `share`, `folder`, `paperclip`, `inbox`, `user`, `snooze`, `sparkle`, `tag`, `book`, `at`, `list`, `terminal`, `branch`, `gauge` | | Everyday and app-frame icons. Each still turns into any other when its name changes. `trash`, `download`, `upload`, `share`, `external` and `arrow-right` move 1px while the control around them is hovered or keyboard-focused. |
+| `more`, `grip`, `pencil`, `sidebar`, `panel`, `search`, `link`, `download`, `upload`, `trash`, `external`, `file`, `retry`, `calendar`, `home`, `compose`, `settings`, `help`, `clock`, `share`, `folder`, `paperclip`, `inbox`, `user`, `snooze`, `sparkle`, `tag`, `book`, `at`, `list`, `terminal`, `branch`, `gauge` | | Everyday and app-frame icons. Each still turns into any other when its name changes. |
 
 ## How it works
 
@@ -98,10 +98,9 @@ in a tile. Every chevron in the same role is the same size.
   line's own weight it's a speck you can barely find.
 - **Filling an outline.** `--icon-fill: 1` on the icon or a parent fills
   every closed outline in the text color (a pressed thumb).
-- **Parent hover, no JS.** The 1px nudges react to the nearest `button`, `a`,
-  `[role="button"]` or `[role="menuitem"]` being hovered (behind
-  `@media (hover: hover)`) or keyboard-focused, and stay still when it's
-  disabled.
+- **Still on hover.** An icon never moves when its control is hovered or
+  focused; the control answers with its fill. Icons move only when their
+  name changes.
 
 ## Motion
 
@@ -113,7 +112,6 @@ in a tile. Every chevron in the same role is the same size.
 | A line fills into a solid | 40% of the glide, after 35% of it | `--ui-ease-color` |
 | A solid empties into a line | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | The strike draws on / retracts | `--ui-dur-base` (200ms) / `--ui-dur-fast` (160ms) | `--ui-ease-draw` / `--ui-ease-exit` |
-| Hover nudges (1px) | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 
 Every point moves on the same glide, so strokes that meet end to end stay
 joined all the way, and the glide passes its mark by under a pixel, so a

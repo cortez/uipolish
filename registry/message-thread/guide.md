@@ -141,7 +141,6 @@ pokes out past its rounded corners as it scrolls by.
 | Sent message in: fade and 4px rise | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |
 | "Jump to latest" in: fade, 4px rise | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |
 | "Jump to latest" out | `--ui-dur-instant` (120ms) | `--ui-ease-exit` |
-| Jump arrow nudges 1px down on hover or focus (`Icon` arrow-right) | `--ui-dur-snap` (240ms) | `--ui-ease-snap` |
 | Actions reveal on hover | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Copy outline runs into a check (`Icon` copy → check) | see the icon set's guide | |
 | "Copied" label | `--ui-dur-move` (380ms) via TextMorph | `--ui-ease-move` |

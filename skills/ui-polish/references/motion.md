@@ -130,14 +130,13 @@ controls when the pointer arrives.
   dim siblings instead of highlighting the target:
   `group-hover:opacity-50 hover:!opacity-100` — the group recedes, the
   hovered item holds.
-- The arrow nudge is the classic link affordance:
-  `group-hover:translate-x-0.5` on a trailing arrow icon, ~150–200ms,
-  `transform` only.
+- Nothing moves on hover, a trailing arrow or chevron included: no
+  nudge, no lift. The color change is the answer; movement under a pointer
+  that is only passing reads as the page twitching.
 - **Scale never moves more than 3%.** Anything from `0.97` to `1.03`, in any
   state: press, enter, exit, icon swaps, stacked layers (3% per layer). A
-  bigger scale reads as a toy. Images inside cards may go to `1.03` on hover,
-  `--ui-dur-panel` on `--ui-ease-enter`, inside `overflow: hidden`; never
-  scale text on hover.
+  bigger scale reads as a toy. Nothing scales on hover, an image in a card
+  included.
   One exception: a knob you hold (a slider's thumb) grows to `1.08` while
   pressed. It is 20px and under the finger, so 3% is under a pixel and
   can't be felt; the grow says "you have it" the way a drag lift does. It

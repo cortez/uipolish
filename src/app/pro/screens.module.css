@@ -108,13 +108,6 @@
   font-size: var(--ui-text-sm);
   white-space: nowrap;
   translate: -50% 0;
-  transition: translate var(--ui-dur-snap) var(--ui-ease-snap);
-}
-
-@media (hover: hover) {
-  .shot:hover .shotLabel {
-    translate: -50% -2px;
-  }
 }
 
 .shot:focus-visible {
@@ -301,10 +294,6 @@
 }
 
 @media (hover: hover) {
-  .tileLink:hover .thumb {
-    translate: 0 -2px;
-    box-shadow: var(--ui-shadow-raised);
-  }
 
   .tileLink:hover .open {
     color: var(--ui-foreground);
