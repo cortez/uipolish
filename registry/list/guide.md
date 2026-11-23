@@ -60,7 +60,7 @@ moves. Every row is one height in every state.
 | `current` | `aria-current` on the row's link or button: `page` for links, `true` otherwise, or the value you pass |
 | `disabled` | The row can't be opened. The description stays at full contrast |
 
-`ListAction` is a 32px square icon button (40px to hit on touch screens): `icon`, `label` (its accessible
+`ListAction` is a 32px icon button (40px to hit on touch screens): `icon`, `label` (its accessible
 name, "Remove Maya Chen", not "Remove") and every `<button>` prop.
 
 ## States

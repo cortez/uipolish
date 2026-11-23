@@ -150,7 +150,7 @@ type ListActionProps = Omit<ComponentProps<"button">, "children"> & {
   label: string;
 };
 
-/** A square icon button for a row's `actions`. */
+/** An icon button for a row's `actions`. */
 export function ListAction({ icon, label, className, type = "button", ...props }: ListActionProps) {
   return (
     <button

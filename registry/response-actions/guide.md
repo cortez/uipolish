@@ -30,7 +30,7 @@ place under the row.
 
 | State | What you see | How |
 |---|---|---|
-| Rest | Four muted 16px icons on small ghost `Button`s (32px square icon buttons) | `variant="ghost" size="sm"`, `--button-fg` set to muted |
+| Rest | Four muted 16px icons on small ghost `Button`s (32px icon buttons) | `variant="ghost" size="sm"`, `--button-fg` set to muted |
 | Hover | Icon darkens, a light fill (`--ui-fill`) appears | `@media (hover: hover)` |
 | Press | The fill darkens and shrinks to `--ui-scale-press` (0.985) at once; the icon never moves | `:active` on `::before` |
 | Copied | The front sheet's outline runs into a check; back to the sheets after 2s | `Icon name="check"` |

@@ -3,7 +3,7 @@
   "title": "Nav rail",
   "summary": "A compact app rail of icon items. One tooltip glides from item to item, easing to each label\u2019s width with the shortcut beside it, and a raised highlight glides to the current page.",
   "blurb": "A compact app rail of icons with one gliding tooltip.",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "dependencies": [
     "kbd",
     "text"

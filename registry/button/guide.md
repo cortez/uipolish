@@ -1,6 +1,6 @@
 # Button
 
-A rounded-rectangle button at the control radius (12px; 8px at `sm`). Hover changes color only. Press goes down in 80ms and springs
+A pill button at the control radius (`--ui-radius-control`, fully round). Hover changes color only. Press goes down in 80ms and springs
 back. A busy state keeps the button's width, and string labels morph in place
 when they change (Copy → Copied).
 
@@ -50,9 +50,10 @@ applies to it too:
 The same timing is exported as `useDelayedBusy(busy)` for busy text outside a
 button.
 
-**Icon buttons are square.** A button whose only child is one icon (an
+**Icon buttons are capsules.** A button whose only child is one icon (an
 `<svg>` or a component such as `Icon`) and that has an `aria-label` is drawn
-as wide as it is tall (40px, 32px at `sm`, 48px at `lg`), with no side
+`--ui-icon-button` (1.375) times as wide as it is tall (55 × 40px, 44 × 32px at `sm`,
+66 × 48px at `lg`; a theme sets it to 1 for squares), with no side
 padding so the icon sits dead center, and the same corners as every
 other button, so every button shares one shape. A
 button with an icon and text is an ordinary button, and so is one whose

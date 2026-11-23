@@ -125,7 +125,7 @@
   composes: inset from "../field/field.module.css";
   width: calc(var(--copy-height) - var(--shell-inset) * 2);
   height: calc(var(--copy-height) - var(--shell-inset) * 2);
-  border-radius: calc(var(--ui-radius-md) - var(--shell-inset));
+  border-radius: calc(var(--ui-radius-control) - var(--shell-inset));
 }
 
 .field[data-size="sm"] .value:not([data-mono]),

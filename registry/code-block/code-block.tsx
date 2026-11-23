@@ -147,7 +147,7 @@ export function CodeBlock({
         <div className={styles.actions}>
           <Button variant="ghost" size="sm" className={styles.action} onClick={handleCopy} aria-label={`Copy ${name} code`}>
             {/* A plain string: Button morphs it itself, and a lone element
-                child with an aria-label would draw a square icon-only button. */}
+                child with an aria-label would draw an icon-only button. */}
             {copy === "copied" ? "Copied" : copy === "failed" ? "Copy failed" : "Copy"}
           </Button>
           <span role="status" className={styles.srOnly}>

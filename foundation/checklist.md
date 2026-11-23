@@ -64,8 +64,8 @@ should be yes. Each check names the rule file that explains it.
     relationship (`--ui-pad-*`, `--ui-gap-*`), with gaps inside a group at
     most half the gap between groups? (spacing)
 22. Do nested radii follow inner = outer − gap, and is every radius on the
-    scale: one rounded-rectangle edge for everything you click or type in,
-    icon buttons square, pills only for things round by nature? (surfaces)
+    scale: one pill edge for everything you click or type in, icon buttons
+    capsules, rows in a menu concentric with their panel? (surfaces)
 23. Does it hold up in every theme the project ships, with no hardcoded white,
     black or light-only shadow? (surfaces)
 24. Are mobile basics covered: `100dvh` not `100vh`, safe-area insets on fixed

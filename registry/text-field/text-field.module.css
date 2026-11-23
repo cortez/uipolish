@@ -73,7 +73,7 @@
   /* 14px in, the same as a select's label, so stacked fields line up. */
   padding-inline: calc(var(--reveal-inset) + 10px);
   border: 0;
-  border-radius: var(--ui-radius-md);
+  border-radius: var(--ui-radius-control);
   background: var(--ui-surface);
   box-shadow: inset 0 0 0 var(--ui-hairline) color-mix(in oklch, var(--ui-border-strong), var(--ui-danger) var(--field-danger));
   color: var(--ui-foreground);
@@ -108,7 +108,7 @@
   width: var(--reveal-size);
   padding: 0;
   border: 0;
-  border-radius: calc(var(--ui-radius-md) - var(--reveal-inset));
+  border-radius: calc(var(--ui-radius-control) - var(--reveal-inset));
   background: transparent;
   color: var(--ui-muted);
   cursor: pointer;
