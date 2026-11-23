@@ -61,7 +61,7 @@
   top: calc(var(--marker) + var(--rail-gap));
   bottom: var(--rail-gap);
   width: var(--ui-hairline);
-  background: var(--ui-border-strong);
+  background: var(--ui-border);
 }
 
 /* The last of a day ends the rail; the next day's heading starts it again. */

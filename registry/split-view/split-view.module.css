@@ -133,7 +133,7 @@
 
 .line {
   position: absolute;
-  background: var(--ui-border-strong);
+  background: var(--ui-border);
   pointer-events: none;
   transition: background-color var(--ui-dur-instant) var(--ui-ease-color);
 }

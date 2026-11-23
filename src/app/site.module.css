@@ -84,8 +84,9 @@
   container-type: inline-size;
   padding: var(--ui-pad-section);
   border-radius: var(--ui-radius-lg);
-  background: var(--ui-surface);
-  box-shadow: var(--ui-shadow-resting);
+  /* Fill, no edge, as on the home page: the demo's own edges are the only
+     lines on it. */
+  background: var(--ui-fill);
 }
 
 @media (max-width: 640px) {

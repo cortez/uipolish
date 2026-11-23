@@ -242,7 +242,7 @@
   padding-inline-start: var(--ui-space-3);
   /* The rule on the start side: an inset hairline, the same weight as
      every edge (a 0.5px border rounds up to a full pixel). */
-  box-shadow: inset var(--ui-hairline) 0 0 var(--ui-border-strong);
+  box-shadow: inset var(--ui-hairline) 0 0 var(--ui-border);
   color: var(--ui-muted);
   font-size: var(--ui-text-sm);
   line-height: var(--ui-leading-prose);
@@ -250,7 +250,7 @@
 }
 
 :is([dir="rtl"]) .body {
-  box-shadow: inset calc(var(--ui-hairline) * -1) 0 0 var(--ui-border-strong);
+  box-shadow: inset calc(var(--ui-hairline) * -1) 0 0 var(--ui-border);
 }
 
 .body p {

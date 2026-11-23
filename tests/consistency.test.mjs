@@ -188,16 +188,18 @@ test("every allowlist entry still matches a file", () => {
   for (const a of ALLOW) assert.ok(files.includes(a.file), `${a.file} is in the allowlist but no longer exists`);
 });
 
-// One solid edge (surfaces.md, "One neutral edge for every line"): a
+// Solid edges (surfaces.md, "Two neutral edges, by job"): a
 // see-through edge came out darker over the page than over a card or a
 // field, so the same token drew two different lines.
-test("the edge token is one solid color", () => {
+test("the edge tokens are solid colors", () => {
   const tokens = readFileSync("foundation/tokens.css", "utf8");
-  const value = /--ui-border-strong:\s*([^;]+);/.exec(tokens)?.[1] ?? "";
-  assert.match(value, /^light-dark\(oklch\([\d.]+ 0 0\), oklch\([\d.]+ 0 0\)\)$/, `--ui-border-strong must be solid, got ${value}`);
-  for (const name of ["--ui-border", "--ui-border-subtle"]) {
-    assert.match(tokens, new RegExp(`${name}:\\s*var\\(--ui-border(-strong)?\\);`), `${name} must alias the one edge`);
+  // Two tiers (surfaces.md): the clear edge of what you click or type in,
+  // and the quiet edge of what holds or divides. Both solid.
+  for (const name of ["--ui-border-strong", "--ui-border"]) {
+    const value = new RegExp(`${name}:\\s*([^;]+);`).exec(tokens)?.[1] ?? "";
+    assert.match(value, /^light-dark\(oklch\([\d.]+ 0 0\), oklch\([\d.]+ 0 0\)\)$/, `${name} must be solid, got ${value}`);
   }
+  assert.match(tokens, /--ui-border-subtle:\s*var\(--ui-border\);/, "--ui-border-subtle must alias --ui-border");
 });
 
 test("controls you tick rest on the control edge", () => {

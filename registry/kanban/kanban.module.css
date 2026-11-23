@@ -185,7 +185,7 @@
 }
 
 .card {
-  --card-edge: var(--ui-border-strong);
+  --card-edge: var(--ui-border);
   position: relative;
   /* Keeps the stretched target and the lift shadow inside the card. */
   isolation: isolate;

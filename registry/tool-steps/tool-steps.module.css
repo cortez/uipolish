@@ -147,7 +147,7 @@
   bottom: 0;
   inset-inline-start: 7.75px;
   width: var(--ui-hairline);
-  background: var(--ui-border-strong);
+  background: var(--ui-border);
 }
 
 .step:last-child .rail {

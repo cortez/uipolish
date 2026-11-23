@@ -57,12 +57,11 @@ The palette is small on purpose (see `foundation/rules/surfaces.md`):
 
 Each tone is the alert tint trio at badge scale: the tone's tint token
 (`--ui-accent-tint`, `-success-tint`, `-warning-tint`, `-danger-tint`;
-`--ui-fill-strong` for neutral), the hue mixed into transparent, a hairline of it at the edge, and the label in the tone's
+`--ui-fill-strong` for neutral), the hue mixed into transparent with no outline, and the label in the tone's
 text color (`--ui-success-text`, `--ui-danger-text`, `--ui-accent-text`),
 which holds 4.5:1 on the tint in both themes. Dark surfaces show a hue far
-later than light ones, so dark takes more of it (26% fill against 16%). The edge is the
-tone's set edge (`--ui-border-accent`, `-success`, `-warning`, `-danger`;
-`--ui-border` for neutral, the line used inside a box). The fill is mixed with transparent, not with the surface, so a
+later than light ones, so dark takes more of it (26% fill against 16%). There is no
+edge: the fill sets the badge apart, and a line around every tag is one more border. The fill is mixed with transparent, not with the surface, so a
 badge reads the same on the canvas, a card, or a selected row.
 
 A toned badge fades a little lighter toward its top: the fill at the

@@ -207,7 +207,7 @@
   inset-block: 2px 0;
   inset-inline-start: calc(var(--tree-pad) + var(--tree-level, 0) * var(--tree-indent) + (var(--tree-twist) - var(--ui-hairline)) / 2);
   width: var(--ui-hairline);
-  background: var(--ui-border-strong);
+  background: var(--ui-border);
   pointer-events: none;
 }
 

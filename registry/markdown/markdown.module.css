@@ -189,11 +189,11 @@ ol.list {
   /* Running text, not a pull quote: pretty, not balanced. */
   text-wrap: pretty;
   color: var(--ui-muted);
-  box-shadow: inset var(--ui-hairline) 0 0 var(--ui-border-strong);
+  box-shadow: inset var(--ui-hairline) 0 0 var(--ui-border);
 }
 
 :is([dir="rtl"]) .quote {
-  box-shadow: inset calc(var(--ui-hairline) * -1) 0 0 var(--ui-border-strong);
+  box-shadow: inset calc(var(--ui-hairline) * -1) 0 0 var(--ui-border);
 }
 
 /* ---------- Rule ---------- */

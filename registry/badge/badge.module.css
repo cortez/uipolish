@@ -2,7 +2,6 @@
   --badge-fill: var(--ui-fill-strong);
   --badge-text: var(--ui-muted);
   --badge-dot: var(--ui-subtle);
-  --badge-edge: var(--ui-border);
   /* A little taller than the line it sits on, so the badge has air above and
      below its letters and still sits inside a 24px row. */
   --badge-height: 24px;
@@ -24,7 +23,8 @@
   /* A tone fades a little lighter toward the top: a quiet gradient, not
      a shine. The neutral badge is flat (its top and bottom are the same). */
   background: linear-gradient(to bottom, var(--badge-fill-top, var(--badge-fill)), var(--badge-fill));
-  box-shadow: inset 0 0 0 var(--ui-hairline) var(--badge-edge);
+  /* Fill only, no outline: the fill already sets it apart, and a line
+     around every tag is one more border on the page. */
   color: var(--badge-text);
   font: var(--ui-weight-medium) var(--ui-text-sm) / 1 var(--ui-font-sans);
   white-space: nowrap;
@@ -49,28 +49,24 @@
 
 .badge[data-tone="accent"] {
   --badge-fill: var(--ui-accent-tint);
-  --badge-edge: var(--ui-border-accent);
   --badge-text: var(--ui-accent-text);
   --badge-dot: var(--ui-accent);
 }
 
 .badge[data-tone="positive"] {
   --badge-fill: var(--ui-success-tint);
-  --badge-edge: var(--ui-border-success);
   --badge-text: var(--ui-success-text);
   --badge-dot: var(--ui-success);
 }
 
 .badge[data-tone="danger"] {
   --badge-fill: var(--ui-danger-tint);
-  --badge-edge: var(--ui-border-danger);
   --badge-text: var(--ui-danger-text);
   --badge-dot: var(--ui-danger);
 }
 
 .badge[data-tone="warning"] {
   --badge-fill: var(--ui-warning-tint);
-  --badge-edge: var(--ui-border-warning);
   --badge-text: var(--ui-warning-text);
   --badge-dot: var(--ui-warning);
 }

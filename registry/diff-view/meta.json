@@ -4,7 +4,7 @@
   "summary": "Unified diff with the changed part of each line marked and unchanged stretches folded. In streaming mode, new lines fade in as they arrive.",
   "blurb": "A unified diff with changes marked and the rest folded.",
   "kit": "agent",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "dependencies": [
     "icons",
     "text"

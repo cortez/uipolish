@@ -256,15 +256,16 @@
   --ui-foreground: light-dark(oklch(0.21 0 0), oklch(0.93 0 0));
   --ui-muted: light-dark(oklch(0.5 0 0), oklch(0.71 0 0));
   --ui-subtle: light-dark(oklch(0.55 0 0), oklch(0.62 0 0));
-  /* Edges: one solid neutral for every line, outline or divider. A card's
-     frame, a field, a button, a table's row rules, a key cap:
-     the same color at the same 1px weight, so no line reads darker,
-     lighter, thicker or thinner than another. Solid, not a see-through
-     tint: a tint came out darker over the page than over a card or a
-     field, so the same token drew two different lines.
-     --ui-border-strong (drawn by --ui-edge) and --ui-border are the same
-     value, two names kept so existing code resolves; --ui-border-subtle
-     too. Only hover, focus and selected step darker, to --ui-field-focus.
+  /* Edges: two solid neutrals. --ui-border-strong is the outline of
+     anything you click or type in (a field, an outline button, an empty
+     checkbox, a track): clear enough to find. --ui-border is a step
+     lighter, for what only holds or divides (a card's or a list's frame,
+     a table's and a list's row rules, a code block): those separate by
+     the surface they sit on more than by a line, so their line stays
+     quiet. Solid, not a see-through tint: a tint came out darker over the
+     page than over a card, so the same token drew two lines.
+     --ui-border-subtle is --ui-border, kept so existing code resolves.
+     Only hover, focus and selected step darker, to --ui-field-focus.
      Colored ones mix a hue at --ui-border-tint: the status edges below, or
      a component's own hue (a phase, a brand) at the same strength. */
   --ui-border-strong: light-dark(oklch(0.93 0 0), oklch(0.28 0 0));
@@ -272,7 +273,7 @@
      button, over the soft fill, so every outline on a form is one line. */
   --ui-border-control: var(--ui-border-strong);
   --ui-fill-control: var(--ui-fill-solid);
-  --ui-border: var(--ui-border-strong);
+  --ui-border: light-dark(oklch(0.955 0 0), oklch(0.245 0 0));
   --ui-border-subtle: var(--ui-border);
   /* Soft: a colored edge is a quiet line in its hue, never an outline
      that competes with the fill or the text inside it. */
@@ -344,11 +345,12 @@
      Dark mode has no shadows at all: depth there comes from the surface
      being lighter than the canvas, and from the edges. */
   /* --ui-edge: a box's outline as a ring in place of a border, so it takes
-     no layout space. The same color as a field's edge: a card and the
-     controls in it read as one family. Already part of the resting and
+     no layout space. The quiet --ui-border, a step lighter than a field's
+     edge: the box is held by its surface, the controls in it by their
+     outline. Already part of the resting and
      floating shadows; never stack it on one of them, two rings read as a
      darker edge. Raised carries no ring: pair it with --ui-edge. */
-  --ui-edge: 0 0 0 var(--ui-hairline) var(--ui-border-strong);
+  --ui-edge: 0 0 0 var(--ui-hairline) var(--ui-border);
   /* A track of choices (tabs, a segmented control): clear inside a hairline
      edge, with one flat highlight under the chosen item, inset from every side.
      Both components read these, so they always look like one family. */

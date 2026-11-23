@@ -244,7 +244,7 @@ button.head:focus-visible .mark {
 .connector {
   position: absolute;
   overflow: hidden;
-  background: var(--ui-border-strong);
+  background: var(--ui-border);
   pointer-events: none;
 }
 

@@ -3,7 +3,7 @@
   "title": "Kanban board",
   "summary": "Columns of cards that move within and between columns by drag, touch or keyboard, on the same engine as Sortable list. Each column scrolls on its own and the board sideways, its edges scrolling while a card is held; counts roll as cards arrive, and a phone shows one column at a time.",
   "blurb": "Columns of cards you move by drag, touch or keyboard.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dependencies": [
     "button",
     "icons",

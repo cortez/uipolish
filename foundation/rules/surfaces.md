@@ -40,15 +40,16 @@ mode for free.
   keeps its edge and changes its fill (`--ui-field-focus-fill`) instead.
 - **Page layout gets no borders.** Headers, sections, hero bands and
   gallery tiles separate with space and a change of surface, not lines.
-- **One neutral edge for every line.** A card's frame, a field, a button,
-  a switch's track, a table's row rules, a separator, a key cap: all
-  `--ui-border-strong` (drawn by `--ui-edge`; `--ui-border` is the same
-  value), one solid neutral at the one hairline weight, dark enough to
-  read crisp (L 0.93 on light, 0.28 on dark) rather than as a haze. Two
-  grays side by side read as two thicknesses, a fainter line looks
-  thinner, so there is no lighter "inner" tier: a box's insides and its
-  frame are the same line. Depth comes from the shadow under a card, not
-  from a darker outline.
+- **Two neutral edges, by job.** What you click or type in (a field, an
+  outline button, a switch's track, an empty checkbox, a chip) has a
+  clear outline, `--ui-border-strong` (L 0.93 on light, 0.28 on dark), so
+  it can be found. What only holds or divides (a card's, a list's, a
+  table's or a diff's frame, row rules, a separator, a rail, the drawn
+  edge `--ui-edge`) takes `--ui-border`, a step quieter (0.955, 0.245):
+  a box separates by its surface against the page more than by a line,
+  and a page of full-strength frames is a page of borders. Fewer lines
+  beats darker ones: a tag is a fill with no outline at all, and a demo
+  sits on a tile of fill, not inside another frame.
 
   Beyond that one:
   - `--ui-field-focus`: a hovered or selected control (or the one
@@ -62,7 +63,8 @@ mode for free.
     `--ui-border-strong`), over a soft flat fill, so the box is found by
     its shape and shade together; its label is always part of the target.
 
-  Nothing else at rest: a button and a card rest on the one edge. No
+  Nothing else at rest: a button rests on the clear edge, a card on the
+  quiet one. No
   hand-picked alphas, no other `color-mix` of the text color for an edge,
   no second gray: two neutral edges that look almost the same read as two
   weights. The edge is solid,
