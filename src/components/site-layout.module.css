@@ -1,13 +1,77 @@
-/* One column for the top bar and the content on every page, so the mark
-   and the page start on one edge everywhere. Text inside keeps its own
-   reading measure. Centered on a whole pixel, so no hairline lands
-   between pixels. */
+/* The top bar spans the whole window; the content keeps one centered
+   column, the same width on every page. The docs add their component list
+   against the window's left edge. Centered on whole pixels, so no hairline
+   lands between pixels. */
 .page {
-  --page-max: calc(1120px + var(--ui-space-5) * 2);
-  max-width: var(--page-max);
+  --head-h: calc(var(--ui-control-sm) + var(--ui-space-4) * 2);
+  --gutter: var(--ui-space-5);
+  padding-bottom: calc(var(--ui-space-8) * 2);
+}
+
+@media (max-width: 640px) {
+  .page {
+    --gutter: var(--ui-space-4);
+    padding-bottom: var(--ui-space-8);
+  }
+}
+
+/* The bar stays at the top as the page scrolls, on the page's own
+   background, so the component list under it can be exactly as tall as
+   the rest of the window. */
+.head {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  height: var(--head-h);
+  padding-inline: var(--gutter);
+  background: var(--ui-canvas);
+}
+
+.head > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.main {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: calc(1120px + var(--gutter) * 2);
   margin-inline: auto;
-  margin-inline: max(0px, round(down, (100% - var(--page-max)) / 2, 1px));
-  padding: var(--ui-space-6) var(--ui-space-5) calc(var(--ui-space-8) * 2);
+  padding: var(--ui-gap-section) var(--gutter) 0;
+}
+
+.main:focus {
+  outline: none;
+}
+
+/* Pages breathe more than the shared rhythm: intro to first block 48. */
+.main > header {
+  padding-bottom: var(--ui-space-7);
+}
+
+/* The aside, on a wide screen: a 240px column flush with the window's
+   left edge, held under the bar at the rest of the window's height, and
+   scrolling on its own. Hidden on anything narrower. */
+.aside {
+  display: none;
+}
+
+@media (min-width: 960px) {
+  .frame[data-aside] {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .aside {
+    position: sticky;
+    top: var(--head-h);
+    display: block;
+    height: calc(100dvh - var(--head-h));
+  }
 }
 
 /* Keyboard only: the first Tab shows it over the mark; it jumps past the
@@ -21,7 +85,7 @@
   align-items: center;
   height: var(--ui-control-md);
   padding-inline: var(--ui-space-5);
-  border-radius: var(--ui-radius-control);
+  border-radius: var(--ui-radius-button);
   background: var(--ui-ink);
   color: var(--ui-on-ink);
   font-size: var(--ui-text-md);
@@ -35,25 +99,4 @@
   padding: 0;
   overflow: hidden;
   white-space: nowrap;
-}
-
-.main:focus {
-  outline: none;
-}
-
-/* The page's title a section gap under the bar. */
-.main {
-  min-width: 0;
-  padding-top: var(--ui-gap-section);
-}
-
-/* Pages breathe more than the shared rhythm: intro to first block 48. */
-.main > header {
-  padding-bottom: var(--ui-space-7);
-}
-
-@media (max-width: 640px) {
-  .page {
-    padding: var(--ui-space-5) var(--ui-space-4) var(--ui-space-8);
-  }
 }

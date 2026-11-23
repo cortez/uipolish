@@ -4,11 +4,14 @@
   white-space: pre;
 }
 
-/* Figures are the font's own, proportional ones, inherited from the
-   context: tabular figures give a narrow 1 the width of a 0 and space a
-   number out (1,267 grows 15%). A digit that rolls to a different width is
-   fine: the width animates with it. A context that needs columns to line
-   up (a table) sets tabular-nums itself, and it is inherited here. */
+/* Digits are tabular, and only digits: a count that goes from 12 to 13
+   keeps every digit the same width, so the words after it ("guests") hold
+   still instead of sliding a pixel or two each time. Letters keep the
+   font's own spacing. */
+.digits,
+.glyph[data-digit] {
+  font-variant-numeric: tabular-nums;
+}
 
 /* The real label, for screen readers and find-in-page. */
 .label {

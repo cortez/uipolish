@@ -84,6 +84,10 @@ footer count all render their changing figures through it.
 | Rolling digit: the old one fades | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | Rolling digit: the new one fades in, half a beat later (60ms) | `--ui-dur-fast` (160ms) | `--ui-ease-enter` |
 
+Digits are tabular, and only digits: a count from 12 to 13 keeps every digit
+the same width, so the words after it hold still. Letters keep the font's
+own spacing.
+
 The width animation is a sanctioned exception to "animate transform and
 opacity only": it's one inline box, and the alternative is a jump. Under
 `prefers-reduced-motion: reduce` the text swaps instantly, digits included.

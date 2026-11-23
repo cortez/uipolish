@@ -1,33 +1,23 @@
-/* The component list beside a docs page: plain text, no boxes, the
-   current page in the text color. Wide screens only; a phone has search
-   and the home page's list. */
+/* The component list in the docs' aside: the column's full height,
+   scrolling on its own, plain text with the current page in the text
+   color. Its edges fade rather than cut a name in half, and its padding
+   lets the first and last names scroll clear of the fade. */
 .nav {
-  position: sticky;
-  top: var(--ui-space-4);
-  display: none;
-  max-height: calc(100dvh - var(--ui-space-4) * 2);
-  /* The list's padding sits above the label, so the label lines up with
-     the page's title. */
-  margin-top: calc(var(--ui-space-5) * -1);
+  box-sizing: border-box;
+  height: 100%;
+  padding: var(--ui-space-5) var(--ui-space-5) var(--ui-space-7);
   overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-width: none;
-  /* The list fades out at its top and bottom edges rather than cutting a
-     name in half. A mask reads only alpha, so any opaque token works. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-border-strong) transparent;
+  /* A mask reads only alpha, so any opaque token works. */
   mask-image: linear-gradient(
     to bottom,
     transparent,
-    var(--ui-foreground) var(--ui-space-5),
+    var(--ui-foreground) var(--ui-space-4),
     var(--ui-foreground) calc(100% - var(--ui-space-5)),
     transparent
   );
-  padding-block: var(--ui-space-5);
-}
-
-@media (min-width: 960px) {
-  .nav {
-    display: block;
-  }
 }
 
 .label {
