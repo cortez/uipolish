@@ -1,0 +1,18 @@
+/* A docs page on a wide screen: the component list in a 200px column on
+   the left, the page beside it. One column on anything narrower. */
+.shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.body {
+  min-width: 0;
+}
+
+@media (min-width: 960px) {
+  .shell {
+    grid-template-columns: 200px minmax(0, 1fr);
+    column-gap: var(--ui-space-7);
+    align-items: start;
+  }
+}

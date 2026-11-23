@@ -1,0 +1,75 @@
+/* The component list beside a docs page: plain text, no boxes, the
+   current page in the text color. Wide screens only; a phone has search
+   and the home page's list. */
+.nav {
+  position: sticky;
+  top: var(--ui-space-4);
+  display: none;
+  max-height: calc(100dvh - var(--ui-space-4) * 2);
+  /* The list's padding sits above the label, so the label lines up with
+     the page's title. */
+  margin-top: calc(var(--ui-space-5) * -1);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  /* The list fades out at its top and bottom edges rather than cutting a
+     name in half. A mask reads only alpha, so any opaque token works. */
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    var(--ui-foreground) var(--ui-space-5),
+    var(--ui-foreground) calc(100% - var(--ui-space-5)),
+    transparent
+  );
+  padding-block: var(--ui-space-5);
+}
+
+@media (min-width: 960px) {
+  .nav {
+    display: block;
+  }
+}
+
+.label {
+  margin: 0 0 var(--ui-space-2);
+  color: var(--ui-foreground);
+  font-size: var(--ui-text-md);
+  font-weight: var(--ui-weight-title);
+  line-height: var(--ui-leading-md);
+}
+
+.list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 28px rows: dense enough to scan 75 names, each still a clear target. */
+.link {
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--ui-space-6) - var(--ui-space-1));
+  color: var(--ui-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-md);
+  text-decoration: none;
+  transition: color var(--ui-dur-instant) var(--ui-ease-color);
+}
+
+@media (hover: hover) {
+  .link:hover {
+    color: var(--ui-foreground);
+  }
+}
+
+.link[aria-current="page"] {
+  color: var(--ui-foreground);
+  font-weight: var(--ui-weight-medium);
+}
+
+.link:focus-visible {
+  border-radius: var(--ui-radius-xs);
+  outline: var(--ui-ring-focus);
+  outline-offset: 2px;
+}

@@ -81,7 +81,7 @@ export default async function ComponentPage({
         <LivePreview name={name} />
       </div>
 
-      <section className={`${site.section} ${site.split}`} aria-labelledby="setup">
+      <section className={site.section} aria-labelledby="setup">
         <h2 id="setup" className={site.heading}>
           Installation
         </h2>
