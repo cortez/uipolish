@@ -153,7 +153,7 @@ type ThemeToggleProps = Omit<ComponentProps<"button">, "value" | "children"> & {
   tooltipSide?: "top" | "bottom" | "left" | "right";
 } & UseThemeOptions;
 
-/** One icon button that switches light and dark; its sun turns into a moon. */
+/** One square icon button that switches light and dark; its sun turns into a moon. */
 export function ThemeToggle({
   value,
   onValueChange,

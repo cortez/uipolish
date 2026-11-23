@@ -1,6 +1,6 @@
 # Theme toggle
 
-An icon button that switches the page between light and dark. The icon
+A square icon button that switches the page between light and dark. The icon
 is one drawing: the sun's disc grows into the moon while a second circle
 slides over it and bites out the crescent, and the rays turn and pull in. It
 stores the choice in `localStorage`, follows the system until someone makes

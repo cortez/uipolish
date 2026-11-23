@@ -163,7 +163,7 @@ rise and "Jump to latest" scrolls instantly.
   or the error. `aria-busy` is set on the message while it streams.
 - Each message is an `<article>` labeled with its author ("You",
   "Assistant", or your `author`). Avatars are off by default and decorative.
-- Actions are small ghost `Button`s (32px icon buttons, muted until hovered)
+- Actions are small ghost `Button`s (32px square icon buttons, muted until hovered)
   with names ("Copy", "Retry", "Good response",
   "Bad response"). Thumbs use `aria-pressed`. "Copied" or "Couldn't copy.
   Select the text instead." goes to a `role="status"` region.

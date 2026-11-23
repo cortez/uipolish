@@ -93,10 +93,9 @@ Disabled options are skipped by the keys and can't be chosen.
   never reserves the widest option.
 - The list opens 8px under the trigger, at least as wide as it (Base UI's
   `--anchor-width`), and flips above when there's no room below. It is not
-  laid over the trigger (`alignItemWithTrigger` is off). The trigger is a
-  pill (`--ui-radius-control`); the list is a 12px box, since a pill list
-  would cut its first and last rows, and its options sit 4px inside with
-  the radius less 4px (concentric, never pills), and option text sits `--ui-pad-row`
+  laid over the trigger (`alignItemWithTrigger` is off). It shares
+  the trigger's radius, its options sit 4px inside with the radius less
+  4px (concentric, never pills), and option text sits `--ui-pad-row`
   (12px) in from the row's edge, clear of its curve: 16px from the panel's,
   just past the trigger's 14, so the list opens under the words. `sm`
   rows are 32px tall with the same radius.

@@ -123,7 +123,7 @@ doesn't sit over the page you just opened.
 
 ## Layout
 
-Items are 40px icon buttons at the control radius, with 4px between
+Items are 40px square icon buttons at the control radius, with 4px between
 them, in a sunken hairline track 4px larger on every side: a 48px-wide
 column. The tooltip sits 8px off the rail's outer side
 (above it when horizontal), never over the item under the pointer, and

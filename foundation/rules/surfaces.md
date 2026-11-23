@@ -289,31 +289,29 @@ for real-looking services read as fake.
   | Role | Radius | Examples |
   |---|---|---|
   | Inline marks | xs (4) | inline code, key caps, a check box, a focus ring on text |
-  | Small marks | sm (8) | table cells, a day in a calendar |
-  | Everything you click or type in | full, `--ui-radius-control` (a pill) | buttons, icon buttons (capsules), segmented controls, tabs, chips, nav and sidebar rows, a compact select in a toolbar; text field, select, combobox, date, number |
+  | Small marks | sm (8) | table cells, a day in a calendar, a small (32px) button |
+  | Everything you click or type in | md (12), `--ui-radius-control` | buttons, icon buttons (square), segmented controls, tabs, chips, nav and sidebar rows, a compact select in a toolbar; text field, select, combobox, date, number, each code box |
   | Round by nature | full, `--ui-radius-pill` | a switch's track and thumb, a slider's track and knob, a progress bar, skeleton bars, avatars, radios |
-  | Rows in a menu or list panel | panel − inset | dropdown and context menu rows, select and combobox options, command palette results |
   | Boxes, panels and cards | lg (16) | cards, tables, code blocks, diffs, menus, dialogs, command palette, drop zone, composer |
   | Anything nested | outer − gap | options in a list, a button inside a field, the highlight in a track |
 
-  One pill edge for everything you click or type in: a button beside a
-  field, a select in a form and the compact select in a toolbar all take
-  the control radius, so a row of them reads as one family. A button drawn
-  as a rectangle beside a pill field reads as a different kind of thing.
-  Icon-only buttons are capsules (`--ui-icon-button`, 1.375 × their
-  height), so they sit in a row of pill buttons as one of them. A field
-  that holds buttons stays a pill around pill buttons. Rows inside a menu
-  or a list panel are not controls on their own: they stay rounded
-  rectangles, concentric with the panel, since a pill row puts short text
-  inside its round end.
-- **A product that wants rounded rectangles sets three tokens in its
-  theme**, never per component: `--ui-radius-control` to
-  `var(--ui-radius-md)`, `--ui-radius-control-sm` to `var(--ui-radius-sm)`
-  and `--ui-icon-button` to `1` (square). Every button, chip, tab, segment,
-  row and icon button follows. Wrappers that add a control's radius to
-  their padding (a dialog's corner, the composer, the nav rail) cap it at
-  half the control's height, so with pills they stay concentric instead of
-  turning into ovals.
+  One rounded-rectangle edge for everything you click or type in: a button
+  beside a field, a select in a form and the compact select in a toolbar all
+  take the control radius, so a row of them reads as one family. Pills are
+  only for things round by nature; a button drawn as a pill reads as a
+  different kind of thing from the field beside it. A list that opens from a
+  field takes the field's radius, so the two read as one piece. A field that
+  holds buttons follows the concentric rule: its radius is the button's
+  radius plus the gap (a small button's 8 plus a 4px inset is the field's
+  12).
+- **A product that wants pill controls sets three tokens in its theme**,
+  never per component: `--ui-radius-control` and `--ui-radius-control-sm`
+  to `var(--ui-radius-pill)`, and `--ui-icon-button` (icon buttons' width
+  over their height, 1 by default) to `var(--ui-capsule)`. Every button,
+  chip, tab, segment, row and icon button follows, and wrappers that add a
+  control's radius to their padding (a dialog's corner, the composer, the
+  nav rail) cap it at half the control's height, so they stay concentric
+  instead of turning into ovals.
 
 ## 5. Color tokens & states
 

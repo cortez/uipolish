@@ -33,9 +33,6 @@ It has no look of its own beyond what those fields share.
 
 Link the message with `aria-describedby` only while it has text.
 
-
-The shell is a pill (`--ui-radius-control`), the same shape as the buttons beside it; a theme that wants rounded rectangles sets the token, and every field follows.
-
 ## Layout
 
 A field is one column as wide as its container: the input narrows with it
