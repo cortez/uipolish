@@ -241,20 +241,21 @@ stem is 1.25px at 400 and 1.48px at 500):
 
 | Token | Value | Text it matches |
 |---|---|---|
-| `--ui-icon-stroke-regular` | 1.25 | 400 |
-| `--ui-icon-stroke-medium` | 1.5 | 500 |
-| `--ui-icon-stroke` | medium | what icons read |
+| `--ui-icon-stroke-regular` | 1.25 | 400: body text and every label |
+| `--ui-icon-stroke-title` | 1.5 | 500: titles |
+| `--ui-icon-stroke-medium` | regular | follows `--ui-weight-medium` |
+| `--ui-icon-stroke` | regular | what icons read |
 
-**Two tiers, picked by the weight of the label beside the icon.** Icons
-read `stroke-width: var(--ui-icon-stroke)`. Set it once where the text
-weight is known: buttons, tabs, segments, nav items and chips (500) set
-medium; field adornments, menu and palette rows, and icons in running text
-(400) set regular. An icon-only button is a button: medium. No blends
-between the tiers, no third tier (`--ui-icon-stroke-semibold` is the medium
-value, kept for older code), no literal `stroke-width`. A glyph drawn
-smaller than 16px on its own (in a node or a tile) keeps the line:
-`calc(var(--ui-icon-stroke-medium) * 16 / 14)` at 14px. Don't add weight
-to an icon on a filled control to "hold up": match the label.
+**Picked by the weight of the text beside the icon.** Icons read
+`stroke-width: var(--ui-icon-stroke)`. Labels on buttons, tabs, segments,
+nav items, chips and menus are regular (400), so their icons are regular,
+an icon-only button's included. An icon in a title (a dialog's or a
+drawer's) takes the title tier. `--ui-icon-stroke-medium` names "the
+label's weight" and follows `--ui-weight-medium`: while that is regular,
+so is the stroke; a theme that sets labels to 500 sets
+`--ui-icon-stroke-medium` to the title tier with it. No blends between the
+tiers, no literal `stroke-width`. Don't add weight to an icon on a filled
+control to "hold up": match the label.
 
 ### Icon sizes
 

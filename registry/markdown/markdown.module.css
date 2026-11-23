@@ -64,7 +64,7 @@
   font-weight: var(--ui-weight-title);
   line-height: var(--ui-leading-md);
   text-wrap: balance;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-title);
 }
 
 .heading[data-depth="1"] {
@@ -92,7 +92,7 @@
 
 .root strong {
   font-weight: var(--ui-weight-title);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-title);
 }
 
 .root del {

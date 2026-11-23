@@ -154,22 +154,23 @@
   --ui-tracking-control: -0.01em;
   --ui-tracking-caps: 0.06em;
 
-  /* Icon stroke: two tiers, one per label weight, each the width of the
-     text's stem at its own size (see --ui-icon-stem). Icons beside regular
-     text take regular; beside a medium label (button, tab, nav or menu
-     item) medium. The size of the icon doesn't change its line.
-     The default is regular, as most text is; a component sets medium only
-     where the label beside its icons is medium.
-     --ui-icon-stroke-semibold is the medium value, kept so older code
-     still resolves; don't use it in new code. */
+  /* Icon stroke: one tier per text weight, each the width of the text's
+     stem at its own size (see --ui-icon-stem). Icons beside regular text
+     take regular, icons in a title take title. The size of the icon
+     doesn't change its line. Medium follows --ui-weight-medium: labels
+     (buttons, tabs, menus) are regular, so their icons are too; a theme
+     that sets --ui-weight-medium to 500 sets --ui-icon-stroke-medium to
+     the title tier with it. --ui-icon-stroke-semibold is kept so older
+     code still resolves; don't use it in new code. */
   --ui-icon-stroke-regular: 1.25;
-  --ui-icon-stroke-medium: 1.5;
+  --ui-icon-stroke-title: 1.5;
+  --ui-icon-stroke-medium: var(--ui-icon-stroke-regular);
   --ui-icon-stroke-semibold: var(--ui-icon-stroke-medium);
   /* Most text is regular, so icons are too unless their label is medium. */
   --ui-icon-stroke: var(--ui-icon-stroke-regular);
   /* What one unit of --ui-icon-stroke is on screen, from the text's own
      size: a letter's stem is about 0.088em at 400 and 0.107em at 500, so
-     the regular tier (1.25) draws 0.088em and the medium tier (1.5) 0.106em.
+     the regular tier (1.25) draws 0.088em and the title tier (1.5) 0.106em.
      Icons draw at that width whatever their size (non-scaling strokes), so
      an icon and its label share one line at every size. */
   --ui-icon-stem: 0.0704em;

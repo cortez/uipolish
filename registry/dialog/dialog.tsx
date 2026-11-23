@@ -277,11 +277,21 @@ export function Dialog({
   const [changes, setChanges] = useState(0);
   // Only a change made while open fades; a reset while closed is simply there next time.
   const [fades, setFades] = useState(false);
+  // The heading as shown, and the one leaving with a step, so the title
+  // and description crossfade with the body instead of switching over it.
+  const [heading, setHeading] = useState({ title, description });
+  const [leavingHeading, setLeavingHeading] = useState<{ title: ReactNode; description?: ReactNode; n: number } | null>(null);
   if (shownStep !== step) {
     setShownStep(step);
     setChanges(changes + 1);
     setFades(open);
     setLeaving(shownStep !== undefined && open ? { key: shownStep, n: changes } : null);
+    const moved = heading.title !== title || heading.description !== description;
+    setLeavingHeading(shownStep !== undefined && open && moved ? { ...heading, n: changes } : null);
+    setHeading({ title, description });
+  } else if (heading.title !== title || heading.description !== description) {
+    // Changed without a step (a count in the title): it simply updates.
+    setHeading({ title, description });
   }
 
   const [wasOpen, setWasOpen] = useState(open);
@@ -290,6 +300,7 @@ export function Dialog({
     if (!open) {
       setGuarding(false);
       setLeaving(null);
+      setLeavingHeading(null);
       setFades(false);
     }
   }
@@ -364,15 +375,30 @@ export function Dialog({
       <AnimatedSize className={styles.sizer}>
         <div className={styles.frame} data-size={size} data-guarding={guarding || undefined}>
           <header className={styles.header} inert={guarding}>
-            <div className={styles.heading}>
-              <h2 id={titleId} className={styles.title}>
-                {title}
-              </h2>
-              {description && (
-                <p id={descriptionId} className={styles.description}>
-                  {description}
-                </p>
+            <div className={styles.headings}>
+              {leavingHeading && (
+                <div
+                  key={`heading-${leavingHeading.n}`}
+                  className={`${styles.heading} ${styles.stepOut}`}
+                  aria-hidden="true"
+                  onAnimationEnd={(e) => {
+                    if (e.target === e.currentTarget) setLeavingHeading((l) => (l?.n === leavingHeading.n ? null : l));
+                  }}
+                >
+                  <p className={styles.title}>{leavingHeading.title}</p>
+                  {leavingHeading.description && <p className={styles.description}>{leavingHeading.description}</p>}
+                </div>
               )}
+              <div key={`heading-${changes}`} className={leavingHeading ? `${styles.heading} ${styles.stepIn}` : styles.heading}>
+                <h2 id={titleId} className={styles.title}>
+                  {title}
+                </h2>
+                {description && (
+                  <p id={descriptionId} className={styles.description}>
+                    {description}
+                  </p>
+                )}
+              </div>
             </div>
             <Button variant="secondary" className={styles.close} aria-label="Close" onClick={dismiss}>
               <Icon name="close" />

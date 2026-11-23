@@ -297,7 +297,7 @@
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-heading);
   text-wrap: balance;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-title);
 }
 
 .description {

@@ -2,7 +2,7 @@
   "name": "button",
   "title": "Button",
   "summary": "Round button that presses instantly and springs back. The busy state keeps its width, and the label morphs when its text changes.",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "dependencies": [
     "text-morph"
   ]

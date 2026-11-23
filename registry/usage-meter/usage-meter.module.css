@@ -256,7 +256,7 @@
   font-weight: var(--ui-weight-title);
   line-height: var(--ui-leading-2xl);
   white-space: nowrap;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-title);
 }
 
 .of {

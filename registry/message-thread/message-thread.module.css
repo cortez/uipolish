@@ -179,7 +179,7 @@
 
 .prose strong {
   font-weight: var(--ui-weight-title);
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-title);
 }
 
 .prose code {

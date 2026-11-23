@@ -212,6 +212,13 @@
     var(--dialog-pad);
 }
 
+/* The heading and, during a step change, the one leaving over it. */
+.headings {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
 .heading {
   display: grid;
   flex: 1;
@@ -228,7 +235,7 @@
   line-height: var(--ui-leading-2xl);
   letter-spacing: var(--ui-tracking-heading);
   text-wrap: balance;
-  --ui-icon-stroke: var(--ui-icon-stroke-medium);
+  --ui-icon-stroke: var(--ui-icon-stroke-title);
 }
 
 .description {

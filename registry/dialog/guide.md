@@ -52,7 +52,7 @@ The file exports three things:
 | Body overflow | Body scrolls on its own; header and footer stay put | `overflow-y: auto; overscroll-behavior: contain` |
 | Content changes size | The panel eases to the new height and stays centered the whole way: its top and bottom edges move together on the same curve, half the change each, and a window resize keeps it centered with no jump. A panel taller than the window stops at its max height and scrolls inside. With `placement="top"` the top edge sits 12% down the window and stays there: a shrink never moves it, and it rises only if growing would run it off the screen |
 | Footer while the size changes | Rides the panel's bottom edge, so a growing panel never pushes its buttons out of sight on the way | the footer is `position: sticky` in the sizer |
-| Step changes | The old step fades out over the top while the new one fades in, half a beat later, and the panel eases to the new step's height | `step`, with `children` as a function of the step |
+| Step changes | The old step fades out over the top while the new one fades in, half a beat later, and the panel eases to the new step's height. A title or description that changes with the step crossfades the same way, so the new heading never sits over the old body | `step`, with `children` as a function of the step |
 | Size changes | The panel eases to the new width | `size` (`sm` 420, `md` 480, `lg` 640) |
 | Guard | Footer swaps for "Discard changes?" with Keep editing / Discard; body and header dim and go inert; focus on Keep editing | `dirty` is true when the user tries to leave |
 | Locked | Escape, backdrop and close do nothing | `locked`, e.g. while saving |
