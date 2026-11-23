@@ -148,7 +148,9 @@
 
 /* The active box fills at once (its edge stays) and, while it's empty, a caret blinks in it. */
 .box:focus {
-  background: var(--ui-field-focus-fill);
+  /* The color only: the shorthand would reset background-image, which is
+     the drawn caret. */
+  background-color: var(--ui-field-focus-fill);
   transition:
     background-color 0s,
     --code-danger var(--ui-dur-fast) var(--ui-ease-color),

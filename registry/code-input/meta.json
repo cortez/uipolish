@@ -3,7 +3,7 @@
   "title": "Code input",
   "summary": "One-time code boxes that fill from a paste or platform autofill and step back on Backspace. The active box shows a dark edge and a caret, invalid shows in the edges; an optional status folds the boxes into a centered, edgeless Verifying bar that turns to Verified, or opens back up on a wrong code.",
   "blurb": "One-time code boxes that fill from a paste or autofill.",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "dependencies": [
     "icons",
     "text",

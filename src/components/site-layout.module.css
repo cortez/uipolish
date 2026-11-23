@@ -58,16 +58,17 @@
 }
 
 @media (min-width: 960px) {
-  /* Beside the list, the page is a reading width (880px), centered on the
-     window, not on what the list leaves, so it sits in the middle of the
-     screen; where the window is too narrow for that, it keeps clear of
-     the list instead. */
+  /* Beside the list, the page is one 720px column, centered on the
+     window, not on what the list leaves; where the window is too narrow
+     for that, it keeps clear of the list instead. Text fills the column,
+     so the title, the guide and the demo share both edges and the column
+     reads as centered, not as text hugging its left side. */
   .frame[data-aside] .main {
     --aside-w: 240px;
-    /* Whatever is left beside the list, up to the reading width. */
+    --ui-measure: 100%;
     width: auto;
-    max-width: calc(880px + var(--gutter) * 2);
-    margin-left: max(var(--aside-w), (100% - (880px + var(--gutter) * 2)) / 2);
+    max-width: calc(720px + var(--gutter) * 2);
+    margin-left: max(var(--aside-w), (100% - (720px + var(--gutter) * 2)) / 2);
     margin-right: auto;
   }
 
