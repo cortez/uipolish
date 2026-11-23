@@ -14,7 +14,8 @@
   min-width: var(--ui-control-md);
   padding-inline: 20px;
   border: 0;
-  border-radius: var(--ui-radius-control);
+  /* Round: a pill, a circle when it holds an icon alone. */
+  border-radius: var(--ui-radius-button);
   background: none;
   color: var(--button-fg);
   isolation: isolate;
@@ -70,7 +71,7 @@
   height: var(--ui-control-sm);
   min-width: var(--ui-control-sm);
   padding-inline: 14px;
-  border-radius: var(--ui-radius-control-sm);
+  border-radius: var(--ui-radius-button);
 }
 
 /* A small button looks 32px but takes a 40px touch: the hit area grows 4px

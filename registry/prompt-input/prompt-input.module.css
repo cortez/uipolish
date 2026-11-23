@@ -49,7 +49,7 @@
   position: relative;
   display: grid;
   --composer-pad: var(--ui-space-2);
-  --composer-radius: calc(min(var(--ui-radius-control-sm), var(--ui-control-sm) / 2) + var(--composer-pad));
+  --composer-radius: calc(min(var(--ui-radius-button), var(--ui-control-sm) / 2) + var(--composer-pad));
   padding: var(--composer-pad);
   border-radius: var(--composer-radius);
   background: var(--ui-surface);

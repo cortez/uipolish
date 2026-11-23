@@ -87,6 +87,10 @@
   /* Small (32px) buttons and chips: at sm the control radius reads as a pill. */
   --ui-radius-control-sm: var(--ui-radius-sm);
   --ui-radius-pill: var(--ui-radius-full);
+  /* Buttons are round: a pill with text, a circle with an icon alone.
+     A product that wants buttons to match its fields sets this to
+     var(--ui-radius-control). */
+  --ui-radius-button: var(--ui-radius-pill);
 
   /* Control heights */
   --ui-control-sm: 32px;

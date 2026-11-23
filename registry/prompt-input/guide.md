@@ -95,8 +95,8 @@ there would make typing feel late.
 
 ## Layout
 
-- Composer padding is 8px around the 32px square buttons, which take the
-  small button's 8px corner; the composer's corner is 24px. Text starts 16px in. Chips are inset 12px and take a
+- Composer padding is 8px around the 32px round buttons; the composer's
+  corner is their 16px radius plus that padding, 24px. Text starts 16px in. Chips are inset 12px and take a
   12px radius.
 - The line under the composer is centered. It shows `hint` if you pass one;
   with attachments on it's kept, empty, so a rejection notice never moves
