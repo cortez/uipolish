@@ -32,8 +32,8 @@
   padding: var(--ui-space-5) var(--ui-space-4);
 }
 
-/* Once open, the panel keeps the top it opened at (set by the component),
-   so a change in its content grows or shrinks it downward. */
+/* placement="top": the panel keeps a top edge 12% down the window (set by
+   the component), so a change in its content grows or shrinks it below. */
 .viewport[data-pinned] {
   place-items: start center;
 }

@@ -38,8 +38,6 @@ function firstFocusable(root: Element | null) {
   return null;
 }
 
-/** How far above center a shrunk dialog may sit before it glides down. */
-const SHRINK_SLACK = 48;
 /** How far down the window a top-placed dialog's top edge sits, as a share of the room. */
 const TOP_PLACEMENT = 0.12;
 
@@ -72,8 +70,8 @@ export type ModalProps = {
   /** Where focus goes on close when the trigger is gone (a deleted row, say). */
   finalFocus?: RefObject<HTMLElement | null>;
   role?: "dialog" | "alertdialog";
-  /** "center" (default) opens centered and settles back to center after a
-   *  shrink. "top" holds its top edge a fixed distance down the window, for
+  /** "center" (default) stays centered: as its height eases, its top and
+   *  bottom edges move together, and a window resize keeps it centered. "top" holds its top edge a fixed distance down the window, for
    *  a panel whose height changes as you type (a command palette): results
    *  grow and shrink below the field, and the field never moves. */
   placement?: "center" | "top";
@@ -109,22 +107,22 @@ export function Modal({
     setTrigger(triggerRef?.current ?? (active instanceof HTMLElement && active !== document.body ? active : null));
   }, [open, triggerRef]);
 
-  // Centered as it opens; from then on its top edge stays where it opened,
-  // so content that grows or shrinks moves only what's below it (the height
-  // eases in AnimatedSize). It recenters when it would no longer fit, when a
-  // shrink has settled and left it well above center, or when the window
-  // resizes. Docked at the bottom on a phone, the bottom edge stays put
-  // already.
+  // A centered panel is centered by the viewport's grid on every frame: as
+  // AnimatedSize eases its height, its top and bottom edges move together,
+  // half the change each, and a window resize keeps it centered with
+  // nothing to recompute. Only `placement="top"` pins a top edge (12% down
+  // the window): content then grows and shrinks below it, and it rises only
+  // if it would run off the screen. Docked at the bottom on a phone, the
+  // bottom edge stays put already.
   const pinRef = useCallback((popup: HTMLDivElement | null) => {
     const viewport = popup?.parentElement;
-    if (!popup || !viewport) return;
+    if (!popup || !viewport || placement !== "top") return;
     const docked = () => matchMedia("(max-width: 480px)").matches;
     const room = () => {
       const cs = getComputedStyle(viewport);
       return viewport.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
     };
-    const centered = () =>
-      placement === "top" ? Math.min(Math.round(room() * TOP_PLACEMENT), Math.max(0, room() - popup.offsetHeight)) : Math.max(0, (room() - popup.offsetHeight) / 2);
+    const centered = () => Math.min(Math.round(room() * TOP_PLACEMENT), Math.max(0, room() - popup.offsetHeight));
     const pin = (top: number) => {
       viewport.style.setProperty("--dialog-top", `${Math.round(top)}px`);
       viewport.setAttribute("data-pinned", "");
@@ -147,46 +145,27 @@ export function Modal({
         },
       );
     };
-    let lastHeight = popup.offsetHeight;
-    let shrank = false;
-    let settle = 0;
     const fit = () => {
       if (docked() || !viewport.hasAttribute("data-pinned")) return;
       const top = parseFloat(viewport.style.getPropertyValue("--dialog-top")) || 0;
-      const height = popup.offsetHeight;
-      if (height < lastHeight) shrank = true;
-      lastHeight = height;
-      // Grown past the window: up, at once, so nothing is cut off.
-      if (top + height > room()) {
-        shrank = false;
-        glideTo(top, Math.round(centered()));
-        return;
-      }
-      // Shrunk: once the height has stopped easing, a panel left well above
-      // center (it opened tall, a loading state collapsed, a step is shorter)
-      // glides down to center. Growing never moves it.
-      window.clearTimeout(settle);
-      if (!shrank || placement === "top") return;
-      settle = window.setTimeout(() => {
-        shrank = false;
-        const now = parseFloat(viewport.style.getPropertyValue("--dialog-top")) || 0;
-        const next = Math.round(centered());
-        if (next - now > SHRINK_SLACK) glideTo(now, next);
-      }, 120);
+      // Grown past the window: up, so nothing is cut off. A shrink never
+      // moves it; the top edge is where the eye left it.
+      if (top + popup.offsetHeight > room()) glideTo(top, Math.round(centered()));
     };
     const observer = new ResizeObserver(fit);
     observer.observe(popup);
+    // A resize moves the top straight to its new place, still pinned, so it
+    // never drops to the grid's center for a frame between.
     const onResize = () => {
       cancelAnimationFrame(frame);
-      viewport.removeAttribute("data-pinned");
       frame = requestAnimationFrame(() => {
-        if (!docked()) pin(centered());
+        if (docked()) viewport.removeAttribute("data-pinned");
+        else pin(centered());
       });
     };
     addEventListener("resize", onResize);
     return () => {
       cancelAnimationFrame(frame);
-      window.clearTimeout(settle);
       observer.disconnect();
       removeEventListener("resize", onResize);
     };
