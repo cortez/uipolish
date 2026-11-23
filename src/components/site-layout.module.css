@@ -52,25 +52,34 @@
   padding-bottom: var(--ui-space-7);
 }
 
-/* The aside, on a wide screen: a 240px column flush with the window's
-   left edge, held under the bar at the rest of the window's height, and
-   scrolling on its own. Hidden on anything narrower. */
+/* The aside shows on a wide screen only. */
 .aside {
   display: none;
 }
 
 @media (min-width: 960px) {
-  .frame[data-aside] {
-    display: grid;
-    grid-template-columns: 240px minmax(0, 1fr);
-    align-items: start;
+  /* Beside the list, the page is a reading width (880px), centered on the
+     window, not on what the list leaves, so it sits in the middle of the
+     screen; where the window is too narrow for that, it keeps clear of
+     the list instead. */
+  .frame[data-aside] .main {
+    --aside-w: 240px;
+    /* Whatever is left beside the list, up to the reading width. */
+    width: auto;
+    max-width: calc(880px + var(--gutter) * 2);
+    margin-left: max(var(--aside-w), (100% - (880px + var(--gutter) * 2)) / 2);
+    margin-right: auto;
   }
 
+  /* The list: a 240px column flush with the window's left edge, held under
+     the bar at the rest of the window's height, scrolling on its own. */
   .aside {
-    position: sticky;
+    position: fixed;
     top: var(--head-h);
+    bottom: 0;
+    left: 0;
     display: block;
-    height: calc(100dvh - var(--head-h));
+    width: 240px;
   }
 }
 

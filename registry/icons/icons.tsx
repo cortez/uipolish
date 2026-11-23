@@ -721,22 +721,12 @@ function createEngine(host: SVGGElement, start: IconName) {
 
   lay(start);
 
-  /** The glide token, read from the page: its curve and its length. */
-  const timing = () => {
-    const css = getComputedStyle(host);
-    const stops = /linear\(([^)]+)\)/.exec(css.getPropertyValue("--ui-ease-glide"))?.[1].split(",").map(parseFloat) ?? [];
-    const raw = css.getPropertyValue("--ui-dur-glide").trim();
-    const ms = parseFloat(raw) * (/\ds$/.test(raw) && !raw.endsWith("ms") ? 1000 : 1) || 320;
-    const ease =
-      stops.length > 1 && !stops.some(Number.isNaN)
-        ? (t: number) => {
-            const u = t * (stops.length - 1);
-            const i = Math.min(stops.length - 2, Math.floor(u));
-            return stops[i] + (stops[i + 1] - stops[i]) * (u - i);
-          }
-        : (t: number) => 1 - (1 + 9.2 * t) * Math.exp(-9.2 * t);
-    return { ms, ease };
-  };
+  /** The morph's timing: the glide's length on the draw curve, read from
+   *  the page. In and out, not a spring that is nearly there in its first
+   *  frames: on a 16px icon a front-loaded curve reads as a snap followed
+   *  by a crawl. It lands at exactly 1, so the hand-off to the icon's own
+   *  path at rest shows nothing. */
+  const timing = () => token("--ui-dur-glide", "--ui-ease-draw", 320);
 
   /** A duration token in ms, and an easing token as a function: a sampled
    *  spring (linear(...)) or a cubic-bezier. */

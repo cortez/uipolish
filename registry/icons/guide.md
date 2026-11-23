@@ -106,16 +106,17 @@ in a tile. Every chevron in the same role is the same size.
 
 | What | Duration | Easing |
 |---|---|---|
-| One icon becomes another: every strand moves, draws on or erases (erasing ends at 60%) | `--ui-dur-glide` (320ms) | `--ui-ease-glide` (read from the page, so a changed token is followed) |
+| One icon becomes another: every strand moves, draws on or erases (erasing ends at 60%) | `--ui-dur-glide` (320ms) | `--ui-ease-draw`, in and out (read from the page, so a changed token is followed) |
 | Copy ↔ check: the icon tilts 45° about the front corner as it reshapes; the rest dims away by halfway | `--ui-dur-move` (380ms) | `--ui-ease-draw` (in and out, so the turn is even) |
-| Play ↔ pause ↔ stop: the halves reshape in place | `--ui-dur-glide` (320ms) | `--ui-ease-glide` |
+| Play ↔ pause ↔ stop: the halves reshape in place | `--ui-dur-glide` (320ms) | `--ui-ease-draw` |
 | A line fills into a solid | 40% of the glide, after 35% of it | `--ui-ease-color` |
 | A solid empties into a line | `--ui-dur-instant` (120ms) | `--ui-ease-color` |
 | The strike draws on / retracts | `--ui-dur-base` (200ms) / `--ui-dur-fast` (160ms) | `--ui-ease-draw` / `--ui-ease-exit` |
 
-Every point moves on the same glide, so strokes that meet end to end stay
-joined all the way, and the glide passes its mark by under a pixel, so a
-result (a check landing) doesn't bounce.
+Every point moves on the same in-and-out curve, so strokes that meet end
+to end stay joined all the way, the change is seen rather than over in two
+frames, and it lands exactly on the icon, so the hand-off to the icon's own
+path at rest doesn't jump and a result (a check landing) doesn't bounce.
 
 Under `prefers-reduced-motion: reduce` every change lands at once: the new
 icon is simply there.

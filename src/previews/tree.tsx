@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Button } from "@registry/button/button";
 import { Icon } from "@registry/icons/icons";
 import { ScrollArea } from "@registry/scroll-area/scroll-area";
+import { TextMorph } from "@registry/text-morph/text-morph";
 import { Tree, type TreeItem } from "@registry/tree/tree";
 import base from "./preview.module.css";
 import styles from "./tree.module.css";
@@ -103,6 +104,7 @@ export function TreePreview() {
   const [selected, setSelected] = useState<string | null>("menus/october/friday-supper.md");
   const [expanded, setExpanded] = useState(["menus", "menus/october"]);
   const [page, setPage] = useState("friday/menu");
+  const allOpen = FOLDERS.every((id) => expanded.includes(id));
   // The archive fails the first time it's asked for, so the retry row can be seen.
   const failed = useRef(false);
 
@@ -122,11 +124,11 @@ export function TreePreview() {
         <h2 className={base.label}>Files, with one selected, change marks, a long name, an empty folder and a locked file</h2>
         <div className={styles.demo}>
           <div className={base.row}>
-            <Button variant="secondary" onClick={() => setExpanded(FOLDERS)}>
-              Expand all
-            </Button>
-            <Button variant="secondary" onClick={() => setExpanded([])}>
-              Collapse all
+            {/* One toggle: it opens everything until everything is open,
+                then it closes it all. The label morphs between the two. */}
+            <Button variant="secondary" onClick={() => setExpanded(allOpen ? [] : FOLDERS)}>
+              <Icon name={allOpen ? "chevron-up" : "chevron-down"} />
+              <TextMorph>{allOpen ? "Collapse all" : "Expand all"}</TextMorph>
             </Button>
           </div>
           <div className={styles.frame}>
