@@ -61,7 +61,7 @@
   display: inline-flex;
   gap: var(--ui-space-1);
   flex-shrink: 0;
-  font: var(--ui-weight-medium) var(--ui-text-sm) / var(--ui-leading-md) var(--ui-font-mono);
+  font: var(--ui-weight-medium) var(--ui-text-mono) / var(--ui-leading-md) var(--ui-font-mono);
   font-variant-ligatures: none;
   --ui-icon-stroke: var(--ui-icon-stroke-medium);
 }
@@ -100,7 +100,7 @@
   width: max-content;
   min-width: 100%;
   padding-block: var(--ui-space-1);
-  font: var(--ui-weight-regular) var(--ui-text-sm) / var(--diff-line) var(--ui-font-mono);
+  font: var(--ui-weight-regular) var(--ui-text-mono) / var(--diff-line) var(--ui-font-mono);
   font-variant-ligatures: none;
   --ui-icon-stroke: var(--ui-icon-stroke-regular);
 }

@@ -124,6 +124,12 @@
   --ui-measure: 65ch;
 
   --ui-text-code: 0.875em;
+  /* Code set on its own (a code block, a command, a terminal, a diff, a
+     mono value in a field): a fixed size, not the inline 0.875em. Mono
+     faces run about a third wider per letter than the sans, so a theme
+     whose small text is 13px or more can set this a step down and keep
+     code from reading bigger than the text beside it. */
+  --ui-text-mono: 12px;
 
   /* Under 16px, iOS zooms the page when a field is focused. */
   --ui-text-touch: 16px;

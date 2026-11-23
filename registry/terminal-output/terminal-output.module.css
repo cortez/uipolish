@@ -35,7 +35,7 @@
   composes: wrap from "../text/text.module.css";
   color: var(--ui-foreground);
   font-family: var(--ui-font-mono);
-  font-size: var(--ui-text-sm);
+  font-size: var(--ui-text-mono);
   font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-md);
   /* A command that wraps hangs under its first word, not under the "$". */
@@ -241,7 +241,7 @@
   display: block;
   color: var(--ui-foreground);
   font-family: var(--ui-font-mono);
-  font-size: var(--ui-text-sm);
+  font-size: var(--ui-text-mono);
   line-height: var(--ui-leading-md);
   tab-size: 4;
   white-space: pre;

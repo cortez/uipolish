@@ -13,6 +13,9 @@ mode, lines appear as the new version is written.
 <DiffView name="checkout/shipping.ts" before={original} after={partial} streaming={!done} />
 ```
 
+
+Code is set at `--ui-text-mono` (12px), the size every block of code shares; a theme sets it a step down when its small text is larger.
+
 ## When to use it
 
 - Reviewing an edit an assistant proposes before applying it.

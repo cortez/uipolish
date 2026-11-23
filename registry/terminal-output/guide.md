@@ -15,6 +15,9 @@ danger-tinted text.
 <TerminalOutput command="npm test" output={lines} status="running" startedAt={startedAt} onStop={stop} />
 ```
 
+
+Code is set at `--ui-text-mono` (12px), the size every block of code shares; a theme sets it a step down when its small text is larger.
+
 ## When to use it
 
 - A shell command in an agent's run: tests, a build, a lint, an install.

@@ -39,7 +39,7 @@ The icons are stacked in one 16px box and crossfade, so a status change never
 moves the title.
 
 Steps with `input` or `output` have a title that's a button: it opens the
-input and output in a mono block capped at 180px that scrolls on its own.
+input and output in a mono block (`--ui-text-mono`, 12px) capped at 180px that scrolls on its own.
 Output appears once the step settles.
 
 The summary:

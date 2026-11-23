@@ -18,7 +18,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--ui-space-2);
-  padding: var(--block-inset) var(--block-inset) var(--block-inset) var(--ui-space-5);
+  padding: var(--block-inset) var(--block-inset) var(--block-inset) var(--ui-space-4);
 }
 
 .name {
@@ -46,6 +46,8 @@
   --button-bg-press: transparent;
   padding-inline: var(--ui-space-3);
   color: var(--ui-muted);
+  /* The name's size, so the header reads as one quiet line. */
+  font-size: var(--ui-text-sm);
 }
 
 @media (hover: hover) {
@@ -107,7 +109,8 @@
   width: max-content;
   min-width: 100%;
   margin: 0;
-  padding: var(--ui-space-1) var(--ui-space-5) var(--ui-space-5);
+  /* 16px in, as the name above it; a one-line command stays a slim box. */
+  padding: 0 var(--ui-space-4) var(--ui-space-4);
   counter-reset: line;
 }
 
@@ -115,7 +118,7 @@
   display: block;
   color: var(--ui-foreground);
   font-family: var(--ui-font-mono);
-  font-size: var(--ui-text-sm);
+  font-size: var(--ui-text-mono);
   line-height: var(--ui-leading-md);
   tab-size: 2;
   white-space: pre;

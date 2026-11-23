@@ -27,11 +27,13 @@ emphasis they were given is lost.)
 
 Running text of more than a couple of lines takes `--ui-leading-prose` (1.5)
 at Body size. Inline code is mono at `--ui-text-code` (0.875em) of the text
-it sits in, which is the same style in another face, not a new one.
+it sits in, which is the same style in another face, not a new one. Code set
+on its own (a code block, a command, a terminal, a diff, a mono value in a
+field) is `--ui-text-mono`, 12px.
 
 Tokens: `--ui-text-{sm,md,2xl}`, `--ui-leading-{sm,md,2xl}` (`display`
 and the old `xs`, `lg` and `xl` steps alias into these),
-`--ui-leading-prose`, `--ui-text-code`, `--ui-weight-{regular,title}` (`medium` and `semibold` alias regular),
+`--ui-leading-prose`, `--ui-text-code`, `--ui-text-mono`, `--ui-weight-{regular,title}` (`medium` and `semibold` alias regular),
 `--ui-measure`, `--ui-text-touch`.
 
 - Line-heights are px for the UI steps so rows line up: 12px text in a 20px
@@ -43,9 +45,11 @@ and the old `xs`, `lg` and `xl` steps alias into these),
   500 for titles. A
   section heading, a label or a button is Body: it's set apart by the
   text color against muted text, and by space, not by weight.
-- Mono uses the step it sits in: code blocks at `sm` / `md` leading, inline
-  code at `--ui-text-code` (mono sets wider than the text face, so the same
-  size looks bigger).
+- Mono sets about a third wider than the text face, so the same size looks
+  bigger. Code blocks, commands, terminals, diffs and mono values take
+  `--ui-text-mono` (12px) at `md` leading; inline code `--ui-text-code`. A
+  theme whose small text is 13px or more sets `--ui-text-mono` on its own
+  so code doesn't read as big as the body.
 
 Keep each step's size, line height and weight together as one set of
 tokens, so they're never mixed across steps:

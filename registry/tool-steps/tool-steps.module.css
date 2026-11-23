@@ -442,7 +442,7 @@ button.title:active {
   background: var(--ui-fill);
   color: var(--ui-foreground);
   font-family: var(--ui-font-mono);
-  font-size: var(--ui-text-sm);
+  font-size: var(--ui-text-mono);
   font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-md);
   white-space: pre-wrap;

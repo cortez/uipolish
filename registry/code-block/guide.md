@@ -11,6 +11,10 @@ four quiet hues mixed from the theme's accent and status colors, the rest in the
 follows any theme. Bring your own highlighter through `lineHtml` if you need
 more.
 
+Code is `--ui-text-mono` (12px) on `md` leading, 16px in from the box's edges,
+under a header whose name and Copy are both small text, so a one-line command
+is a slim box.
+
 ```tsx
 <CodeBlock code={text} language="ts" title="scale-recipe.ts" streaming={!done} lineNumbers />
 ```

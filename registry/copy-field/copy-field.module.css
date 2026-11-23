@@ -101,7 +101,7 @@
 /* Longhands, not `font`, so code keeps its ligatures off. */
 .value[data-mono] {
   font-family: var(--ui-font-mono);
-  font-size: var(--ui-text-sm);
+  font-size: var(--ui-text-mono);
 }
 
 .mask {
