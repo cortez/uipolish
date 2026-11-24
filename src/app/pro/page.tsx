@@ -11,12 +11,18 @@ import { InstallCommand } from "@/components/install-command";
 import { SiteLayout } from "@/components/site-layout";
 import {
   CATALOG,
+  PRO_FAQ,
+  PRO_HEADLINE,
+  PRO_INCLUDED,
+  PRO_LEDE,
   PRO_OPEN,
   PRO_PORTAL,
   PRO_PRICE,
+  PRO_STEPS,
   previewHref,
   proCheckout,
 } from "@/lib/pro";
+import { JsonLd, proLd } from "@/lib/seo/json-ld";
 import { pageMetadata } from "@/lib/seo/site";
 import { MCP_URL } from "@/lib/setup";
 import site from "../site.module.css";
@@ -73,28 +79,6 @@ function cards(): Card[] {
   return [...listed, ...extra];
 }
 
-const INCLUDED = [
-  `All ${SCREEN_INFO.length} screens, plus every screen and update added later`,
-  "No seat limits: use it across your company and on client projects",
-  "Source, sample data and a written guide for each screen, in a private GitHub repo",
-  "Made only from the free UI Polish components, so there’s nothing new to learn",
-];
-
-const STEPS = [
-  {
-    title: "Buy",
-    body: `Pay ${PRO_PRICE} through Polar. Your receipt and license key arrive by email.`,
-  },
-  {
-    title: "Get the repo",
-    body: "Sign in to Polar’s customer portal with the same email and connect GitHub. You’ll get an invite to the private repo.",
-  },
-  {
-    title: "Copy a screen",
-    body: "Copy a screen into your app, replace the sample data with yours, and edit whatever you like.",
-  },
-];
-
 /** A placeholder: the buyer swaps in the key from their purchase email. */
 const KEY = "UIPOLISH-XXXX-XXXX-XXXX";
 const MCP_SETUPS = [
@@ -105,29 +89,6 @@ const MCP_SETUPS = [
   {
     label: "Cursor, in .cursor/mcp.json",
     command: `{ "mcpServers": { "uipolish": { "url": "${MCP_URL}", "headers": { "Authorization": "Bearer ${KEY}" } } } }`,
-  },
-];
-
-const FAQ = [
-  {
-    q: "Are the components free?",
-    a: "Yes. Every UI Polish component is free and MIT licensed, and stays that way. Pro is the finished screens built from them.",
-  },
-  {
-    q: "How many people can use it?",
-    a: "Anyone at your company, on any number of projects, client work included. What you can’t do is resell or share the screens themselves as a kit or template.",
-  },
-  {
-    q: "What do I need to use a screen?",
-    a: "A React app with the UI Polish components installed. Each screen lists the components it imports, and its guide says how to wire in your own data.",
-  },
-  {
-    q: "How do I get the screens after I buy?",
-    a: "Your license key arrives by email. Sign in to Polar’s customer portal (polar.sh/ui-polish/portal) with the email you paid with and connect GitHub, and you’ll get an invite to the private repo. The same key works in your AI tool over MCP.",
-  },
-  {
-    q: "Do I get new screens?",
-    a: "Yes, at no extra cost, along with updates to the ones you have.",
   },
 ];
 
@@ -157,15 +118,14 @@ export default async function Page({
 
   return (
     <SiteLayout>
+      <JsonLd nodes={proLd()} />
       <header className={`${site.intro} ${styles.hero}`}>
         <p className={styles.eyebrow}>UI Polish Pro</p>
         <h1 className={site.title}>
-          App screens for AI products, built with UI Polish.
+          {PRO_HEADLINE}
         </h1>
         <p className={`${site.text} ${styles.lede}`}>
-          Chat, agent runs, approvals, evals, billing and more. Each screen
-          handles its loading, empty and error states, and it’s plain React
-          on the free components, so you can change anything.
+          {PRO_LEDE}
         </p>
         {PRO_OPEN ? (
           <>
@@ -314,7 +274,7 @@ export default async function Page({
               How it works
             </h2>
             <ol className={styles.steps}>
-              {STEPS.map((step, i) => (
+              {PRO_STEPS.map((step, i) => (
                 <li key={step.title} className={styles.step}>
                   <span className={styles.stepNumber} aria-hidden="true">
                     {i + 1}
@@ -372,7 +332,7 @@ export default async function Page({
                 <span className={styles.per}>paid once</span>
               </p>
               <ul className={styles.included}>
-                {INCLUDED.map((line) => (
+                {PRO_INCLUDED.map((line) => (
                   <li key={line}>
                     <Icon name="check" className={styles.tick} />
                     {line}
@@ -392,7 +352,7 @@ export default async function Page({
           Questions
         </h2>
         <Accordion>
-          {FAQ.map((item, i) => (
+          {PRO_FAQ.map((item, i) => (
             <AccordionItem key={item.q} value={String(i)} title={item.q}>
               <p>{item.a}</p>
             </AccordionItem>

@@ -32,7 +32,7 @@ export async function getFaq(): Promise<Faq[]> {
     {
       id: "free",
       question: "Is it free?",
-      answer: `Yes. Every component and the design rules are MIT-licensed, for personal, commercial and client work, with no account or key. The source is at github.com/cortez/uipolish.`,
+      answer: `Yes. Components and design rules are free, MIT-licensed, for personal, commercial and client work, with no account or key. The source is at github.com/cortez/uipolish. UI Polish Pro, the finished app screens, is $299 one-time.`,
     },
     {
       id: "agent-kit",

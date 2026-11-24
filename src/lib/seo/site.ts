@@ -70,4 +70,4 @@ export const NO_INDEX = { index: false, follow: false } as const;
 /** The one "last updated" date: llms.txt, sitemap lastmod
  *  and TechArticle dateModified. Bump when site or registry content changes
  *  materially; a date that is always "today" gets ignored. */
-export const CONTENT_UPDATED = "2026-11-05";
+export const CONTENT_UPDATED = "2026-11-24";

@@ -29,7 +29,7 @@ If the project uses Tailwind CSS v4 (its CSS has @import "tailwindcss"), pass ta
 
 Before calling UI work done, go through the checklist (get_rules topic "checklist").
 
-UI Polish Pro screens are app screens for AI products, built from these components. list_screens shows them; get_screen returns one screen's files and needs a Pro license key in this server's config (header Authorization: Bearer <key>).`;
+UI Polish Pro offers finished app screens for AI products, built from these components. list_screens shows them; get_screen returns one screen's files and needs a Pro license key in this server's config (header Authorization: Bearer <key>).`;
 
 type Tool = {
   name: string;
