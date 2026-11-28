@@ -3,6 +3,7 @@ import { AI_COMPONENTS, sortComponents } from "@/components/component-index";
 import { getFaq } from "@/lib/faq";
 import { getComponentGuide, getRule, listComponents, listRuleTopics } from "@/lib/content";
 import { SERVER_INSTRUCTIONS, TOOLS } from "@/lib/mcp/tools";
+import { PRO_PRICE, SCREEN_COUNT } from "@/lib/pro";
 import { CLIENTS, MCP_URL } from "@/lib/setup";
 import { CONTENT_UPDATED, DEFINITION, SITE_DESCRIPTION, abs } from "./site";
 
@@ -54,7 +55,12 @@ export async function llmsText(full: boolean): Promise<string> {
     `- Design rules: the rules as one file: a Claude Code skill (${abs("/skill.md")}) or for AGENTS.md (${abs("/rules.md")})`,
     `- shadcn/ui: install with \`npx shadcn add\` (registry at ${abs("/r/registry.json")})`,
     `- [OpenAPI spec](${abs("/openapi.json")}): the REST API, for agents without MCP`,
-    ...(SCREENS.copper ? [`- [UI Polish Pro screens](${abs("/pro")}): app screens for AI products, built from these components; each one is live to try`, `- [Example app](${abs("/example")}): Copper, an AI assistant for a caterer, built only from these components`] : []),
+    ...(SCREENS.copper
+      ? [
+          `- [UI Polish Pro](${abs("/pro")}): ${SCREEN_COUNT} finished app screens for AI products, ${PRO_PRICE} one-time; each one is live to try`,
+          `- [Example app](${abs("/example")}): Copper, an AI assistant for a caterer, built only from these components`,
+        ]
+      : []),
     `- [Contact](${abs("/contact")})`,
   );
 

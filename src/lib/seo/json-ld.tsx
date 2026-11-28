@@ -1,4 +1,6 @@
 import { SUPPORT_EMAIL } from "@/lib/info-pages";
+import { PRO_HEADLINE, PRO_LEDE, PRO_OPEN, PRO_PRICE, SCREEN_COUNT } from "@/lib/pro";
+import type { Faq } from "@/lib/faq";
 import { AUTHOR, OG_IMAGE, SITE_DESCRIPTION, SITE_NAME, SITE_SLOGAN, abs, siteUrl } from "./site";
 
 // Schema.org nodes joined by @id. @id only resolves inside one document, so
@@ -57,8 +59,52 @@ const software = () => ({
   offers: { "@type": "Offer", price: 0, priceCurrency: "USD", url: siteUrl() },
 });
 
-/** Home: who, what site, what product. */
-export const homeLd = () => [organization(), website(), software()];
+/** Home: who, what site, what product, and the FAQ when the page shows it. */
+export const homeLd = (faq: Faq[] = []) => [
+  organization(),
+  website(),
+  software(),
+  ...(faq.length
+    ? [
+        {
+          "@type": "FAQPage",
+          "@id": id("faq"),
+          mainEntity: faq.map((q) => ({
+            "@type": "Question",
+            name: q.question,
+            acceptedAnswer: { "@type": "Answer", text: q.answer },
+          })),
+        },
+      ]
+    : []),
+];
+
+/** /pro: UI Polish Pro as a paid product, $299 one-time, distinct from the free components. */
+export const proLd = () => [
+  organization(),
+  website(),
+  {
+    "@type": "Product",
+    "@id": `${abs("/pro")}#product`,
+    name: "UI Polish Pro",
+    description: `${SCREEN_COUNT} finished app screens for AI products. ${PRO_HEADLINE} ${PRO_LEDE}`,
+    url: abs("/pro"),
+    image: OG_IMAGE.url,
+    brand: { "@id": id("organization") },
+    isRelatedTo: { "@id": id("software") },
+    ...(PRO_OPEN
+      ? {
+          offers: {
+            "@type": "Offer",
+            price: PRO_PRICE.replace("$", ""),
+            priceCurrency: "USD",
+            url: abs("/pro"),
+            availability: "https://schema.org/InStock",
+          },
+        }
+      : {}),
+  },
+];
 
 /** A docs page: TechArticle plus its breadcrumb trail ([label, path], root first). */
 export function docsLd(a: {

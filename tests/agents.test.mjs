@@ -220,6 +220,57 @@ describe("Agent guidance and trust", () => {
   });
 });
 
+describe("UI Polish Pro on the site", () => {
+  test("llms.txt has the current date and the $299 one-time price", async () => {
+    const text = await (await get("/llms.txt")).text();
+    assert.match(text, /^Last updated: 2026-11-24$/m);
+    assert.match(text, /\$299 one-time/);
+    assert.doesNotMatch(text, /\$199|\$149/);
+    assert.doesNotMatch(text, /UI Polish Pro screens/);
+  });
+
+  test("the homepage FAQ says components and rules are free and Pro is $299 one-time", async () => {
+    const page = await (await get("/", html)).text();
+    const text = page.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, " ").replace(/<[^>]+>/g, " ");
+    assert.match(text, /Is it free\?/);
+    assert.match(text, /\$299 one-time/);
+    assert.match(text, /Components and design rules are free/);
+  });
+
+  test("/pricing and retired Pro docs redirect to /pro, not home", async () => {
+    for (const path of ["/pricing", "/docs/plan-approval", "/docs/file-changes", "/thanks"]) {
+      const res = await get(path, html, { redirect: "manual" });
+      assert.equal(res.status, 308, path);
+      assert.equal(new URL(res.headers.get("location"), server.url).pathname, "/pro", path);
+    }
+  });
+
+  test("/pro and /screens are available as Markdown, with the price", async () => {
+    const page = await get("/pro", html, { redirect: "manual" });
+    if (page.status === 404) return; // a build without the private screens
+    for (const path of ["/pro.md", "/pro", "/screens.md", "/pricing.md"]) {
+      const headers = path.endsWith(".md") ? {} : md;
+      const res = await get(path, headers);
+      assert.equal(res.status, 200, path);
+      assert.match(res.headers.get("content-type"), /^text\/markdown/, path);
+      const body = await res.text();
+      assert.match(body, /^# UI Polish Pro/m, path);
+      assert.match(body, /\$299/, path);
+    }
+  });
+
+  test("a retired Pro docs path explains the move in Markdown", async () => {
+    const res = await get("/docs/plan-approval.md");
+    assert.equal(res.status, 200);
+    assert.match(res.headers.get("content-type"), /^text\/markdown/);
+    const body = await res.text();
+    assert.match(body, /has moved/i);
+    assert.match(body, /\$299/);
+    assert.match(body, /uipolish\.com\/pro/);
+    assert.doesNotMatch(body, /\$199|\$149/);
+  });
+});
+
 describe("MCP", () => {
   test("get_component still answers over JSON-RPC", async () => {
     const res = await fetch(server.url + "/mcp", {
