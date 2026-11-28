@@ -32,10 +32,11 @@ To *use* UI Polish in another project, see
 - Follow the rules in `foundation/` for anything you build here, the site
   included: the site is the first user of the components.
 
-## Deploys
+## Deploys and cost
 
-Vercel builds only a commit whose message has `[deploy]` (`scripts/vercel-ignore-build.sh`): on `main` it
-ships, elsewhere it builds a preview. Push freely; add `[deploy]` to the commit that should go out.
+Every build and every function costs money, and the plan includes $20 a month for everything. Ship at most
+once a day: batch work on `main` and put `[deploy]` on one commit (`scripts/vercel-ignore-build.sh`). Never
+add a dependency over a few MB to a route that does not need it, and never run a function per request where a cached or static answer will do.
 
 ## Checks
 
