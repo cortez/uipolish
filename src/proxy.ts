@@ -58,12 +58,17 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Skip build assets and images outright, and the router's prefetches (a
-  // hover on a link fetches a page in several parts; none is a view or asks
-  // for Markdown). The function above sorts out the rest.
+  // Only what the function above acts on: page paths and their .md twins. Build assets, the API, the MCP
+  // server, the registry (/r) and any file with an extension never run it, since each run is a billed
+  // function call. Nor do the router's prefetches (a hover on a link fetches a page in several parts; none
+  // is a view or asks for Markdown).
   matcher: [
     {
-      source: "/((?!_next/static|_next/image).*)",
+      source: "/((?!_next/|api/|api$|mcp|md/|md$|r/|.*\\.[A-Za-z0-9]+$).*)",
+      missing: [{ type: "header", key: "next-router-prefetch" }],
+    },
+    {
+      source: "/((?!_next/|api/|mcp|md/|r/).*\\.md)",
       missing: [{ type: "header", key: "next-router-prefetch" }],
     },
   ],

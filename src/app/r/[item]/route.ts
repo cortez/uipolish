@@ -1,4 +1,4 @@
-import { apiError, json, preflight } from "@/lib/api/respond";
+import { apiError, CACHED, json, preflight } from "@/lib/api/respond";
 import { abs } from "@/lib/seo/site";
 import { registryIndex, registryItem } from "@/lib/shadcn";
 import { count } from "@/lib/stats";
@@ -22,7 +22,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ item
     return apiError(404, "component_not_found", `No registry item named "${name}".`, `See ${abs("/r/registry.json")} for every item.`);
   }
   count("registry.item", `component.${name}.registry`);
-  return json(result.item, { headers: { "cache-control": "public, max-age=300" } });
+  return json(result.item, { headers: CACHED });
 }
 
 export const OPTIONS = preflight;

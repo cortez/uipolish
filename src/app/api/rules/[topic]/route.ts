@@ -1,5 +1,5 @@
 import { rule, ruleTopics } from "@/lib/api/catalog";
-import { apiError, json, methodNotAllowed, preflight } from "@/lib/api/respond";
+import { apiError, CACHED, json, methodNotAllowed, preflight } from "@/lib/api/respond";
 
 export const runtime = "nodejs";
 
@@ -11,7 +11,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ top
       available: await ruleTopics(),
     });
   }
-  return json({ topic, ...found });
+  return json({ topic, ...found }, { headers: CACHED });
 }
 
 export { preflight as OPTIONS, methodNotAllowed as POST, methodNotAllowed as PUT, methodNotAllowed as PATCH, methodNotAllowed as DELETE };

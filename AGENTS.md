@@ -32,6 +32,11 @@ To *use* UI Polish in another project, see
 - Follow the rules in `foundation/` for anything you build here, the site
   included: the site is the first user of the components.
 
+## Deploys
+
+Vercel builds only a commit whose message has `[deploy]` (`scripts/vercel-ignore-build.sh`): on `main` it
+ships, elsewhere it builds a preview. Push freely; add `[deploy]` to the commit that should go out.
+
 ## Checks
 
 ```sh

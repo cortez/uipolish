@@ -10,6 +10,10 @@ export const CORS = {
   "access-control-allow-headers": "authorization, content-type",
 };
 
+/** For a read that changes only with a deploy: the CDN keeps it (a deploy clears it), so a repeat isn't a
+ *  billed function call. Errors and anything per-caller stay no-store. */
+export const CACHED = { "cache-control": "public, max-age=300, s-maxage=86400, stale-while-revalidate=604800" };
+
 export function json(body: unknown, init: ResponseInit = {}) {
   return Response.json(body, {
     ...init,

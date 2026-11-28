@@ -1,5 +1,5 @@
 import { componentDetail } from "@/lib/api/catalog";
-import { apiError, json, methodNotAllowed, preflight } from "@/lib/api/respond";
+import { apiError, CACHED, json, methodNotAllowed, preflight } from "@/lib/api/respond";
 import { count } from "@/lib/stats";
 
 export const runtime = "nodejs";
@@ -20,7 +20,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ name
   const result = await componentDetail(name, { tailwind: tailwind === "true" });
   if (result.status === "ok") {
     count("api.component", `component.${name}.served`, ...(tailwind === "true" ? ["component.tailwind"] : []));
-    return json(result.body);
+    return json(result.body, { headers: CACHED });
   }
   return apiError(404, "component_not_found", `No component named "${name}".`, "Use a name from GET /api/components.", {
     available: result.names,
